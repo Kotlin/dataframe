@@ -94,7 +94,11 @@ class JoinWith : TestBase() {
                         DateTimeFormatter.ofPattern("dd MMMM yyyy").format(value.value.toJavaLocalDate()),
                     )
                 } else {
-                    renderValueForHtml(value.value, configuration.cellContentLimit, configuration.decimalFormat)
+                    renderValueForHtml(
+                        value = value.value,
+                        truncate = configuration.cellContentLimit ?: Int.MAX_VALUE,
+                        format = configuration.decimalFormat,
+                    )
                 }
             } else {
                 null

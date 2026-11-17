@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -39,7 +40,6 @@ class SchemaTests {
             """
             |g: *
             |    a: Int
-            |
             """.trimMargin()
     }
 
@@ -55,7 +55,6 @@ class SchemaTests {
             |g: *
             |    a: Int
             |    b: Int
-            |
             """.trimMargin()
     }
 
@@ -91,7 +90,6 @@ class SchemaTests {
             |group: *
             |    city: String
             |    age: Int
-            |
             """.trimMargin()
     }
 
@@ -105,7 +103,6 @@ class SchemaTests {
             |group1: *
             |    group: String
             |    age: Int
-            |
             """.trimMargin()
     }
 
@@ -169,6 +166,136 @@ class SchemaTests {
         // `T` of `DataFrame<*>` is `Any?`, and `Any` has no properties to take columns from
         val untyped = dataFrameOf("a")(1)
         untyped.compileTimeSchema().columns.keys shouldBe emptySet()
+    }
+
+    @Test
+    fun `a nested column group does not add a blank line before the next column`() {
+        // reproducer of #1805: `nested` is the last child of `group`, and the blank line
+        // used to appear between its content and the following top-level column
+        val df = dataFrameOf(
+            "a" to columnOf(1),
+            "group" to columnOf(
+                "b" to columnOf(2),
+                "nested" to columnOf(
+                    "c" to columnOf(3),
+                    "d" to columnOf(4),
+                ),
+            ),
+            "e" to columnOf("str"),
+        )
+        df.schema().toString() shouldBe
+            """
+            |a: Int
+            |group:
+            |    b: Int
+            |    nested:
+            |        c: Int
+            |        d: Int
+            |e: String
+            """.trimMargin()
+    }
+
+    @Test
+    fun `a frame column as the last child of a group does not add a trailing blank line`() {
+        val frames = dataFrameOf("frames")(dataFrameOf("x")(1))
+        val df = dataFrameOf(
+            "a" to columnOf(1),
+            "group" to columnOf(
+                "b" to columnOf(2),
+                "frames" to frames.getColumn("frames"),
+            ),
+        )
+        df.schema().toString() shouldBe
+            """
+            |a: Int
+            |group:
+            |    b: Int
+            |    frames: *
+            |        x: Int
+            """.trimMargin()
+    }
+
+    @Test
+    fun `a frame column with an empty nested schema renders as its header only`() {
+        // all dataframes in the frame column are empty, so the frame's schema has no columns
+        val mid = dataFrameOf("g", "e")(DataFrame.empty(), 1)
+        mid.schema().toString() shouldBe
+            """
+            |g: *
+            |e: Int
+            """.trimMargin()
+
+        val last = dataFrameOf("e", "g")(1, DataFrame.empty())
+        last.schema().toString() shouldBe
+            """
+            |e: Int
+            |g: *
+            """.trimMargin()
+    }
+
+    @Test
+    fun `a column group with an empty nested schema renders as its header only`() {
+        // a group with one row and no nested columns: all columns removed from a one-row frame
+        val emptyGroup = DataColumn.createColumnGroup("g", dataFrameOf("a")(1).remove("a"))
+        val df = dataFrameOf(
+            "a" to columnOf(1),
+            "g" to emptyGroup,
+            "e" to columnOf(2),
+        )
+        df.schema().toString() shouldBe
+            """
+            |a: Int
+            |g:
+            |e: Int
+            """.trimMargin()
+    }
+
+    @Test
+    fun `a frame column in the middle does not add a blank line before the next column`() {
+        // the frame's own last child is a group, and a top-level column follows the frame,
+        // so both directions of the trailing-newline guard run here: the group inside
+        // suppresses its newline, the frame itself keeps exactly one
+        val frames = dataFrameOf("frames")(
+            dataFrameOf(
+                "b" to columnOf(2),
+                "g" to columnOf("c" to columnOf(3)),
+            ),
+        )
+        val df = dataFrameOf(
+            "a" to columnOf(1),
+            "frames" to frames.getColumn("frames"),
+            "e" to columnOf("str"),
+        )
+        df.schema().toString() shouldBe
+            """
+            |a: Int
+            |frames: *
+            |    b: Int
+            |    g:
+            |        c: Int
+            |e: String
+            """.trimMargin()
+    }
+
+    @Test
+    fun `deeply nested groups do not add blank lines after the innermost group`() {
+        // every level ends with a group; each level used to stack one extra blank line
+        val df = dataFrameOf(
+            "g1" to columnOf(
+                "g2" to columnOf(
+                    "g3" to columnOf(
+                        "c" to columnOf(3),
+                    ),
+                ),
+            ),
+        )
+        df.schema().toString() shouldBe
+            """
+            |g1:
+            |    g2:
+            |        g3:
+            |            c: Int
+            """.trimMargin()
     }
 }
 
@@ -235,7 +362,6 @@ class SchemaKDocExampleTests : TestBase() {
             |g: *
             |    a: Int
             |    b: Int
-            |
             """.trimMargin()
     }
 
@@ -253,7 +379,6 @@ class SchemaKDocExampleTests : TestBase() {
             |    city: String?
             |    weight: Int?
             |    isHappy: Boolean
-            |
             """.trimMargin()
     }
 }

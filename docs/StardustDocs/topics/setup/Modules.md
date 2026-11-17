@@ -335,7 +335,7 @@ dependencies {
 
 #### `dataframe-arrow` {id="dataframe-arrow"}
 
-Provides all logic and tests for DataFrame to be able to work with
+Provides the logic needed for DataFrame to work with
 [Apache Arrow](https://arrow.apache.org), and for **reading**
 [Apache Parquet](https://parquet.apache.org/) through
 [Apache Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html). Writing Parquet is not supported.

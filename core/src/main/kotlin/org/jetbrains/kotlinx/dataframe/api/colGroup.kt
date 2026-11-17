@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -64,12 +65,15 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`colGroup`**][ColumnsSelectionDsl.colGroup] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colGroup`**][ColumnsSelectionDsl.colGroup] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colGroup`**][ColumnsSelectionDsl.colGroup] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
@@ -119,6 +123,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col\]
      * {@set [CommonColGroupDocs.NOTE]}
      */
+    @ExcludeFromSources
     private interface CommonColGroupDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
@@ -155,9 +160,10 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs]
      * {@set [CommonColGroupDocs.ARG] columnGroupA}
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.SingleExample]}}
-     * @param [col\] The [ColumnAccessor] pointing to the column group.
+     * @param [colGroup\] The [ColumnAccessor] pointing to the column group.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
+    @ExcludeFromSources
     private typealias ColGroupReferenceDocs = Nothing
 
     /**
@@ -224,8 +230,9 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs]
      * {@set [CommonColGroupDocs.ARG] "columnGroupName"}
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
-     * @param [name\] The name of the value column.
+     * @param [name\] The name of the column group.
      */
+    @ExcludeFromSources
     private typealias ColGroupNameDocs = Nothing
 
     /**
@@ -328,8 +335,9 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs]
      * {@set [CommonColGroupDocs.ARG] "pathTo"["columnGroupName"\] }
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
-     * @param [path\] The path to the value column.
+     * @param [path\] The path to the column group.
      */
+    @ExcludeFromSources
     private typealias ColGroupPathDocs = Nothing
 
     /**
@@ -433,9 +441,10 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs]
      * {@set [CommonColGroupDocs.ARG] Type::columnGroupA}
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.SingleExample]}}
-     * @param [property\] The [KProperty] reference to the value column.
+     * @param [property\] The [KProperty] reference to the column group.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
+    @ExcludeFromSources
     private typealias ColGroupKPropertyDocs = Nothing
 
     /**
@@ -554,9 +563,10 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs]
      * {@set [CommonColGroupDocs.ARG] 0}
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
-     * @param [index\] The index of the value column.
+     * @param [index\] The index of the column group.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
+    @ExcludeFromSources
     private typealias ColGroupIndexDocs = Nothing
 
     /**
@@ -657,7 +667,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
 
 /**
  * Checks the validity of this [SingleColumn],
- * by adding a check to see it's a [ColumnGroup] (so, a [SingleColumn]<*>)
+ * by adding a check to see if it's a [ColumnGroup] (so, a [SingleColumn]<*>)
  * and throwing an [IllegalArgumentException] if it's not.
  */
 @PublishedApi

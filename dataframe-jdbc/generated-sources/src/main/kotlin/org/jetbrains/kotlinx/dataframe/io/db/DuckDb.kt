@@ -102,7 +102,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
     /**
      * How a column type from JDBC, [<code>sqlTypeName</code>][sqlTypeName], is read in Java/Kotlin.
      * The returned type must exactly follow [<code>ResultSet.getObject</code>][ResultSet.getObject] of your specific database's JDBC driver.
-     * Returning `null` defer the implementation to the default one (which may not always be correct).
+     * Returning `null` defers the implementation to the default one (which may not always be correct).
      *
      * Following [<code>org.duckdb.DuckDBVector.getObject</code>][org.duckdb.DuckDBVector.getObject] and converting the result to
      *

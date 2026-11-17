@@ -36,7 +36,7 @@ public fun FieldType.isNotNullable(): Boolean = !isNullable()
 private fun String.toNullable() = if (this.last() == '?' || this == "*") this else "$this?"
 
 /**
- * Returns a new fieldType with the same type but with nullability in the column type.
+ * Returns a new fieldType with the same type but with nullability enabled in the column type.
  * NOTE: for [<code>FieldType.FrameFieldType</code>][FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
  */
 public fun FieldType.toNullable(): FieldType =

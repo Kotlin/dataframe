@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
@@ -57,7 +58,7 @@ internal interface SelectingRows {
          *
          * `df.`operation` { length }.`where` { it > 10.0 }`
          *
-         * `df.`operation` { `[<code>cols</code>][ColumnsSelectionDsl.cols]`(1..5) }.`where` { `[<code>index</code>][index]`() > 4 && city != "Paris" }`
+         * `df.`operation` { `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }.`where` { `[<code>index</code>][index]`() > 4 && city != "Paris" }`
          *
          */
         typealias WithExample = Nothing

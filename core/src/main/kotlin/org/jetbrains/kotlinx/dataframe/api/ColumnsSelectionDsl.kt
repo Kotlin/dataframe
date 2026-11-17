@@ -39,7 +39,7 @@ public annotation class ColumnsSelectionDslMarker
  * {@include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]}
  * {@set [SelectingColumns.OPERATION] [select][DataFrame.select]}
  *
- * @comment This interface be safely cast to [SingleColumn] across the library because it's always
+ * @comment This interface can be safely cast to [SingleColumn] across the library because it's always
  * implemented in combination with [DataFrameReceiver] which is a [SingleColumn] itself.
  * It does not directly implement [SingleColumn] for DSL purposes.
  */

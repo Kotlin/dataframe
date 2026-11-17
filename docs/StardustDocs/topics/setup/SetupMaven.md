@@ -86,7 +86,7 @@ In your Maven build file (`pom.xml`), add the Kotlin DataFrame library as a depe
 </dependency>
 ```
 
-This will add [general Kotlin DataFrame dependency](Modules.md#dataframe-general), 
+This will add the [general Kotlin DataFrame dependency](Modules.md#dataframe-general), 
 i.e., [core API and implementation](Modules.md#dataframe-core) as well as all 
 [IO modules](Modules.md#io-modules) (excluding [experimental ones](Modules.md#experimental-modules)).  
 You can add only the [core API module](Modules.md#dataframe-core) 

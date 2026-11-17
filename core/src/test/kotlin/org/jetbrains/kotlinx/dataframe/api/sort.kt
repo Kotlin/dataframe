@@ -396,6 +396,18 @@ class SortTests : TestBase() {
     }
 
     @Test
+    fun `sortByCountDesc sorts key-group pairs by group size descending`() {
+        // group sizes: b=3, c=1, a=2, so the descending count order [b, a, c]
+        // differs from every ascending and descending key order
+        val grouped = dataFrameOf(
+            "key" to columnOf("b", "b", "b", "c", "a", "a"),
+            "value" to columnOf(4, 2, 1, 6, 5, 3),
+        ).groupBy("key")
+
+        grouped.sortByCountDesc().toDataFrame() shouldBe grouped.toDataFrame()[listOf(0, 2, 1)]
+    }
+
+    @Test
     fun `sort by selected keys preserves encounter order for ties`() {
         val grouped = df.groupBy { name.firstName and age }
 

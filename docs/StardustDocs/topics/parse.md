@@ -1,7 +1,7 @@
 [//]: # (title: parse)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Parse-->
 
-Returns a [`DataFrame`](DataFrame.md) in which the given `String` and `Char` columns are parsed into other types.
+Returns a [`DataFrame`](DataFrame.md) in which `String` and `Char` columns are parsed into other types.
 
 **API reference**: [`parse`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/parse.html)
 
@@ -32,11 +32,21 @@ even those inside [column groups](DataColumn.md#columngroup) and inside [frame c
 To parse only particular columns, use a [column selector](ColumnSelectors.md):
 
 <!---FUN parseSome-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 df.parse { date and value }
 ```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.parse("date", "value")
+```
+
+</tab></tabs>
 <inline-frame src="./resources/parseSome.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
@@ -59,8 +69,8 @@ df.parse { date and value }
 | Default Java date-time ISO types (`java.time`):<br/>`LocalDateTime`, `LocalDate`, `LocalTime`, `Instant`                                                 | (**J**, **P**)                                                                                                                                |
 | `Duration` (`kotlin.time`)                                                                                                                               | (**K**)                                                                                                                                       |
 | `Duration` (`java.time`)                                                                                                                                 | (**J**)                                                                                                                                       |
-| `Month` (`kotlinx.datetime`)                                                                                                                             | (**K**)                                                                                                                                       |
-| `DayOfWeek` (`kotlinx.datetime`)                                                                                                                         | (**K**)                                                                                                                                       |
+| `Month` (`kotlinx.datetime`)                                                                                                                             | (**K**) - Full enum name, any capitalization.                                                                                                |
+| `DayOfWeek` (`kotlinx.datetime`)                                                                                                                         | (**K**) - Full enum name, any capitalization.                                                                                                |
 | `URL` (`java.net`)                                                                                                                                       |                                                                                                                                               |
 | [`Double` (with optional locale settings)](#parsing-doubles)                                                                                             |                                                                                                                                               |
 | `Double`                                                                                                                                                 | with "C.UTF-8" locale, used as fallback for `Double` parsing.                                                                                 |
@@ -87,6 +97,25 @@ You can get this list by accessing `availableParserTypes` on the [](#global-pars
 When `.parse()` is called on a [`DataColumn`](DataColumn.md) of `String` or `Char`, `parse()` attempts to convert the column
 to one of the supported types mentioned above. If the input (`String`/`Char`) type is the same as the output type
 (i.e., it cannot be parsed further), an `IllegalStateException` is thrown. To avoid this, use `col.tryParse()` instead.
+
+When `.parse()` is called on a [`DataColumn`](DataColumn.md) of [`DataFrame`s](DataFrame.md)
+(either a [frame column](DataColumn.md#framecolumn) or a value column of frames — only the latter can
+contain `null` cells), every frame is parsed recursively,
+as if `parse()` was called on each frame with no columns selected. `null` cells stay `null`.
+
+<!---FUN parseFrameColumn-->
+
+```kotlin
+val frames = DataColumn.createValueColumn(
+    "frames",
+    listOf(dataFrameOf("value")("1.0"), null, dataFrameOf("value")("2.0")),
+)
+frames.parse()
+```
+
+<inline-frame src="./resources/parseFrameColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ### Parser Options
 

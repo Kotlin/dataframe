@@ -175,7 +175,7 @@ df.convert("city").notNull { (it as String).uppercase() }
 <!---END-->
 
 ## Row conditions
-Row condition is a special case of [row expression](#row-expressions) that returns `Boolean`.
+A row condition is a special case of [row expression](#row-expressions) that returns `Boolean`.
 There are two types of row conditions:
 
 ### `RowFilter`

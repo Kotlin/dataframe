@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.cumSum
 import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.head
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
 import org.jetbrains.kotlinx.dataframe.api.meanOf
@@ -34,14 +33,6 @@ import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 
 class Analyze : TestBase() {
-
-    @Test
-    @TransformDataFrameExpressions
-    fun head() {
-        // SampleStart
-        df.head(3)
-        // SampleEnd
-    }
 
     @Test
     @TransformDataFrameExpressions

@@ -47,7 +47,7 @@ import kotlin.reflect.KProperty
  *   and then reduced or aggregated into a [<code>DataFrame</code>][DataFrame].
  *
  * Pivoted columns can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -410,7 +410,7 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
  *   and then reduced or aggregated into a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Pivoted columns can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -485,7 +485,7 @@ public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumns
  *   and then reduced or aggregated into a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Pivoted columns can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -713,39 +713,6 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: B
  * * **Cells** contain an [<code>Int</code>][Int] value indicating how many rows with the corresponding
  *   combination of values (horizontal and vertical) exist in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function combines [<code>pivot</code>][DataFrame.pivot], [<code>groupByOther</code>][Pivot.groupByOther],
- * and [<code>count</code>][PivotGroupBy.count] operations into a single call.
- *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
- *
- * See [<code>Selecting Columns</code>][SelectSelectingOptions].
- *
- * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
- *
- * See also: [<code>pivotMatches</code>][pivotMatches], which performs a similar operation
- * but checks if there is any matching row instead of counting them
- * to produce a [<code>Boolean</code>][Boolean] matrix.
- *
- * ### This `pivotCounts` Overload
- */
-internal typealias DataFramePivotCountsCommonDocs = Nothing
-
-/**
- * Computes a **count matrix** (similar to frequency encoding) for the values in the
- * specified [<code>columns</code>][columns] of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], returning a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] where:
- * * **Columns** represent all unique values from the selected [<code>columns</code>][columns]
- *   (they become [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [<code>then</code>][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
- *   similar to [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot]);
- * * **Rows** correspond to all unique combinations of values from the remaining columns;
- *   each combination is represented in dedicated key columns that store
- *   a distinct set of values for each row
- *   (similar to [<code>keys</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
- * * **Cells** contain an [<code>Int</code>][Int] value indicating how many rows with the corresponding
- *   combination of values (horizontal and vertical) exist in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
- *
  * This function combines [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [<code>groupByOther</code>][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
  * and [<code>count</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
  *
@@ -905,7 +872,7 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Bo
  * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  * Pivoted columns can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -982,7 +949,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: ColumnReference<*>, inward: B
  * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  * Pivoted columns can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -1040,40 +1007,6 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
 // endregion
 
 // region pivotMatches
-
-/**
- * Computes a **presence matrix**
- * (similar to [one-hot encoding](https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics))
- * for the values in the
- * specified [<code>columns</code>][columns] within each group of this [<code>GroupBy</code>][GroupBy], returning a new [<code>DataFrame</code>][DataFrame] where:
- * * **Columns** represent all unique values from the selected [<code>columns</code>][columns]
- *   (they become [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [<code>then</code>][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
- *   similar to [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot]);
- * * **Rows** correspond to all unique combinations of values from the grouping columns;
- *   each combination is represented in dedicated key columns that store
- *   a distinct set of values for each row
- *   (similar to [<code>keys</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
- * * **Cells** contain a [<code>Boolean</code>][Boolean] value indicating whether a row with the corresponding
- *   combination of values (horizontal and vertical) exists in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
- *
- * This function combines [<code>pivot</code>][GroupBy.pivot]
- * and [<code>matches</code>][PivotGroupBy.matches] operations into a single call.
- *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
- *
- * See [<code>Selecting Columns</code>][SelectSelectingOptions].
- *
- * For more information: [See `pivotMatches` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotmatches)
- *
- * See also: [<code>pivotCounts</code>][GroupBy.pivotCounts], which performs a similar operation
- * but counts the number of matching rows instead of checking for their presence.
- *
- * ### This `pivotMatches` Overload
- */
-internal typealias GroupByPivotMatchesCommonDocs = Nothing
 
 /**
  * Computes a **presence matrix**
@@ -1217,38 +1150,6 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
 // endregion
 
 // region pivotCounts
-
-/**
- * Computes a **count matrix** (similar to frequency encoding) for the values in the
- * specified [<code>columns</code>][columns] within each group of this [<code>GroupBy</code>][GroupBy], returning a new [<code>DataFrame</code>][DataFrame] where:
- * * **Columns** represent all unique values from the selected [<code>columns</code>][columns]
- *   (they become [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [<code>then</code>][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
- *   similar to [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot]);
- * * **Rows** correspond to all unique combinations of values from the grouping columns;
- *   each combination is represented in dedicated key columns that store
- *   a distinct set of values for each row
- *   (similar to [<code>keys</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
- * * **Cells** contain an [<code>Int</code>][Int] value indicating how many rows with the corresponding
- *   combination of values (horizontal and vertical) exist in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
- *
- * This function combines [<code>pivot</code>][GroupBy.pivot]
- * and [<code>count</code>][PivotGroupBy.count] operations into a single call.
- *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
- *
- * See [<code>Selecting Columns</code>][SelectSelectingOptions].
- *
- * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
- *
- * See also: [<code>pivotMatches</code>][GroupBy.pivotMatches], which performs a similar operation
- * but checks if there is any matching row instead of counting them.
- *
- * ### This `pivotCounts` Overload
- */
-internal typealias GroupByPivotCountsCommonDocs = Nothing
 
 /**
  * Computes a **count matrix** (similar to frequency encoding) for the values in the
@@ -1706,7 +1607,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: KProperty<*>,
  * ### Example
  * ```kotlin
  * df.groupBy { name.firstName }.aggregate {
- *     // Compute number of for all unique values of "city"
+ *     // Compute number of matching rows for all unique values of "city"
  *     // across all "name.firstName" key values and adds it to the aggregation result
  *     pivotCounts { city }
  * }
@@ -1933,7 +1834,7 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      * #### Example
      * ```kotlin
      * df.pivot { city }.groupBy { name.firstName }.aggregate {
-     *   // Сount rows within each firstName" × "city" combination group and store the result
+     *   // Count rows within each "firstName" × "city" combination group and store the result
      *   // into a new "total" column (a new sub-column under each pivot key column)
      *   count() into "total"
      *
