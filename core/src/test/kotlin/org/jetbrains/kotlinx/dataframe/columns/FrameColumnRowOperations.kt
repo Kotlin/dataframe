@@ -21,7 +21,7 @@ import org.jetbrains.kotlinx.dataframe.api.xs
 import org.junit.Test
 
 /**
- * Row operations that leave no row keep the nested columns of a [FrameColumn].
+ * Row operations that leave no row keep the schema of a [FrameColumn].
  *
  * The schema of a frame column is computed from its non-empty dataframes, so with no row left
  * there is nothing to compute it from, and the schema of the original column is kept.
@@ -35,76 +35,76 @@ class FrameColumnRowOperations {
         .add("w") { null as Int? }
         .add("d") { Double.NaN }
 
-    private fun AnyFrame.shouldKeepNestedColumns() {
+    private fun AnyFrame.shouldKeepSchema() {
         rowsCount() shouldBe 0
         getFrameColumn("group").schema.value.columns.keys shouldBe setOf("k", "v")
         getFrameColumn("group").schema.value shouldBe df.getFrameColumn("group").schema.value
     }
 
     @Test
-    fun `take with zero rows keeps the nested columns`() {
-        df.take(0).shouldKeepNestedColumns()
+    fun `take with zero rows keeps the schema`() {
+        df.take(0).shouldKeepSchema()
     }
 
     @Test
-    fun `takeLast with zero rows keeps the nested columns`() {
-        df.takeLast(0).shouldKeepNestedColumns()
+    fun `takeLast with zero rows keeps the schema`() {
+        df.takeLast(0).shouldKeepSchema()
     }
 
     @Test
-    fun `takeWhile that keeps no row keeps the nested columns`() {
-        df.takeWhile { false }.shouldKeepNestedColumns()
+    fun `takeWhile that keeps no row keeps the schema`() {
+        df.takeWhile { false }.shouldKeepSchema()
     }
 
     @Test
-    fun `dropWhile that drops every row keeps the nested columns`() {
-        df.dropWhile { true }.shouldKeepNestedColumns()
+    fun `dropWhile that drops every row keeps the schema`() {
+        df.dropWhile { true }.shouldKeepSchema()
     }
 
     @Test
-    fun `drop of all rows keeps the nested columns`() {
-        df.drop(2).shouldKeepNestedColumns()
+    fun `drop of all rows keeps the schema`() {
+        df.drop(2).shouldKeepSchema()
     }
 
     @Test
-    fun `dropLast of all rows keeps the nested columns`() {
-        df.dropLast(2).shouldKeepNestedColumns()
+    fun `dropLast of all rows keeps the schema`() {
+        df.dropLast(2).shouldKeepSchema()
     }
 
     @Test
-    fun `drop with a predicate that matches every row keeps the nested columns`() {
-        df.drop { true }.shouldKeepNestedColumns()
+    fun `drop with a predicate that matches every row keeps the schema`() {
+        df.drop { true }.shouldKeepSchema()
     }
 
     @Test
-    fun `getRows with no indices keeps the nested columns`() {
-        df.getRows(emptyList()).shouldKeepNestedColumns()
-        df[emptyList<Int>()].shouldKeepNestedColumns()
+    fun `getRows with no indices keeps the schema`() {
+        df.getRows(emptyList()).shouldKeepSchema()
+        df[emptyList<Int>()].shouldKeepSchema()
     }
 
     @Test
-    fun `getRows with an empty range keeps the nested columns`() {
-        df.getRows(0 until 0).shouldKeepNestedColumns()
-        df[0 until 0].shouldKeepNestedColumns()
+    fun `getRows with an empty range keeps the schema`() {
+        df.getRows(0 until 0).shouldKeepSchema()
+        df[0 until 0].shouldKeepSchema()
     }
 
     @Test
-    fun `dropNulls that removes every row keeps the nested columns`() {
-        df.dropNulls { "w"() }.shouldKeepNestedColumns()
+    fun `dropNulls that removes every row keeps the schema`() {
+        df.dropNulls { "w"() }.shouldKeepSchema()
     }
 
     @Test
-    fun `dropNA that removes every row keeps the nested columns`() {
-        df.dropNA { "w"() }.shouldKeepNestedColumns()
+    fun `dropNA that removes every row keeps the schema`() {
+        df.dropNA { "w"() }.shouldKeepSchema()
     }
 
     @Test
-    fun `dropNaNs that removes every row keeps the nested columns`() {
-        df.dropNaNs { "d"() }.shouldKeepNestedColumns()
+    fun `dropNaNs that removes every row keeps the schema`() {
+        df.dropNaNs { "d"() }.shouldKeepSchema()
     }
 
     @Test
-    fun `xs with a key that matches no row keeps the nested columns`() {
-        df.xs(99).shouldKeepNestedColumns()
+    fun `xs with a key that matches no row keeps the schema`() {
+        df.xs(99).shouldKeepSchema()
     }
 }

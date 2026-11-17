@@ -153,7 +153,7 @@ class DataColumns : BaseTest() {
         val column = DataColumn.createFrameColumn("g", listOf(dataFrameOf("a", "b")(1, 2), dataFrameOf("a")(3)))
         column.schema.value.columns.keys shouldBe setOf("a")
 
-        (column[listOf(0)] as FrameColumn<*>).schema.value.columns.keys shouldBe setOf("a", "b")
+        column[listOf(0)].schema.value.columns.keys shouldBe setOf("a", "b")
         (column[0..0] as FrameColumn<*>).schema.value.columns.keys shouldBe setOf("a", "b")
     }
 
@@ -163,9 +163,9 @@ class DataColumns : BaseTest() {
         column.schema.value.columns.keys shouldBe setOf("a", "b")
 
         // rows are left, but every dataframe in them is empty
-        (column[listOf(1)] as FrameColumn<*>).schema.value.columns.keys shouldBe setOf("a", "b")
+        column[listOf(1)].schema.value.columns.keys shouldBe setOf("a", "b")
         (column[1..1] as FrameColumn<*>).schema.value.columns.keys shouldBe setOf("a", "b")
         // no rows are left
-        (column[emptyList()] as FrameColumn<*>).schema.value.columns.keys shouldBe setOf("a", "b")
+        column[emptyList()].schema.value.columns.keys shouldBe setOf("a", "b")
     }
 }

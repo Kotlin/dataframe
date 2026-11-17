@@ -24,14 +24,15 @@ tail(numRows: Int = 5): DataFrame
 ```
 
 If `numRows` is greater than or equal to the number of rows, the whole [`DataFrame`](DataFrame.md) is returned
-as it is, column types included.
+as it is.
 Otherwise, each column keeps its runtime type except for nullability: a nullable column
-whose last `numRows` values contain no `null` becomes non-nullable in the result.
+whose last `numRows` values contain no `null` becomes non-nullable at runtime;
+the compile-time type is not affected.
 In the examples below, the runtime type of `city` stays `String?` in `df.tail()`, whose last five cities
 include a `null`, and becomes `String` in `df.tail(2)`.
 
-When `numRows` is `0`, the result has no rows but keeps all columns,
-including the nested columns of column groups and frame columns.
+When `numRows` is `0`, the result has no rows but keeps all columns:
+a column group keeps its nested columns, and a frame column keeps its schema.
 
 A negative `numRows` throws an `IllegalArgumentException`.
 

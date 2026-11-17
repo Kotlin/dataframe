@@ -1,15 +1,15 @@
 [//]: # (title: head)
 
 <web-summary>
-Discover `head` operation in Kotlin DataFrame.
+Discover the `head` operation in Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `head` operation in Kotlin DataFrame.
+Discover the `head` operation in Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `head` operation in Kotlin DataFrame.
+Discover the `head` operation in Kotlin DataFrame.
 </link-summary>
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.info.HeadSamples-->
@@ -23,13 +23,14 @@ head(numRows: Int = 5): DataFrame
 ```
 
 If `numRows` is greater than or equal to the number of rows, the whole [`DataFrame`](DataFrame.md) is returned
-as it is, column types included.
+as it is.
 Otherwise, each column keeps its runtime type except for nullability: a nullable column
-whose first `numRows` values contain no `null` becomes non-nullable in the result.
+whose first `numRows` values contain no `null` becomes non-nullable at runtime;
+the compile-time type is not affected.
 In the examples below, the runtime type of `city` is `String?` in `df` and `String` in `df.head()`.
 
-When `numRows` is `0`, the result has no rows but keeps all columns,
-including the nested columns of column groups and frame columns.
+When `numRows` is `0`, the result has no rows but keeps all columns:
+a column group keeps its nested columns, and a frame column keeps its schema.
 
 A negative `numRows` throws an `IllegalArgumentException`.
 
@@ -45,8 +46,9 @@ This is equivalent to calling [`take`](sliceRows.md#take) with the same `numRows
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/headInput.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 The first five rows, by default:
 
@@ -56,8 +58,9 @@ The first five rows, by default:
 df.head()
 ```
 
-<!---END-->
 <inline-frame src="./resources/headDefault.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 The first three rows:
 
@@ -67,5 +70,6 @@ The first three rows:
 df.head(3)
 ```
 
-<!---END-->
 <inline-frame src="./resources/headNumRows.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->

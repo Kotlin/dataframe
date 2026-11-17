@@ -11,7 +11,7 @@ import kotlin.reflect.typeOf
  * Tests the behavior of the `head` API on a [DataFrame]:
  * the first five rows by default, the first `numRows` rows when given,
  * the edge cases of `numRows` (equal to and more than the number of rows, zero, negative),
- * the nullability of the columns that are left, and the nested columns kept at zero rows.
+ * the nullability of the columns that are left, and the schema kept at zero rows.
  */
 @Suppress("ktlint:standard:argument-list-wrapping")
 class HeadTests {
@@ -76,7 +76,7 @@ class HeadTests {
     }
 
     @Test
-    fun `head with zero rows keeps the nested columns of column groups and frame columns`() {
+    fun `head with zero rows keeps the schema of column groups and frame columns`() {
         // `keys` is a column group, `group` is a frame column whose dataframes have the columns `k` and `v`
         val nested = dataFrameOf("k", "v")(1, "x", 2, "y").groupBy("k").toDataFrame().group("k").into("keys")
 

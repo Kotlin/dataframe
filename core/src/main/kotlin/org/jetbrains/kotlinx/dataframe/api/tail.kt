@@ -2,19 +2,15 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 
 // region DataFrame
 
 /**
  * Returns a [DataFrame] containing the last [numRows] rows, five by default.
  *
- * If [numRows] is greater than or equal to the number of rows, the whole [DataFrame] is returned
- * as it is, column types included.
- * Otherwise, each column keeps its runtime type except for nullability: a nullable column
- * whose last [numRows] values contain no `null` becomes non-nullable in the result.
- *
- * When [numRows] is `0`, the result has no rows but keeps all columns,
- * including the nested columns of column groups and frame columns.
+ * @include [SelectingRows.SlicedColumnTypesSnippet]
+ * {@set [SelectingRows.WHICH_ROWS] last}
  *
  * This is equivalent to calling [takeLast][DataFrame.takeLast] with the same [numRows].
  *
