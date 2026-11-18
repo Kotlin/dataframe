@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.mapToRows
 import org.jetbrains.kotlinx.dataframe.api.maxBy
@@ -49,70 +48,6 @@ class Access : TestBase() {
         // SampleStart
         df["age"]
         df["name"]["firstName"]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumn_properties() {
-        // SampleStart
-        df.getColumn { age }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumn_strings() {
-        // SampleStart
-        df.getColumn("age")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumnOrNull_properties() {
-        // SampleStart
-        df.getColumnOrNull { age }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumnOrNull_strings() {
-        // SampleStart
-        df.getColumnOrNull("age")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumns_properties() {
-        // SampleStart
-        df.getColumns { age and name }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumns_strings() {
-        // SampleStart
-        df.getColumns("age", "name")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumnGroup_properties() {
-        // SampleStart
-        df.getColumnGroup { name }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumnGroup_strings() {
-        // SampleStart
-        df.getColumnGroup("name")
         // SampleEnd
     }
 
