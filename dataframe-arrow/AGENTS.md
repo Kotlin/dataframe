@@ -114,3 +114,16 @@ write tables are **not** symmetric — reading builds lists and frame columns, w
 - Tests live under `src/test/kotlin/.../io/`; fixtures in `src/test/resources/`. `duckdb-jdbc` and `arrow-c-data` are
   test-only deps (DuckDB is used to produce Parquet/Arrow test data).
 - Run just this module: `./gradlew dataframe-arrow:test` (add `-Pkotlin.dataframe.debug=true` to match CI checks).
+- **Never walk a whole batch-sized vector per row when reading.** `readField` runs once per Arrow batch (Parquet
+  default batch: 32K rows), and a full-vector walk — e.g. `StructVector.getNullCount()`, which scans the entire
+  validity buffer via `BitVectorHelper.getNullCount` — must not happen per list row: batch-sized work × rows turns
+  a linear read into a quadratic one. `ArrowListStructScanTest` guards this deterministically: a hand-built
+  `VectorSchemaRoot` fed through a custom `ArrowReader` (the same `readArrowImpl` path all readers take) with a
+  `getNullCount`-counting element vector pins "at most one full validity-buffer scan per batch" — no timing
+  involved.
+- To *measure* reading performance, use `ArrowReadingPerfBenchmarkTest`: a manual `@Ignore`d benchmark over
+  in-memory Arrow IPC datasets (the shared conversion, so no Arrow-dataset JNI is needed). Label each run with the
+  `ARROW_PERF_VARIANT` env var; per-dataset medians **and fingerprints** (row/sum/null counts) are appended to
+  `arrow-reading-perf.txt` in the system temp dir (`java.io.tmpdir`) — identical fingerprints across variants mean a
+  pure perf change, differing ones mean the reads are not comparable. Timing is machine-dependent, so it stays out
+  of CI.

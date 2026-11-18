@@ -514,7 +514,11 @@ private fun readListVector(
     return if (dataVector is StructVector) {
         val structField = field.children.single()
         // A struct *element* can itself be null inside the list; like the top-level struct path we honor
-        // its own validity buffer so null elements don't materialize phantom child values.
+        // its own validity buffer so null elements don't materialize phantom child values. The mask is
+        // built once per batch, not once per list row: `nullMaskOrNull` calls `getNullCount`, a full scan
+        // of the validity buffer over the whole element vector (#2064 — a per-row scan made reading a
+        // `List<Struct>` column quadratic in the batch size). Per-element slices then reuse that one pass.
+        val batchNullMask = dataVector.nullMaskOrNull(0 until dataVector.valueCount)
         val frames = range.map { i ->
             val start = accessor.getElementStartIndex(i)
             val end = accessor.getElementEndIndex(i)
@@ -526,7 +530,7 @@ private fun readListVector(
                     start until end,
                 )
             }
-            val nullMask = dataVector.nullMaskOrNull(start until end)
+            val nullMask = batchNullMask?.copyOfRange(start, end)?.takeIf { it.any() }
             val elementColumns = if (nullMask != null) columns.map { it.injectNullsAt(nullMask) } else columns
             elementColumns.toDataFrame()
         }
