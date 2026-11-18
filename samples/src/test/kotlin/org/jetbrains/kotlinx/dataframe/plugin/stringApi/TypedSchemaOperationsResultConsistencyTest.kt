@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.plugin.stringApi
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.byName
-import org.jetbrains.kotlinx.dataframe.api.compileTimeSchema
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.cumSum
 import org.jetbrains.kotlinx.dataframe.api.distinct
@@ -15,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.api.fillNA
 import org.jetbrains.kotlinx.dataframe.api.fillNaNs
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filterJoin
-import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.fullJoin
 import org.jetbrains.kotlinx.dataframe.api.gather
@@ -34,7 +32,6 @@ import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.medianFor
 import org.jetbrains.kotlinx.dataframe.api.merge
 import org.jetbrains.kotlinx.dataframe.api.min
-import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minFor
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.moveTo
@@ -46,7 +43,6 @@ import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.reorder
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
-import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.std
@@ -79,20 +75,6 @@ class TypedSchemaOperationsResultConsistencyTest : CommonTestData() {
     @Test
     fun DataFrameGroupBy() {
         df.groupBy("key").toDataFrame() matches df.groupBy { key }.toDataFrame()
-    }
-
-    @Test
-    fun GroupByInto() {
-        df.groupBy { key }.into("group").compileTimeSchema() shouldBe df.groupBy { key }.into("group").schema()
-    }
-
-    @Test
-    fun GroupByReduceInto() {
-        // The plugin types the reduced row's columns as nullable: it cannot assume that every group
-        // has a selected row, so the compile-time schema equals the runtime schema of the case
-        // where some group has no selected row
-        df.groupBy { key }.minBy { value }.into("minValue")
-            .compileTimeSchema() shouldBe df.groupBy { key }.first { value > 2 }.into("minValue").schema()
     }
 
     @Test

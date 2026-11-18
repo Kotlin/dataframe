@@ -108,9 +108,10 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   (Extension Properties API / String API). If the operation can't take plain `String` names, write `_strings` with
   `String` column accessors (`col<Int>("age")`, `getValue<Int>("age")`, …) — never the outdated "Invoked String API"
   (`"age"<Int>()`). The ban covers **column selection**: inside a row expression (`filter { }`, `into { }`,
-  `add { }`), `"age"<Int>()` on a `DataRow` is the String API cell read (a non-deprecated member operator;
-  `concepts/AccessApis.kt` teaches this form), and `col<T>(name)` resolves only in the columns-selection
-  DSL, not in a plain `ColumnsSelector` receiver. Use the Extension Properties API in the remaining examples.
+  `add { }`, `minBy { }`), `"age"<Int>()` on a `DataRow` is the String API cell read (a non-deprecated member
+  operator; `concepts/AccessApis.kt` teaches this form), and `col<T>(name)` resolves only in the
+  columns-selection DSL (the receiver of any `ColumnsSelector` lambda), not in a row expression
+  (`DataRow` receiver). Use the Extension Properties API in the remaining examples.
 - **After** `// SampleEnd`: save outputs (`.saveDfHtmlSample()` for `DataFrame`/`DataColumn`/`GroupBy`, using
   `.toDataFrame()`/`.values()`/`.frames()` if needed; `.savePlotSVGSample()` for plots; `.saveSample()` /
   `.saveTextSample()` for `String`/`CodeString` — see above) and add highlighting (`.format` / `.formatHeader` /
