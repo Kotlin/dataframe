@@ -25,7 +25,10 @@ import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.util.AS_COLUMN_GROUP_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.GET_COLUMN_GROUP_OR_NULL
+import org.jetbrains.kotlinx.dataframe.util.GET_COLUMN_GROUP_OR_NULL_REPLACE
 import kotlin.reflect.KProperty
 
 // region docs
@@ -102,7 +105,7 @@ private typealias GetColumnDocs = Nothing
  * For more information: {@include [DocumentationUrls.GetColumn.GetColumnGroup]}
  *
  * See also:
- * - [getColumnGroupOrNull], that returns `null` instead of throwing if there is no such column;
+ * - [getColumnOrNull][ColumnsContainer.getColumnOrNull], that returns `null` instead of throwing;
  * - [getColumn], that returns a column of any kind;
  * - [getFrameColumn], that returns the column as a [FrameColumn].
  *
@@ -114,7 +117,9 @@ private typealias GetColumnDocs = Nothing
 private typealias GetColumnGroupDocs = Nothing
 
 /**
- * The `getFrameColumn` overloads find the column by a top-level column name (`String`) or by a [ColumnPath].
+ * The `getFrameColumn` overloads find the column by a top-level column name (`String`), a [ColumnPath],
+ * a zero-based column index (`Int`), or a [column selector][ColumnSelector].
+ * Only the selector overload returns a typed [FrameColumn]; the others return [FrameColumn]`<*>`.
  * They throw if the column doesn't exist, and they don't check the kind of the column:
  * a column that isn't a [FrameColumn] leads to a [ClassCastException].
  *
@@ -389,6 +394,20 @@ public fun <T> ColumnsContainer<T>.getFrameColumn(columnPath: ColumnPath): Frame
     get(columnPath).asAnyFrameColumn()
 
 /**
+ * Returns the top-level column at [index] as a [FrameColumn], throwing if [index] is out of bounds.
+ *
+ * @include [ByIndexSnippet]
+ *
+ * @include [GetFrameColumnDocs]
+ *
+ * @param [index] The zero-based index of the top-level column.
+ * @return The column at [index] as a [FrameColumn]`<*>`.
+ * @throws [IllegalArgumentException] if [index] is negative or not less than the number of top-level columns.
+ * @throws [ClassCastException] if the column at [index] is not a [FrameColumn].
+ */
+public fun <T> ColumnsContainer<T>.getFrameColumn(index: Int): FrameColumn<*> = getColumn(index).asAnyFrameColumn()
+
+/**
  * Returns the top-level column named [columnName] as a [FrameColumn], throwing if there is no such column.
  *
  * @include [ByTopLevelNameSnippet]
@@ -402,6 +421,24 @@ public fun <T> ColumnsContainer<T>.getFrameColumn(columnPath: ColumnPath): Frame
  */
 public fun <T> ColumnsContainer<T>.getFrameColumn(columnName: String): FrameColumn<*> =
     get(columnName).asAnyFrameColumn()
+
+/**
+ * Returns the single column selected by [selector] as a typed [FrameColumn],
+ * throwing if [selector] doesn't resolve to exactly one column.
+ *
+ * @include [BySelectorSnippet]
+ *
+ * It is the same as [get][ColumnsContainer.get] with a [ColumnSelector].
+ *
+ * @include [GetFrameColumnDocs]
+ *
+ * @param [selector] A [ColumnSelector] that selects exactly one column.
+ * @return The selected column as a [FrameColumn]`<C>`.
+ * @include [SingleColumnSelectorThrowsSnippet]
+ * @throws [ClassCastException] if the selected column is not a [FrameColumn].
+ */
+public fun <T, C> ColumnsContainer<T>.getFrameColumn(selector: ColumnSelector<T, DataFrame<C>>): FrameColumn<C> =
+    get(selector).asFrameColumn()
 
 // endregion
 
@@ -558,35 +595,18 @@ public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnSelector<T, D
 
 // region getColumnGroupOrNull
 
-/**
- * Returns the top-level column named [name] as a [ColumnGroup], or `null` if there is no such column.
- *
- * @include [ByTopLevelNameSnippet]
- *
- * Only a missing column gives `null`:
- * an existing column that isn't a [ColumnGroup] still leads to a [ClassCastException].
- *
- * For more information: {@include [DocumentationUrls.GetColumn.GetColumnGroup]}
- *
- * See also:
- * - [getColumnGroup], that throws instead of returning `null`;
- * - [getColumnOrNull][ColumnsContainer.getColumnOrNull], that returns a column of any kind or `null`.
- *
- * ### Examples
- *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnGroup]
- *
- * @param [name] The name of the top-level column.
- * @return The column named [name] as a [ColumnGroup]`<*>`, or `null` if there is no such column.
- * @throws [ClassCastException] if the column named [name] exists but is not a [ColumnGroup].
- */
+@Deprecated(
+    message = GET_COLUMN_GROUP_OR_NULL,
+    replaceWith = ReplaceWith(GET_COLUMN_GROUP_OR_NULL_REPLACE, AS_COLUMN_GROUP_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
 public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(name: String): ColumnGroup<*>? =
     getColumnOrNull(name)?.asColumnGroup()
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(column: KProperty<*>): ColumnGroup<*>? =
-    getColumnGroupOrNull(column.columnName)
+    getColumnOrNull(column.columnName)?.asColumnGroup()
 
 // endregion
 

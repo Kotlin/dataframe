@@ -2,9 +2,9 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.getColumnGroupOrNull
 import org.jetbrains.kotlinx.dataframe.api.getColumnIndex
 import org.jetbrains.kotlinx.dataframe.api.getColumnPath
 import org.jetbrains.kotlinx.dataframe.api.getColumnPaths
@@ -51,19 +51,17 @@ class GetColumnSamples : DataFrameSampleHelper("getColumn", "api") {
         df.getColumnGroup(0) // ColumnGroup<*>: "name"
         df.getColumnGroup(pathOf("name")) // ColumnGroup<*>
         df.getColumnGroup { name } // ColumnGroup<Name>
-        df.getColumnGroupOrNull("address") // null: there is no such column
+        df.getColumnOrNull("address")?.asColumnGroup() // null: there is no such column
         // SampleEnd
         df.getColumnGroup("name").name() shouldBe "name"
         df.getColumnGroup(0).name() shouldBe "name"
         df.getColumnGroup(pathOf("name")).name() shouldBe "name"
         df.getColumnGroup { name }.name() shouldBe "name"
-        df.getColumnGroupOrNull("name")?.name() shouldBe "name"
-        df.getColumnGroupOrNull("address") shouldBe null
+        df.getColumnOrNull("address")?.asColumnGroup() shouldBe null
 
         shouldThrow<IllegalArgumentException> { df.getColumnGroup("address") }
         shouldThrow<IllegalArgumentException> { df.getColumnGroup(5) }
         shouldThrow<ClassCastException> { df.getColumnGroup("age") } // not a column group
-        shouldThrow<ClassCastException> { df.getColumnGroupOrNull("age") }
     }
 
     @Test
@@ -72,13 +70,20 @@ class GetColumnSamples : DataFrameSampleHelper("getColumn", "api") {
         val grouped = df.groupBy { city }.toDataFrame("frame") // has the FrameColumn "frame"
         grouped.getFrameColumn("frame") // FrameColumn<*>
         grouped.getFrameColumn(pathOf("frame")) // FrameColumn<*>
+        grouped.getFrameColumn(1) // FrameColumn<*>: "frame"
+        grouped.getFrameColumn { frameCol<Any?>("frame") } // FrameColumn<DataFrame<Any?>>
         // SampleEnd
         grouped.getFrameColumn("frame").name() shouldBe "frame"
         grouped.getFrameColumn(pathOf("frame")).name() shouldBe "frame"
+        grouped.getFrameColumn(1).name() shouldBe "frame"
+        grouped.getFrameColumn { frameCol<Any?>("frame") }.name() shouldBe "frame"
 
         shouldThrow<IllegalArgumentException> { grouped.getFrameColumn("group") }
         shouldThrow<IllegalArgumentException> { grouped.getFrameColumn(pathOf("frame", "age")) }
+        shouldThrow<IllegalArgumentException> { grouped.getFrameColumn(2) }
+        shouldThrow<ClassCastException> { grouped.getFrameColumn(0) } // "city" is not a frame column
         shouldThrow<ClassCastException> { grouped.getFrameColumn("city") } // not a frame column
+        shouldThrow<ClassCastException> { df.getFrameColumn(2) } // "city" is not a frame column
     }
 
     @Test
