@@ -60,6 +60,24 @@ class GroupByTests {
     }
 
     @Test
+    fun `into on a group by collects values computed on all rows of each group into lists`() {
+        val df = dataFrameOf(
+            "city", "age",
+        )(
+            "London", 30,
+            "London", 20,
+            "Paris", 25,
+        )
+
+        val result = df.groupBy("city").into("ages") { "age"<Int>() }
+
+        // the values of each group in the original row order
+        result["city"].toList() shouldBe listOf("London", "Paris")
+        result["ages"].toList() shouldBe listOf(listOf(30, 20), listOf(25))
+        result["ages"].type() shouldBe typeOf<List<Int>>()
+    }
+
+    @Test
     fun `groupBy preserves value rows and group order`() {
         val df = dataFrameOf(
             "key1" to listOf(2, 1, 2, 1, null, null),
