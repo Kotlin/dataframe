@@ -363,8 +363,7 @@ df.getColumns("age", "city")
 
 ## getColumnIndex
 
-Returns the zero-based index of a top-level column with the given name, or `-1` if there is no such top-level column. A
-nested column's name is not looked up, so its index is `-1`.
+Returns the zero-based index of a top-level column with the given name, or `-1` if there is no such top-level column.
 
 ```text
 df.getColumnIndex(name: String): Int
