@@ -13,9 +13,16 @@ class RowsSamples : DataFrameSampleHelper("rows", "api") {
     fun rows() {
         // SampleStart
         df.rows().map { it.age } // [15, 45, 20, ..., 18]: from the first row to the last one
-        df.rowsReversed().map { it.age } // [18, 15, 30, ..., 15]: from the last row to the first one
         // SampleEnd
         df.rows().map { it.age } shouldBe listOf(15, 45, 20, 40, 30, 20, 30, 30, 15, 18)
+    }
+
+    @Test
+    fun rowsReversed() {
+        // SampleStart
+        df.rowsReversed().map { it.age } // [18, 15, 30, ..., 15]: from the last row to the first one
+        // SampleEnd
+
         df.rowsReversed().map { it.age } shouldBe listOf(18, 15, 30, 30, 20, 30, 40, 20, 45, 15)
     }
 }

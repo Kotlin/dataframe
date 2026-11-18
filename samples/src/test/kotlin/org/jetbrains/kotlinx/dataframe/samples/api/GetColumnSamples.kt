@@ -109,6 +109,24 @@ class GetColumnSamples : DataFrameSampleHelper("getColumn", "api") {
     }
 
     @Test
+    fun getColumnGroupByPath() {
+        // SampleStart
+        val group = df.getColumnGroup(pathOf("name"))
+        // SampleEnd
+
+        group.name() shouldBe "name"
+    }
+
+    @Test
+    fun getColumnGroupByIndex() {
+        // SampleStart
+        val group = df.getColumnGroup(0)
+        // SampleEnd
+
+        group.name() shouldBe "name"
+    }
+
+    @Test
     fun getColumnOrNullAsColumnGroup() {
         // SampleStart
         val group = df.getColumnOrNull("name")?.asColumnGroup()
@@ -215,6 +233,51 @@ class GetColumnSamples : DataFrameSampleHelper("getColumn", "api") {
         output.saveTextSample()
 
         indices shouldBe listOf(2, -1, -1)
+    }
+
+    @Test
+    fun getColumnIndexByColumn() {
+        // SampleStart
+        val index = df.getColumnIndex(df.city)
+        // SampleEnd
+
+        index shouldBe 2
+    }
+
+    @Test
+    fun getColumnPathBySelector() {
+        // SampleStart
+        val path = df.getColumnPath { name.firstName }
+        // SampleEnd
+
+        path shouldBe pathOf("name", "firstName")
+    }
+
+    @Test
+    fun getColumnPathsBySelector() {
+        // SampleStart
+        val paths = df.getColumnPaths { name.allCols() }
+        // SampleEnd
+
+        paths shouldBe listOf(pathOf("name", "firstName"), pathOf("name", "lastName"))
+    }
+
+    @Test
+    fun getColumnWithPathBySelector() {
+        // SampleStart
+        val columnWithPath = df.getColumnWithPath { name.firstName }
+        // SampleEnd
+
+        columnWithPath.path shouldBe pathOf("name", "firstName")
+    }
+
+    @Test
+    fun getColumnsWithPathsBySelector() {
+        // SampleStart
+        val columnsWithPaths = df.getColumnsWithPaths { age and name.firstName }
+        // SampleEnd
+
+        columnsWithPaths.map { it.path } shouldBe listOf(pathOf("age"), pathOf("name", "firstName"))
     }
 
     @Test

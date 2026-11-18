@@ -89,10 +89,12 @@ private typealias SingleColumnSelectorThrowsSnippet = Nothing
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumn]
+ * $[GetColumnDocs.SAMPLE]
  */
 @ExcludeFromSources
-private typealias GetColumnDocs = Nothing
+internal interface GetColumnDocs {
+    typealias SAMPLE = Nothing
+}
 
 /**
  * The `getColumnGroup` overloads differ in how they find the column:
@@ -111,10 +113,12 @@ private typealias GetColumnDocs = Nothing
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnGroup]
+ * $[GetColumnGroupDocs.SAMPLE]
  */
 @ExcludeFromSources
-private typealias GetColumnGroupDocs = Nothing
+internal interface GetColumnGroupDocs {
+    typealias SAMPLE = Nothing
+}
 
 /**
  * The `getFrameColumn` overloads find the column by a top-level column name (`String`), a [ColumnPath],
@@ -132,10 +136,12 @@ private typealias GetColumnGroupDocs = Nothing
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getFrameColumn]
+ * $[GetFrameColumnDocs.SAMPLE]
  */
 @ExcludeFromSources
-private typealias GetFrameColumnDocs = Nothing
+internal interface GetFrameColumnDocs {
+    typealias SAMPLE = Nothing
+}
 
 /**
  * For more information: {@include [DocumentationUrls.GetColumn.GetColumns]}
@@ -147,10 +153,12 @@ private typealias GetFrameColumnDocs = Nothing
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumns]
+ * $[GetColumnsDocs.SAMPLE]
  */
 @ExcludeFromSources
-private typealias GetColumnsDocs = Nothing
+internal interface GetColumnsDocs {
+    typealias SAMPLE = Nothing
+}
 
 /**
  * A [ColumnPath] is the chain of column names from the top level of this [DataFrame] to the column,
@@ -158,17 +166,17 @@ private typealias GetColumnsDocs = Nothing
  *
  * For more information: {@include [DocumentationUrls.ColumnSelectors]}
  *
- * See also:
- * - [getColumnPath] and [getColumnPaths] that return only the paths;
- * - [getColumnWithPath] and [getColumnsWithPaths], that return the columns together with their paths;
- * - [getColumns], that returns only the columns.
+ * See also $[GetColumnPathsDocs.SEE_ALSO]
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnPaths]
+ * $[GetColumnPathsDocs.SAMPLE]
  */
 @ExcludeFromSources
-private typealias GetColumnPathsDocs = Nothing
+internal interface GetColumnPathsDocs {
+    typealias SAMPLE = Nothing
+    typealias SEE_ALSO = Nothing
+}
 
 /**
  * For more information: {@include [DocumentationUrls.GetRow]}
@@ -180,10 +188,12 @@ private typealias GetColumnPathsDocs = Nothing
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetRowSamples.getRows]
+ * $[GetRowsDocs.SAMPLE]
  */
 @ExcludeFromSources
-private typealias GetRowsDocs = Nothing
+internal interface GetRowsDocs {
+    typealias SAMPLE = Nothing
+}
 
 /**
  * The iteration is lazy: no rows are copied,
@@ -192,17 +202,17 @@ private typealias GetRowsDocs = Nothing
  *
  * For more information: {@include [DocumentationUrls.Rows]}
  *
- * See also:
- * - [rows] and [rowsReversed], that iterate in the forward and the reverse order;
- * - [forEach], that runs an action for each row;
- * - [asSequence], that returns the rows as a [Sequence].
+ * See also $[RowsDocs.SEE_ALSO]
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.RowsSamples.rows]
+ * $[RowsDocs.SAMPLE]
  */
 @ExcludeFromSources
-private typealias RowsDocs = Nothing
+internal interface RowsDocs {
+    typealias SAMPLE = Nothing
+    typealias SEE_ALSO = Nothing
+}
 
 // endregion
 
@@ -213,6 +223,8 @@ private typealias RowsDocs = Nothing
  *
  * @include [ByColumnsSelectorSnippet]
  *
+ * {@set [GetColumnPathsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnsWithPathsBySelector]}
+ * {@set [GetColumnPathsDocs.SEE_ALSO] [getColumnPath] and [getColumnPaths], which return only the paths; [getColumnWithPath], which returns one column with its path; and [getColumns], which returns only the columns.}
  * @include [GetColumnPathsDocs]
  *
  * @param [selector] A [ColumnsSelector] that selects the columns.
@@ -228,6 +240,8 @@ public fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, 
  *
  * @include [BySelectorSnippet]
  *
+ * {@set [GetColumnPathsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnPathBySelector]}
+ * {@set [GetColumnPathsDocs.SEE_ALSO] [getColumnPaths], which returns paths for multiple columns; [getColumnWithPath] and [getColumnsWithPaths], which return columns together with their paths; and [getColumns], which returns only the columns.}
  * @include [GetColumnPathsDocs]
  *
  * @param [selector] A [ColumnSelector] that selects exactly one column.
@@ -242,6 +256,8 @@ public fun <T, C> DataFrame<T>.getColumnPath(selector: ColumnSelector<T, C>): Co
  *
  * @include [ByColumnsSelectorSnippet]
  *
+ * {@set [GetColumnPathsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnPathsBySelector]}
+ * {@set [GetColumnPathsDocs.SEE_ALSO] [getColumnPath], which returns a single path; [getColumnWithPath] and [getColumnsWithPaths], which return columns together with their paths; and [getColumns], which returns only the columns.}
  * @include [GetColumnPathsDocs]
  *
  * @param [selector] A [ColumnsSelector] that selects the columns.
@@ -257,6 +273,8 @@ public fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>): 
  *
  * @include [BySelectorSnippet]
  *
+ * {@set [GetColumnPathsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnWithPathBySelector]}
+ * {@set [GetColumnPathsDocs.SEE_ALSO] [getColumnPath] and [getColumnPaths], which return only the paths; [getColumnsWithPaths], which returns several columns together with their paths; and [getColumns], which returns only the columns.}
  * @include [GetColumnPathsDocs]
  *
  * @param [selector] A [ColumnSelector] that selects exactly one column.
@@ -277,6 +295,7 @@ public fun <T, C> DataFrame<T>.getColumnWithPath(selector: ColumnSelector<T, C>)
  *
  * It is the same as [get][ColumnsContainer.get] with a [ColumnsSelector].
  *
+ * {@set [GetColumnsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnsByNames_properties]}
  * @include [GetColumnsDocs]
  *
  * @param [selector] A [ColumnsSelector] that selects the columns.
@@ -290,6 +309,7 @@ public fun <T, C> DataFrame<T>.getColumns(selector: ColumnsSelector<T, C>): List
  *
  * @include [ByTopLevelNameSnippet]
  *
+ * {@set [GetColumnsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnsByNames_strings]}
  * @include [GetColumnsDocs]
  *
  * @param [columns] The names of the top-level columns to return.
@@ -312,7 +332,7 @@ public fun <T> DataFrame<T>.getColumns(vararg columns: String): List<DataColumn<
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumns]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnIndexByColumn]
  *
  * @param [col] The column whose name is looked up among the top-level columns.
  * @return The index of the top-level column named like [col], or `-1` if there is none.
@@ -331,6 +351,7 @@ public fun <T> DataFrame<T>.getColumnIndex(col: DataColumn<*>): Int = getColumnI
  *
  * It is the same as [get][DataFrame.get] with an [IntRange].
  *
+ * {@set [GetRowsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetRowSamples.getRowsByRange]}
  * @include [GetRowsDocs]
  *
  * @param [range] The range of row indices to return.
@@ -346,6 +367,7 @@ public fun <T> DataFrame<T>.getRows(range: IntRange): DataFrame<T> = get(range)
  * The same index can occur several times; then the row is repeated.
  * It is the same as [get][DataFrame.get] with an [Iterable] of indices.
  *
+ * {@set [GetRowsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetRowSamples.getRowsByIndices]}
  * @include [GetRowsDocs]
  *
  * @param [indices] The row indices to return.
@@ -383,6 +405,7 @@ public fun <T> DataFrame<T>.getOrNull(index: Int): DataRow<T>? = if (index !in 0
  *
  * @include [ByPathSnippet]
  *
+ * {@set [GetFrameColumnDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getFrameColumnByPath]}
  * @include [GetFrameColumnDocs]
  *
  * @param [columnPath] The [ColumnPath] of the column.
@@ -398,6 +421,7 @@ public fun <T> ColumnsContainer<T>.getFrameColumn(columnPath: ColumnPath): Frame
  *
  * @include [ByIndexSnippet]
  *
+ * {@set [GetFrameColumnDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getFrameColumnByIndex]}
  * @include [GetFrameColumnDocs]
  *
  * @param [index] The zero-based index of the top-level column.
@@ -412,6 +436,7 @@ public fun <T> ColumnsContainer<T>.getFrameColumn(index: Int): FrameColumn<*> = 
  *
  * @include [ByTopLevelNameSnippet]
  *
+ * {@set [GetFrameColumnDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getFrameColumnByName]}
  * @include [GetFrameColumnDocs]
  *
  * @param [columnName] The name of the top-level column.
@@ -430,6 +455,7 @@ public fun <T> ColumnsContainer<T>.getFrameColumn(columnName: String): FrameColu
  *
  * It is the same as [get][ColumnsContainer.get] with a [ColumnSelector].
  *
+ * {@set [GetFrameColumnDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getFrameColumnBySelector_properties]}
  * @include [GetFrameColumnDocs]
  *
  * @param [selector] A [ColumnSelector] that selects exactly one column.
@@ -449,6 +475,7 @@ public fun <T, C> ColumnsContainer<T>.getFrameColumn(selector: ColumnSelector<T,
  *
  * @include [ByTopLevelNameSnippet]
  *
+ * {@set [GetColumnDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnByName_strings]}
  * @include [GetColumnDocs]
  *
  * @param [name] The name of the top-level column.
@@ -478,6 +505,7 @@ public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<R>): Dat
  *
  * @include [ByPathSnippet]
  *
+ * {@set [GetColumnDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnByPath]}
  * @include [GetColumnDocs]
  *
  * @param [path] The [ColumnPath] of the column.
@@ -492,6 +520,7 @@ public fun <T> ColumnsContainer<T>.getColumn(path: ColumnPath): DataColumn<*> =
  *
  * @include [ByIndexSnippet]
  *
+ * {@set [GetColumnDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnByIndex]}
  * @include [GetColumnDocs]
  *
  * @param [index] The zero-based index of the top-level column.
@@ -510,6 +539,7 @@ public fun <T> ColumnsContainer<T>.getColumn(index: Int): DataColumn<*> =
  *
  * It is the same as [get][ColumnsContainer.get] with a [ColumnSelector].
  *
+ * {@set [GetColumnDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnByName_properties]}
  * @include [GetColumnDocs]
  *
  * @param [selector] A [ColumnSelector] that selects exactly one column.
@@ -527,6 +557,7 @@ public fun <T, C> ColumnsContainer<T>.getColumn(selector: ColumnSelector<T, C>):
  *
  * @include [ByPathSnippet]
  *
+ * {@set [GetColumnGroupDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnGroupByPath]}
  * @include [GetColumnGroupDocs]
  *
  * @param [columnPath] The [ColumnPath] of the column.
@@ -542,6 +573,7 @@ public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): Colum
  *
  * @include [ByIndexSnippet]
  *
+ * {@set [GetColumnGroupDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnGroupByIndex]}
  * @include [GetColumnGroupDocs]
  *
  * @param [index] The zero-based index of the top-level column.
@@ -556,6 +588,7 @@ public fun <T> ColumnsContainer<T>.getColumnGroup(index: Int): ColumnGroup<*> = 
  *
  * @include [ByTopLevelNameSnippet]
  *
+ * {@set [GetColumnGroupDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnGroupByName_strings]}
  * @include [GetColumnGroupDocs]
  *
  * @param [name] The name of the top-level column.
@@ -581,6 +614,7 @@ public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnReference<Dat
  *
  * @include [BySelectorSnippet]
  *
+ * {@set [GetColumnGroupDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnGroupByName_properties]}
  * @include [GetColumnGroupDocs]
  *
  * @param [column] A [ColumnSelector] that selects exactly one column group.
@@ -635,6 +669,8 @@ public operator fun ColumnsContainer<*>.contains(column: KProperty<*>): Boolean 
 /**
  * Returns an [Iterable] over the [rows][DataRow] of this [DataFrame], from the first row to the last one.
  *
+ * {@set [RowsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.RowsSamples.rows]}
+ * {@set [RowsDocs.SEE_ALSO] [rowsReversed], which iterates rows in reverse order; [forEach], which runs an action for each row; and [asSequence], which returns the rows as a [Sequence].}
  * @include [RowsDocs]
  *
  * @return An [Iterable] over the rows of this [DataFrame] in their order.
@@ -661,6 +697,8 @@ public fun <T> DataFrame<T>.rows(): Iterable<DataRow<T>> =
  *
  * Unlike [reverse], it doesn't create a new [DataFrame].
  *
+ * {@set [RowsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.RowsSamples.rowsReversed]}
+ * {@set [RowsDocs.SEE_ALSO] [rows], which iterates rows in forward order; [forEach], which runs an action for each row; and [asSequence], which returns the rows as a [Sequence].}
  * @include [RowsDocs]
  *
  * @return An [Iterable] over the rows of this [DataFrame] in the reverse order.

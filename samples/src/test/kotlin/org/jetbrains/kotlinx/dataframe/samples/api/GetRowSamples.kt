@@ -11,17 +11,24 @@ class GetRowSamples : DataFrameSampleHelper("getRow", "api") {
     val df = peopleDf
 
     @Test
-    fun getRows() {
+    fun getRowsByRange() {
         // SampleStart
         df.getRows(0..2) // a DataFrame with the first three rows
-        df.getRows(listOf(4, 1)) // a DataFrame with the rows 4 and 1, in this order
         // SampleEnd
         df.getRows(0..2).rowsCount() shouldBe 3
         df.getRows(0..2).age.toList() shouldBe listOf(15, 45, 20)
-        df.getRows(listOf(4, 1)).age.toList() shouldBe listOf(30, 45)
         df.getRows(IntRange.EMPTY).rowsCount() shouldBe 0
 
         shouldThrow<IndexOutOfBoundsException> { df.getRows(8..10) }
+    }
+
+    @Test
+    fun getRowsByIndices() {
+        // SampleStart
+        df.getRows(listOf(4, 1)) // a DataFrame with the rows 4 and 1, in this order
+        // SampleEnd
+        df.getRows(listOf(4, 1)).age.toList() shouldBe listOf(30, 45)
+
         shouldThrow<IndexOutOfBoundsException> { df.getRows(listOf(1, 10)) }
     }
 
