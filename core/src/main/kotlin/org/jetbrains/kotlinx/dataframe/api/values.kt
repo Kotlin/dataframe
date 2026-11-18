@@ -25,9 +25,9 @@ import kotlin.reflect.KProperty
  * Extracts the values of the selected columns of this [DataFrame] into a lazy [Sequence].
  *
  * By default, the values come column by column: all values of the first selected column,
- * then all values of the second one, and so on. With `byRow = true`, the values come row by
- * row instead: for each row, the values of the selected columns in the order the columns
- * were selected.
+ * then all values of the second one, and so on. With the row-by-row traversal enabled, the
+ * values come row by row instead: for each row, the values of the selected columns in the
+ * order the columns were selected.
  *
  * The [Sequence] is lazy — the values are pulled from this [DataFrame] one by one, as the
  * sequence is consumed.
@@ -97,13 +97,7 @@ internal interface ValuesNotNullDocs {
 /**
  * Collects the values of the selected columns for every group.
  *
- * Each selected column is collected independently of the others.
- *
- * When the groups have lost track of the key columns — this can happen after
- * [updateGroups][GroupBy.updateGroups], [filter][GroupBy.filter], or [add][GroupBy.add]
- * changed the columns inside the groups — the collected columns can collide with the key
- * columns, and a [DuplicateColumnPathInsertException] is thrown with a hint about the
- * cause. Try renaming the columns inside the groups or aggregate them manually instead.
+ * Each selected column is collected into its own column of the result.
  *
  * Don't confuse this `values` with [values][DataFrame.values] on a [DataFrame], which
  * extracts the values of the selected columns into a lazy [Sequence], without any grouping.
@@ -150,37 +144,50 @@ internal interface ValuesInAggregationDocs {
     typealias ColumnNamesParamSnippet = Nothing
 
     /**
+     * When the groups have lost track of the key columns — this can happen after
+     * [updateGroups][GroupBy.updateGroups], [filter][GroupBy.filter], or [add][GroupBy.add]
+     * changed the columns inside the groups — the collected columns can collide with the key
+     * columns, and a [DuplicateColumnPathInsertException] is thrown with a hint about the
+     * cause. Try renaming the columns inside the groups or aggregate them manually instead.
+     */
+    typealias LostKeyColumnsSnippet = Nothing
+
+    /**
      * the single value if there is exactly one, a [List] if there are several, and an empty
-     *   cell if there is nothing to collect. An empty cell is `null`, or an empty [List] when
-     *   the other cells of that column hold lists; it appears when the cell has no rows, or
-     *   when `dropNA` removed all the values.
+     *   cell if there is nothing to collect. When the other cells of that column hold
+     *   lists, a cell holds a [List] too: a single value as a one-element [List], a cell
+     *   with no rows as an empty [List]; a cell with no rows is `null` otherwise, and a
+     *   cell emptied by `dropNA` is always `null`. A selected column group is collected
+     *   as a nested [DataFrame] with the collected rows of the columns inside it, instead
+     *   of a [List].
      */
     typealias OneOrManyCellSnippet = Nothing
 
     /**
      * @return A new [DataFrame] with one row per group: the group keys, and, per selected
-     *   column, a [List] with all values from the group.
+     *   column, a [List] with all values from the group. A selected column group is
+     *   collected as a nested [DataFrame] with the collected rows of the columns inside it.
      */
     typealias GroupedReturnSnippet = Nothing
 
     /**
      * @return A new [DataFrame] with one row per group: the group keys, and, per selected
-     *   column, the value from the row that the reduction (for example, `minBy`) picked
-     *   in that group.
+     *   column, the value from the row that the reduction (for example, `minBy`) picked in
+     *   that group, or `null` if the reduction picked no row.
      */
     typealias ReducedGroupByReturnSnippet = Nothing
 
     /**
      * @return A single [DataRow] with one (nested) column per unique combination of the pivot
      *   column values; every cell holds the collected values of the rows with that pivot
-     *   value: {@include [OneOrManyCellSnippet]}.
+     *   value: {@include [OneOrManyCellSnippet]}
      */
     typealias PivotReturnSnippet = Nothing
 
     /**
      * @return A new [DataFrame] with one row per combination of the [groupBy][DataFrame.groupBy]
      *   key values and one (nested) column per unique combination of the pivot column values;
-     *   every cell holds the collected values of the corresponding rows: {@include [OneOrManyCellSnippet]}.
+     *   every cell holds the collected values of the corresponding rows: {@include [OneOrManyCellSnippet]}
      */
     typealias PivotGroupByReturnSnippet = Nothing
 
@@ -300,6 +307,7 @@ public fun <T> Grouped<T>.values(
 
 /**
  * @include [ValuesInAggregationDocs]
+ * @include [ValuesInAggregationDocs.LostKeyColumnsSnippet]
  * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Examples
@@ -320,6 +328,7 @@ public fun <T> Grouped<T>.values(
 
 /**
  * @include [ValuesInAggregationDocs]
+ * @include [ValuesInAggregationDocs.LostKeyColumnsSnippet]
  * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples
@@ -349,6 +358,7 @@ public fun <T> Grouped<T>.values(
 
 /**
  * @include [ValuesInAggregationDocs]
+ * @include [ValuesInAggregationDocs.LostKeyColumnsSnippet]
  *
  * This overload collects the values from all columns except the group keys.
  *
@@ -370,6 +380,7 @@ public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = fa
 
 /**
  * @include [ValuesInAggregationDocs]
+ * @include [ValuesInAggregationDocs.LostKeyColumnsSnippet]
  * @include [GroupByDocs.ReducedGroupByFinalStepSnippet]
  * @include [GroupByDocs.ReducedGroupByNoSelectedRowSnippet]
  *
@@ -400,6 +411,7 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: ColumnReference<*>
 
 /**
  * @include [ValuesInAggregationDocs]
+ * @include [ValuesInAggregationDocs.LostKeyColumnsSnippet]
  * @include [GroupByDocs.ReducedGroupByFinalStepSnippet]
  * @include [GroupByDocs.ReducedGroupByNoSelectedRowSnippet]
  * @include [SelectingColumns.ColumnNamesApi]
@@ -430,6 +442,7 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: KProperty<*>): Dat
 
 /**
  * @include [ValuesInAggregationDocs]
+ * @include [ValuesInAggregationDocs.LostKeyColumnsSnippet]
  * @include [GroupByDocs.ReducedGroupByFinalStepSnippet]
  * @include [GroupByDocs.ReducedGroupByNoSelectedRowSnippet]
  * @include [SelectingColumns.ColumnsSelectionDsl]

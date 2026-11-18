@@ -296,7 +296,8 @@ class ValuesSamples : DataFrameSampleHelper("values", "api") {
         // for every person, the "age" values per city: a single value when there is one,
         // a list when there are several, and an empty cell when there is nothing to collect
         val result = df.pivot { city }.groupBy { name }.values { age }
-        // with dropNA, a cell whose values are all `null` becomes empty as well
+        // with dropNA, `null` weights are skipped in every cell: a cell whose values
+        // are all `null` collects nothing
         val withoutNA = df.pivot { city }.groupBy { name }.values(dropNA = true) { weight }
         // SampleEnd
         result.columnNames() shouldBe listOf("name", "city")
