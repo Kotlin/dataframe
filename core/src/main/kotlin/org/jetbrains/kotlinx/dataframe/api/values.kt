@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.NALink
@@ -369,12 +370,22 @@ public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = fa
 
 /**
  * @include [ValuesInAggregationDocs]
+ * @include [GroupByDocs.ReducedGroupByFinalStepSnippet]
+ * @include [GroupByDocs.ReducedGroupByNoSelectedRowSnippet]
  *
  * This overload collects the values from all columns except the group keys.
+ *
+ * For more information: {@include [DocumentationUrls.GroupByReducing]}
+ *
+ * See also:
+ * - [into][ReducedGroupBy.into] — puts the reduced rows, or a value computed from each of them, into a new column.
+ * - [concat][ReducedGroupBy.concat] — returns the reduced rows themselves.
  *
  * ### Examples
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInReducedGroupBy_properties]
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.groupByValuesAllColumns]
  *
  * @param [T] The schema marker type of the [DataFrame] the groups were created from.
  * @param [G] The schema marker type of the group data.
@@ -389,11 +400,21 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: ColumnReference<*>
 
 /**
  * @include [ValuesInAggregationDocs]
+ * @include [GroupByDocs.ReducedGroupByFinalStepSnippet]
+ * @include [GroupByDocs.ReducedGroupByNoSelectedRowSnippet]
  * @include [SelectingColumns.ColumnNamesApi]
+ *
+ * For more information: {@include [DocumentationUrls.GroupByReducing]}
+ *
+ * See also:
+ * - [into][ReducedGroupBy.into] — puts the reduced rows, or a value computed from each of them, into a new column.
+ * - [concat][ReducedGroupBy.concat] — returns the reduced rows themselves.
  *
  * ### Examples
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInReducedGroupBy_strings]
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.groupByValues_strings]
  *
  * @param [T] The schema marker type of the [DataFrame] the groups were created from.
  * @param [G] The schema marker type of the group data.
@@ -409,11 +430,21 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: KProperty<*>): Dat
 
 /**
  * @include [ValuesInAggregationDocs]
+ * @include [GroupByDocs.ReducedGroupByFinalStepSnippet]
+ * @include [GroupByDocs.ReducedGroupByNoSelectedRowSnippet]
  * @include [SelectingColumns.ColumnsSelectionDsl]
+ *
+ * For more information: {@include [DocumentationUrls.GroupByReducing]}
+ *
+ * See also:
+ * - [into][ReducedGroupBy.into] — puts the reduced rows, or a value computed from each of them, into a new column.
+ * - [concat][ReducedGroupBy.concat] — returns the reduced rows themselves.
  *
  * ### Examples
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInReducedGroupBy_properties]
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.groupByValues_properties]
  *
  * @param [T] The schema marker type of the [DataFrame] the groups were created from.
  * @param [G] The schema marker type of the group data.
@@ -523,12 +554,20 @@ public fun <T> Pivot<T>.values(
 
 /**
  * @include [ValuesInAggregationDocs]
+ * @include [PivotDocs.ReducedPivotFinalStepSnippet]
  *
  * This overload collects the values from all columns except the pivot columns.
+ *
+ * For more information: {@include [DocumentationUrls.PivotReducing]}
+ *
+ * See also:
+ * - [with][ReducedPivot.with] — computes a value from each reduced row.
  *
  * ### Examples
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInReducedPivot_properties]
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotValues_properties]
  *
  * @param [T] The schema marker type of the original [DataFrame].
  * @include [ValuesInAggregationDocs.SeparateSnippet]
@@ -544,11 +583,19 @@ public fun <T> ReducedPivot<T>.values(vararg columns: ColumnReference<*>, separa
 
 /**
  * @include [ValuesInAggregationDocs]
+ * @include [PivotDocs.ReducedPivotFinalStepSnippet]
  * @include [SelectingColumns.ColumnNamesApi]
+ *
+ * For more information: {@include [DocumentationUrls.PivotReducing]}
+ *
+ * See also:
+ * - [with][ReducedPivot.with] — computes a value from each reduced row.
  *
  * ### Examples
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInReducedPivot_strings]
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotValuesSelectedColumns_strings]
  *
  * @param [T] The schema marker type of the original [DataFrame].
  * @include [ValuesInAggregationDocs.ColumnNamesParamSnippet]
@@ -565,11 +612,19 @@ public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Bo
 
 /**
  * @include [ValuesInAggregationDocs]
+ * @include [PivotDocs.ReducedPivotFinalStepSnippet]
  * @include [SelectingColumns.ColumnsSelectionDsl]
+ *
+ * For more information: {@include [DocumentationUrls.PivotReducing]}
+ *
+ * See also:
+ * - [with][ReducedPivot.with] — computes a value from each reduced row.
  *
  * ### Examples
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInReducedPivot_properties]
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotValuesSelectedColumns_properties]
  *
  * @param [T] The schema marker type of the original [DataFrame].
  * @include [ValuesInAggregationDocs.ColumnsForAggregateSelectorParamSnippet]

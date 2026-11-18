@@ -30,7 +30,7 @@ df.concat(frames: Iterable<DataFrame>): DataFrame
 df.concat(rows: Iterable<DataRow>): DataFrame
 ```
 
-`concat` overload with a single `DataFrame` argument can be called using either infix or regular call syntax.
+The `concat` overload with a single `DataFrame` argument can be called using either infix or regular call syntax.
 Infix notation reads naturally when concatenation is the complete expression, such as
 `val fullDf = df1 concat df2` or `return df1 concat df2`.
 When chaining another operation, prefer regular call syntax, such as `df1.concat(df2).head()`, instead of

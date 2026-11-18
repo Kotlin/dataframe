@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -80,12 +81,15 @@ public interface ColsOfColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**colsOf**][ColumnsSelectionDsl.colsOf] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colsOf`**][ColumnsSelectionDsl.colsOf] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsOf`**][ColumnsSelectionDsl.colsOf] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
@@ -130,6 +134,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      */
+    @ExcludeFromSources
     private interface CommonColsOfDocs {
 
         /** @return A [ColumnSet] containing the columns of given type that were included by [filter\]. */
@@ -268,10 +273,10 @@ public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
 /**
  * If this [ColumnsResolver] is a [SingleColumn], it
  * returns a new [ColumnSet] containing the columns inside of this [SingleColumn] that
- * match the given [filter] and are the given [type].
+ * match the given [filter] and are of the given [type].
  *
  * Else, it returns a new [ColumnSet] containing all columns in this [ColumnsResolver] that
- * match the given [filter] and are the given [type].
+ * match the given [filter] and are of the given [type].
  */
 @Suppress("UNCHECKED_CAST")
 internal inline fun <C> ColumnsResolver<*>.colsOfInternal(

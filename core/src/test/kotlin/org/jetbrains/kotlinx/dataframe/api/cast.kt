@@ -2,6 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
 import java.lang.IllegalArgumentException
@@ -40,5 +42,33 @@ class CastTests {
                 "score" to columnOf(1f),
             ),
         ).cast<Container>(verify = true)
+    }
+
+    @Test
+    fun `verified row cast with dataframe matching target schema`() {
+        val df = dataFrameOf(
+            "a" to columnOf(1, 2),
+            "b" to columnOf("one", "two"),
+        )
+
+        val casted: DataRow<Data> = df[1].cast(verify = true)
+
+        casted shouldBe df[1]
+        casted.index() shouldBe 1
+    }
+
+    @Test
+    fun `unchecked row casts do not check schema`() {
+        val row = dataFrameOf(
+            "a" to columnOf("one", "two"),
+            "b" to columnOf(1, 2),
+        )[1]
+
+        val casted: DataRow<Data> = row.cast()
+        val castedWithFlag: DataRow<Data> = row.cast(verify = false)
+
+        casted shouldBeSameInstanceAs row
+        castedWithFlag shouldBe row
+        castedWithFlag.index() shouldBe 1
     }
 }

@@ -22,7 +22,7 @@ tracking schema changes throughout your data pipeline.
 
 ## Add Kotlin DataFrame Gradle dependency
 
-You could read more about the setup of the Gradle build in the [Gradle Setup Guide](SetupGradle.md).
+You can read more about the Gradle build setup in the [Gradle Setup Guide](SetupGradle.md).
 
 In your Gradle build file (`build.gradle` or `build.gradle.kts`), add the Kotlin DataFrame library as a dependency:
 
@@ -128,8 +128,8 @@ Kotlin DataFrame:
 - Has no persistence layer
 - Doesn’t try to map rows to mutable entities
 - Focuses on **in-memory analytics**, **transformations**, and **type-safe pipelines**
-- The **main idea** is that the schema *changes together with your transformations* — and the [**Compiler Plugin
-  **](Compiler-Plugin.md) updates the type-safe API automatically under the hood.
+- The **main idea** is that the schema *changes together with your transformations* — and the
+  [**Compiler Plugin**](Compiler-Plugin.md) updates the type-safe API automatically under the hood.
     - You don’t have to manually define or recreate schemas every time — the plugin infers them dynamically from the data or
       transformations.
 - In ORMs, the mapping layer is **frozen** — schema changes require manual model edits and migrations.
@@ -208,12 +208,12 @@ sales.filter { amount > 0 }
 
 ## In Conclusion
 
-- Kotlin DataFrame keeps the familiar SQL-style workflow (select → filter → group → aggregate) but makes it **type-safe
-  ** and fully integrated into Kotlin.
+- Kotlin DataFrame keeps the familiar SQL-style workflow (select → filter → group → aggregate) but makes it
+  **type-safe** and fully integrated into Kotlin.
 - The main focus is **readability** and schema change safety via
   the [Compiler Plugin](Compiler-Plugin.md).
-- It is neither a database nor an ORM — a Kotlin DataFrame library does not store data or manage transactions but works as an in-memory
-  layer for analytics and transformations.
+- It is neither a database nor an ORM — the Kotlin DataFrame library does not store data or manage transactions but
+  works as an in-memory layer for analytics and transformations.
 - It does not provide some SQL features (permissions, transactions, indexes) — but offers convenient tools for working
   with JSON-like structures and combining multiple data sources.
 - Use Kotlin DataFrame as a **type-safe DSL** for post-processing, merging data sources, and analytics directly on the
@@ -224,7 +224,7 @@ sales.filter { amount > 0 }
 ## What's Next?
 
 If you're ready to go through a complete example, we recommend our **[Quickstart Guide](quickstart.md)**
-— you'll learn the basics of reading data, transforming it, and creating visualization step-by-step.
+— you'll learn the basics of reading data, transforming it, and creating visualizations step by step.
 
 Ready to go deeper? Check out what’s next:
 

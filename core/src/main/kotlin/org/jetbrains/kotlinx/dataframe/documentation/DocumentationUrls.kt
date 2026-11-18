@@ -336,6 +336,9 @@ public interface DocumentationUrls {
     /** [See `rename` on the documentation website.]({@include [Url]}/rename.html) */
     public typealias Rename = Nothing
 
+    /** [See `replace` on the documentation website.]({@include [Url]}/replace.html) */
+    public typealias Replace = Nothing
+
     /** [See `groupBy` on the documentation website.]({@include [Url]}/groupby.html) */
     public typealias GroupBy = Nothing
 
@@ -562,11 +565,17 @@ public interface DocumentationUrls {
     /** [See `requireColumn` on the documentation website.]({@include [Url]}/require.html) */
     public typealias Require = Nothing
 
+    /** [See `head` on the documentation website.]({@include [Url]}/head.html) */
+    public typealias Head = Nothing
+
     /** [See `tail` on the documentation website.]({@include [Url]}/tail.html) */
     public typealias Tail = Nothing
 
     /** [See `split` on the documentation website.]({@include [Url]}/split.html) */
     public typealias Split = Nothing
+
+    /** [See `merge` on the documentation website.]({@include [Url]}/merge.html) */
+    public typealias Merge = Nothing
 
     /** [See (Cols) Without Nulls on the documentation website.]({@include [Url]}/columnselectors.html#cols-without-nulls) */
     public typealias WithoutNulls = Nothing
@@ -609,6 +618,9 @@ public interface DocumentationUrls {
 
     /** [See Parsing Doubles on the documentation website.]({@include [Url]}/parse.html#parsing-doubles) */
     public typealias ParsingDoubles = Nothing
+
+    /** [See `parse` on the documentation website.]({@include [Url]}/parse.html) */
+    public typealias Parse = Nothing
 
     /** [See `parse` on a DataColumn on the documentation website.]({@include [Url]}/parse.html#on-a-datacolumn) */
     public typealias ParseOnDataColumn = Nothing

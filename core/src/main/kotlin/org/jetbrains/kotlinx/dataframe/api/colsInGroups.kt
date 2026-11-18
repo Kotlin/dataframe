@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -12,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
@@ -54,12 +56,15 @@ public interface ColsInGroupsColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`colsInGroups`**][ColumnsSelectionDsl.colsInGroups] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colsInGroups`**][ColumnsSelectionDsl.colsInGroups] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsInGroups`**][ColumnsSelectionDsl.colsInGroups] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
@@ -105,6 +110,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups\]
      * @return A [ColumnSet] containing the cols.
      */
+    @ExcludeFromSources
     private interface ColsInGroupsDocs {
 
         /** Example argument to use */
@@ -133,6 +139,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`() }`
      */
+    @Interpretable("ColumnSetColsInGroups")
     public fun ColumnSet<*>.colsInGroups(): ColumnSet<*> = transform { it.flatMap { it.cols() } }
 
     /**
@@ -157,6 +164,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnSet.colsInGroups]`() }`
      */
+    @Interpretable("DslColsInGroups")
     public fun ColumnsSelectionDsl<*>.colsInGroups(): ColumnSet<*> = asSingleColumn().colsInGroups()
 
     /**
@@ -182,6 +190,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
+    @Interpretable("SingleColumnColsInGroups")
     public fun SingleColumn<DataRow<*>>.colsInGroups(): ColumnSet<*> =
         ensureIsColumnGroup().allColumnsInternal().colsInGroups()
 
@@ -205,6 +214,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsInGroups][String.colsInGroups]`() }`
      */
+    @Interpretable("StringColsInGroups")
     public fun String.colsInGroups(): ColumnSet<*> = columnGroup(this).colsInGroups()
 
     /**
@@ -240,6 +250,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`() }`
      */
+    @Interpretable("ColumnPathColsInGroups")
     public fun ColumnPath.colsInGroups(): ColumnSet<*> = columnGroup(this).colsInGroups()
 }
 

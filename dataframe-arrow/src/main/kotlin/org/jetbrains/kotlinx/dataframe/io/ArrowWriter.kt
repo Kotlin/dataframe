@@ -50,7 +50,8 @@ public interface ArrowWriter : AutoCloseable {
     /**
      * If [restrictWidening] is true, [dataFrame] columns not described in [targetSchema] would not be saved (otherwise, would be saved as is).
      * If [restrictNarrowing] is true, [targetSchema] fields that are not nullable and do not exist in [dataFrame] will produce an exception (otherwise, would not be saved).
-     * If [strictType] is true, [dataFrame] columns described in [targetSchema] with non-compatible type will produce an exception (otherwise, would be saved as is).
+     * If [strictType] is true, [dataFrame] columns described in [targetSchema] with an incompatible type
+     * will produce an exception (otherwise, they would be saved as is).
      * If [strictNullable] is true, [targetSchema] fields that are not nullable and contain nulls in [dataFrame] will produce an exception (otherwise, would be saved as is with nullable = true).
      */
     public data class Mode(
@@ -92,7 +93,7 @@ public interface ArrowWriter : AutoCloseable {
 
     /**
      * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
-     * If file exists, it can be recreated or expanded.
+     * If [append] is true, data is appended to the file; otherwise, the existing file is truncated.
      */
     public fun writeArrowIPC(file: File, append: Boolean = true) {
         writeArrowIPC(file.toPath(), append)
@@ -101,7 +102,7 @@ public interface ArrowWriter : AutoCloseable {
     /**
      * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format),
      * write to a new or existing file on the given [path].
-     * If file on the given [path] exists, it can be recreated or expanded.
+     * If [append] is true, data is appended to the file at the given [path]; otherwise, the existing file is truncated.
      */
     public fun writeArrowIPC(path: Path, append: Boolean = true) {
         val options = if (append) {

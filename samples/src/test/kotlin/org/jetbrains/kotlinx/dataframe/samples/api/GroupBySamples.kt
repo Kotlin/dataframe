@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.RgbColor
@@ -39,15 +40,17 @@ import org.jetbrains.kotlinx.dataframe.api.medianFor
 import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minFor
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.percentile
 import org.jetbrains.kotlinx.dataframe.api.percentileBy
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.sortByCount
+import org.jetbrains.kotlinx.dataframe.api.sortByCountDesc
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortByGroup
 import org.jetbrains.kotlinx.dataframe.api.sortByKey
+import org.jetbrains.kotlinx.dataframe.api.sortByKeyDesc
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.take
@@ -274,19 +277,20 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     }
 
     @Test
-    fun sortByCountOnGroupBy_properties() {
+    fun sortByCountDescOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { age }.sortByCount()
+        df.groupBy { age }.sortByCountDesc()
             // SampleEnd
+            .also { it.keys.age.toList() shouldBe listOf(30, 15, 20, 45, 40, 18) }
             .toDataFrame()
             .defaultHeaderFormatting { group }
             .saveDfHtmlSample()
     }
 
     @Test
-    fun sortByCountOnGroupBy_strings() {
+    fun sortByCountDescOnGroupBy_strings() {
         // SampleStart
-        df.groupBy("age").sortByCount()
+        df.groupBy("age").sortByCountDesc()
         // SampleEnd
     }
 
@@ -295,6 +299,9 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df.groupBy { age }.sortByKey()
             // SampleEnd
+            .also {
+                it.keys.age.toList() shouldBe listOf(15, 18, 20, 30, 40, 45)
+            }
             .toDataFrame()
             .defaultHeaderFormatting { age }
             .saveDfHtmlSample()
@@ -303,8 +310,62 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun sortByKeyOnGroupBy_strings() {
         // SampleStart
-        df.groupBy { age }.sortByKey()
+        df.groupBy("age").sortByKey()
         // SampleEnd
+    }
+
+    @Test
+    fun sortBySelectedKeysOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { city and age }.sortByKey { age and city.reversed() }
+            // SampleEnd
+            .also {
+                it.keys.age.toList() shouldBe listOf(15, 18, 20, 20, 30, 30, 30, 40, 45)
+                it.keys.city.toList() shouldBe
+                    listOf("London", "Dubai", "Moscow", null, "Tokyo", "Moscow", "Milan", "Milan", "Dubai")
+            }
+            .toDataFrame()
+            .defaultHeaderFormatting { city and age }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun sortBySelectedKeysOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("city", "age").sortByKey { "age"<Int>() and "city"<String?>().reversed() }
+            // SampleEnd
+            .also {
+                it.keys.age.toList() shouldBe listOf(15, 18, 20, 20, 30, 30, 30, 40, 45)
+                it.keys.city.toList() shouldBe
+                    listOf("London", "Dubai", "Moscow", null, "Tokyo", "Moscow", "Milan", "Milan", "Dubai")
+            }
+    }
+
+    @Test
+    fun sortBySelectedKeysDescOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { city and age }.sortByKeyDesc(nullsLast = true) { city }
+            // SampleEnd
+            .also {
+                it.keys.city.toList() shouldBe
+                    listOf(null, "Tokyo", "Moscow", "Moscow", "Milan", "Milan", "London", "Dubai", "Dubai")
+                it.keys.age.toList() shouldBe listOf(20, 30, 20, 30, 40, 30, 15, 45, 18)
+            }
+            .toDataFrame()
+            .defaultHeaderFormatting { city and age }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun sortBySelectedKeysDescOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("city", "age").sortByKeyDesc(nullsLast = true) { "city"<String?>() }
+            // SampleEnd
+            .also {
+                it.keys.city.toList() shouldBe
+                    listOf(null, "Tokyo", "Moscow", "Moscow", "Milan", "Milan", "London", "Dubai", "Dubai")
+                it.keys.age.toList() shouldBe listOf(20, 30, 20, 30, 40, 30, 15, 45, 18)
+            }
     }
 
     @Test
@@ -536,6 +597,30 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df.groupBy("isHappy").minBy("age").into("youngest") { getColumnGroup("name") }
         // SampleEnd
+    }
+
+    @Test
+    fun groupByValuesAllColumns() {
+        // SampleStart
+        // For each `isHappy` value, the values of the youngest person
+        df.groupBy { isHappy }.minBy { age }.values()
+            // SampleEnd
+            .also { result ->
+                result.columnNames() shouldBe listOf("isHappy", "name", "age", "city", "weight")
+                result["name"]["lastName"].toList() shouldBe listOf("Cooper", "Brown")
+            }
+    }
+
+    @Test
+    fun groupByIntoColumnGroup() {
+        // SampleStart
+        // For each `isHappy` value, the whole row of the youngest person in the "youngest" column group
+        df.groupBy { isHappy }.minBy { age }.into("youngest")
+            // SampleEnd
+            .also { result ->
+                result.columnNames() shouldBe listOf("isHappy", "youngest")
+                result["youngest"]["name"]["lastName"].toList() shouldBe listOf("Cooper", "Brown")
+            }
     }
 
     // endregion
@@ -1038,6 +1123,31 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df.groupBy { "name"["firstName"] }.mapToFrames { group.sortByDesc("age").take(2) }
         // SampleEnd
+    }
+
+    // endregion
+
+    // region ColumnsForAggregateSelectionDsl
+
+    @Test
+    fun columnsForAggregateSelectionDsl() {
+        // SampleStart
+        // Store the maximum "age" of each city in the "maxAge" column
+        df.groupBy { city }.maxFor { age into "maxAge" }
+
+        // Put the maximum "age" and "weight" values into the "max" column group
+        df.groupBy { isHappy }.maxFor { (age and weight) into "max" }
+
+        // Put the maximum "age" and "weight" values into the "max" column group,
+        // nested in the "stats" column group
+        df.groupBy { isHappy }.maxFor { (age and weight) into pathOf("stats", "max") }
+
+        // Use 0 for the pivot cells without any "weight" values
+        df.groupBy { city }.pivot { isHappy }.maxFor { weight default 0 }
+            // SampleEnd
+            .also { result ->
+                result["isHappy"]["false"].toList() shouldBe listOf(60, 70, 0, 52, 0, 55)
+            }
     }
 
     // endregion

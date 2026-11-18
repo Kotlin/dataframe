@@ -79,7 +79,7 @@ df.pivot("isHappy", inward = true)
 <!---END-->
 
 
-To pivot several columns at once, you can combine them using `and` or `then` infix function:
+To pivot several columns at once, you can combine them using `and` or `then` infix functions:
 * `and` will pivot columns independently
 * `then` will create column hierarchy from combinations of values from pivoted columns
 
@@ -198,6 +198,11 @@ df.groupBy { "name"["firstName"] }.pivot("isHappy").max("age")
 <inline-frame src="./resources/pivotGroupByAggregation.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
+
+`frames` keeps each group as a frame — it returns a [`DataFrame`](DataFrame.md)
+with one row per unique combination of the grouping values and one [`column group`](DataColumn.md#columngroup)
+per pivoted column, with [`FrameColumn`](DataColumn.md#framecolumn)s inside holding the corresponding groups
+as [`DataFrame`](DataFrame.md) values; a combination with no rows is an empty frame:
 
 <!---FUN pivotGroupByFrames-->
 <tabs>

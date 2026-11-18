@@ -92,16 +92,16 @@ internal interface GroupByDocs {
      * `[ `__`.`__[<code>**`sortByGroupDesc`**</code>][GroupBy.sortByGroupDesc]**`() `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[<code>**`sortByCount`**</code>][GroupBy.sortByCount]**`() `**`]`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `[ `__`.`__[<code>**`sortByCountAsc`**</code>][GroupBy.sortByCountAsc]**`() `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[<code>**`sortByKey`**</code>][GroupBy.sortByKey]**`() `**`]`
+     * `[ `__`.`__[<code>**`sortByCountDesc`**</code>][GroupBy.sortByCountDesc]**`() `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[<code>**`sortByKeyDesc`**</code>][GroupBy.sortByKeyDesc]**`() `**`]`
+     * `[ `__`.`__[<code>**`sortByKey`**</code>][GroupBy.sortByKey]` [ `**`{ `**`columns: `[<code>`SortColumnsSelector`</code>][SortColumnsSelector]**` }`**` ] ]`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[<code>**`sortByKeyDesc`**</code>][GroupBy.sortByKeyDesc]` [ `**`{ `**`columns: `[<code>`SortColumnsSelector`</code>][SortColumnsSelector]**` }`**` ] ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `[ `__`.`__[<code>**`sortBy`**</code>][GroupBy.sortBy]**`  {  `**`columns: `[<code>`ColumnsSelector`</code>][ColumnsSelector]**`  }  `**`]`
@@ -313,8 +313,9 @@ internal interface GroupByDocs {
      * A [<code>GroupBy</code>][GroupBy] can be transformed into a new [<code>GroupBy</code>][GroupBy] using one of the following methods:
      * * [<code>sortByGroup</code>][GroupBy.sortByGroup] / [<code>sortByGroupDesc</code>][GroupBy.sortByGroupDesc] — sorts the **order
      *   of groups** (and their corresponding keys) by values computed with a [<code>DataFrameExpression</code>][DataFrameExpression] applied to each group;
-     * * [<code>sortByCount</code>][GroupBy.sortByCount] / [<code>sortByCountAsc</code>][GroupBy.sortByCountAsc] — sorts the **order
-     *   of groups** (and their corresponding keys) by the number of rows they contain;
+     * * [<code>sortByCountAsc</code>][GroupBy.sortByCountAsc] / [<code>sortByCountDesc</code>][GroupBy.sortByCountDesc] — sorts the **order
+     *   of groups** (and their corresponding keys) by the number of rows they contain; [<code>sortByCountAsc</code>][sortByCountAsc] — in ascending order,
+     *   [<code>sortByCountDesc</code>][sortByCountDesc] — in descending order;
      * * [<code>sortByKey</code>][GroupBy.sortByKey] / [<code>sortByKeyDesc</code>][GroupBy.sortByKeyDesc] — sorts the **order
      *   of groups** (and their corresponding keys) by the grouping key values;
      * * [<code>sortBy</code>][GroupBy.sortBy] / [<code>sortByDesc</code>][GroupBy.sortByDesc] — sorts the **order of rows within each group**

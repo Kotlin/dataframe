@@ -51,6 +51,10 @@ KDF extension libraries. These methods should have a small KDoc as well.
 
 Deprecated methods, properties, classes, and constructors are not required to have KDocs.
 
+A replacement operation's KDoc does not reference the function it replaces: the deprecation
+message and the migration guide carry the rename story, so nothing in the KDoc has to be removed
+when the deprecated function is deleted.
+
 For the internal API, please add at least a small note.
 
 ## KoDEx & KDoc-helpers
@@ -119,7 +123,11 @@ lines included. Unescaped, the reference is resolved where it is written (`[colu
 becomes a link to the `…dataframe.columns` *package*). Escaped, KoDEx leaves it in place and it
 resolves after processing, once the snippet sits in a function that has that parameter.
 
-Also, you can use 
+An included snippet must stay true in every function it is included into: re-read it against each
+host's signature, not only where it was written. A wording that names one host's behaviour — printing,
+mutating, returning — is false on a host that does something else with the same parameters.
+
+Also, you can use
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
 along with `@include` to change variable values in common parts. This is especially useful for 
 writing examples of methods with similar usage but with different names.
@@ -239,6 +247,11 @@ When linking to external URLs, it's recommended to use
 
 It's a central place where we can store URLs that can be used in multiple places in the library. Plus, it makes
 it easier to update the documentation whenever (a part of) a URL changes.
+
+A KDoc that uses `{@include [DocumentationUrls.X]}` needs
+`import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls` in the same file
+(as `count.kt` does): without it KoDEx fails with `Reference not found` at `processKDocsMain` time,
+and the import is doc-only — it is stripped from the processed sources, so nothing flags it earlier.
 
 For [Kotlin DataFrame GitHub issues and PRs](https://github.com/Kotlin/dataframe/issues),
 you can just write its number like `#1234` in the KDoc.
@@ -381,6 +394,11 @@ Example from `DataFrame.first` KDoc:
 add a note about it. 
 * If you think a user can confuse the operation with another one,
 write it down exactly like that.
+* `[link]` references resolve by the normal Kotlin rules — against the imports and the package of the
+file the KDoc lives in. A link like `[DataFrame]` from another package needs the import even when the
+name appears in the KDoc only; such imports are load-bearing, keep them.
+* When a `See also` entry names an operation pair such as `x` and `xDesc`, list the ascending
+variant first — the pair reads "ascending and descending", like its neighbouring entries.
 
 For example, from `group` KDoc:
 
@@ -398,6 +416,11 @@ For example, from `group` KDoc:
 
 Add a link to the corresponding operation in the 
 [documentation website](https://kotlin.github.io/dataframe).
+
+Before linking an operation whose page already exists, check whether `DocumentationUrls` has a
+constant for the page itself, not only for its section anchors — with anchors alone the KDoc ends up
+pointing at a section instead of the operation's overview. If the page-level constant is missing,
+add it next to the anchors.
 
 Please add it as a KDoc-snippet inside 
 [DocumentationUrls](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt)
@@ -646,6 +669,12 @@ The grammars are also almost always decorated with highlighted code snippets all
 - '`( ... )`' : Indicates grouping, e.g. '`( `**`a`**` | `**`b`**` )` **`c`**'.
 
 No other symbols of [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) are used.
+
+If several steps are mutually exclusive — for example, overloads that lead to the same next step — list them
+as alternatives inside **one** optional group: '`[ `**`a`**` | `**`b`**` | `**`c`**` ]`'. Do not model them as
+several separate '`[ ... ]`' groups: each reads as an independent step, so the grammar would permit chains
+the receiver types do not allow — the receiver after a step is that step's result type, and every chain a
+grammar permits must compile.
 
 Note that the grammar is not always 100% accurate to keep the readability acceptable.
 Always use your common sense reading it, and if you're unsure, try out the function yourself or check

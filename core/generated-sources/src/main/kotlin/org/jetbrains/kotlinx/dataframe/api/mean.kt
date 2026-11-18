@@ -564,10 +564,21 @@ public fun <T> DataFrame<T>.mean(skipNaN: Boolean = skipNaNDefault): DataRow<T> 
  * Result cells for which there is nothing to average
  * (for instance, because the input was empty or contained only `null` values)
  * simply become [<code>Double.NaN</code>][Double.NaN].
- * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
- * Columns Selection DSL which lets you rename the result of a column with
- * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [<code>`default`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * Select the columns using the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl].
+ *
+ *
+ *
+ *
+ *
+ * The [<code>Columns For Aggregate Selection DSL</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] allows selecting columns
+ * to aggregate, just like the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * It also allows configuring how the aggregation result of each selected column is stored:
+ * - [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] sets the name
+ *   (or the [<code>path</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], see [<code>pathOf</code>][org.jetbrains.kotlinx.dataframe.api.pathOf]) of the resulting column.
+ *   If several columns are selected, their results are put into a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+ *   with this name, keeping the names of the columns.
+ * - [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] sets the value used in [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] aggregations
+ *   instead of `null` results, including the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] cells without any rows.
  *
  *
  * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -1043,10 +1054,21 @@ public fun <T> Grouped<T>.mean(skipNaN: Boolean = skipNaNDefault): DataFrame<T> 
  * (for instance, because the input was empty or contained only `null` values)
  * simply become [<code>Double.NaN</code>][Double.NaN].
  *
- * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
- * Columns Selection DSL which lets you rename the result of a column with
- * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [<code>`default`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * Select the columns using the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl].
+ *
+ *
+ *
+ *
+ *
+ * The [<code>Columns For Aggregate Selection DSL</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] allows selecting columns
+ * to aggregate, just like the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * It also allows configuring how the aggregation result of each selected column is stored:
+ * - [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] sets the name
+ *   (or the [<code>path</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], see [<code>pathOf</code>][org.jetbrains.kotlinx.dataframe.api.pathOf]) of the resulting column.
+ *   If several columns are selected, their results are put into a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+ *   with this name, keeping the names of the columns.
+ * - [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] sets the value used in [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] aggregations
+ *   instead of `null` results, including the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] cells without any rows.
  *
  *
  * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -1577,10 +1599,21 @@ public fun <T> Pivot<T>.mean(skipNaN: Boolean = skipNaNDefault, separate: Boolea
  * Result cells for which there is nothing to average
  * (for instance, because the input was empty or contained only `null` values)
  * simply become [<code>Double.NaN</code>][Double.NaN].
- * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
- * Columns Selection DSL which lets you rename the result of a column with
- * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [<code>`default`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * Select the columns using the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl].
+ *
+ *
+ *
+ *
+ *
+ * The [<code>Columns For Aggregate Selection DSL</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] allows selecting columns
+ * to aggregate, just like the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * It also allows configuring how the aggregation result of each selected column is stored:
+ * - [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] sets the name
+ *   (or the [<code>path</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], see [<code>pathOf</code>][org.jetbrains.kotlinx.dataframe.api.pathOf]) of the resulting column.
+ *   If several columns are selected, their results are put into a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+ *   with this name, keeping the names of the columns.
+ * - [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] sets the value used in [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] aggregations
+ *   instead of `null` results, including the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] cells without any rows.
  *
  *
  * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -2004,10 +2037,21 @@ public fun <T> PivotGroupBy<T>.mean(separate: Boolean = false, skipNaN: Boolean 
  *
  *
  * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
- * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
- * Columns Selection DSL which lets you rename the result of a column with
- * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [<code>`default`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * Select the columns using the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl].
+ *
+ *
+ *
+ *
+ *
+ * The [<code>Columns For Aggregate Selection DSL</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] allows selecting columns
+ * to aggregate, just like the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * It also allows configuring how the aggregation result of each selected column is stored:
+ * - [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] sets the name
+ *   (or the [<code>path</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], see [<code>pathOf</code>][org.jetbrains.kotlinx.dataframe.api.pathOf]) of the resulting column.
+ *   If several columns are selected, their results are put into a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+ *   with this name, keeping the names of the columns.
+ * - [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] sets the value used in [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] aggregations
+ *   instead of `null` results, including the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] cells without any rows.
  *
  *
  * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.

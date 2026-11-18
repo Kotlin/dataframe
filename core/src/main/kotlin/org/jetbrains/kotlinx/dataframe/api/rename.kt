@@ -531,15 +531,19 @@ public interface RenameColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**named**][ColumnsSelectionDsl.named] */
+        @ExcludeFromSources
         public typealias InfixNamedName = Nothing
 
         /** [**into**][ColumnsSelectionDsl.into] */
+        @ExcludeFromSources
         public typealias InfixIntoName = Nothing
 
         /** __`.`__[**named**][ColumnsSelectionDsl.named] */
+        @ExcludeFromSources
         public typealias NamedName = Nothing
 
         /** __`.`__[**into**][ColumnsSelectionDsl.into] */
+        @ExcludeFromSources
         public typealias IntoName = Nothing
     }
 

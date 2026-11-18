@@ -17,7 +17,7 @@ import org.jetbrains.kotlinx.dataframe.util.SUPPORTED_DATAFRAME_FORMAT
 import java.net.URL
 
 /**
- * Reader that can read a dataframe from a URL. It tries to guess the format based on the given [<code>formats</code>][formats] and returns
+ * Reader that can read a dataframe from a URL. It tries to guess the format based on the given `formats` and returns
  * [<code>DfReadResult.Success</code>][DfReadResult.Success], or returns [<code>DfReadResult.Error</code>][DfReadResult.Error] if it fails.
  */
 @Deprecated(SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
@@ -54,7 +54,7 @@ public sealed interface DfReadResult {
 
 /**
  * Reader that can read data from a URL and generate code (type schema representations) for it.
- * It tries to guess the format based on the given [<code>formats</code>][formats] and returns [<code>CodeGenerationReadResult.Success</code>][CodeGenerationReadResult.Success],
+ * It tries to guess the format based on the given `formats` and returns [<code>CodeGenerationReadResult.Success</code>][CodeGenerationReadResult.Success],
  * or returns [<code>CodeGenerationReadResult.Error</code>][CodeGenerationReadResult.Error] if it fails.
  */
 public val CodeGenerator.Companion.urlCodeGenReader: (

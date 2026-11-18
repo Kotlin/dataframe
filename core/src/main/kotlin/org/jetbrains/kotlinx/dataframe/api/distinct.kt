@@ -171,6 +171,7 @@ public interface DistinctColumnsSelectionDsl {
     public interface Grammar {
 
         /** __`.`__[**`distinct`**][ColumnsSelectionDsl.distinct] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
     }
 

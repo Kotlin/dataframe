@@ -47,6 +47,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [<code>ColumnGroup</code>][ColumnGroup] this [<code>Column Reference</code>][ColumnReference] or [<code>-Accessor</code>][ColumnAccessor] points to.
      */
+    @Interpretable("ColumnReferenceInvokeGroup")
     public operator fun <T> ColumnReference<DataRow<T>>.invoke(): ColumnGroup<T> = get(this)
 
     /**

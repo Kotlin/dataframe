@@ -19,9 +19,6 @@ A data transformation pipeline usually consists of several modification operatio
 The Kotlin DataFrame API is designed in a functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
 [`DataFrame`](DataFrame.md) object is immutable and all operations return a new [`DataFrame`](DataFrame.md) instance reusing underlying data structures as much as possible.
 
-For full signature details and KDocs of all operations, see the
-[Dokka API Reference](https://kotlin.github.io/dataframe/api-docs/index.html) (or [Core API Package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)).
-
 <!---FUN multiCallOperations-->
 
 ```kotlin
@@ -33,12 +30,6 @@ df.update { age }.where { city == "Paris" }.with { it - 5 }
 ```
 
 <!---END-->
-
-<tip>
-
-You can play with the "people" dataset that is used in this guide [here](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
-
-</tip>
 
 ## Multiplex operations
 
@@ -52,6 +43,12 @@ Every multiplex operation configuration consists of:
 Most multiplex operations end with `into` or `with` function. The following naming convention is used:
 * `into` defines column names for storing operation results. Used in [`move`](move.md), [`group`](group.md), [`split`](split.md), [`merge`](merge.md), [`gather`](gather.md), [`groupBy`](groupBy.md), [`rename`](rename.md).
 * `with` defines row-wise data transformation with [`row expression`](DataRow.md#row-expressions). Used in [`update`](update.md), [`convert`](convert.md), [`replace`](replace.md), [`pivot`](pivot.md).
+
+
+## Full API reference
+
+For full signature details and KDocs of all operations, see the
+[Dokka API Reference](https://kotlin.github.io/dataframe/api-docs/index.html) (or [Core API Package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)).
 
 ## List of DataRow operations
 
@@ -89,7 +86,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [getColumn](getColumn.md) / [getColumnOrNull](getColumn.md#getcolumnornull) / [getColumnGroup](getColumn.md#getcolumngroup) / [getColumns](getColumn.md#getcolumns) — get one or several columns
 * [group](group.md) — group columns into [`ColumnGroup`](DataColumn.md#columngroup)
 * [groupBy](groupBy.md) — group rows by key columns
-* [head](head.md) — get first 5 rows of [`DataFrame`](DataFrame.md)
+* [head](head.md) — get the first `numRows` rows of [`DataFrame`](DataFrame.md), five by default
 * [implode](implode.md) — collapse column values into lists grouping by other columns
 * [inferType](inferType.md) — infer column type from column values
 * [insert](insert.md) — insert column
@@ -120,6 +117,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [split](split.md) — split column values into new rows/columns or inplace into lists
 * [std](std.md) / [stdOf](std.md) / [stdFor](std.md) — standard deviation of values
 * [sum](sum.md) / [sumOf](sum.md) / [sumFor](sum.md) — sum of values
+* [tail](tail.md) — get the last `numRows` rows of [`DataFrame`](DataFrame.md), five by default
 * [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) / [takeWhile](sliceRows.md#takewhile) — get first/last rows
 * [toList](toList.md) / [toListOf](toList.md#tolistof) — export [`DataFrame`](DataFrame.md) into a list of data classes
 * [toMap](toMap.md) — export [`DataFrame`](DataFrame.md) into a map from column names to column values
