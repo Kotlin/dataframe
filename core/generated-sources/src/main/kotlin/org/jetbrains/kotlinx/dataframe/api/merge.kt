@@ -427,6 +427,8 @@ private fun <C> List<C>.filterNotNullAndEmptyRows(notNull: Boolean): List<C> =
  * @param [path] The [<code>path</code>][ColumnPath] of the column to store the merged values in.
  * @return A new [<code>DataFrame</code>][DataFrame] with the merged column.
  */
+@Refine
+@Interpretable("MergeWithTransformIntoPath")
 @Suppress("DEPRECATION_ERROR")
 public fun <T, C, R> MergeWithTransform<T, C, R>.into(path: ColumnPath): DataFrame<T> {
     // If target path exists, merge into temp path
@@ -473,6 +475,8 @@ public fun <T, C, R> MergeWithTransform<T, C, R>.into(path: ColumnPath): DataFra
  * @param [path] The [<code>path</code>][ColumnPath] of the column to store the merged values in.
  * @return A new [<code>DataFrame</code>][DataFrame] with the merged column.
  */
+@Refine
+@Interpretable("MergeIntoPath")
 public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> =
     MergeWithTransform(df, selector, notNull, transform, resultType, infer).into(path)
 

@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -142,6 +143,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("ColumnSetColsOfKind")
     public fun ColumnSet<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
@@ -186,6 +188,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("DslColsOfKind")
     public fun ColumnsSelectionDsl<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
@@ -230,6 +233,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("SingleColumnColsOfKind")
     public fun SingleColumn<DataRow<*>>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
@@ -274,6 +278,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("StringColsOfKind")
     public fun String.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
@@ -356,6 +361,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("ColumnPathColsOfKind")
     public fun ColumnPath.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,

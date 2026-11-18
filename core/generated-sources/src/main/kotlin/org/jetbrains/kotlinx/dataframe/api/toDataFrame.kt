@@ -252,6 +252,7 @@ public abstract class CreateDataFrameDsl<T> {
     @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
     public fun preserve(vararg properties: KCallable<*>): Unit = Unit
 
+    @Interpretable("ToDataFrameDslExpr")
     public inline fun <reified R> expr(infer: Infer = Infer.Nulls, noinline expression: (T) -> R): DataColumn<R> =
         source.map { expression(it) }.toColumn(infer = infer)
 
