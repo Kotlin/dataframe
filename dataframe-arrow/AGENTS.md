@@ -127,3 +127,8 @@ write tables are **not** symmetric — reading builds lists and frame columns, w
   `arrow-reading-perf.txt` in the system temp dir (`java.io.tmpdir`) — identical fingerprints across variants mean a
   pure perf change, differing ones mean the reads are not comparable. Timing is machine-dependent, so it stays out
   of CI.
+- When a test hand-builds Arrow vectors instead of `VectorSchemaRoot.create`, construct struct vectors via the
+  `(name, FieldType)` constructor + `initializeChildrenFromFields`: the `(Field, …)` constructor eagerly allocates
+  writer-owned child buffers that `close()` never releases, and the root allocator reports the leak at the end of
+  the test. A data vector injected into a list (e.g. a counting subclass overriding `getDataVector`) is not closed
+  by the list — the test closes it itself. `ArrowListStructScanTest`'s KDoc shows the working shape.
