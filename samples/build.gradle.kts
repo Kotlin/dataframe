@@ -153,6 +153,7 @@ korro {
                 include("unfold.md")
                 include("replace.md")
                 include("reorder.md")
+                include("values.md")
                 include("operations.md")
             },
         )

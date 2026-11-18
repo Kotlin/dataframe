@@ -309,6 +309,9 @@ public interface DocumentationUrls {
     /** [See `valueCounts` on the documentation website.]({@include [Url]}/valuecounts.html) */
     public typealias ValueCounts = Nothing
 
+    /** [See `values` on the documentation website.]({@include [Url]}/values.html) */
+    public typealias Values = Nothing
+
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
     public typealias Explode = Nothing
 
