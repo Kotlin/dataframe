@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.columnValues
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
@@ -16,22 +17,228 @@ import org.jetbrains.kotlinx.dataframe.impl.valuesImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
+// region docs
+
+// endregion
+
 // region DataFrame
 
+/**
+ * Extracts the values of the selected columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] into a lazy [<code>Sequence</code>][Sequence].
+ *
+ * By default, the values come column by column: all values of the first selected column,
+ * then all values of the second one, and so on. With the row-by-row traversal enabled, the
+ * values come row by row instead: for each row, the values of the selected columns in the
+ * order the columns were selected.
+ *
+ * The [<code>Sequence</code>][Sequence] is lazy — the values are pulled from this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] one by one, as the
+ * sequence is consumed.
+ *
+ * Don't confuse this `values` with the aggregation [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.Grouped.values], which collects
+ * the values of the selected columns for every group of a [<code>groupBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy] or
+ * [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] result.
+ *
+ * See also:
+ * - [<code>valuesNotNull</code>][org.jetbrains.kotlinx.dataframe.DataFrame.valuesNotNull] — the same, but `null` values are skipped.
+ * - [<code>asSequence</code>][org.jetbrains.kotlinx.dataframe.DataFrame.asSequence] — a [<code>Sequence</code>][Sequence] over the [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ *
+ *
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ *
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
+ *
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * // all "age" values, then all "weight" values
+ * val values: Sequence<Int?> = df.values { age and weight }
+ * ```
+ *
+ * ```kotlin
+ * // for each row, "age" and "weight" — row by row
+ * val values: Sequence<Int?> = df.values(byRow = true) { age and weight }
+ * ```
+ *
+ * @param [T] The schema marker type of this [<code>DataFrame</code>][DataFrame].
+ * @param [C] The common type of the selected columns.
+ * @param [byRow] When `true`, the values come row by row: for each row, the values of
+ *   all selected columns in the order the columns were selected. When `false` (default),
+ *   the values come column by column: all values of the first selected column, then all
+ *   values of the second one, and so on.
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns to extract
+ *   the values from.
+ * @return A lazy [<code>Sequence</code>][Sequence] of the values of the selected columns.
+ */
 public fun <T, C> DataFrame<T>.values(byRow: Boolean = false, columns: ColumnsSelector<T, C>): Sequence<C> =
     valuesImpl(byRow, columns)
 
+/**
+ * Extracts the values of the selected columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] into a lazy [<code>Sequence</code>][Sequence].
+ *
+ * By default, the values come column by column: all values of the first selected column,
+ * then all values of the second one, and so on. With the row-by-row traversal enabled, the
+ * values come row by row instead: for each row, the values of the selected columns in the
+ * order the columns were selected.
+ *
+ * The [<code>Sequence</code>][Sequence] is lazy — the values are pulled from this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] one by one, as the
+ * sequence is consumed.
+ *
+ * Don't confuse this `values` with the aggregation [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.Grouped.values], which collects
+ * the values of the selected columns for every group of a [<code>groupBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy] or
+ * [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] result.
+ *
+ * See also:
+ * - [<code>valuesNotNull</code>][org.jetbrains.kotlinx.dataframe.DataFrame.valuesNotNull] — the same, but `null` values are skipped.
+ * - [<code>asSequence</code>][org.jetbrains.kotlinx.dataframe.DataFrame.asSequence] — a [<code>Sequence</code>][Sequence] over the [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ *
+ * This overload extracts the values from all columns of this [<code>DataFrame</code>][DataFrame].
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * val allValues: Sequence<Any?> = df.values()
+ * ```
+ *
+ * ```kotlin
+ * val allValues: Sequence<Any?> = df.values(byRows = true)
+ * ```
+ *
+ * @param [T] The schema marker type of this [<code>DataFrame</code>][DataFrame].
+ * @param [byRows] When `true`, the values come row by row: for each row, the values of all
+ *   columns in the order the columns appear in this [<code>DataFrame</code>][DataFrame]. When `false` (default), the
+ *   values come column by column: all values of the first column, then all values of the
+ *   second one, and so on.
+ * @return A lazy [<code>Sequence</code>][Sequence] of the values of all columns of this [<code>DataFrame</code>][DataFrame].
+ */
 public fun <T> DataFrame<T>.values(byRows: Boolean = false): Sequence<Any?> = values(byRows) { all() }
 
+/**
+ * Extracts the values of the selected columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] into a lazy [<code>Sequence</code>][Sequence],
+ * skipping `null` values.
+ *
+ * The order of the values is the same as in [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values]: column by column
+ * by default, row by row with `byRow = true`.
+ *
+ * See also:
+ * - [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] — the same, but `null` values are included.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `valuesNotNull` overload
+ *
+ *
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ *
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
+ *
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * val values: Sequence<Int> = df.valuesNotNull { age and weight }
+ * ```
+ *
+ * @param [T] The schema marker type of this [<code>DataFrame</code>][DataFrame].
+ * @param [C] The common type of the values of the selected columns.
+ * @param [byRow] When `true`, the values come row by row: for each row, the values of
+ *   all selected columns in the order the columns were selected. When `false` (default),
+ *   the values come column by column: all values of the first selected column, then all
+ *   values of the second one, and so on.
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns to extract
+ *   the values from.
+ * @return A lazy [<code>Sequence</code>][Sequence] of the non-`null` values of the selected columns.
+ */
 public fun <T, C> DataFrame<T>.valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> =
     values(byRow, columns).filterNotNull()
 
+/**
+ * Extracts the values of the selected columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] into a lazy [<code>Sequence</code>][Sequence],
+ * skipping `null` values.
+ *
+ * The order of the values is the same as in [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values]: column by column
+ * by default, row by row with `byRow = true`.
+ *
+ * See also:
+ * - [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] — the same, but `null` values are included.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `valuesNotNull` overload
+ *
+ * This overload extracts the values from all columns of this [<code>DataFrame</code>][DataFrame].
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * val values: Sequence<Any> = df.valuesNotNull()
+ * ```
+ *
+ * @param [T] The schema marker type of this [<code>DataFrame</code>][DataFrame].
+ * @param [byRow] When `true`, the values come row by row: for each row, the values of
+ *   all selected columns in the order the columns were selected. When `false` (default),
+ *   the values come column by column: all values of the first selected column, then all
+ *   values of the second one, and so on.
+ * @return A lazy [<code>Sequence</code>][Sequence] of the non-`null` values of all columns of this [<code>DataFrame</code>][DataFrame].
+ */
 public fun <T> DataFrame<T>.valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
 
 // endregion
 
 // region GroupBy
 
+/**
+ * Message appended to a [<code>DuplicateColumnPathInsertException</code>][DuplicateColumnPathInsertException] rethrown by the aggregation
+ * `values` overloads when the groups have lost track of the key columns.
+ */
 internal const val GROUP_BY_VALUES_EXCEPTION_MESSAGE =
     "This grouped dataframe might have lost track of key-columns in the groups, " +
         "causing this duplicate-column exception. " +
@@ -46,12 +253,120 @@ public fun <T> Grouped<T>.values(
     distinct: Boolean = false,
 ): DataFrame<T> = values(dropNA, distinct) { columns.toColumnSet() }
 
+/**
+ * Collects the values of the selected columns for every group.
+ *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ * When the groups have lost track of the key columns — this can happen after
+ * [<code>updateGroups</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.updateGroups], [<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.filter], or [<code>add</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.add]
+ * changed the columns inside the groups — the collected columns can collide with the key
+ * columns, and a [<code>DuplicateColumnPathInsertException</code>][org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException] is thrown with a hint about the
+ * cause. Try renaming the columns inside the groups or aggregate them manually instead.
+ *
+ *
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * val result = df.groupBy("city").values("name", "age")
+ * ```
+ *
+ * @param [T] The schema marker type of this [<code>DataFrame</code>][DataFrame].
+ * @param [columns] The names of the columns to collect the values from.
+ * @param [dropNA] When `true`, [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values are removed from the collected
+ *   values. `false` by default. Each column is filtered independently of the others.
+ * @param [distinct] When `true`, only distinct values are collected: the first occurrence
+ *   of each value, in the order the values appear. `false` by default.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with one row per group: the group keys, and, per selected
+ *   column, a [<code>List</code>][List] with all values from the group. A selected column group is
+ *   collected as a nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the collected rows of the columns inside it.
+ */
 public fun <T> Grouped<T>.values(
     vararg columns: String,
     dropNA: Boolean = false,
     distinct: Boolean = false,
 ): DataFrame<T> = values(dropNA, distinct) { columns.toColumnSet() }
 
+/**
+ * Collects the values of the selected columns for every group.
+ *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ * When the groups have lost track of the key columns — this can happen after
+ * [<code>updateGroups</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.updateGroups], [<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.filter], or [<code>add</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.add]
+ * changed the columns inside the groups — the collected columns can collide with the key
+ * columns, and a [<code>DuplicateColumnPathInsertException</code>][org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException] is thrown with a hint about the
+ * cause. Try renaming the columns inside the groups or aggregate them manually instead.
+ *
+ *
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ *
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
+ *
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * // for every city, the "name" and "age" values of its people, as lists
+ * val result = df.groupBy { city }.values { name and age }
+ * ```
+ *
+ * ```kotlin
+ * // `null` values are skipped in the "weight" lists, while "name" lists stay whole
+ * val result = df.groupBy { city }.values(dropNA = true) { name and weight }
+ * ```
+ *
+ * ```kotlin
+ * // only distinct "name" values per city
+ * val result = df.groupBy { city }.values(distinct = true) { name }
+ * ```
+ *
+ * @param [T] The schema marker type of this [<code>DataFrame</code>][DataFrame].
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector] used to select the columns to
+ *   collect the values from.
+ * @param [dropNA] When `true`, [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values are removed from the collected
+ *   values. `false` by default. Each column is filtered independently of the others.
+ * @param [distinct] When `true`, only distinct values are collected: the first occurrence
+ *   of each value, in the order the values appear. `false` by default.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with one row per group: the group keys, and, per selected
+ *   column, a [<code>List</code>][List] with all values from the group. A selected column group is
+ *   collected as a nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the collected rows of the columns inside it.
+ */
 public fun <T> Grouped<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
@@ -63,6 +378,45 @@ public fun <T> Grouped<T>.values(
         throw DuplicateColumnPathInsertException("${e.message!!} $GROUP_BY_VALUES_EXCEPTION_MESSAGE")
     }
 
+/**
+ * Collects the values of the selected columns for every group.
+ *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ * When the groups have lost track of the key columns — this can happen after
+ * [<code>updateGroups</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.updateGroups], [<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.filter], or [<code>add</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.add]
+ * changed the columns inside the groups — the collected columns can collide with the key
+ * columns, and a [<code>DuplicateColumnPathInsertException</code>][org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException] is thrown with a hint about the
+ * cause. Try renaming the columns inside the groups or aggregate them manually instead.
+ *
+ * This overload collects the values from all columns except the group keys.
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * // all columns except the keys, as lists per city
+ * val result = df.groupBy { city }.values()
+ * ```
+ *
+ * @param [T] The schema marker type of this [<code>DataFrame</code>][DataFrame].
+ * @param [dropNA] When `true`, [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values are removed from the collected
+ *   values. `false` by default. Each column is filtered independently of the others.
+ * @param [distinct] When `true`, only distinct values are collected: the first occurrence
+ *   of each value, in the order the values appear. `false` by default.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with one row per group: the group keys, and, per selected
+ *   column, a [<code>List</code>][List] with all values from the group. A selected column group is
+ *   collected as a nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the collected rows of the columns inside it.
+ */
 public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> =
     values(dropNA, distinct, remainingColumnsSelector())
 
@@ -71,9 +425,25 @@ public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = fa
 // region ReducedGroupBy
 
 /**
- * Returns a [<code>DataFrame</code>][DataFrame] with one row per group of this [<code>ReducedGroupBy</code>][ReducedGroupBy]:
- * the grouping key columns and the values of all other columns of the reduced row.
+ * Collects the values of the selected columns for every group.
  *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ * When the groups have lost track of the key columns — this can happen after
+ * [<code>updateGroups</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.updateGroups], [<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.filter], or [<code>add</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.add]
+ * changed the columns inside the groups — the collected columns can collide with the key
+ * columns, and a [<code>DuplicateColumnPathInsertException</code>][org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException] is thrown with a hint about the
+ * cause. Try renaming the columns inside the groups or aggregate them manually instead.
  *
  *
  * This is the final step of [<code>GroupBy reducing</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing].
@@ -84,7 +454,6 @@ public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = fa
  * Check out [<code>`GroupBy grammar`</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar].
  *
  *
- *
  * If no row is selected in a group (for example, if no row of the group satisfies
  * the predicate of [<code>first</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.first]), the result still contains a row for this group.
  * This row is treated as missing every value, so its value columns contain `null` and become nullable.
@@ -93,10 +462,9 @@ public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = fa
  * [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s; these columns do not become nullable. A missing [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] remains a column group, and its
  * nested columns are filled according to these same rules recursively.
  *
- * For more information: [See "`GroupBy` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#reducing)
+ * This overload collects the values from all columns except the group keys.
  *
- * Don't confuse this with [<code>values</code>][Grouped.values] on a [<code>GroupBy</code>][GroupBy], which collects the values of all rows
- * of each group into lists.
+ * For more information: [See "`GroupBy` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#reducing)
  *
  * See also:
  * - [<code>into</code>][ReducedGroupBy.into] — puts the reduced rows, or a value computed from each of them, into a new column.
@@ -105,13 +473,22 @@ public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = fa
  * ### Examples
  *
  * ```kotlin
+ * // the "name" and "weight" of the youngest person in each city
+ * val youngest = df.groupBy { city }.minBy { age }.values { name and weight }
+ * // the same, for all columns except the keys
+ * val youngestAll = df.groupBy { city }.minBy { age }.values()
+ * ```
+ *
+ * ```kotlin
  * // For each `isHappy` value, the values of the youngest person
  * df.groupBy { isHappy }.minBy { age }.values()
  * ```
  *
- * @param [T] The schema marker type of the grouping keys in the underlying [<code>GroupBy</code>][GroupBy].
- * @param [G] The schema marker type of the groups.
- * @return A new [<code>DataFrame</code>][DataFrame] with the grouping key columns and the values of the reduced rows.
+ * @param [T] The schema marker type of the [<code>DataFrame</code>][DataFrame] the groups were created from.
+ * @param [G] The schema marker type of the group data.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with one row per group: the group keys, and, per selected
+ *   column, the value from the row that the reduction (for example, `minBy`) picked in
+ *   that group, or `null` if the reduction picked no row.
  */
 public fun <T, G> ReducedGroupBy<T, G>.values(): DataFrame<G> = values(groupBy.remainingColumnsSelector())
 
@@ -121,10 +498,25 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: ColumnReference<*>
     values { columns.toColumnSet() }
 
 /**
- * Returns a [<code>DataFrame</code>][DataFrame] with one row per group of this [<code>ReducedGroupBy</code>][ReducedGroupBy]:
- * the grouping key columns and the values of the reduced row
- * in the [<code>columns</code>][columns] with the given names.
+ * Collects the values of the selected columns for every group.
  *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ * When the groups have lost track of the key columns — this can happen after
+ * [<code>updateGroups</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.updateGroups], [<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.filter], or [<code>add</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.add]
+ * changed the columns inside the groups — the collected columns can collide with the key
+ * columns, and a [<code>DuplicateColumnPathInsertException</code>][org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException] is thrown with a hint about the
+ * cause. Try renaming the columns inside the groups or aggregate them manually instead.
  *
  *
  * This is the final step of [<code>GroupBy reducing</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing].
@@ -135,7 +527,6 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: ColumnReference<*>
  * Check out [<code>`GroupBy grammar`</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar].
  *
  *
- *
  * If no row is selected in a group (for example, if no row of the group satisfies
  * the predicate of [<code>first</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.first]), the result still contains a row for this group.
  * This row is treated as missing every value, so its value columns contain `null` and become nullable.
@@ -144,10 +535,11 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: ColumnReference<*>
  * [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s; these columns do not become nullable. A missing [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] remains a column group, and its
  * nested columns are filled according to these same rules recursively.
  *
- * For more information: [See "`GroupBy` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#reducing)
  *
- * Don't confuse this with [<code>values</code>][Grouped.values] on a [<code>GroupBy</code>][GroupBy], which collects the values of all rows
- * of each group into lists.
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ *
+ * For more information: [See "`GroupBy` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#reducing)
  *
  * See also:
  * - [<code>into</code>][ReducedGroupBy.into] — puts the reduced rows, or a value computed from each of them, into a new column.
@@ -156,14 +548,19 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: ColumnReference<*>
  * ### Examples
  *
  * ```kotlin
+ * val youngest = df.groupBy("city").minBy("age").values("name", "weight")
+ * ```
+ *
+ * ```kotlin
  * df.groupBy("isHappy").minBy("age").values("name", "age", "city")
  * ```
  *
- * @param [T] The schema marker type of the grouping keys in the underlying [<code>GroupBy</code>][GroupBy].
- * @param [G] The schema marker type of the groups.
- * @param [columns] The names of the columns to take the values from.
- * @return A new [<code>DataFrame</code>][DataFrame] with the grouping key columns and the values of the reduced rows
- *   in the given columns.
+ * @param [T] The schema marker type of the [<code>DataFrame</code>][DataFrame] the groups were created from.
+ * @param [G] The schema marker type of the group data.
+ * @param [columns] The names of the columns to collect the values from.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with one row per group: the group keys, and, per selected
+ *   column, the value from the row that the reduction (for example, `minBy`) picked in
+ *   that group, or `null` if the reduction picked no row.
  */
 public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: String): DataFrame<G> = values { columns.toColumnSet() }
 
@@ -173,9 +570,25 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: KProperty<*>): Dat
     values { columns.toColumnSet() }
 
 /**
- * Returns a [<code>DataFrame</code>][DataFrame] with one row per group of this [<code>ReducedGroupBy</code>][ReducedGroupBy]:
- * the grouping key columns and the values of the reduced row in the selected [<code>columns</code>][columns].
+ * Collects the values of the selected columns for every group.
  *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ * When the groups have lost track of the key columns — this can happen after
+ * [<code>updateGroups</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.updateGroups], [<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.filter], or [<code>add</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.add]
+ * changed the columns inside the groups — the collected columns can collide with the key
+ * columns, and a [<code>DuplicateColumnPathInsertException</code>][org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException] is thrown with a hint about the
+ * cause. Try renaming the columns inside the groups or aggregate them manually instead.
  *
  *
  * This is the final step of [<code>GroupBy reducing</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing].
@@ -184,7 +597,6 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: KProperty<*>): Dat
  * [<code>percentileBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.percentileBy], which selects at most one row in each group.
  *
  * Check out [<code>`GroupBy grammar`</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar].
- *
  *
  *
  * If no row is selected in a group (for example, if no row of the group satisfies
@@ -196,27 +608,24 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: KProperty<*>): Dat
  * nested columns are filled according to these same rules recursively.
  *
  *
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * Select the columns using the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl].
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
  *
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
- * The [<code>Columns For Aggregate Selection DSL</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] allows selecting columns
- * to aggregate, just like the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
- * It also allows configuring how the aggregation result of each selected column is stored:
- * - [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] sets the name
- *   (or the [<code>path</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], see [<code>pathOf</code>][org.jetbrains.kotlinx.dataframe.api.pathOf]) of the resulting column.
- *   If several columns are selected, their results are put into a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   with this name, keeping the names of the columns.
+ * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
  *
  * For more information: [See "`GroupBy` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#reducing)
- *
- * Don't confuse this with [<code>values</code>][Grouped.values] on a [<code>GroupBy</code>][GroupBy], which collects the values of all rows
- * of each group into lists.
  *
  * See also:
  * - [<code>into</code>][ReducedGroupBy.into] — puts the reduced rows, or a value computed from each of them, into a new column.
@@ -225,14 +634,23 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: KProperty<*>): Dat
  * ### Examples
  *
  * ```kotlin
+ * // the "name" and "weight" of the youngest person in each city
+ * val youngest = df.groupBy { city }.minBy { age }.values { name and weight }
+ * // the same, for all columns except the keys
+ * val youngestAll = df.groupBy { city }.minBy { age }.values()
+ * ```
+ *
+ * ```kotlin
  * df.groupBy { isHappy }.minBy { age }.values { name and age and city }
  * ```
  *
- * @param [T] The schema marker type of the grouping keys in the underlying [<code>GroupBy</code>][GroupBy].
- * @param [G] The schema marker type of the groups.
- * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] selecting the columns to take the values from.
- * @return A new [<code>DataFrame</code>][DataFrame] with the grouping key columns and the values of the reduced rows
- *   in the selected columns.
+ * @param [T] The schema marker type of the [<code>DataFrame</code>][DataFrame] the groups were created from.
+ * @param [G] The schema marker type of the group data.
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector] used to select the columns to
+ *   collect the values from.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with one row per group: the group keys, and, per selected
+ *   column, the value from the row that the reduction (for example, `minBy`) picked in
+ *   that group, or `null` if the reduction picked no row.
  */
 public fun <T, G> ReducedGroupBy<T, G>.values(columns: ColumnsForAggregateSelector<G, *>): DataFrame<G> =
     try {
@@ -245,6 +663,71 @@ public fun <T, G> ReducedGroupBy<T, G>.values(columns: ColumnsForAggregateSelect
 
 // region Pivot
 
+/**
+ * Collects the values of the selected columns for every group.
+ *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ *
+ *
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ *
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
+ *
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * // the "age" values of each city, as a single row
+ * val result = df.pivot { city }.values { age }
+ * // the same, for all columns except the pivot column
+ * val resultAll = df.pivot { city }.values()
+ * ```
+ *
+ * @param [T] The schema marker type of the original [<code>DataFrame</code>][DataFrame].
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector] used to select the columns to
+ *   collect the values from.
+ * @param [dropNA] When `true`, [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values are removed from the collected
+ *   values. `false` by default. Each column is filtered independently of the others.
+ * @param [distinct] When `true`, only distinct values are collected: the first occurrence
+ *   of each value, in the order the values appear. `false` by default.
+ * @param [separate] When several columns are selected: when `true`, each selected column
+ *   becomes its own column group with one nested column per pivot value; when `false`
+ *   (default), each pivot value becomes its own column group with one nested column per
+ *   selected column. When a single column is selected, its values go directly into the
+ *   pivot cells, and this parameter has no effect.
+ * @return A single [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] with one (nested) column per unique combination of the pivot
+ *   column values; every cell holds the collected values of the rows with that pivot
+ *   value: the single value if there is exactly one, a [<code>List</code>][List] if there are several, and an empty
+ *   cell if there is nothing to collect. When the other cells of that column hold
+ *   lists, a cell holds a [<code>List</code>][List] too: a single value as a one-element [<code>List</code>][List], a cell
+ *   with no rows as an empty [<code>List</code>][List]; a cell with no rows is `null` otherwise, and a
+ *   cell emptied by `dropNA` is always `null`. A selected column group is collected
+ *   as a nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the collected rows of the columns inside it, instead
+ *   of a [<code>List</code>][List].
+ */
 public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
@@ -261,6 +744,53 @@ public fun <T> Pivot<T>.values(
     separate: Boolean = false,
 ): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
+/**
+ * Collects the values of the selected columns for every group.
+ *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ *
+ *
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * val result = df.pivot("city").values("age")
+ * ```
+ *
+ * @param [T] The schema marker type of the original [<code>DataFrame</code>][DataFrame].
+ * @param [columns] The names of the columns to collect the values from.
+ * @param [dropNA] When `true`, [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values are removed from the collected
+ *   values. `false` by default. Each column is filtered independently of the others.
+ * @param [distinct] When `true`, only distinct values are collected: the first occurrence
+ *   of each value, in the order the values appear. `false` by default.
+ * @param [separate] When several columns are selected: when `true`, each selected column
+ *   becomes its own column group with one nested column per pivot value; when `false`
+ *   (default), each pivot value becomes its own column group with one nested column per
+ *   selected column. When a single column is selected, its values go directly into the
+ *   pivot cells, and this parameter has no effect.
+ * @return A single [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] with one (nested) column per unique combination of the pivot
+ *   column values; every cell holds the collected values of the rows with that pivot
+ *   value: the single value if there is exactly one, a [<code>List</code>][List] if there are several, and an empty
+ *   cell if there is nothing to collect. When the other cells of that column hold
+ *   lists, a cell holds a [<code>List</code>][List] too: a single value as a one-element [<code>List</code>][List], a cell
+ *   with no rows as an empty [<code>List</code>][List]; a cell with no rows is `null` otherwise, and a
+ *   cell emptied by `dropNA` is always `null`. A selected column group is collected
+ *   as a nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the collected rows of the columns inside it, instead
+ *   of a [<code>List</code>][List].
+ */
 public fun <T> Pivot<T>.values(
     vararg columns: String,
     dropNA: Boolean = false,
@@ -277,6 +807,53 @@ public fun <T> Pivot<T>.values(
     separate: Boolean = false,
 ): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
+/**
+ * Collects the values of the selected columns for every group.
+ *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ *
+ * This overload collects the values from all columns except the pivot columns.
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * // the "age" values of each city, as a single row
+ * val result = df.pivot { city }.values { age }
+ * // the same, for all columns except the pivot column
+ * val resultAll = df.pivot { city }.values()
+ * ```
+ *
+ * @param [T] The schema marker type of the original [<code>DataFrame</code>][DataFrame].
+ * @param [dropNA] When `true`, [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values are removed from the collected
+ *   values. `false` by default. Each column is filtered independently of the others.
+ * @param [distinct] When `true`, only distinct values are collected: the first occurrence
+ *   of each value, in the order the values appear. `false` by default.
+ * @param [separate] When several columns are selected: when `true`, each selected column
+ *   becomes its own column group with one nested column per pivot value; when `false`
+ *   (default), each pivot value becomes its own column group with one nested column per
+ *   selected column. When a single column is selected, its values go directly into the
+ *   pivot cells, and this parameter has no effect.
+ * @return A single [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] with one (nested) column per unique combination of the pivot
+ *   column values; every cell holds the collected values of the rows with that pivot
+ *   value: the single value if there is exactly one, a [<code>List</code>][List] if there are several, and an empty
+ *   cell if there is nothing to collect. When the other cells of that column hold
+ *   lists, a cell holds a [<code>List</code>][List] too: a single value as a one-element [<code>List</code>][List], a cell
+ *   with no rows as an empty [<code>List</code>][List]; a cell with no rows is `null` otherwise, and a
+ *   cell emptied by `dropNA` is always `null`. A selected column group is collected
+ *   as a nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the collected rows of the columns inside it, instead
+ *   of a [<code>List</code>][List].
+ */
 public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
@@ -291,10 +868,20 @@ public fun <T> Pivot<T>.values(
 // region ReducedPivot
 
 /**
- * Returns a [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys of this [<code>ReducedPivot</code>][ReducedPivot] as columns,
- * containing the values of all columns of the reduced row of the corresponding
- * group, except the pivoted columns.
+ * Collects the values of the selected columns for every group.
  *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
  *
  *
  * This is the final step of [<code>Pivot reducing</code>][org.jetbrains.kotlinx.dataframe.api.PivotDocs.Reducing].
@@ -308,17 +895,9 @@ public fun <T> Pivot<T>.values(
  *
  * Check out [<code>`Pivot grammar`</code>][org.jetbrains.kotlinx.dataframe.api.PivotDocs.Grammar].
  *
- *
- *
- * If a single column is taken, its value is stored directly under the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] key.
- * If several columns are taken and `separate` is `false` (the default), the value of each [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] key
- * is a row with the values of these columns; if `separate` is `true`, the results are grouped
- * by the names of these columns first, and by the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] keys second.
+ * This overload collects the values from all columns except the pivot columns.
  *
  * For more information: [See "`Pivot` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#reducing)
- *
- * Don't confuse this with [<code>values</code>][Pivot.values] on a [<code>Pivot</code>][Pivot], which takes the values of all rows
- * of each group.
  *
  * See also:
  * - [<code>with</code>][ReducedPivot.with] — computes a value from each reduced row.
@@ -326,14 +905,26 @@ public fun <T> Pivot<T>.values(
  * ### Examples
  *
  * ```kotlin
+ * // the "name" and "weight" of the youngest person in each city
+ * val youngest = df.pivot { city }.minBy { age }.values { name and weight }
+ * // the same, for all columns except the pivot column
+ * val youngestAll = df.pivot { city }.minBy { age }.values()
+ * ```
+ *
+ * ```kotlin
  * df.pivot { isHappy }.first().values()
  * ```
  *
- * @param [T] The schema marker type of the pivoted [<code>DataFrame</code>][DataFrame].
- * @param [separate] If `false` (the default), the resulting columns are indexed
- *   first by the pivot key(s) and then by the names of the aggregated columns.
- *   If `true`, this order is reversed: the results are grouped by aggregated column first.
- * @return A new [<code>DataRow</code>][DataRow] with the values of the reduced rows under their [<code>pivot</code>][pivot] keys.
+ * @param [T] The schema marker type of the original [<code>DataFrame</code>][DataFrame].
+ * @param [separate] When several columns are selected: when `true`, each selected column
+ *   becomes its own column group with one nested column per pivot value; when `false`
+ *   (default), each pivot value becomes its own column group with one nested column per
+ *   selected column. When a single column is selected, its values go directly into the
+ *   pivot cells, and this parameter has no effect.
+ * @return A single [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] with one (nested) column per unique combination of the pivot
+ *   column values; every cell holds, per selected column, the value from the row that the
+ *   reduction (for example, `minBy`) picked for that pivot value, or `null` if the
+ *   reduction picked no row.
  */
 public fun <T> ReducedPivot<T>.values(separate: Boolean = false): DataRow<T> =
     pivot.delegate { reduce(reducer).values(separate = separate) }
@@ -344,10 +935,20 @@ public fun <T> ReducedPivot<T>.values(vararg columns: ColumnReference<*>, separa
     values(separate) { columns.toColumnSet() }
 
 /**
- * Returns a [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys of this [<code>ReducedPivot</code>][ReducedPivot] as columns,
- * containing the values of the reduced row of the corresponding group
- * in the [<code>columns</code>][columns] with the given names.
+ * Collects the values of the selected columns for every group.
  *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
  *
  *
  * This is the final step of [<code>Pivot reducing</code>][org.jetbrains.kotlinx.dataframe.api.PivotDocs.Reducing].
@@ -362,16 +963,10 @@ public fun <T> ReducedPivot<T>.values(vararg columns: ColumnReference<*>, separa
  * Check out [<code>`Pivot grammar`</code>][org.jetbrains.kotlinx.dataframe.api.PivotDocs.Grammar].
  *
  *
- *
- * If a single column is taken, its value is stored directly under the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] key.
- * If several columns are taken and `separate` is `false` (the default), the value of each [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] key
- * is a row with the values of these columns; if `separate` is `true`, the results are grouped
- * by the names of these columns first, and by the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] keys second.
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * For more information: [See "`Pivot` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#reducing)
- *
- * Don't confuse this with [<code>values</code>][Pivot.values] on a [<code>Pivot</code>][Pivot], which takes the values of all rows
- * of each group.
  *
  * See also:
  * - [<code>with</code>][ReducedPivot.with] — computes a value from each reduced row.
@@ -379,16 +974,25 @@ public fun <T> ReducedPivot<T>.values(vararg columns: ColumnReference<*>, separa
  * ### Examples
  *
  * ```kotlin
+ * val youngest = df.pivot("city").minBy("age").values("name", "weight")
+ * ```
+ *
+ * ```kotlin
  * // For each `isHappy` value, the `name` and `age` of the first person
  * df.pivot("isHappy").first().values("name", "age")
  * ```
  *
- * @param [T] The schema marker type of the pivoted [<code>DataFrame</code>][DataFrame].
- * @param [columns] The names of the columns to take the values from.
- * @param [separate] If `false` (the default), the resulting columns are indexed
- *   first by the pivot key(s) and then by the names of the aggregated columns.
- *   If `true`, this order is reversed: the results are grouped by aggregated column first.
- * @return A new [<code>DataRow</code>][DataRow] with the values of the reduced rows in the given columns under their [<code>pivot</code>][pivot] keys.
+ * @param [T] The schema marker type of the original [<code>DataFrame</code>][DataFrame].
+ * @param [columns] The names of the columns to collect the values from.
+ * @param [separate] When several columns are selected: when `true`, each selected column
+ *   becomes its own column group with one nested column per pivot value; when `false`
+ *   (default), each pivot value becomes its own column group with one nested column per
+ *   selected column. When a single column is selected, its values go directly into the
+ *   pivot cells, and this parameter has no effect.
+ * @return A single [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] with one (nested) column per unique combination of the pivot
+ *   column values; every cell holds, per selected column, the value from the row that the
+ *   reduction (for example, `minBy`) picked for that pivot value, or `null` if the
+ *   reduction picked no row.
  */
 public fun <T> ReducedPivot<T>.values(vararg columns: String, separate: Boolean = false): DataRow<T> =
     values(separate) { columns.toColumnSet() }
@@ -399,10 +1003,20 @@ public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Bo
     values(separate) { columns.toColumnSet() }
 
 /**
- * Returns a [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys of this [<code>ReducedPivot</code>][ReducedPivot] as columns,
- * containing the values of the reduced row of the corresponding group
- * in the selected [<code>columns</code>][columns].
+ * Collects the values of the selected columns for every group.
  *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
  *
  *
  * This is the final step of [<code>Pivot reducing</code>][org.jetbrains.kotlinx.dataframe.api.PivotDocs.Reducing].
@@ -417,38 +1031,24 @@ public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Bo
  * Check out [<code>`Pivot grammar`</code>][org.jetbrains.kotlinx.dataframe.api.PivotDocs.Grammar].
  *
  *
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * If a single column is taken, its value is stored directly under the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] key.
- * If several columns are taken and `separate` is `false` (the default), the value of each [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] key
- * is a row with the values of these columns; if `separate` is `true`, the results are grouped
- * by the names of these columns first, and by the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] keys second.
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
  *
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
- * Select the columns using the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl].
+ * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- *
- *
- *
- *
- * The [<code>Columns For Aggregate Selection DSL</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] allows selecting columns
- * to aggregate, just like the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
- * It also allows configuring how the aggregation result of each selected column is stored:
- * - [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] sets the name
- *   (or the [<code>path</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], see [<code>pathOf</code>][org.jetbrains.kotlinx.dataframe.api.pathOf]) of the resulting column.
- *   If several columns are selected, their results are put into a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   with this name, keeping the names of the columns.
- * - [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] sets the value used in [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] aggregations
- *   instead of `null` results, including the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] cells without any rows.
- *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
  *
  * For more information: [See "`Pivot` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#reducing)
- *
- * Don't confuse this with [<code>values</code>][Pivot.values] on a [<code>Pivot</code>][Pivot], which takes the values of all rows
- * of each group.
  *
  * See also:
  * - [<code>with</code>][ReducedPivot.with] — computes a value from each reduced row.
@@ -456,16 +1056,29 @@ public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Bo
  * ### Examples
  *
  * ```kotlin
+ * // the "name" and "weight" of the youngest person in each city
+ * val youngest = df.pivot { city }.minBy { age }.values { name and weight }
+ * // the same, for all columns except the pivot column
+ * val youngestAll = df.pivot { city }.minBy { age }.values()
+ * ```
+ *
+ * ```kotlin
  * // For each `isHappy` value, the `name` and `age` of the first person
  * df.pivot { isHappy }.first().values { name and age }
  * ```
  *
- * @param [T] The schema marker type of the pivoted [<code>DataFrame</code>][DataFrame].
- * @param [separate] If `false` (the default), the resulting columns are indexed
- *   first by the pivot key(s) and then by the names of the aggregated columns.
- *   If `true`, this order is reversed: the results are grouped by aggregated column first.
- * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] selecting the columns to take the values from.
- * @return A new [<code>DataRow</code>][DataRow] with the values of the reduced rows in the selected columns under their [<code>pivot</code>][pivot] keys.
+ * @param [T] The schema marker type of the original [<code>DataFrame</code>][DataFrame].
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector] used to select the columns to
+ *   collect the values from.
+ * @param [separate] When several columns are selected: when `true`, each selected column
+ *   becomes its own column group with one nested column per pivot value; when `false`
+ *   (default), each pivot value becomes its own column group with one nested column per
+ *   selected column. When a single column is selected, its values go directly into the
+ *   pivot cells, and this parameter has no effect.
+ * @return A single [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] with one (nested) column per unique combination of the pivot
+ *   column values; every cell holds, per selected column, the value from the row that the
+ *   reduction (for example, `minBy`) picked for that pivot value, or `null` if the
+ *   reduction picked no row.
  */
 public fun <T> ReducedPivot<T>.values(
     separate: Boolean = false,
@@ -476,6 +1089,45 @@ public fun <T> ReducedPivot<T>.values(
 
 // region PivotGroupBy
 
+/**
+ * Collects the values of the selected columns for every group.
+ *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ *
+ * This overload collects the values from all columns except the pivot columns and
+ * the [<code>groupBy</code>][DataFrame.groupBy] keys.
+ *
+ * @param [T] The schema marker type of the original [<code>DataFrame</code>][DataFrame].
+ * @param [dropNA] When `true`, [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values are removed from the collected
+ *   values. `false` by default. Each column is filtered independently of the others.
+ * @param [distinct] When `true`, only distinct values are collected: the first occurrence
+ *   of each value, in the order the values appear. `false` by default.
+ * @param [separate] When several columns are selected: when `true`, each selected column
+ *   becomes its own column group with one nested column per pivot value; when `false`
+ *   (default), each pivot value becomes its own column group with one nested column per
+ *   selected column. When a single column is selected, its values go directly into the
+ *   pivot cells, and this parameter has no effect.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with one row per combination of the [<code>groupBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]
+ *   key values and one (nested) column per unique combination of the pivot column values;
+ *   every cell holds the collected values of the corresponding rows: the single value if there is exactly one, a [<code>List</code>][List] if there are several, and an empty
+ *   cell if there is nothing to collect. When the other cells of that column hold
+ *   lists, a cell holds a [<code>List</code>][List] too: a single value as a one-element [<code>List</code>][List], a cell
+ *   with no rows as an empty [<code>List</code>][List]; a cell with no rows is `null` otherwise, and a
+ *   cell emptied by `dropNA` is always `null`. A selected column group is collected
+ *   as a nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the collected rows of the columns inside it, instead
+ *   of a [<code>List</code>][List].
+ */
 public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
@@ -491,6 +1143,53 @@ public fun <T> PivotGroupBy<T>.values(
     separate: Boolean = false,
 ): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
+/**
+ * Collects the values of the selected columns for every group.
+ *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ *
+ *
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * val result = df.pivot("city").groupBy("name").values("age")
+ * ```
+ *
+ * @param [T] The schema marker type of the original [<code>DataFrame</code>][DataFrame].
+ * @param [columns] The names of the columns to collect the values from.
+ * @param [dropNA] When `true`, [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values are removed from the collected
+ *   values. `false` by default. Each column is filtered independently of the others.
+ * @param [distinct] When `true`, only distinct values are collected: the first occurrence
+ *   of each value, in the order the values appear. `false` by default.
+ * @param [separate] When several columns are selected: when `true`, each selected column
+ *   becomes its own column group with one nested column per pivot value; when `false`
+ *   (default), each pivot value becomes its own column group with one nested column per
+ *   selected column. When a single column is selected, its values go directly into the
+ *   pivot cells, and this parameter has no effect.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with one row per combination of the [<code>groupBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]
+ *   key values and one (nested) column per unique combination of the pivot column values;
+ *   every cell holds the collected values of the corresponding rows: the single value if there is exactly one, a [<code>List</code>][List] if there are several, and an empty
+ *   cell if there is nothing to collect. When the other cells of that column hold
+ *   lists, a cell holds a [<code>List</code>][List] too: a single value as a one-element [<code>List</code>][List], a cell
+ *   with no rows as an empty [<code>List</code>][List]; a cell with no rows is `null` otherwise, and a
+ *   cell emptied by `dropNA` is always `null`. A selected column group is collected
+ *   as a nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the collected rows of the columns inside it, instead
+ *   of a [<code>List</code>][List].
+ */
 public fun <T> PivotGroupBy<T>.values(
     vararg columns: String,
     dropNA: Boolean = false,
@@ -507,6 +1206,73 @@ public fun <T> PivotGroupBy<T>.values(
     separate: Boolean = false,
 ): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
+/**
+ * Collects the values of the selected columns for every group.
+ *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ *
+ *
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ *
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
+ *
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * // for every person, the "age" values per city: a single value when there is one,
+ * // a list when there are several, and an empty cell when there is nothing to collect
+ * val result = df.pivot { city }.groupBy { name }.values { age }
+ * // with dropNA, `null` weights are skipped in every cell: a cell whose values
+ * // are all `null` collects nothing
+ * val withoutNA = df.pivot { city }.groupBy { name }.values(dropNA = true) { weight }
+ * ```
+ *
+ * @param [T] The schema marker type of the original [<code>DataFrame</code>][DataFrame].
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector] used to select the columns to
+ *   collect the values from.
+ * @param [dropNA] When `true`, [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values are removed from the collected
+ *   values. `false` by default. Each column is filtered independently of the others.
+ * @param [distinct] When `true`, only distinct values are collected: the first occurrence
+ *   of each value, in the order the values appear. `false` by default.
+ * @param [separate] When several columns are selected: when `true`, each selected column
+ *   becomes its own column group with one nested column per pivot value; when `false`
+ *   (default), each pivot value becomes its own column group with one nested column per
+ *   selected column. When a single column is selected, its values go directly into the
+ *   pivot cells, and this parameter has no effect.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with one row per combination of the [<code>groupBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]
+ *   key values and one (nested) column per unique combination of the pivot column values;
+ *   every cell holds the collected values of the corresponding rows: the single value if there is exactly one, a [<code>List</code>][List] if there are several, and an empty
+ *   cell if there is nothing to collect. When the other cells of that column hold
+ *   lists, a cell holds a [<code>List</code>][List] too: a single value as a one-element [<code>List</code>][List], a cell
+ *   with no rows as an empty [<code>List</code>][List]; a cell with no rows is `null` otherwise, and a
+ *   cell emptied by `dropNA` is always `null`. A selected column group is collected
+ *   as a nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the collected rows of the columns inside it, instead
+ *   of a [<code>List</code>][List].
+ */
 public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
@@ -523,6 +1289,36 @@ public fun <T> PivotGroupBy<T>.values(
 
 // region ReducedPivotGroupBy
 
+/**
+ * Collects the values of the selected columns for every group.
+ *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ *
+ * This overload collects the values from all columns except the pivot columns and
+ * the [<code>groupBy</code>][DataFrame.groupBy] keys.
+ *
+ * @param [T] The schema marker type of the original [<code>DataFrame</code>][DataFrame].
+ * @param [separate] When several columns are selected: when `true`, each selected column
+ *   becomes its own column group with one nested column per pivot value; when `false`
+ *   (default), each pivot value becomes its own column group with one nested column per
+ *   selected column. When a single column is selected, its values go directly into the
+ *   pivot cells, and this parameter has no effect.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with one row per combination of the [<code>groupBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]
+ *   key values and one (nested) column per unique combination of the pivot column values;
+ *   every cell holds, per selected column, the value from the row that the reduction
+ *   (for example, `minBy`) picked in that cell, or `null` if the reduction picked no row.
+ */
 public fun <T> ReducedPivotGroupBy<T>.values(separate: Boolean = false): DataFrame<T> =
     values(separate, pivot.remainingColumnsSelector())
 
@@ -533,6 +1329,44 @@ public fun <T> ReducedPivotGroupBy<T>.values(
     separate: Boolean = false,
 ): DataFrame<T> = values(separate) { columns.toColumnSet() }
 
+/**
+ * Collects the values of the selected columns for every group.
+ *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ *
+ *
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * val result = df.pivot("city").groupBy("name").minBy("age").values("weight")
+ * ```
+ *
+ * @param [T] The schema marker type of the original [<code>DataFrame</code>][DataFrame].
+ * @param [columns] The names of the columns to collect the values from.
+ * @param [separate] When several columns are selected: when `true`, each selected column
+ *   becomes its own column group with one nested column per pivot value; when `false`
+ *   (default), each pivot value becomes its own column group with one nested column per
+ *   selected column. When a single column is selected, its values go directly into the
+ *   pivot cells, and this parameter has no effect.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with one row per combination of the [<code>groupBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]
+ *   key values and one (nested) column per unique combination of the pivot column values;
+ *   every cell holds, per selected column, the value from the row that the reduction
+ *   (for example, `minBy`) picked in that cell, or `null` if the reduction picked no row.
+ */
 public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: String, separate: Boolean = false): DataFrame<T> =
     values(separate) { columns.toColumnSet() }
 
@@ -541,6 +1375,60 @@ public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: String, separate: B
 public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataFrame<T> =
     values(separate) { columns.toColumnSet() }
 
+/**
+ * Collects the values of the selected columns for every group.
+ *
+ * Each selected column is collected into its own column of the result.
+ *
+ * Don't confuse this `values` with [<code>values</code>][org.jetbrains.kotlinx.dataframe.DataFrame.values] on a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], which
+ * extracts the values of the selected columns into a lazy [<code>Sequence</code>][Sequence], without any grouping.
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information: [See `values` on the documentation website.](https://kotlin.github.io/dataframe/values.html)
+ *
+ * ### This `values` overload
+ *
+ *
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ *
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
+ *
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * // the "weight" of the youngest person for every name and city
+ * val result = df.pivot { city }.groupBy { name }.minBy { age }.values { weight }
+ * ```
+ *
+ * @param [T] The schema marker type of the original [<code>DataFrame</code>][DataFrame].
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector] used to select the columns to
+ *   collect the values from.
+ * @param [separate] When several columns are selected: when `true`, each selected column
+ *   becomes its own column group with one nested column per pivot value; when `false`
+ *   (default), each pivot value becomes its own column group with one nested column per
+ *   selected column. When a single column is selected, its values go directly into the
+ *   pivot cells, and this parameter has no effect.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with one row per combination of the [<code>groupBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]
+ *   key values and one (nested) column per unique combination of the pivot column values;
+ *   every cell holds, per selected column, the value from the row that the reduction
+ *   (for example, `minBy`) picked in that cell, or `null` if the reduction picked no row.
+ */
 public fun <T> ReducedPivotGroupBy<T>.values(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,
