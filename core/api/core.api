@@ -78,6 +78,7 @@ public final class org/jetbrains/kotlinx/dataframe/DataColumnKt {
 	public static final fun getTypeClass (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lkotlin/reflect/KClass;
 	public static final fun getValues (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Iterable;
 	public static final fun indices (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lkotlin/ranges/IntRange;
+	public static final synthetic fun indices (Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;)Lkotlin/ranges/IntRange;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/DataFrame : org/jetbrains/kotlinx/dataframe/ColumnsContainer, org/jetbrains/kotlinx/dataframe/aggregation/Aggregatable {

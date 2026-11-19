@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.indices
@@ -26,6 +27,9 @@ import org.junit.Test
  *
  * - on a [ColumnGroup]: a group is not a `DataColumn`, so `indices()` resolves to the
  * [DataFrame] overload and returns the row indices of the dataframe the group forms.
+ *
+ * - on the old `BaseColumn` overload: it is hidden from overload resolution but kept in the jar,
+ * as binary compatibility for code compiled against earlier versions.
  */
 class IndicesTests : TestBase() {
 
@@ -120,6 +124,15 @@ class IndicesTests : TestBase() {
         frames.indices() shouldBe 0..2
         // the seven rows are still there, spread over the three cells
         frames.toList().sumOf { it.rowsCount() } shouldBe 7
+    }
+
+    @Test
+    fun `the hidden BaseColumn overload stays in the jar for binary compatibility`() {
+        // code compiled against the old receiver links DataColumnKt.indices(BaseColumn); the shim keeps that
+        // JVM method present while HIDDEN removes it from resolution. The facade class is synthetic, so it
+        // is reached by name.
+        Class.forName("org.jetbrains.kotlinx.dataframe.DataColumnKt")
+            .getDeclaredMethod("indices", BaseColumn::class.java)
     }
 
     // endregion
