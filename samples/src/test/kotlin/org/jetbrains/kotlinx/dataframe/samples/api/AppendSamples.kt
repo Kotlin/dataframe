@@ -22,6 +22,16 @@ class AppendSamples : DataFrameSampleHelper("append", "api") {
     @DataSchema
     data class Person(val name: String, val age: Int)
 
+    // SampleStart
+    interface Named : DataRowSchema {
+        val name: String
+    }
+    // SampleEnd
+
+    // SampleStart
+    data class NamedPerson(override val name: String) : Named
+    // SampleEnd
+
     private val df: DataFrame<Person> = dataFrameOf(
         "name" to columnOf("Alice"),
         "age" to columnOf(20),
@@ -126,6 +136,18 @@ class AppendSamples : DataFrameSampleHelper("append", "api") {
         df.append(Person("Bob", 30))
             // SampleEnd
             .also { it shouldBe dataFrameOf("name", "age")("Alice", 20, "Bob", 30) }
+            .highlightAppendedRows(df.rowsCount())
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun appendInterfaceDataRowSchema() {
+        // SampleStart
+        val df = dataFrameOf("name")("Alice").cast<Named>()
+
+        df.append(NamedPerson("Bob"))
+            // SampleEnd
+            .also { it shouldBe dataFrameOf("name")("Alice", "Bob") }
             .highlightAppendedRows(df.rowsCount())
             .saveDfHtmlSample()
     }

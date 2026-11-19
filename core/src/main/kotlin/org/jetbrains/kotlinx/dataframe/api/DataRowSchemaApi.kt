@@ -37,17 +37,17 @@ public inline fun <reified T : DataRowSchema> dataFrameOf(vararg rows: T): DataF
  *
  * The schema type [T] must implement [DataRowSchema]. The Kotlin DataFrame compiler plugin adds [DataRowSchema] to
  * classes annotated with [DataSchema]; alternatively, a class can implement it explicitly.
+ * @include [DocumentationUrls.CompilerPlugin]
  *
- * {@include [DocumentationUrls.CompilerPlugin]}
+ * @include [AppendPerformanceNote]
  *
- * @include [AppendImmutabilityAndPerformanceNote]
- *
- * {@include [DocumentationUrls.Append]}
+ * For more information: {@include [DocumentationUrls.Append]}
  *
  * See also:
  * - [append][DataFrame.append] — appends rows constructed from a flat sequence of cell values.
  * - [appendNulls] — appends rows filled with `null` values.
  * - [concat][DataFrame.concat] — vertically combines this [DataFrame] with other dataframes or rows.
+ * - [duplicateRows][DataFrame.duplicateRows] — repeats existing rows.
  * - [add][DataFrame.add] — adds columns rather than rows.
  *
  * ### Examples

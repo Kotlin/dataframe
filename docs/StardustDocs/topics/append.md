@@ -38,7 +38,6 @@ Every appended value must be compatible with the corresponding column:
 * A [`FrameColumn`](DataColumn.md#framecolumn) accepts a `DataFrame` or `null`, which is
   [represented by an empty dataframe](#null-with-framecolumn).
 
-`append` does not modify the original `DataFrame`.
 When `values` or `rows` is empty, it returns the original `DataFrame` instance.
 
 The overload that accepts `rows` appends one row for each object in `rows`. The `DataFrame` schema type `T` must
@@ -78,9 +77,9 @@ See also:
 * `values: vararg Any?` — a flat sequence of values to construct new rows from.
   Each consecutive group containing one value for every top-level column forms one new
   row, and the values within each group must follow the dataframe's column order. The number of values
-  must be a multiple of the number of columns.
+  must be a multiple of the number of top-level columns.
 * `rows: vararg T` — objects representing complete rows to append, in argument order. `T` must implement
-  `DataRowSchema` and must be the schema type of `typedDf`.
+  `DataRowSchema` and must be the schema type of `df`.
 
 ### Examples
 
@@ -186,8 +185,41 @@ df.append(Person("Bob", 30))
 
 <!---END-->
 
-An interface can also extend `DataRowSchema` and serve as the schema. In that case, instances of a class
-implementing that interface can be appended.
+An interface can also extend `DataRowSchema` and serve as the schema:
+
+<!---FUN Named-->
+
+```kotlin
+interface Named : DataRowSchema {
+    val name: String
+}
+```
+
+<!---END-->
+
+A class can implement that interface:
+
+<!---FUN NamedPerson-->
+
+```kotlin
+data class NamedPerson(override val name: String) : Named
+```
+
+<!---END-->
+
+Its instances can then be appended:
+
+<!---FUN appendInterfaceDataRowSchema-->
+
+```kotlin
+val df = dataFrameOf("name")("Alice").cast<Named>()
+
+df.append(NamedPerson("Bob"))
+```
+
+<inline-frame src="./resources/appendInterfaceDataRowSchema.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ### Append values to a [`ColumnGroup`](DataColumn.md#columngroup)
 

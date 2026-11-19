@@ -16,10 +16,7 @@ Discover the `appendNulls` operation for Kotlin DataFrame.
 
 Adds one or more rows filled with `null` values to a [`DataFrame`](DataFrame.md).
 Returns a new `DataFrame` containing the existing rows followed by the requested number of rows filled with `null`
-values. 
-
-`appendNulls` does not modify the original `DataFrame`. Calling `appendNulls(0)` returns the original
-`DataFrame` instance.
+values.
 
 **API reference**: [`appendNulls`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/append-nulls.html)
 
@@ -27,6 +24,8 @@ values.
 df.appendNulls(numberOfRows: Int = 1): DataFrame
 ```
 
+Calling `appendNulls(0)` returns the original `DataFrame` instance.
+For a `DataFrame` without columns, `appendNulls` adds `numberOfRows` rows without adding columns.
 Passing a negative `numberOfRows` results in an `IllegalArgumentException`.
 
 <warning>

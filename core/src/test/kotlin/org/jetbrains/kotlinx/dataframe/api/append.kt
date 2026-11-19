@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.inspectors.shouldForAll
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.ncol
@@ -30,6 +31,15 @@ class AppendTests {
         val result = df.append("Bill", 30)
 
         result shouldBe dataFrameOf("name", "age")("Alice", 20, "Bill", 30)
+    }
+
+    @Test
+    fun `append accepts a subtype of a value column type`() {
+        val df = DataColumn.createValueColumn<Number>("value", listOf(1)).toDataFrame()
+
+        val result = df.append(2.5)
+
+        result shouldBe dataFrameOf("value" to columnOf<Number>(1, 2.5))
     }
 
     @Test
