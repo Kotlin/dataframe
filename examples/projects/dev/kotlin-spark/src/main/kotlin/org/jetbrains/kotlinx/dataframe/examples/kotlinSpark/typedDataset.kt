@@ -5,6 +5,7 @@ package org.jetbrains.kotlinx.dataframe.examples.kotlinSpark
 import org.apache.spark.sql.Dataset
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.aggregate
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.mean
@@ -13,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.toListOf
+import org.jetbrains.kotlinx.dataframe.api.toList
 import org.jetbrains.kotlinx.spark.api.withSpark
 
 /**
@@ -45,6 +46,8 @@ fun main() = withSpark {
 
     // and convert it to DataFrame via a typed List
     val dataframe = dataset.collectAsList().toDataFrame()
+        // Due to #1908, we need to remove the platform type (`!`) by casting
+        .cast<Person>()
     dataframe.schema().print()
     dataframe.print(columnTypes = true, borders = true)
 
@@ -59,10 +62,11 @@ fun main() = withSpark {
 
     ageStats.print(columnTypes = true, borders = true)
 
-    // and when we want to convert a DataFrame back to Spark, we can do the same trick via a typed List
-    // Using the compiler plugin, it's important to specify the target data class explicitly!
-    // The local compiler-plugin type is not a data class that can be instantiated.
-    val sparkDatasetAgain = dataframe.toListOf<Person>().toDS()
+    // When we want to convert a DataFrame back to Spark, we can do the same trick via a typed List.
+    // Using the compiler plugin, it's important to check the subtype of the dataframe is a
+    // data class that can be instantiated. In this case, `dataframe: DataFrame<Person>`,
+    // so `toList()` will work.
+    val sparkDatasetAgain = dataframe.toList().toDS()
     sparkDatasetAgain.printSchema()
     sparkDatasetAgain.show()
 }
