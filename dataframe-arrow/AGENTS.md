@@ -131,5 +131,7 @@ write tables are **not** symmetric — reading builds lists and frame columns, w
 - When a test hand-builds Arrow vectors instead of `VectorSchemaRoot.create`, construct struct vectors via the
   `(name, FieldType)` constructor + `initializeChildrenFromFields`: the `(Field, …)` constructor eagerly allocates
   writer-owned child buffers that `close()` never releases, and the root allocator reports the leak at the end of
-  the test. A data vector injected into a list (e.g. a counting subclass overriding `getDataVector`) is not closed
-  by the list — the test closes it itself. `ArrowListStructScanTest`'s KDoc shows the working shape.
+  the test. A vector injected anywhere is closed by nobody but the test itself: as a list's data vector (a
+  subclass overriding `getDataVector`) or as a struct element's child (a subclass overriding the one-arg
+  `getChild(String)`, declared on `AbstractContainerVector` — two supertypes above `StructVector`).
+  `ArrowListStructScanTest`'s KDoc shows the working shapes.
