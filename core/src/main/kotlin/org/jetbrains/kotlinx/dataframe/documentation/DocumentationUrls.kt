@@ -610,6 +610,9 @@ public interface DocumentationUrls {
     /** [See DataFrame from Iterable<T> on the documentation website.]({@include [Url]}/createdataframe.html#dataframe-from-iterable-t) */
     public typealias CreateDataFrameFromIterable = Nothing
 
+    /** [See DataFrame from Map<String, List<*>> on the documentation website.]({@include [Url]}/createdataframe.html#dataframe-from-map-string-list) */
+    public typealias CreateDataFrameFromMap = Nothing
+
     /** [See Global Parser Options on the documentation website.]({@include [Url]}/parse.html#global-parser-options) */
     public typealias GlobalParserOptions = Nothing
 

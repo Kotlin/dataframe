@@ -133,6 +133,9 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   show it.
   Numbers that read as real-world facts (star counts, prices, view counts) are either copied from a tracked
   dataset (e.g. `data/*.csv`) or clearly synthetic — the rendered iframe presents them to the reader as real.
+- A DSL function used inside a lambda body needs its import even when it reads like a member:
+  `preserve<Name>()` inside `properties { }` is an extension on `TraversePropertiesDsl`, so the sample
+  needs `import org.jetbrains.kotlinx.dataframe.api.preserve` — there are no wildcard imports here.
 - **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without
   deprecation warnings.
 - Conversion shortcuts with `@Refine` (e.g. `toLocalDate(format)`, `toJavaLocalDate(formatter)`) change the

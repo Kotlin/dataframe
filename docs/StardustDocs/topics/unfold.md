@@ -142,7 +142,7 @@ so the result has no typed accessors.
 
 A column that cannot be unfolded stays as it is. These are:
 * columns of simple values, such as numbers, strings, or enums;
-* columns of objects without public properties;
+* columns of objects without public properties or getter-like functions;
 * columns whose type is `Any` — for example, with objects of different classes;
   with [`unfold` on DataColumn](#unfold-on-datacolumn), only when the compiler sees the column as `Any` too;
 * [`ColumnGroup`](DataColumn.md#columngroup)s and [`FrameColumn`](DataColumn.md#framecolumn)s.
