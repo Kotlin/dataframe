@@ -3,6 +3,9 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnNames
+import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.preserve
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -140,5 +143,101 @@ class ToDataFrameSamples {
         df.columnNames() shouldBe listOf("name", "details")
         df["details"].asColumnGroup().columnNames() shouldBe listOf("age", "city")
         df["name"].toList() shouldBe listOf("Alice", "Bob")
+    }
+
+    @Test
+    fun toDataFrameFromRows() {
+        // SampleStart
+        val people = dataFrameOf("name", "age")(
+            "Alice",
+            15,
+            "Bob",
+            20,
+            "Charlie",
+            22,
+        )
+
+        // the rows of `people` in a new order
+        val df = listOf(people[2], people[0]).toDataFrame()
+        // SampleEnd
+        df.columnNames() shouldBe listOf("name", "age")
+        df["name"].toList() shouldBe listOf("Charlie", "Alice")
+        df["age"].toList() shouldBe listOf(22, 15)
+    }
+
+    @Test
+    fun toDataFrameFromColumns() {
+        // SampleStart
+        val name = columnOf("Alice", "Bob").named("name")
+        val age = columnOf(15, 20).named("age")
+
+        val df = listOf(name, age).toDataFrame()
+        // SampleEnd
+        df.columnNames() shouldBe listOf("name", "age")
+        df["name"].toList() shouldBe listOf("Alice", "Bob")
+        df["age"].toList() shouldBe listOf(15, 20)
+    }
+
+    @Test
+    fun toDataFrameFromPairsOfColumns() {
+        // SampleStart
+        val df = listOf(
+            pathOf("name") to columnOf("Alice", "Bob"),
+            pathOf("details", "age") to columnOf(15, 20),
+            pathOf("details", "city") to columnOf("London", "Dubai"),
+        ).toDataFrameFromPairs<Any>()
+        // SampleEnd
+        df.columnNames() shouldBe listOf("name", "details")
+        df["details"].asColumnGroup().columnNames() shouldBe listOf("age", "city")
+        df["name"].toList() shouldBe listOf("Alice", "Bob")
+    }
+
+    @Test
+    fun toDataFrameFromPairsOfNames() {
+        // SampleStart
+        val df = listOf(
+            "name" to listOf("Alice", "Bob"),
+            "age" to listOf(15, 20),
+        ).toDataFrameFromPairs()
+        // SampleEnd
+        df.columnNames() shouldBe listOf("name", "age")
+        df["name"].toList() shouldBe listOf("Alice", "Bob")
+        df["age"].toList() shouldBe listOf(15, 20)
+    }
+
+    @Test
+    fun toDataFrameFromMapOfColumnPaths() {
+        // SampleStart
+        val map = mapOf(
+            pathOf("name") to listOf("Alice", "Bob"),
+            pathOf("details", "age") to listOf(15, 20),
+            pathOf("details", "city") to listOf("London", "Dubai"),
+        )
+
+        val df = map.toDataFrame()
+        // SampleEnd
+        df.columnNames() shouldBe listOf("name", "details")
+        df["details"].asColumnGroup().columnNames() shouldBe listOf("age", "city")
+        df["name"].toList() shouldBe listOf("Alice", "Bob")
+    }
+
+    @Test
+    fun toDataFrameWithExpr() {
+        // SampleStart
+        data class Person(val name: String, val age: Int)
+
+        val persons = listOf(Person("Alice", 15), Person("Bob", 20))
+
+        val df = persons.toDataFrame {
+            // a column under a name
+            expr { it.name.uppercase() } into "upper name"
+
+            // a column at a path: nested in the `details` column group
+            expr { 2021 - it.age } into pathOf("details", "year of birth")
+        }
+        // SampleEnd
+        df.columnNames() shouldBe listOf("upper name", "details")
+        df["upper name"].toList() shouldBe listOf("ALICE", "BOB")
+        df["details"].asColumnGroup()["year of birth"].toList() shouldBe listOf(2006, 2001)
     }
 }

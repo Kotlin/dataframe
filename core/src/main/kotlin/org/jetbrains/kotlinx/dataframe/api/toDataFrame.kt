@@ -14,6 +14,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
+import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -92,6 +94,7 @@ internal interface ToDataFrameDocs {
      * Duplicate names are made unique at every level: a column named `a` that comes after another `a`
      * is renamed to `a1`. When a column and a group would share a name,
      * the one that comes later in the pairs is renamed.
+     * A column whose name in the path is empty gets a generated name: `untitled`.
      */
     typealias FromPairsSnippet = Nothing
 
@@ -106,6 +109,25 @@ internal interface ToDataFrameDocs {
      *   into a [ColumnGroup].
      */
     typealias SeeAlsoSnippet = Nothing
+
+    /**
+     * {@comment See also section of the `toDataFrameFromPairs` overloads. KDoc-snippet.}
+     *
+     * See also:
+     * - [dataFrameOf] — creates a [DataFrame] from columns, or from name and value pairs.
+     * - [toDataFrame][Map.toDataFrame] — creates a [DataFrame] from a [Map] of column names
+     *   or [ColumnPath]s to values.
+     */
+    typealias FromPairsSeeAlsoSnippet = Nothing
+
+    /**
+     * {@comment See also section of the `Map.toDataFrame` overloads. KDoc-snippet.}
+     *
+     * See also:
+     * - [dataFrameOf] — creates a [DataFrame] from columns, or from name and value pairs.
+     * - [toDataFrameFromPairs] — creates a [DataFrame] from an [Iterable] of pairs instead of a [Map].
+     */
+    typealias FromMapSeeAlsoSnippet = Nothing
 
     /**
      * @param [maxDepth\] How deep to convert the values of the properties; `0` by default.
@@ -149,7 +171,7 @@ public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
 
 /**
  * Creates a [DataFrame] from this [Iterable] of objects with the [CreateDataFrameDsl]:
- * every element becomes a row, and [body] decides the columns —
+ * [body] decides the columns —
  * the properties of the elements via [properties][CreateDataFrameDsl.properties],
  * computed columns and column groups via the other members of [CreateDataFrameDsl].
  *
@@ -188,9 +210,9 @@ public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataF
  * ### Example
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ToDataFrameSamples.toDataFrameWithMaxDepth]
  *
- * @include [ToDataFrameDocs.MaxDepthParamSnippet]
  * @param [T] The type of the elements; the schema marker of the result.
  * @param [props] The properties to make columns from; all public properties of the elements by default.
+ * @include [ToDataFrameDocs.MaxDepthParamSnippet]
  * @return The new [DataFrame].
  */
 @Refine
@@ -205,9 +227,15 @@ public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>
  *
  * When all rows come from the same [DataFrame], the result is that [DataFrame] with its rows
  * in the order of this iterable. Otherwise, the rows are concatenated in the order of this
- * iterable: the columns of the result are the union of the columns of the rows' frames,
- * and a row from a frame without one of the columns gets `null` in it.
+ * iterable: the columns of the result are the union of the columns of the rows' [DataFrame]s,
+ * and a row from a [DataFrame] without one of the columns gets `null` in it.
  *
+ * See also [concat][Iterable.concat], which concatenates whole [DataFrame]s.
+ *
+ * ### Example
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ToDataFrameSamples.toDataFrameFromRows]
+ *
+ * @param [T] The schema marker of the rows and of the result.
  * @return The new [DataFrame].
  */
 @JvmName("toDataFrameT")
@@ -235,6 +263,9 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
  * Creates a [DataFrame] from this [Iterable] of maps, treating every map as a row:
  * every distinct key becomes a column, in the order the keys are first seen.
  * A map without one of the keys gets `null` in the key's column.
+ *
+ * See also [toDataFrame][Map.toDataFrame] for a single [Map] of column names to values,
+ * where every entry is a column and not a row.
  *
  * ### Example
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ToDataFrameSamples.toDataFrameFromMaps]
@@ -265,21 +296,38 @@ public fun Iterable<Map<String, Any?>>.toDataFrame(): DataFrame<*> {
 /**
  * Creates a [DataFrame] from this [Iterable] of columns: the columns become the columns of the
  * result, keeping their names and values.
+ * A column with an empty name gets a generated name: `untitled`.
+ *
+ * See also [dataFrameOf], which does the same for columns passed as arguments.
+ *
+ * ### Example
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ToDataFrameSamples.toDataFrameFromColumns]
  *
  * @return The new [DataFrame].
+ * @throws [DuplicateColumnNamesException] if two columns have the same name.
+ * @throws [UnequalColumnSizesException] if the columns have different sizes.
  */
 @JvmName("toDataFrameAnyColumn")
 public fun Iterable<BaseColumn<*>>.toDataFrame(): DataFrame<*> = dataFrameOf(this)
 
 /**
- * Creates a [DataFrame] from this [Iterable] of column paths to columns.
+ * Creates a [DataFrame] from this [Iterable] of pairs of a [ColumnPath] and a column.
  *
  * @include [ToDataFrameDocs.FromPairsSnippet]
  *
- * See also the [overload][toDataFrameFromPairs] for an [Iterable] of paths to values,
- * which infers the column types.
+ * The columns' own names are ignored: every column is named after the last segment of its path.
  *
+ * To create the columns from values and infer their types, use the `toDataFrameFromPairs` overload
+ * for pairs of a [ColumnPath] and an [Iterable] of values.
+ *
+ * @include [ToDataFrameDocs.FromPairsSeeAlsoSnippet]
+ *
+ * ### Example
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ToDataFrameSamples.toDataFrameFromPairsOfColumns]
+ *
+ * @param [T] The schema marker of the result; it is not checked against the columns.
  * @return The new [DataFrame].
+ * @throws [UnequalColumnSizesException] if the columns have different sizes.
  */
 @JvmName("toDataFramePairColumnPathAnyCol")
 public fun <T> Iterable<Pair<ColumnPath, BaseColumn<*>>>.toDataFrameFromPairs(): DataFrame<T> {
@@ -336,15 +384,18 @@ public fun <T> Iterable<Pair<ColumnPath, BaseColumn<*>>>.toDataFrameFromPairs():
 }
 
 /**
- * Creates a [DataFrame] from this [Iterable] of column paths to values,
+ * Creates a [DataFrame] from this [Iterable] of pairs of a [ColumnPath] and the values of the column,
  * inferring the type of each column from its values.
  *
  * @include [ToDataFrameDocs.FromPairsSnippet]
+ *
+ * @include [ToDataFrameDocs.FromPairsSeeAlsoSnippet]
  *
  * ### Example
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ToDataFrameSamples.toDataFrameFromPairs]
  *
  * @return The new [DataFrame].
+ * @throws [UnequalColumnSizesException] if the columns have different numbers of values.
  */
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): DataFrame<*> =
@@ -353,15 +404,21 @@ public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): Da
     }.toDataFrameFromPairs<Unit>()
 
 /**
- * Creates a [DataFrame] from this [Iterable] of column names to values,
+ * Creates a [DataFrame] from this [Iterable] of pairs of a column name and the values of the column,
  * inferring the type of each column from its values.
  *
  * @include [ToDataFrameDocs.FromPairsSnippet]
  *
- * See also the [overload][toDataFrameFromPairs] for an [Iterable] of [ColumnPath]es to values,
- * which can nest the columns in [ColumnGroup]s.
+ * To nest the columns in [ColumnGroup]s, use the `toDataFrameFromPairs` overload
+ * for pairs of a [ColumnPath] and an [Iterable] of values.
+ *
+ * @include [ToDataFrameDocs.FromPairsSeeAlsoSnippet]
+ *
+ * ### Example
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ToDataFrameSamples.toDataFrameFromPairsOfNames]
  *
  * @return The new [DataFrame].
+ * @throws [UnequalColumnSizesException] if the columns have different numbers of values.
  */
 public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): DataFrame<*> =
     map {
@@ -400,9 +457,14 @@ public interface TraversePropertiesDsl {
 
     /**
      * Skip given [classes] during recursive (dfs) traversal:
-     * a property of one of the [classes] is not read, wherever it appears in the object graph.
+     * a property whose type is exactly one of the [classes] is not read,
+     * wherever it appears in the object graph.
+     * A property of another type is still read, even when its values are of one of the [classes]:
+     * a `List` of them, or a property typed as their subclass.
      *
      * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
+     *
+     * @param [classes] The classes of the properties to skip.
      */
     @Interpretable("Exclude0")
     public fun exclude(vararg classes: KClass<*>)
@@ -412,6 +474,8 @@ public interface TraversePropertiesDsl {
      * These can also be getter-like functions (like `getX()` or `isX()`).
      *
      * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
+     *
+     * @param [properties] The properties to skip.
      */
     @Interpretable("Exclude1")
     public fun exclude(vararg properties: KCallable<*>)
@@ -420,6 +484,8 @@ public interface TraversePropertiesDsl {
      * Store given [classes] in ValueColumns without transformation into ColumnGroups or FrameColumns.
      *
      * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
+     *
+     * @param [classes] The classes whose values are stored as they are.
      */
     @Interpretable("Preserve0")
     public fun preserve(vararg classes: KClass<*>)
@@ -429,6 +495,8 @@ public interface TraversePropertiesDsl {
      * These can also be getter-like functions (like `getX()` or `isX()`).
      *
      * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
+     *
+     * @param [properties] The properties whose values are stored as they are.
      */
     @Interpretable("Preserve1")
     public fun preserve(vararg properties: KCallable<*>)
@@ -438,6 +506,8 @@ public interface TraversePropertiesDsl {
  * Store values of the given type [T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
  *
  * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
+ *
+ * @param [T] The class whose values are stored as they are.
  */
 @Interpretable("PreserveT")
 public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(T::class)
@@ -470,6 +540,8 @@ public abstract class CreateDataFrameDsl<T> {
 
     /**
      * Puts this column into the [DataFrame] being built, under [name].
+     *
+     * @param [name] The name of the column in the [DataFrame] being built.
      */
     @Interpretable("ToDataFrameDslIntoString")
     public infix fun BaseColumn<*>.into(name: String): Unit = add(this, pathOf(name))
@@ -477,6 +549,8 @@ public abstract class CreateDataFrameDsl<T> {
     /**
      * Puts this column into the [DataFrame] being built, at [path];
      * a path of more than one segment nests the column in [ColumnGroup]s.
+     *
+     * @param [path] The path to put the column at; the column is renamed to the last path segment.
      */
     @Interpretable("ToDataFrameDslIntoPath")
     public infix fun BaseColumn<*>.into(path: ColumnPath): Unit = add(this, path)
@@ -512,17 +586,28 @@ public abstract class CreateDataFrameDsl<T> {
     public fun preserve(vararg properties: KCallable<*>): Unit = Unit
 
     /**
-     * Creates a [DataColumn] with the values [expression] returns for each element,
-     * without adding it to the [DataFrame] being built — combine it with [into].
+     * Creates a [DataColumn] with the values [expression] returns for each element.
      *
+     * The column is not added to the [DataFrame] being built on its own:
+     * put it there with [into], under a name or at a [ColumnPath].
+     *
+     * ### Example
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ToDataFrameSamples.toDataFrameWithExpr]
+     *
+     * @param [R] The type of the values of the column.
      * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
      * @param [expression] The expression to compute each value from an element.
+     * @return The new [DataColumn], with an empty name.
      */
     public inline fun <reified R> expr(infer: Infer = Infer.Nulls, noinline expression: (T) -> R): DataColumn<R> =
         source.map { expression(it) }.toColumn(infer = infer)
 
     /**
      * Adds a column named [name] with the values [expression] returns for each element.
+     *
+     * @param [R] The type of the values of the column.
+     * @param [name] The name of the new column.
+     * @param [expression] The expression to compute each value from an element.
      */
     @Interpretable("ToDataFrameDslAdd")
     public inline fun <reified R> add(name: String, noinline expression: (T) -> R): Unit =
@@ -530,6 +615,9 @@ public abstract class CreateDataFrameDsl<T> {
 
     /**
      * Adds a column named this string with the values [expression] returns for each element.
+     *
+     * @param [R] The type of the values of the column.
+     * @param [expression] The expression to compute each value from an element.
      */
     @Interpretable("ToDataFrameFrom0")
     public inline infix fun <reified R> String.from(noinline expression: (T) -> R): Unit = add(this, expression)
@@ -542,6 +630,9 @@ public abstract class CreateDataFrameDsl<T> {
     /**
      * Adds a column named this string with the values of [inferType]'s expression,
      * with the column type inferred from the values.
+     *
+     * @param [R] The declared type of the values; the column type is inferred from the values instead.
+     * @param [inferType] The expression wrapped with [inferType][CreateDataFrameDsl.inferType].
      */
     @Interpretable("ToDataFrameDslFromInferType")
     public inline infix fun <reified R> String.from(inferType: InferType<T, R>): Unit =
@@ -555,18 +646,25 @@ public abstract class CreateDataFrameDsl<T> {
     /**
      * Wraps an expression so that [from][String.from] creates the column
      * with the type inferred from the values it returns.
+     *
+     * @param [expression] The expression to compute each value from an element.
      */
     public data class InferType<T, R>(val expression: (T) -> R)
 
     /**
      * Creates an [InferType] for [from][String.from] from [expression],
      * so that the column type is inferred from the values.
+     *
+     * @param [expression] The expression to compute each value from an element.
+     * @return The [InferType] to pass to [from][String.from].
      */
     public inline fun <reified R> inferType(noinline expression: (T) -> R): InferType<T, R> = InferType(expression)
 
     /**
      * Creates a [ColumnGroup] named this string: every column added inside [builder]
      * lands in the group.
+     *
+     * @param [builder] The [CreateDataFrameDsl] lambda that adds the columns of the group.
      */
     @Interpretable("ToDataFrameDslStringInvoke")
     public abstract operator fun String.invoke(builder: CreateDataFrameDsl<T>.() -> Unit)
@@ -580,6 +678,8 @@ public abstract class CreateDataFrameDsl<T> {
  * and to add columns extracted from them later.
  *
  * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
+ *
+ * @include [ToDataFrameDocs.SeeAlsoSnippet]
  *
  * ### Example
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ToDataFrameSamples.toDataFrameWithColumnName]
@@ -623,12 +723,15 @@ public interface ValueProperty<T> {
  * the column is named after the key and takes the values of the iterable,
  * with the type inferred from the values.
  *
- * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
+ * For more information: {@include [DocumentationUrls.CreateDataFrameFromMap]}
+ *
+ * @include [ToDataFrameDocs.FromMapSeeAlsoSnippet]
  *
  * ### Example
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ToDataFrameSamples.toDataFrameFromMapOfColumns]
  *
  * @return The new [DataFrame].
+ * @throws [UnequalColumnSizesException] if the columns have different numbers of values.
  */
 public fun Map<String, Iterable<Any?>>.toDataFrame(): DataFrame<*> =
     map {
@@ -636,11 +739,19 @@ public fun Map<String, Iterable<Any?>>.toDataFrame(): DataFrame<*> =
     }.toDataFrame()
 
 /**
- * Creates a [DataFrame] with a column per entry of this [Map], like [toDataFrame][Map.toDataFrame],
- * but a key that is a [ColumnPath] of more than one segment nests the column in [ColumnGroup]s,
+ * Creates a [DataFrame] with a column per entry of this [Map]:
+ * the column takes the values of the iterable, with the type inferred from the values,
+ * and the key is its [ColumnPath]. A path of one segment names a top-level column;
+ * a longer path nests the column in [ColumnGroup]s,
  * one group per path segment except the last, which names the column.
  *
+ * @include [ToDataFrameDocs.FromMapSeeAlsoSnippet]
+ *
+ * ### Example
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ToDataFrameSamples.toDataFrameFromMapOfColumnPaths]
+ *
  * @return The new [DataFrame].
+ * @throws [UnequalColumnSizesException] if the columns have different numbers of values.
  */
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): DataFrame<*> =

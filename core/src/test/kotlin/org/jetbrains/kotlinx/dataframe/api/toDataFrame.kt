@@ -17,8 +17,11 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
+import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Ignore
@@ -1049,5 +1052,120 @@ class CreateDataFrameTests {
         val df = emptyList<Map<String, Any?>>().toDataFrame()
         df.columnsCount() shouldBe 0
         df.rowsCount() shouldBe 0
+    }
+
+    data class Excluded(val y: Int)
+
+    data class ExcludedHolder(val excluded: Excluded, val z: Int)
+
+    data class ExcludeRoot(
+        val x: Int,
+        val excluded: Excluded,
+        val list: List<Excluded>,
+        val holder: ExcludedHolder,
+    )
+
+    @Test
+    fun `exclude of a class skips properties of exactly that type at any depth but not lists of it`() {
+        val root = ExcludeRoot(1, Excluded(2), listOf(Excluded(3)), ExcludedHolder(Excluded(4), 5))
+        val df = listOf(root).toDataFrame {
+            properties(maxDepth = 2) { exclude(Excluded::class) }
+        }
+
+        // the `excluded` property is skipped, the `List<Excluded>` one is not
+        df.columnNames() shouldBe listOf("x", "list", "holder")
+        df["list"].kind shouldBe ColumnKind.Frame
+        (df["list"][0] as DataFrame<*>)["y"].toList() shouldBe listOf(3)
+        // one level deeper the property of the excluded type is skipped as well
+        df["holder"].asColumnGroup().columnNames() shouldBe listOf("z")
+    }
+
+    open class ExcludedBase(val y: Int)
+
+    class ExcludedSub(y: Int) : ExcludedBase(y)
+
+    data class ExcludedSubHolder(val sub: ExcludedSub)
+
+    @Test
+    fun `exclude of a class keeps a property typed as its subclass`() {
+        val df = listOf(ExcludedSubHolder(ExcludedSub(1))).toDataFrame {
+            properties(maxDepth = 2) { exclude(ExcludedBase::class) }
+        }
+
+        df.columnNames() shouldBe listOf("sub")
+        df["sub"].asColumnGroup()["y"].toList() shouldBe listOf(1)
+    }
+
+    @Test
+    fun `iterable of columns with duplicate names throws DuplicateColumnNamesException`() {
+        val columns: List<BaseColumn<*>> = listOf(columnOf(1, 2).named("a"), columnOf(3, 4).named("a"))
+        shouldThrow<DuplicateColumnNamesException> { columns.toDataFrame() }
+    }
+
+    @Test
+    fun `iterable of columns of different sizes throws UnequalColumnSizesException`() {
+        val columns: List<BaseColumn<*>> = listOf(columnOf(1, 2).named("a"), columnOf(3, 4, 5).named("b"))
+        shouldThrow<UnequalColumnSizesException> { columns.toDataFrame() }
+    }
+
+    @Test
+    fun `iterable of columns names a column with an empty name untitled`() {
+        val columns: List<BaseColumn<*>> = listOf(columnOf(1, 2).named("a"), columnOf(3, 4))
+        columns.toDataFrame().columnNames() shouldBe listOf("a", "untitled")
+    }
+
+    @Test
+    fun `toDataFrameFromPairs throws UnequalColumnSizesException for columns of different sizes`() {
+        val columns: List<Pair<ColumnPath, BaseColumn<*>>> = listOf(
+            pathOf("a") to columnOf(1, 2),
+            pathOf("b") to columnOf(1, 2, 3),
+        )
+        shouldThrow<UnequalColumnSizesException> { columns.toDataFrameFromPairs<Unit>() }
+
+        val pathsToValues = listOf(pathOf("a") to listOf(1, 2), pathOf("b") to listOf(1, 2, 3))
+        shouldThrow<UnequalColumnSizesException> { pathsToValues.toDataFrameFromPairs() }
+
+        val namesToValues = listOf("a" to listOf(1, 2), "b" to listOf(1, 2, 3))
+        shouldThrow<UnequalColumnSizesException> { namesToValues.toDataFrameFromPairs() }
+    }
+
+    @Test
+    fun `toDataFrameFromPairs names a column with an empty name in the path untitled`() {
+        listOf(pathOf("") to listOf(1, 2)).toDataFrameFromPairs().columnNames() shouldBe listOf("untitled")
+        listOf("" to listOf(1, 2)).toDataFrameFromPairs().columnNames() shouldBe listOf("untitled")
+
+        val nested = listOf(
+            pathOf("person", "") to listOf(1, 2),
+            pathOf("person", "age") to listOf(30, 40),
+        ).toDataFrameFromPairs()
+        nested["person"].asColumnGroup().columnNames() shouldBe listOf("untitled", "age")
+    }
+
+    @Test
+    fun `maps of columns with different numbers of values throw UnequalColumnSizesException`() {
+        val byName: Map<String, Iterable<Any?>> = mapOf("a" to listOf(1, 2), "b" to listOf(1, 2, 3))
+        shouldThrow<UnequalColumnSizesException> { byName.toDataFrame() }
+
+        val byPath: Map<ColumnPath, Iterable<Any?>> = mapOf(
+            pathOf("a") to listOf(1, 2),
+            pathOf("g", "b") to listOf(1, 2, 3),
+        )
+        shouldThrow<UnequalColumnSizesException> { byPath.toDataFrame() }
+    }
+
+    @Test
+    fun `expr creates a column with an empty name that into puts under a name or at a path`() {
+        var exprName: String? = null
+        val df = listOf(1, 2).toDataFrame {
+            val column = expr { it * 10 }
+            exprName = column.name()
+            column into "tens"
+            expr { it + 1 } into pathOf("g", "next")
+        }
+
+        exprName shouldBe ""
+        df.columnNames() shouldBe listOf("tens", "g")
+        df["tens"].toList() shouldBe listOf(10, 20)
+        df["g"].asColumnGroup()["next"].toList() shouldBe listOf(2, 3)
     }
 }

@@ -386,6 +386,8 @@ Example from `DataFrame.first` KDoc:
 add a note about it. 
 * If you think a user can confuse the operation with another one,
 write it down exactly like that.
+* A link can't point at one overload of a function. To refer to another overload,
+describe it in words — by its receiver or parameter types — instead of linking to it.
 
 For example, from `group` KDoc:
 
@@ -518,7 +520,10 @@ Only if the task explicitly asks for before/after tables, read
 #### Parameters and return section
 
 Describe parameters and return of the method using `@param` and `@return` tags. 
-Remember type parameters.
+Remember type parameters. Keep the `@param` tags in the order of the signature.
+
+Document the exceptions the method throws with `@throws`, including those thrown by the function it
+delegates to.
 
 Wrap parameter names into `[]` for better readability.
 This is not only cosmetic: an unbracketed type parameter (`@param T ...`) makes KoDEx emit a broken
