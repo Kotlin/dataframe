@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -23,7 +22,10 @@ import org.junit.Test
  * and the cases where nothing matches.
  *
  * - on a column, as the `indices()` function and the `indices` property: the index of every
- * element, and what an element is for a [ColumnGroup] and for a [FrameColumn].
+ * element for a value column, and one index per cell for a [FrameColumn].
+ *
+ * - on a [ColumnGroup]: a group is not a `DataColumn`, so `indices()` resolves to the
+ * [DataFrame] overload and returns the row indices of the dataframe the group forms.
  */
 class IndicesTests : TestBase() {
 
@@ -83,8 +85,8 @@ class IndicesTests : TestBase() {
 
     // region on a column
 
-    // The column `indices` is an accessor on `DataColumn`/`BaseColumn`, not the `DataFrame`
-    // operation, and it carries no KDoc yet; these tests pin its behaviour down regardless.
+    // The column `indices` is an accessor on `DataColumn`, not the `DataFrame` operation,
+    // and it carries no KDoc yet; these tests pin its behaviour down regardless.
 
     @Test
     fun `indices of a column is the index of every element`() {
@@ -107,9 +109,8 @@ class IndicesTests : TestBase() {
 
     @Test
     fun `indices of a column group are the row indices of the dataframe it forms`() {
-        // typed as a BaseColumn, so the receiver leaves only the column overload applicable
-        val group: AnyBaseCol = df.name
-        group.indices() shouldBe 0..6
+        // a ColumnGroup is not a DataColumn, so this resolves to the DataFrame overload
+        df.name.indices() shouldBe 0..6
     }
 
     @Test

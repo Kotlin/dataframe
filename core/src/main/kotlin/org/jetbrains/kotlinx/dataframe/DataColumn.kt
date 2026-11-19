@@ -322,4 +322,4 @@ public val DataColumn<*>.typeClass: KClass<*>
     get() = type.classifier as? KClass<*>
         ?: error("Cannot cast ${type.classifier?.javaClass} to a ${KClass::class}. Column $name: $type")
 
-public fun AnyBaseCol.indices(): IntRange = 0 until size()
+public fun DataColumn<*>.indices(): IntRange = 0 until size()
