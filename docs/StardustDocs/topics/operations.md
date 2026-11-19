@@ -63,6 +63,7 @@ For full signature details and KDocs of all operations, see the
 * [add](add.md) — add columns
 * [addId](add.md#addid) — add `id` column
 * [append](append.md) — add rows
+* [appendNulls](appendNulls.md) — add rows filled with null values
 * [columns](columns.md) / [columnNames](columnNames.md) / [columnTypes](columnTypes.md) — get list of top-level columns, column names or column types
 * [columnsCount](columnsCount.md) — number of top-level columns
 * [concat](concat.md) — union rows from several [`DataFrame`](DataFrame.md) objects
