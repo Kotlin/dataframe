@@ -9,7 +9,12 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
+import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -23,8 +28,72 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
+// region docs
+
+// endregion
+
 // region read DataFrame from objects
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] from this [<code>Iterable</code>][Iterable] of objects by reading their public properties.
+ *
+ *
+ *
+ * The columns are the public properties of the elements;
+ * a class without properties contributes its getter-like functions instead, such as `getX()`.
+ * The columns are named after the properties, in the order of the primary constructor's parameters,
+ * with the remaining properties sorted by name.
+ * When there is no constructor to read parameter names from — in Java classes, for example —
+ * all columns are sorted by name.
+ *
+ *
+ *
+ * Every element of the iterable becomes a row of the new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * How the property values are stored depends on their type:
+ * - a value of a simple type — a number, a string, a boolean, a char, an enum, an array, a map,
+ *   a date-time type, ... — is stored as it is;
+ * - a nested object becomes a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] with a column per property,
+ *   and a list of nested objects becomes a [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] with a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] per value —
+ *   as deep as `maxDepth` allows;
+ * - a list of simple values stays a single value column with the values as a [<code>List</code>][List];
+ * - a property of a [<code>DataSchema</code>][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] type, a [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] or a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] is converted at any depth:
+ *   a [<code>DataSchema</code>][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] value and a [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] become a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+ *   a list of [<code>DataSchema</code>][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] values and a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] become a [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+ *
+ * A property getter that throws stores the exception it threw in the cell instead of a value,
+ * and the column type is then inferred from the values.
+ * When the elements themselves cannot be unfolded — they are of a simple type,
+ * or of a class without public properties or getter-like functions — the result is a single `value` column
+ * that stores them as they are.
+ *
+ * The values of the properties stay as they are.
+ * To convert nested values as well, use the overload with a `maxDepth` parameter,
+ * and to add computed columns, the one with a [<code>CreateDataFrameDsl</code>][CreateDataFrameDsl] lambda.
+ *
+ * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
+ *
+ *
+ *
+ * See also:
+ * - [<code>dataFrameOf</code>][org.jetbrains.kotlinx.dataframe.api.dataFrameOf] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from columns, or from name and value pairs.
+ * - [<code>toDataFrameFromPairs</code>][org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs] — the nesting-aware builder behind this operation,
+ *   for explicit column paths.
+ * - [<code>unfold</code>][org.jetbrains.kotlinx.dataframe.DataColumn.unfold] — the column-side counterpart: unfolds a column of objects
+ *   into a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * ### Example
+ * ```kotlin
+ * data class Person(val name: String, val age: Int)
+ *
+ * val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
+ *
+ * val df = persons.toDataFrame()
+ * ```
+ *
+ * @param [T] The type of the elements; the schema marker of the result.
+ * @return The new [<code>DataFrame</code>][DataFrame].
+ */
 @Refine
 @Interpretable("toDataFrameDefault")
 public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
@@ -32,11 +101,158 @@ public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
         properties()
     }
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] from this [<code>Iterable</code>][Iterable] of objects with the [<code>CreateDataFrameDsl</code>][CreateDataFrameDsl]:
+ * [<code>body</code>][body] decides the columns —
+ * the properties of the elements via [<code>properties</code>][CreateDataFrameDsl.properties],
+ * computed columns and column groups via the other members of [<code>CreateDataFrameDsl</code>][CreateDataFrameDsl].
+ *
+ *
+ *
+ * Every element of the iterable becomes a row of the new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * How the property values are stored depends on their type:
+ * - a value of a simple type — a number, a string, a boolean, a char, an enum, an array, a map,
+ *   a date-time type, ... — is stored as it is;
+ * - a nested object becomes a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] with a column per property,
+ *   and a list of nested objects becomes a [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] with a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] per value —
+ *   as deep as `maxDepth` allows;
+ * - a list of simple values stays a single value column with the values as a [<code>List</code>][List];
+ * - a property of a [<code>DataSchema</code>][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] type, a [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] or a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] is converted at any depth:
+ *   a [<code>DataSchema</code>][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] value and a [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] become a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+ *   a list of [<code>DataSchema</code>][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] values and a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] become a [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+ *
+ * A property getter that throws stores the exception it threw in the cell instead of a value,
+ * and the column type is then inferred from the values.
+ * When the elements themselves cannot be unfolded — they are of a simple type,
+ * or of a class without public properties or getter-like functions — the result is a single `value` column
+ * that stores them as they are.
+ *
+ * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
+ *
+ *
+ *
+ * See also:
+ * - [<code>dataFrameOf</code>][org.jetbrains.kotlinx.dataframe.api.dataFrameOf] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from columns, or from name and value pairs.
+ * - [<code>toDataFrameFromPairs</code>][org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs] — the nesting-aware builder behind this operation,
+ *   for explicit column paths.
+ * - [<code>unfold</code>][org.jetbrains.kotlinx.dataframe.DataColumn.unfold] — the column-side counterpart: unfolds a column of objects
+ *   into a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * ### Example
+ * ```kotlin
+ * data class Name(val firstName: String, val lastName: String)
+ *
+ * data class Score(val subject: String, val value: Int)
+ *
+ * data class Student(val name: Name, val age: Int, val scores: List<Score>)
+ *
+ * val students = listOf(
+ *     Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
+ *     Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
+ * )
+ *
+ * val df = students.toDataFrame {
+ *     // add column
+ *     "year of birth" from { 2021 - it.age }
+ *
+ *     // scan all properties
+ *     properties(maxDepth = 1) {
+ *         exclude(Score::subject) // `subject` property will be skipped from object graph traversal
+ *         preserve<Name>() // `Name` objects will be stored as-is without transformation into DataFrame
+ *     }
+ *
+ *     // add column group
+ *     "summary" {
+ *         "max score" from { it.scores.maxOf { it.value } }
+ *         "min score" from { it.scores.minOf { it.value } }
+ *     }
+ * }
+ * ```
+ *
+ * @param [T] The type of the elements; the schema marker of the result.
+ * @param [body] The [<code>CreateDataFrameDsl</code>][CreateDataFrameDsl] lambda that adds the columns.
+ * @return The new [<code>DataFrame</code>][DataFrame].
+ */
 @Refine
 @Interpretable("toDataFrameDsl")
 public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> =
     createDataFrameImpl(typeOf<T>(), body)
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] from this [<code>Iterable</code>][Iterable] of objects, with a column per property in [<code>props</code>][props],
+ * or for all public properties of the elements when [<code>props</code>][props] is empty.
+ *
+ *
+ *
+ * The columns are the public properties of the elements;
+ * a class without properties contributes its getter-like functions instead, such as `getX()`.
+ * The columns are named after the properties, in the order of the primary constructor's parameters,
+ * with the remaining properties sorted by name.
+ * When there is no constructor to read parameter names from — in Java classes, for example —
+ * all columns are sorted by name.
+ *
+ *
+ *
+ * Every element of the iterable becomes a row of the new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * How the property values are stored depends on their type:
+ * - a value of a simple type — a number, a string, a boolean, a char, an enum, an array, a map,
+ *   a date-time type, ... — is stored as it is;
+ * - a nested object becomes a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] with a column per property,
+ *   and a list of nested objects becomes a [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] with a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] per value —
+ *   as deep as `maxDepth` allows;
+ * - a list of simple values stays a single value column with the values as a [<code>List</code>][List];
+ * - a property of a [<code>DataSchema</code>][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] type, a [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] or a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] is converted at any depth:
+ *   a [<code>DataSchema</code>][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] value and a [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] become a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+ *   a list of [<code>DataSchema</code>][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] values and a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] become a [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+ *
+ * A property getter that throws stores the exception it threw in the cell instead of a value,
+ * and the column type is then inferred from the values.
+ * When the elements themselves cannot be unfolded — they are of a simple type,
+ * or of a class without public properties or getter-like functions — the result is a single `value` column
+ * that stores them as they are.
+ *
+ *
+ *
+ * With `maxDepth` = 0, the values of the properties stay as they are:
+ * a nested object stays an object, and a list stays a list.
+ * With `maxDepth` = 1, nested objects become [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]s, and lists of objects [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]s;
+ * every further step goes one level deeper.
+ * Properties of a [<code>DataSchema</code>][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] type, [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow]s and [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s are converted at any depth.
+ *
+ * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
+ *
+ *
+ *
+ * See also:
+ * - [<code>dataFrameOf</code>][org.jetbrains.kotlinx.dataframe.api.dataFrameOf] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from columns, or from name and value pairs.
+ * - [<code>toDataFrameFromPairs</code>][org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs] — the nesting-aware builder behind this operation,
+ *   for explicit column paths.
+ * - [<code>unfold</code>][org.jetbrains.kotlinx.dataframe.DataColumn.unfold] — the column-side counterpart: unfolds a column of objects
+ *   into a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * ### Example
+ * ```kotlin
+ * data class Name(val firstName: String, val lastName: String)
+ *
+ * data class Score(val subject: String, val value: Int)
+ *
+ * data class Student(val name: Name, val age: Int, val scores: List<Score>)
+ *
+ * val students = listOf(
+ *     Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
+ *     Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
+ * )
+ *
+ * val df = students.toDataFrame(maxDepth = 1)
+ * ```
+ *
+ * @param [T] The type of the elements; the schema marker of the result.
+ * @param [props] The properties to make columns from; all public properties of the elements by default.
+ * @param [maxDepth] How deep to convert the values of the properties; `0` by default.
+ * @return The new [<code>DataFrame</code>][DataFrame].
+ */
 @Refine
 @Interpretable("toDataFrame")
 public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>, maxDepth: Int = 0): DataFrame<T> =
@@ -44,6 +260,34 @@ public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>
         properties(roots = props, maxDepth = maxDepth)
     }
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] from this [<code>Iterable</code>][Iterable] of [<code>DataRow</code>][DataRow]s.
+ *
+ * When all rows come from the same [<code>DataFrame</code>][DataFrame], the result is that [<code>DataFrame</code>][DataFrame] with its rows
+ * in the order of this iterable. Otherwise, the rows are concatenated in the order of this
+ * iterable: the columns of the result are the union of the columns of the rows' [<code>DataFrame</code>][DataFrame]s,
+ * and a row from a [<code>DataFrame</code>][DataFrame] without one of the columns gets `null` in it.
+ *
+ * See also [<code>concat</code>][Iterable.concat], which concatenates whole [<code>DataFrame</code>][DataFrame]s.
+ *
+ * ### Example
+ * ```kotlin
+ * val people = dataFrameOf("name", "age")(
+ *     "Alice",
+ *     15,
+ *     "Bob",
+ *     20,
+ *     "Charlie",
+ *     22,
+ * )
+ *
+ * // the rows of `people` in a new order
+ * val df = listOf(people[2], people[0]).toDataFrame()
+ * ```
+ *
+ * @param [T] The schema marker of the rows and of the result.
+ * @return The new [<code>DataFrame</code>][DataFrame].
+ */
 @JvmName("toDataFrameT")
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
     var uniqueDf: DataFrame<T>? = null
@@ -65,6 +309,26 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
     }
 }
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] from this [<code>Iterable</code>][Iterable] of maps, treating every map as a row:
+ * every distinct key becomes a column, in the order the keys are first seen.
+ * A map without one of the keys gets `null` in the key's column.
+ *
+ * See also [<code>toDataFrame</code>][Map.toDataFrame] for a single [<code>Map</code>][Map] of column names to values,
+ * where every entry is a column and not a row.
+ *
+ * ### Example
+ * ```kotlin
+ * val maps = listOf(
+ *     mapOf("name" to "Alice", "age" to 15),
+ *     mapOf("name" to "Bob", "city" to "Moscow"),
+ * )
+ *
+ * val df = maps.toDataFrame()
+ * ```
+ *
+ * @return The new [<code>DataFrame</code>][DataFrame].
+ */
 @JvmName("toDataFrameMapStringAnyNullable")
 public fun Iterable<Map<String, Any?>>.toDataFrame(): DataFrame<*> {
     val list = asList()
@@ -86,9 +350,66 @@ public fun Iterable<Map<String, Any?>>.toDataFrame(): DataFrame<*> {
     return columns.toDataFrame()
 }
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] from this [<code>Iterable</code>][Iterable] of columns: the columns become the columns of the
+ * result, keeping their names and values.
+ * A column with an empty name gets a generated name: `untitled`.
+ *
+ * See also [<code>dataFrameOf</code>][dataFrameOf], which does the same for columns passed as arguments.
+ *
+ * ### Example
+ * ```kotlin
+ * val name = columnOf("Alice", "Bob").named("name")
+ * val age = columnOf(15, 20).named("age")
+ *
+ * val df = listOf(name, age).toDataFrame()
+ * ```
+ *
+ * @return The new [<code>DataFrame</code>][DataFrame].
+ * @throws [DuplicateColumnNamesException] if two columns have the same name.
+ * @throws [UnequalColumnSizesException] if the columns have different sizes.
+ */
 @JvmName("toDataFrameAnyColumn")
 public fun Iterable<BaseColumn<*>>.toDataFrame(): DataFrame<*> = dataFrameOf(this)
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] from this [<code>Iterable</code>][Iterable] of pairs of a [<code>ColumnPath</code>][ColumnPath] and a column.
+ *
+ *
+ *
+ * A pair with a path of one segment becomes a top-level column.
+ * A longer path nests the column in [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]s, one group per path segment
+ * except the last, which names the column.
+ * Duplicate names are made unique at every level: a column named `a` that comes after another `a`
+ * is renamed to `a1`. When a column and a group would share a name,
+ * the one that comes later in the pairs is renamed.
+ * A column whose name in the path is empty gets a generated name: `untitled`.
+ *
+ * The columns' own names are ignored: every column is named after the last segment of its path.
+ *
+ * To create the columns from values and infer their types, use the `toDataFrameFromPairs` overload
+ * for pairs of a [<code>ColumnPath</code>][ColumnPath] and an [<code>Iterable</code>][Iterable] of values.
+ *
+ *
+ *
+ * See also:
+ * - [<code>dataFrameOf</code>][org.jetbrains.kotlinx.dataframe.api.dataFrameOf] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from columns, or from name and value pairs.
+ * - [<code>toDataFrame</code>][kotlin.collections.Map.toDataFrame] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from a [<code>Map</code>][Map] of column names
+ *   or [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s to values.
+ *
+ * ### Example
+ * ```kotlin
+ * val df = listOf(
+ *     pathOf("name") to columnOf("Alice", "Bob"),
+ *     pathOf("details", "age") to columnOf(15, 20),
+ *     pathOf("details", "city") to columnOf("London", "Dubai"),
+ * ).toDataFrameFromPairs<Any>()
+ * ```
+ *
+ * @param [T] The schema marker of the result; it is not checked against the columns.
+ * @return The new [<code>DataFrame</code>][DataFrame].
+ * @throws [UnequalColumnSizesException] if the columns have different sizes.
+ */
 @JvmName("toDataFramePairColumnPathAnyCol")
 public fun <T> Iterable<Pair<ColumnPath, BaseColumn<*>>>.toDataFrameFromPairs(): DataFrame<T> {
     val nameGenerator = ColumnNameGenerator()
@@ -143,12 +464,80 @@ public fun <T> Iterable<Pair<ColumnPath, BaseColumn<*>>>.toDataFrameFromPairs():
     return columns.map { it!! }.toDataFrame().cast()
 }
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] from this [<code>Iterable</code>][Iterable] of pairs of a [<code>ColumnPath</code>][ColumnPath] and the values of the column,
+ * inferring the type of each column from its values.
+ *
+ *
+ *
+ * A pair with a path of one segment becomes a top-level column.
+ * A longer path nests the column in [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]s, one group per path segment
+ * except the last, which names the column.
+ * Duplicate names are made unique at every level: a column named `a` that comes after another `a`
+ * is renamed to `a1`. When a column and a group would share a name,
+ * the one that comes later in the pairs is renamed.
+ * A column whose name in the path is empty gets a generated name: `untitled`.
+ *
+ *
+ *
+ * See also:
+ * - [<code>dataFrameOf</code>][org.jetbrains.kotlinx.dataframe.api.dataFrameOf] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from columns, or from name and value pairs.
+ * - [<code>toDataFrame</code>][kotlin.collections.Map.toDataFrame] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from a [<code>Map</code>][Map] of column names
+ *   or [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s to values.
+ *
+ * ### Example
+ * ```kotlin
+ * val df = listOf(
+ *     pathOf("name") to listOf("Alice", "Bob"),
+ *     pathOf("details", "age") to listOf(15, 20),
+ *     pathOf("details", "city") to listOf("London", "Dubai"),
+ * ).toDataFrameFromPairs()
+ * ```
+ *
+ * @return The new [<code>DataFrame</code>][DataFrame].
+ * @throws [UnequalColumnSizesException] if the columns have different numbers of values.
+ */
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): DataFrame<*> =
     map {
         it.first to createColumnGuessingType(it.first.last(), it.second.asList())
     }.toDataFrameFromPairs<Unit>()
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] from this [<code>Iterable</code>][Iterable] of pairs of a column name and the values of the column,
+ * inferring the type of each column from its values.
+ *
+ *
+ *
+ * A pair with a path of one segment becomes a top-level column.
+ * A longer path nests the column in [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]s, one group per path segment
+ * except the last, which names the column.
+ * Duplicate names are made unique at every level: a column named `a` that comes after another `a`
+ * is renamed to `a1`. When a column and a group would share a name,
+ * the one that comes later in the pairs is renamed.
+ * A column whose name in the path is empty gets a generated name: `untitled`.
+ *
+ * To nest the columns in [<code>ColumnGroup</code>][ColumnGroup]s, use the `toDataFrameFromPairs` overload
+ * for pairs of a [<code>ColumnPath</code>][ColumnPath] and an [<code>Iterable</code>][Iterable] of values.
+ *
+ *
+ *
+ * See also:
+ * - [<code>dataFrameOf</code>][org.jetbrains.kotlinx.dataframe.api.dataFrameOf] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from columns, or from name and value pairs.
+ * - [<code>toDataFrame</code>][kotlin.collections.Map.toDataFrame] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from a [<code>Map</code>][Map] of column names
+ *   or [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]s to values.
+ *
+ * ### Example
+ * ```kotlin
+ * val df = listOf(
+ *     "name" to listOf("Alice", "Bob"),
+ *     "age" to listOf(15, 20),
+ * ).toDataFrameFromPairs()
+ * ```
+ *
+ * @return The new [<code>DataFrame</code>][DataFrame].
+ * @throws [UnequalColumnSizesException] if the columns have different numbers of values.
+ */
 public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): DataFrame<*> =
     map {
         ColumnPath(it.first) to createColumnGuessingType(it.first, it.second.asList())
@@ -171,22 +560,40 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): DataFr
 @Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS, AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
 public annotation class CreateDataFrameDslMarker
 
+/**
+ * The DSL that configures how [<code>properties</code>][CreateDataFrameDsl.properties] traverse the object graph
+ * of the elements: which classes and properties to skip ([<code>exclude</code>][TraversePropertiesDsl.exclude]),
+ * and which to store as they are ([<code>preserve</code>][TraversePropertiesDsl.preserve]).
+ *
+ * It is available only inside the `body` of [<code>properties</code>][CreateDataFrameDsl.properties]:
+ * there is no [<code>TraversePropertiesDsl</code>][TraversePropertiesDsl] receiver outside it,
+ * and the [<code>CreateDataFrameDslMarker</code>][CreateDataFrameDslMarker] additionally hides the members of the outer [<code>CreateDataFrameDsl</code>][CreateDataFrameDsl]
+ * inside the `body`.
+ */
 @CreateDataFrameDslMarker
 public interface TraversePropertiesDsl {
 
     /**
-     * Skip given [<code>classes</code>][classes] during recursive (dfs) traversal.
+     * Skip given [<code>classes</code>][classes] during recursive (dfs) traversal:
+     * a property whose type is exactly one of the [<code>classes</code>][classes] is not read,
+     * wherever it appears in the object graph.
+     * A property of another type is still read, even when its values are of one of the [<code>classes</code>][classes]:
+     * a `List` of them, or a property typed as their subclass.
      *
      * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
+     *
+     * @param [classes] The classes of the properties to skip.
      */
     @Interpretable("Exclude0")
     public fun exclude(vararg classes: KClass<*>)
 
     /**
-     * Skip given [<code>properties</code>][properties] during recursive (dfs) traversal.
+     * Skip given [<code>properties</code>][properties] during recursive (dfs) traversal, wherever they appear in the object graph.
      * These can also be getter-like functions (like `getX()` or `isX()`).
      *
      * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
+     *
+     * @param [properties] The properties to skip.
      */
     @Interpretable("Exclude1")
     public fun exclude(vararg properties: KCallable<*>)
@@ -195,6 +602,8 @@ public interface TraversePropertiesDsl {
      * Store given [<code>classes</code>][classes] in ValueColumns without transformation into ColumnGroups or FrameColumns.
      *
      * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
+     *
+     * @param [classes] The classes whose values are stored as they are.
      */
     @Interpretable("Preserve0")
     public fun preserve(vararg classes: KClass<*>)
@@ -204,6 +613,8 @@ public interface TraversePropertiesDsl {
      * These can also be getter-like functions (like `getX()` or `isX()`).
      *
      * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
+     *
+     * @param [properties] The properties whose values are stored as they are.
      */
     @Interpretable("Preserve1")
     public fun preserve(vararg properties: KCallable<*>)
@@ -213,6 +624,8 @@ public interface TraversePropertiesDsl {
  * Store values of the given type [<code>T</code>][T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
  *
  * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
+ *
+ * @param [T] The class whose values are stored as they are.
  */
 @Interpretable("PreserveT")
 public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(T::class)
@@ -220,19 +633,63 @@ public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(
 @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
 public inline fun <reified T> CreateDataFrameDsl<*>.preserve(): Unit = Unit
 
+/**
+ * The DSL that [<code>toDataFrame</code>][Iterable.toDataFrame] uses to build a [<code>DataFrame</code>][DataFrame] from an [<code>Iterable</code>][Iterable]
+ * of objects: every element becomes a row, and the members of this DSL add the columns —
+ * [<code>properties</code>][properties] for a column per property of the elements, [<code>from</code>][String.from] and [<code>add</code>][add] for
+ * computed columns, [<code>String.invoke</code>][String.invoke] for column groups.
+ *
+ * Every column lands at a path, and paths nest as in [<code>toDataFrameFromPairs</code>][toDataFrameFromPairs].
+ */
 @CreateDataFrameDslMarker
 public abstract class CreateDataFrameDsl<T> {
 
+    /** The [<code>Iterable</code>][Iterable] the [<code>DataFrame</code>][DataFrame] is built from: the objects, one per row. */
     public abstract val source: Iterable<T>
 
+    /**
+     * Adds [<code>column</code>][column] to the [<code>DataFrame</code>][DataFrame] being built, at [<code>path</code>][path].
+     * Without [<code>path</code>][path], the column lands at its own name.
+     *
+     * @param [column] The column to add.
+     * @param [path] The path to put the column at; the column is renamed to the last path segment.
+     */
     public abstract fun add(column: BaseColumn<*>, path: ColumnPath? = null)
 
+    /**
+     * Puts this column into the [<code>DataFrame</code>][DataFrame] being built, under [<code>name</code>][name].
+     *
+     * @param [name] The name of the column in the [<code>DataFrame</code>][DataFrame] being built.
+     */
     @Interpretable("ToDataFrameDslIntoString")
     public infix fun BaseColumn<*>.into(name: String): Unit = add(this, pathOf(name))
 
+    /**
+     * Puts this column into the [<code>DataFrame</code>][DataFrame] being built, at [<code>path</code>][path];
+     * a path of more than one segment nests the column in [<code>ColumnGroup</code>][ColumnGroup]s.
+     *
+     * @param [path] The path to put the column at; the column is renamed to the last path segment.
+     */
     @Interpretable("ToDataFrameDslIntoPath")
     public infix fun BaseColumn<*>.into(path: ColumnPath): Unit = add(this, path)
 
+    /**
+     * Adds a column per property of the elements.
+     *
+     *
+     *
+     * With `maxDepth` = 0, the values of the properties stay as they are:
+     * a nested object stays an object, and a list stays a list.
+     * With `maxDepth` = 1, nested objects become [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]s, and lists of objects [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]s;
+     * every further step goes one level deeper.
+     * Properties of a [<code>DataSchema</code>][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] type, [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow]s and [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s are converted at any depth.
+     *
+     * @param [roots] The properties, or getter-like functions such as `getX()`, to make columns from;
+     * all public properties of the elements by default.
+     * @param [maxDepth] How deep to convert the values of the properties.
+     * @param [body] The [<code>TraversePropertiesDsl</code>][TraversePropertiesDsl] lambda that excludes or preserves
+     * classes and properties during the traversal.
+     */
     @Interpretable("Properties0")
     public abstract fun properties(
         vararg roots: KCallable<*>,
@@ -252,14 +709,54 @@ public abstract class CreateDataFrameDsl<T> {
     @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
     public fun preserve(vararg properties: KCallable<*>): Unit = Unit
 
+    /**
+     * Creates a [<code>DataColumn</code>][DataColumn] with the values [<code>expression</code>][expression] returns for each element.
+     *
+     * The column is not added to the [<code>DataFrame</code>][DataFrame] being built on its own:
+     * put it there with [<code>into</code>][into], under a name or at a [<code>ColumnPath</code>][ColumnPath].
+     *
+     * ### Example
+     * ```kotlin
+     * data class Person(val name: String, val age: Int)
+     *
+     * val persons = listOf(Person("Alice", 15), Person("Bob", 20))
+     *
+     * val df = persons.toDataFrame {
+     *     // a column under a name
+     *     expr { it.name.uppercase() } into "upper name"
+     *
+     *     // a column at a path: nested in the `details` column group
+     *     expr { 2021 - it.age } into pathOf("details", "year of birth")
+     * }
+     * ```
+     *
+     * @param [R] The type of the values of the column.
+     * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
+     * Either [<code>None</code>][org.jetbrains.kotlinx.dataframe.api.Infer.None], [<code>Nulls</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [<code>Type</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [<code>Nulls</code>][Infer.Nulls].
+     * @param [expression] The expression to compute each value from an element.
+     * @return The new [<code>DataColumn</code>][DataColumn], with an empty name.
+     */
     @Interpretable("ToDataFrameDslExpr")
     public inline fun <reified R> expr(infer: Infer = Infer.Nulls, noinline expression: (T) -> R): DataColumn<R> =
         source.map { expression(it) }.toColumn(infer = infer)
 
+    /**
+     * Adds a column named [<code>name</code>][name] with the values [<code>expression</code>][expression] returns for each element.
+     *
+     * @param [R] The type of the values of the column.
+     * @param [name] The name of the new column.
+     * @param [expression] The expression to compute each value from an element.
+     */
     @Interpretable("ToDataFrameDslAdd")
     public inline fun <reified R> add(name: String, noinline expression: (T) -> R): Unit =
         add(source.map { expression(it) }.toColumn(name, Infer.Nulls))
 
+    /**
+     * Adds a column named this string with the values [<code>expression</code>][expression] returns for each element.
+     *
+     * @param [R] The type of the values of the column.
+     * @param [expression] The expression to compute each value from an element.
+     */
     @Interpretable("ToDataFrameFrom0")
     public inline infix fun <reified R> String.from(noinline expression: (T) -> R): Unit = add(this, expression)
 
@@ -268,6 +765,13 @@ public abstract class CreateDataFrameDsl<T> {
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
         add(columnName, expression)
 
+    /**
+     * Adds a column named this string with the values of [<code>inferType</code>][inferType]'s expression,
+     * with the column type inferred from the values.
+     *
+     * @param [R] The declared type of the values; the column type is inferred from the values instead.
+     * @param [inferType] The expression wrapped with [<code>inferType</code>][CreateDataFrameDsl.inferType].
+     */
     @Interpretable("ToDataFrameDslFromInferType")
     public inline infix fun <reified R> String.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createByInference(this, source.map { inferType.expression(it) }))
@@ -277,14 +781,62 @@ public abstract class CreateDataFrameDsl<T> {
     public inline infix fun <reified R> KProperty<R>.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createByInference(columnName, source.map { inferType.expression(it) }))
 
+    /**
+     * Wraps an expression so that [<code>from</code>][String.from] creates the column
+     * with the type inferred from the values it returns.
+     *
+     * @param [expression] The expression to compute each value from an element.
+     */
     public data class InferType<T, R>(val expression: (T) -> R)
 
+    /**
+     * Creates an [<code>InferType</code>][InferType] for [<code>from</code>][String.from] from [<code>expression</code>][expression],
+     * so that the column type is inferred from the values.
+     *
+     * @param [expression] The expression to compute each value from an element.
+     * @return The [<code>InferType</code>][InferType] to pass to [<code>from</code>][String.from].
+     */
     public inline fun <reified R> inferType(noinline expression: (T) -> R): InferType<T, R> = InferType(expression)
 
+    /**
+     * Creates a [<code>ColumnGroup</code>][ColumnGroup] named this string: every column added inside [<code>builder</code>][builder]
+     * lands in the group.
+     *
+     * @param [builder] The [<code>CreateDataFrameDsl</code>][CreateDataFrameDsl] lambda that adds the columns of the group.
+     */
     @Interpretable("ToDataFrameDslStringInvoke")
     public abstract operator fun String.invoke(builder: CreateDataFrameDsl<T>.() -> Unit)
 }
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] from this [<code>Iterable</code>][Iterable] with a single column named [<code>columnName</code>][columnName]:
+ * every element becomes one cell of the column.
+ *
+ * A way to start from values you want to take apart step by step — files, URLs, ... —
+ * and to add columns extracted from them later.
+ *
+ * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
+ *
+ *
+ *
+ * See also:
+ * - [<code>dataFrameOf</code>][org.jetbrains.kotlinx.dataframe.api.dataFrameOf] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from columns, or from name and value pairs.
+ * - [<code>toDataFrameFromPairs</code>][org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs] — the nesting-aware builder behind this operation,
+ *   for explicit column paths.
+ * - [<code>unfold</code>][org.jetbrains.kotlinx.dataframe.DataColumn.unfold] — the column-side counterpart: unfolds a column of objects
+ *   into a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * ### Example
+ * ```kotlin
+ * val files = listOf(File("data.csv"), File("data1.csv"))
+ *
+ * val df = files.toDataFrame(columnName = "data")
+ * ```
+ *
+ * @param [T] The type of the elements.
+ * @param [columnName] The name of the single column.
+ * @return The new [<code>DataFrame</code>][DataFrame].
+ */
 @Refine
 @Interpretable("ToDataFrameColumn")
 public inline fun <reified T> Iterable<T>.toDataFrame(columnName: String): DataFrame<*> =
@@ -296,6 +848,16 @@ public inline fun <reified T> Iterable<T>.toDataFrame(columnName: String): DataF
 
 // region toDataFrame overloads for built-in types
 
+/**
+ * A [<code>DataSchema</code>][DataSchema] for the `value` column: the single column that [<code>toDataFrame</code>][Iterable.toDataFrame]
+ * creates when the elements of the [<code>Iterable</code>][Iterable] are stored as they are — they are of a simple type,
+ * or of a class without public properties or getter-like functions.
+ *
+ * Cast the resulting [<code>DataFrame</code>][DataFrame] to `DataFrame<ValueProperty<T>>` to access the `value` column
+ * type-safely, for example to add computed columns to it.
+ *
+ * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
+ */
 @DataSchema
 public interface ValueProperty<T> {
     public val value: T
@@ -305,11 +867,61 @@ public interface ValueProperty<T> {
 
 // region Create DataFrame from Map
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] with a column per entry of this [<code>Map</code>][Map]:
+ * the column is named after the key and takes the values of the iterable,
+ * with the type inferred from the values.
+ *
+ * For more information: [See DataFrame from Map<String, List<*>> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-map-string-list)
+ *
+ *
+ *
+ * See also:
+ * - [<code>dataFrameOf</code>][org.jetbrains.kotlinx.dataframe.api.dataFrameOf] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from columns, or from name and value pairs.
+ * - [<code>toDataFrameFromPairs</code>][org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from an [<code>Iterable</code>][Iterable] of pairs instead of a [<code>Map</code>][Map].
+ *
+ * ### Example
+ * ```kotlin
+ * val map = mapOf("name" to listOf("Alice", "Bob"), "age" to listOf(15, 20))
+ *
+ * val df = map.toDataFrame()
+ * ```
+ *
+ * @return The new [<code>DataFrame</code>][DataFrame].
+ * @throws [UnequalColumnSizesException] if the columns have different numbers of values.
+ */
 public fun Map<String, Iterable<Any?>>.toDataFrame(): DataFrame<*> =
     map {
         DataColumn.createByInference(it.key, it.value.asList())
     }.toDataFrame()
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] with a column per entry of this [<code>Map</code>][Map]:
+ * the column takes the values of the iterable, with the type inferred from the values,
+ * and the key is its [<code>ColumnPath</code>][ColumnPath]. A path of one segment names a top-level column;
+ * a longer path nests the column in [<code>ColumnGroup</code>][ColumnGroup]s,
+ * one group per path segment except the last, which names the column.
+ *
+ *
+ *
+ * See also:
+ * - [<code>dataFrameOf</code>][org.jetbrains.kotlinx.dataframe.api.dataFrameOf] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from columns, or from name and value pairs.
+ * - [<code>toDataFrameFromPairs</code>][org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs] — creates a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from an [<code>Iterable</code>][Iterable] of pairs instead of a [<code>Map</code>][Map].
+ *
+ * ### Example
+ * ```kotlin
+ * val map = mapOf(
+ *     pathOf("name") to listOf("Alice", "Bob"),
+ *     pathOf("details", "age") to listOf(15, 20),
+ *     pathOf("details", "city") to listOf("London", "Dubai"),
+ * )
+ *
+ * val df = map.toDataFrame()
+ * ```
+ *
+ * @return The new [<code>DataFrame</code>][DataFrame].
+ * @throws [UnequalColumnSizesException] if the columns have different numbers of values.
+ */
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): DataFrame<*> =
     map {
