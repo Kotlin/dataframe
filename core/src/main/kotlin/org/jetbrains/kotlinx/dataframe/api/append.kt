@@ -40,7 +40,8 @@ import org.jetbrains.kotlinx.dataframe.nrow
  * For more information: {@include [DocumentationUrls.Append]}
  *
  * See also:
- * - [append][DataFrame.append] — appends complete rows represented by objects whose type implements [DataRowSchema].
+ * - [append(rows)][DataFrame.append] — appends complete rows
+ * represented by objects whose type implements [DataRowSchema].
  * - [appendNulls] — appends rows filled with `null` values.
  * - [concat][DataFrame.concat] — vertically combines this [DataFrame] with other dataframes or rows.
  * - [duplicateRows][DataFrame.duplicateRows] — repeats existing rows.
