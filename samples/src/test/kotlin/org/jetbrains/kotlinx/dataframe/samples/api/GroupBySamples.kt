@@ -40,12 +40,13 @@ import org.jetbrains.kotlinx.dataframe.api.medianFor
 import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minFor
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.percentile
 import org.jetbrains.kotlinx.dataframe.api.percentileBy
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.sortByCount
+import org.jetbrains.kotlinx.dataframe.api.sortByCountDesc
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortByGroup
 import org.jetbrains.kotlinx.dataframe.api.sortByKey
@@ -276,19 +277,20 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     }
 
     @Test
-    fun sortByCountOnGroupBy_properties() {
+    fun sortByCountDescOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { age }.sortByCount()
+        df.groupBy { age }.sortByCountDesc()
             // SampleEnd
+            .also { it.keys.age.toList() shouldBe listOf(30, 15, 20, 45, 40, 18) }
             .toDataFrame()
             .defaultHeaderFormatting { group }
             .saveDfHtmlSample()
     }
 
     @Test
-    fun sortByCountOnGroupBy_strings() {
+    fun sortByCountDescOnGroupBy_strings() {
         // SampleStart
-        df.groupBy("age").sortByCount()
+        df.groupBy("age").sortByCountDesc()
         // SampleEnd
     }
 
@@ -587,6 +589,9 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df.groupBy { isHappy }.minBy { age }.into("youngest") { name }
             // SampleEnd
+            .also { result ->
+                result["youngest"]["lastName"].toList() shouldBe listOf("Cooper", "Brown")
+            }
             .saveDfHtmlSample()
     }
 
@@ -594,7 +599,44 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun groupByInto_strings() {
         // SampleStart
         df.groupBy("isHappy").minBy("age").into("youngest") { getColumnGroup("name") }
-        // SampleEnd
+            // SampleEnd
+            .also { result ->
+                result["youngest"]["firstName"].toList() shouldBe listOf("Alice", "Bob")
+            }
+    }
+
+    @Test
+    fun groupByValuesAllColumns() {
+        // SampleStart
+        // For each `isHappy` value, the values of the youngest person
+        df.groupBy { isHappy }.minBy { age }.values()
+            // SampleEnd
+            .also { result ->
+                result.columnNames() shouldBe listOf("isHappy", "name", "age", "city", "weight")
+                result["name"]["lastName"].toList() shouldBe listOf("Cooper", "Brown")
+            }
+    }
+
+    @Test
+    fun groupByIntoColumnGroup_properties() {
+        // SampleStart
+        df.groupBy { isHappy }.minBy { age }.into("youngest")
+            // SampleEnd
+            .also { result ->
+                result.columnNames() shouldBe listOf("isHappy", "youngest")
+                result["youngest"]["name"]["lastName"].toList() shouldBe listOf("Cooper", "Brown")
+            }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun groupByIntoColumnGroup_strings() {
+        // SampleStart
+        df.groupBy("isHappy").minBy("age").into("youngest")
+            // SampleEnd
+            .also { result ->
+                result.columnNames() shouldBe listOf("isHappy", "youngest")
+            }
     }
 
     // endregion
@@ -652,7 +694,10 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df.groupBy { isHappy }.into("ages") { age }
             // SampleEnd
-            .defaultHeaderFormatting { "ages"<List<String>>() }
+            .also { result ->
+                result["ages"][0] shouldBe listOf(15, 45, 40, 30, 30)
+            }
+            .defaultHeaderFormatting { "ages"<List<Int>>() }
             .saveDfHtmlSample()
     }
 
@@ -660,7 +705,10 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun intoOnGroupBy_strings() {
         // SampleStart
         df.groupBy("isHappy").into("ages") { "age"<Int>() }
-        // SampleEnd
+            // SampleEnd
+            .also { result ->
+                result["ages"][1] shouldBe listOf(20, 20, 30, 15, 18)
+            }
     }
 
     @Test
@@ -1097,6 +1145,31 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df.groupBy { "name"["firstName"] }.mapToFrames { group.sortByDesc("age").take(2) }
         // SampleEnd
+    }
+
+    // endregion
+
+    // region ColumnsForAggregateSelectionDsl
+
+    @Test
+    fun columnsForAggregateSelectionDsl() {
+        // SampleStart
+        // Store the maximum "age" of each city in the "maxAge" column
+        df.groupBy { city }.maxFor { age into "maxAge" }
+
+        // Put the maximum "age" and "weight" values into the "max" column group
+        df.groupBy { isHappy }.maxFor { (age and weight) into "max" }
+
+        // Put the maximum "age" and "weight" values into the "max" column group,
+        // nested in the "stats" column group
+        df.groupBy { isHappy }.maxFor { (age and weight) into pathOf("stats", "max") }
+
+        // Use 0 for the pivot cells without any "weight" values
+        df.groupBy { city }.pivot { isHappy }.maxFor { weight default 0 }
+            // SampleEnd
+            .also { result ->
+                result["isHappy"]["false"].toList() shouldBe listOf(60, 70, 0, 52, 0, 55)
+            }
     }
 
     // endregion

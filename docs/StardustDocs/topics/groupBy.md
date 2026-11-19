@@ -17,7 +17,7 @@ groupBy(moveToTop = true) { columns }
       [ transformations ]
       reducer | aggregator | pivot | mapper
 
-transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression } | .sortByCount() | .sortByCountAsc() | .sortByKey [ { columns } ] | .sortByKeyDesc [ { columns } ] | .sortBy { columns } | .sortByDesc { columns } ]
+transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression } | .sortByCountAsc() | .sortByCountDesc() | .sortByKey [ { columns } ] | .sortByKeyDesc [ { columns } ] | .sortBy { columns } | .sortByDesc { columns } ]
                   [ .updateGroups { frameExpression } ]
                   [ .filter { rowExpression } ]
                   [ .add(column) { rowExpression } ]
@@ -187,7 +187,7 @@ Returns `GroupBy` object.
 A `GroupBy` can be transformed into a new `GroupBy` using one of the following methods:
 
 * `sortByGroup` / `sortByGroupDesc` — sorts the **order of groups** (and their corresponding keys) by values computed with a `DataFrameExpression` applied to each group;
-* `sortByCount` / `sortByCountAsc` — sorts the **order of groups** (and their corresponding keys) by the number of rows they contain;
+* `sortByCountAsc` / `sortByCountDesc` — sorts the **order of groups** (and their corresponding keys) by the number of rows they contain; `sortByCountAsc` sorts in ascending order, `sortByCountDesc` — in descending order;
 * `sortByKey` / `sortByKeyDesc` — sorts the **order of groups**
   (and their corresponding keys) by the grouping key values;
 * [`sortBy`](sortBy.md) / [`sortByDesc`](sortBy.md#sortbydesc) — sorts the **order of rows within each group** by one or more column values, preserving the order of groups and their corresponding keys;
@@ -248,26 +248,28 @@ df.groupBy("isHappy").sortByGroup { mean("age") }
 
 <!---END-->
 
-#### sortByCount {collapsible="true"}
-<!---FUN sortByCountOnGroupBy-->
+#### sortByCountDesc {collapsible="true"}
+<!---FUN sortByCountDescOnGroupBy-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.groupBy { age }.sortByCount()
+df.groupBy { age }.sortByCountDesc()
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.groupBy("age").sortByCount()
+df.groupBy("age").sortByCountDesc()
 ```
 
 </tab></tabs>
-<inline-frame src="./resources/sortByCountOnGroupBy.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/sortByCountDescOnGroupBy.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
+
+Sorts groups by size in descending order; for ascending order, use `sortByCountAsc()`.
 
 #### sortByKey {collapsible="true"}
 <!---FUN sortByKeyOnGroupBy-->
@@ -666,6 +668,29 @@ df.groupBy("isHappy").minBy("age").into("youngest") { getColumnGroup("name") }
 
 <!---END-->
 
+Passing only the column name, without an expression, stores the whole reduced row in a new
+[`column group`](DataColumn.md#columngroup). The reduced row keeps all the original columns, the grouping keys included.
+
+<!---FUN groupByIntoColumnGroup-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.minBy { age }.into("youngest")
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").minBy("age").into("youngest")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByIntoColumnGroup.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
 ## Aggregation
 
 A `GroupBy` can be directly transformed into a new [`DataFrame`](DataFrame.md) by applying one or more aggregation operations to its groups.
@@ -691,7 +716,7 @@ and an additional [`column`](DataColumn.md) with the number of rows in each corr
 and an additional [`column`](DataColumn.md) with the number of distinct rows in each corresponding group.
 * `aggregate` — performs a set of custom aggregations using `AggregateDsl`, 
 allowing you to compute one or more [statistics](summaryStatistics.md) per every group of `GroupBy`. 
-The body if this function will be executed for every data group and has a receiver of type [`DataFrame`](DataFrame.md) 
+The body of this function will be executed for every data group and has a receiver of type [`DataFrame`](DataFrame.md) 
 that represents the current data group being aggregated. 
 To add a new column to the resulting [`DataFrame`](DataFrame.md), pass the name of the new column to infix function `into`.
 

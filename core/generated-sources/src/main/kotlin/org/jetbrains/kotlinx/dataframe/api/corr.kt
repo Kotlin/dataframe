@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.CorrDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -251,6 +252,7 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
  * of this [<code>DataFrame</code>][DataFrame] to compute a correlation.
  * @return A [<code>Corr</code>][Corr] intermediate object with the selected columns.
  */
+@Interpretable("Corr0")
 public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> = Corr(this, columns)
 
 /**
@@ -309,6 +311,7 @@ public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> 
  * of this [<code>DataFrame</code>][DataFrame] to compute a correlation.
  * @return A [<code>Corr</code>][Corr] intermediate object with the selected columns.
  */
+@StringApiInterpretable(interpreter = "Corr0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.corr(vararg columns: String): Corr<T, Any?> = corr { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -318,26 +321,6 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: KProperty<C>): Corr<T, C> = 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T, C> = corr { columns.toColumnSet() }
-
-/**
- * Calculates the correlation of specified [<code>columns</code>][otherColumns]
- * with values in the columns previously selected with [<code>corr</code>][corr].
- *
- * Returns a correlation matrix represented by a [<code>DataFrame</code>][DataFrame],
- * where rows and columns correspond to the selected column sets,
- * and each cell contains the Pearson correlation coefficient between the corresponding pair of columns.
- *
- * Check out [<code>Grammar</code>][Grammar].
- *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
- *
- * See also: [<code>Selecting Columns</code>][SelectingOptions].
- *
- * For more information, see: [See `corr` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
- */
-internal typealias CorrWithDocs = Nothing
 
 /**
  * Calculates the correlation of specified [<code>columns</code>][otherColumns]
@@ -389,6 +372,8 @@ internal typealias CorrWithDocs = Nothing
  * from this [<code>DataFrame</code>][DataFrame] to compute correlations against the initially selected columns.
  * @return A [<code>DataFrame</code>][DataFrame] containing the resulting correlation matrix.
  */
+@Refine
+@Interpretable("CorrWith")
 public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataFrame<T> = corrImpl(otherColumns)
 
 /**
@@ -427,6 +412,8 @@ public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataF
  * from this [<code>DataFrame</code>][DataFrame] to compute correlations against the initially selected columns.
  * @return A [<code>DataFrame</code>][DataFrame] containing the resulting correlation matrix.
  */
+@Refine
+@StringApiInterpretable(interpreter = "CorrWith", stringArgument = "otherColumns", targetArgument = "otherColumns")
 public fun <T, C> Corr<T, C>.with(vararg otherColumns: String): DataFrame<T> = with { otherColumns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -453,6 +440,8 @@ public fun <T, C, R> Corr<T, C>.with(vararg otherColumns: ColumnReference<R>): D
  *
  * @return A [<code>DataFrame</code>][DataFrame] containing the pairwise correlation matrix.
  */
+@Refine
+@Interpretable("CorrWithItself")
 public fun <T, C> Corr<T, C>.withItself(): DataFrame<T> = with(columns)
 
 // endregion

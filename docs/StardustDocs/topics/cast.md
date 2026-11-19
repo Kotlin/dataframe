@@ -9,7 +9,7 @@ Changes the type argument of the [`DataFrame`](DataFrame.md) instance without ch
 cast<T>(verify = false)
 ```
 
-Related operations: [](adjustSchema.md)
+Related operations: [](adjustSchema.md), [](require.md)
 
 **Parameters:**
 * `verify: Boolean = false` —

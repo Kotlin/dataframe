@@ -41,20 +41,34 @@ import kotlin.reflect.typeOf
 
 // region column
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(path)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccessorImpl(property.name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> ColumnReference<DataRow<*>>.column(): ColumnDelegate<T> = ColumnDelegate(this)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun <T> ColumnReference<DataRow<*>>.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun <T> ColumnReference<DataRow<*>>.column(path: ColumnPath): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + path)
 
@@ -81,40 +95,73 @@ public inline fun <T, reified C> column(
 
 // region valueColumn
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun valueColumn(): ColumnDelegate<Any?> = column()
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("valueColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> valueColumn(): ColumnDelegate<T> = column()
 
+@Suppress("DEPRECATION")
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun valueColumn(name: String): ColumnAccessor<Any?> = column(name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("valueColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> valueColumn(name: String): ColumnAccessor<T> = column(name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun valueColumn(path: ColumnPath): ColumnAccessor<Any?> = column(path)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("valueColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> valueColumn(path: ColumnPath): ColumnAccessor<T> = column(path)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> valueColumn(property: KProperty<T>): ColumnAccessor<T> = column(property.name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun ColumnReference<DataRow<*>>.valueColumn(): ColumnDelegate<Any?> = ColumnDelegate(this)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("valueColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> ColumnReference<DataRow<*>>.valueColumn(): ColumnDelegate<T> = ColumnDelegate(this)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun ColumnReference<DataRow<*>>.valueColumn(name: String): ColumnAccessor<Any?> =
     ColumnAccessorImpl(path() + name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("valueColumnTyped")
 public fun <T> ColumnReference<DataRow<*>>.valueColumn(name: String): ColumnAccessor<T> =
     ColumnAccessorImpl(path() + name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun ColumnReference<DataRow<*>>.valueColumn(path: ColumnPath): ColumnAccessor<Any?> =
     ColumnAccessorImpl(this.path() + path)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("valueColumnTyped")
 public fun <T> ColumnReference<DataRow<*>>.valueColumn(path: ColumnPath): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + path)
@@ -128,45 +175,79 @@ public fun <T> ColumnReference<DataRow<*>>.valueColumn(property: KProperty<T>): 
 
 // region columnGroup
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun columnGroup(): ColumnDelegate<DataRow<*>> = column()
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("columnGroupTyped")
+@Suppress("DEPRECATION")
 public fun <T> columnGroup(): ColumnDelegate<DataRow<T>> = column()
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun columnGroup(name: String): ColumnAccessor<DataRow<*>> = column(name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("columnGroupTyped")
+@Suppress("DEPRECATION")
 public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = column(path)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("columnGroupTyped")
+@Suppress("DEPRECATION")
 public fun <T> columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = column(path)
 
 @JvmName("columnGroupDataRowKProperty")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> = column(property)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> = column(property.name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun ColumnReference<DataRow<*>>.columnGroup(): ColumnDelegate<DataRow<*>> = ColumnDelegate(this)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("columnGroupTyped")
+@Suppress("DEPRECATION")
 public fun <T> ColumnReference<DataRow<*>>.columnGroup(): ColumnDelegate<DataRow<T>> = ColumnDelegate(this)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun ColumnReference<DataRow<*>>.columnGroup(name: String): ColumnAccessor<DataRow<*>> =
     ColumnAccessorImpl(path() + name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("columnGroupTyped")
 public fun <T> ColumnReference<DataRow<*>>.columnGroup(name: String): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(path() + name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun ColumnReference<DataRow<*>>.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
     ColumnAccessorImpl(this.path() + path)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("columnGroupTyped")
 public fun <T> ColumnReference<DataRow<*>>.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(this.path() + path)
@@ -186,45 +267,79 @@ public fun <T> ColumnReference<DataRow<*>>.columnGroup(property: KProperty<T>): 
 
 // region frameColumn
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun frameColumn(): ColumnDelegate<DataFrame<*>> = column()
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("frameColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> frameColumn(): ColumnDelegate<DataFrame<T>> = column()
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun frameColumn(name: String): ColumnAccessor<DataFrame<*>> = column(name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("frameColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<*>> = column(path)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("frameColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = column(path)
 
 @JvmName("frameColumnDataFrameKProperty")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> = column(property)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> = column(property.name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun ColumnReference<DataRow<*>>.frameColumn(): ColumnDelegate<DataFrame<*>> = ColumnDelegate(this)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("frameColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> ColumnReference<DataRow<*>>.frameColumn(): ColumnDelegate<DataFrame<T>> = ColumnDelegate(this)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun ColumnReference<DataRow<*>>.frameColumn(name: String): ColumnAccessor<DataFrame<*>> =
     ColumnAccessorImpl(path() + name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("frameColumnTyped")
 public fun <T> ColumnReference<DataRow<*>>.frameColumn(name: String): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(path() + name)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun ColumnReference<DataRow<*>>.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<*>> =
     ColumnAccessorImpl(this.path() + path)
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("frameColumnTyped")
 public fun <T> ColumnReference<DataRow<*>>.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(this.path() + path)
@@ -243,9 +358,15 @@ public fun <T> ColumnReference<DataRow<*>>.frameColumn(property: KProperty<List<
 
 // endregion
 
+@Suppress("DEPRECATION")
+@Deprecated(DEPRECATED_ACCESS_API)
 public class ColumnDelegate<T>(private val parent: ColumnReference<DataRow<*>>? = null) {
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.columnName)
 
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public infix fun named(name: String): ColumnAccessor<T> =
         parent?.let { ColumnAccessorImpl(it.path() + name) } ?: ColumnAccessorImpl(name)
 }

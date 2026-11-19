@@ -391,12 +391,16 @@ private fun AnyBaseCol.injectNullsAt(isNull: BooleanArray): AnyBaseCol =
 /**
  * The struct's own per-row null mask over [range] — Arrow keeps a struct validity buffer independent of its
  * child vectors — or `null` when this slice has no null-parent rows, so required groups are read as before.
+ *
+ * Costs O([range]): a *partial* slice never consults `nullCount` — that scans the whole validity buffer,
+ * so a per-row caller with a partial slice would turn a linear read into a quadratic one (#2064). Only a
+ * whole-vector slice without nulls takes the `nullCount` shortcut: one scan beats building the mask.
  */
 private fun StructVector.nullMaskOrNull(range: IntRange): BooleanArray? =
-    if (nullCount > 0) {
-        BooleanArray(range.count()) { isNull(range.first + it) }.takeIf { mask -> mask.any { it } }
-    } else {
+    if (range.first == 0 && range.last == valueCount - 1 && nullCount == 0) {
         null
+    } else {
+        BooleanArray(range.count()) { isNull(range.first + it) }.takeIf { mask -> mask.any { it } }
     }
 
 private fun readField(
@@ -514,7 +518,14 @@ private fun readListVector(
     return if (dataVector is StructVector) {
         val structField = field.children.single()
         // A struct *element* can itself be null inside the list; like the top-level struct path we honor
-        // its own validity buffer so null elements don't materialize phantom child values.
+        // its own validity buffer so null elements don't materialize phantom child values. The mask is
+        // built once per read of [range] — per batch at the top level, per outer row for a list nested
+        // deeper inside a column — and covers exactly the element span [range] addresses, never the whole
+        // dataVector: a whole-vector range re-scans the validity buffer (`getNullCount`), and once per
+        // outer row that turns a linear read into a quadratic one (#2064). Per-element slices reuse the pass.
+        val maskFirst = if (range.isEmpty()) 0 else accessor.getElementStartIndex(range.first)
+        val maskLast = if (range.isEmpty()) 0 else minOf(accessor.getElementEndIndex(range.last), dataVector.valueCount)
+        val batchNullMask = dataVector.nullMaskOrNull(maskFirst until maskLast)
         val frames = range.map { i ->
             val start = accessor.getElementStartIndex(i)
             val end = accessor.getElementEndIndex(i)
@@ -526,7 +537,7 @@ private fun readListVector(
                     start until end,
                 )
             }
-            val nullMask = dataVector.nullMaskOrNull(start until end)
+            val nullMask = batchNullMask?.copyOfRange(start - maskFirst, end - maskFirst)?.takeIf { it.any() }
             val elementColumns = if (nullMask != null) columns.map { it.injectNullsAt(nullMask) } else columns
             elementColumns.toDataFrame()
         }

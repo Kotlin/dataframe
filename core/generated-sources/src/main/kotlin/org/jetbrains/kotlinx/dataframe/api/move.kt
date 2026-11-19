@@ -1139,7 +1139,7 @@ public fun <T, C> MoveClause<T, C>.under(column: ColumnAccessor<DataRow<*>>): Da
  * // move under an existing column group
  * df.move { age and weight }.under { info }
  * // move under a new column group
- * df.move { age and weight }.under { columnGroup(info) }
+ * df.move { age and weight }.under { colGroup("newInfo") }
  * ```
  *
  * @param [column] The [<code>ColumnsSelector</code>][ColumnsSelector] that defines the path to a [<code>ColumnGroup</code>][ColumnGroup]

@@ -5,7 +5,6 @@
         <plugin id="mobi.hsz.idea.gitignore"/>
         <plugin id="org.jetbrains.kotlin"/>
         <plugin id="org.jetbrains.plugins.github"/>
-        <plugin id="org.jetbrains.plugins.kotlin.jupyter"/>
         <plugin id="com.nbadal.ktlint"/>
         <plugin id="nl.jolanrensen.kodex"/>
         <plugin id="com.jetbrains.writerside"/>

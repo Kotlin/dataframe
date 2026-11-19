@@ -121,24 +121,31 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`all`**][ColumnsSelectionDsl.all] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`all`**][ColumnsSelectionDsl.all] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`allCols`**][ColumnsSelectionDsl.allCols] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
 
         /** [**`Before`**][ColumnsSelectionDsl.allColsBefore] */
+        @ExcludeFromSources
         public typealias Before = Nothing
 
         /** [**`After`**][ColumnsSelectionDsl.allColsAfter] */
+        @ExcludeFromSources
         public typealias After = Nothing
 
         /** [**`From`**][ColumnsSelectionDsl.allColsFrom] */
+        @ExcludeFromSources
         public typealias From = Nothing
 
         /** [**`UpTo`**][ColumnsSelectionDsl.allColsUpTo] */
+        @ExcludeFromSources
         public typealias UpTo = Nothing
     }
 
@@ -203,7 +210,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @see [allUpTo\]
      * @see [ColumnsSelectionDsl.allExcept\]
      * @see [all\]
-     * @see [cols\]
+     * @see [ColumnsSelectionDsl.cols\]
      */
     @Suppress("ClassName")
     @ExcludeFromSources
@@ -347,6 +354,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column\] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
+    @ExcludeFromSources
     private typealias AllAfterDocs = Nothing
 
     /**
@@ -404,6 +412,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         asSingleColumn().allColsAfter(column)
 
     /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] ("pathTo"["myColumn"])} */
+    @Interpretable("AllAfterColumnPath")
     public fun ColumnsSelectionDsl<*>.allAfter(column: ColumnPath): ColumnSet<*> = asSingleColumn().allColsAfter(column)
 
     /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] ("myColumn")} */
@@ -585,6 +594,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column\] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
+    @ExcludeFromSources
     private typealias AllFromDocs = Nothing
 
     /**
@@ -642,9 +652,11 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         asSingleColumn().allColsFrom(column)
 
     /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] ("pathTo"["myColumn"])} */
+    @Interpretable("AllFromColumnPath")
     public fun ColumnsSelectionDsl<*>.allFrom(column: ColumnPath): ColumnSet<*> = asSingleColumn().allColsFrom(column)
 
     /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] ("myColumn")} */
+    @Interpretable("AllFromDslString")
     public fun ColumnsSelectionDsl<*>.allFrom(column: String): ColumnSet<*> = asSingleColumn().allColsFrom(column)
 
     /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] (myColumn)} */
@@ -821,6 +833,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column\] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
+    @ExcludeFromSources
     private typealias AllBeforeDocs = Nothing
 
     /**
@@ -878,6 +891,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         asSingleColumn().allColsBefore(column)
 
     /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] ("pathTo"["myColumn"])} */
+    @Interpretable("AllBeforeColumnPath")
     public fun ColumnsSelectionDsl<*>.allBefore(column: ColumnPath): ColumnSet<*> =
         asSingleColumn().allColsBefore(column)
 
@@ -1058,6 +1072,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column\] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
+    @ExcludeFromSources
     private typealias AllUpToDocs = Nothing
 
     /**
@@ -1114,6 +1129,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         asSingleColumn().allColsUpTo(column)
 
     /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] ("pathTo"["myColumn"])} */
+    @Interpretable("AllUpToColumnPath")
     public fun ColumnsSelectionDsl<*>.allUpTo(column: ColumnPath): ColumnSet<*> = asSingleColumn().allColsUpTo(column)
 
     /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] ("myColumn")} */

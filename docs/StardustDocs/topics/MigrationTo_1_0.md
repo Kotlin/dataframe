@@ -206,6 +206,18 @@ separately.
 |-------------------------------------------------|---------------------------------------------------------|
 | `df.groupBy { city }.sortBy { city and day }`   | `df.groupBy { city }.sortByKey().sortBy { day }`        |
 
+### `indices()` on a `BaseColumn` receiver no longer resolves
+
+The column-level [`indices()`](indexing.md#row-indices) operation is declared on `DataColumn` now, next to
+the `indices` property. A column group is both a column and a dataframe, so the call used to be ambiguous
+between the column-level and the dataframe-level overload and did not compile; it now resolves to the
+dataframe-level `indices()` and returns the row indices of the dataframe the group forms.
+
+Calling `indices()` on a variable typed as `BaseColumn` no longer compiles — every column value is a
+`DataColumn`, so type the variable accordingly. Value and frame columns are unaffected, and no call returns
+a different value. The old overload stays in the jar, hidden from overload resolution, so code compiled
+against earlier versions keeps linking.
+
 ### Removed functions and classes
 
 The following functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
@@ -253,6 +265,8 @@ The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `KeyValueProperty<T>`                                                                                    | `NameValueProperty<T>`                                                                                                        | Removed duplicated functionality.                                            |
 | `rename { columns }.into(..)` (will remain WARNING)                                                      | `rename { columns }.to(..)`                                                                                                   | Renamed to better reflect the English sentence "rename this column to that". |
 | `df.sortBy { col.desc() }` / `df.sortByDesc { col.desc() }`                                              | `df.sortBy { col.reversed() }` / `df.sortByDesc { col.reversed() }`                                                           | Renamed to better reflect its purpose.                                       |
+| `gb.sortByCount()`                                                                                       | `gb.sortByCountDesc()`                                                                                                         | Renamed to better reflect its purpose.                                       |
+| `df.sumFor { cols into path(..) }`                                                     | `df.sumFor { cols into pathOf(..) }`                                                                        | Removed duplicated functionality. All methods with `ColumnsForAggregateSelector` lambda.                                           |
 
 ## Parsing and Converting Date-Time
 

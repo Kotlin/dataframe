@@ -687,20 +687,7 @@ public interface RenameColumnsSelectionDsl {
      *
      *
      */
-    public interface Grammar {
-
-        /** [<code>**named**</code>][ColumnsSelectionDsl.named] */
-        public typealias InfixNamedName = Nothing
-
-        /** [<code>**into**</code>][ColumnsSelectionDsl.into] */
-        public typealias InfixIntoName = Nothing
-
-        /** __`.`__[<code>**named**</code>][ColumnsSelectionDsl.named] */
-        public typealias NamedName = Nothing
-
-        /** __`.`__[<code>**into**</code>][ColumnsSelectionDsl.into] */
-        public typealias IntoName = Nothing
-    }
+    public interface Grammar
 
     /**
      * ## Rename: `named` / `into`

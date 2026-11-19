@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -65,12 +66,15 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`col`**][ColumnsSelectionDsl.col] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`col`**][ColumnsSelectionDsl.col] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`col`**][ColumnsSelectionDsl.col] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
@@ -118,6 +122,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.valueCol\]
      * {@set [CommonColDocs.NOTE]}
      */
+    @ExcludeFromSources
     private interface CommonColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
@@ -157,6 +162,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [col\] The [ColumnAccessor] pointing to the column.
      * @include [CommonColDocs.ColumnTypeParam]
      */
+    @ExcludeFromSources
     private typealias ColReferenceDocs = Nothing
 
     /**
@@ -221,6 +227,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColDocs.EXAMPLE] {@include [CommonColDocs.DoubleExample]}}
      * @param [name\] The name of the column.
      */
+    @ExcludeFromSources
     private typealias ColNameDocs = Nothing
 
     /**
@@ -334,6 +341,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColDocs.EXAMPLE] {@include [CommonColDocs.DoubleExample]}}
      * @param [path\] The path to the column.
      */
+    @ExcludeFromSources
     private typealias ColPathDocs = Nothing
 
     /**
@@ -438,6 +446,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [property\] The [KProperty] reference to the column.
      * @include [CommonColDocs.ColumnTypeParam]
      */
+    @ExcludeFromSources
     private typealias ColKPropertyDocs = Nothing
 
     /**
@@ -497,6 +506,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [index\] The index of the column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
+    @ExcludeFromSources
     private typealias ColIndexDocs = Nothing
 
     /**

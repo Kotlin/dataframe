@@ -433,7 +433,7 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): DataFr
  *     "colA" from { ... }
  *     properties {
  *         preserve<T>()
- *         "colB" from { ... } // ERROR, cannot be called in this context an implicit receiver.
+ *         "colB" from { ... } // ERROR, cannot be called in this context with an implicit receiver.
  *     }
  * }
  * ```
@@ -599,6 +599,7 @@ public abstract class CreateDataFrameDsl<T> {
      * @param [expression] The expression to compute each value from an element.
      * @return The new [DataColumn], with an empty name.
      */
+    @Interpretable("ToDataFrameDslExpr")
     public inline fun <reified R> expr(infer: Infer = Infer.Nulls, noinline expression: (T) -> R): DataColumn<R> =
         source.map { expression(it) }.toColumn(infer = infer)
 

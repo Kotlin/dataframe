@@ -106,7 +106,7 @@ internal sealed class OpenApiMarker private constructor(
      * A [Marker] that will be used to generate an interface.
      *
      * @param nullable whether the object can be null. Needs to be checked when referring to this [Marker].
-     * @param fields the fields of the enum, can be created using [generatedFieldOf].
+     * @param fields the fields of the interface, can be created using [generatedFieldOf].
      * @param name the name of the interface.
      * @param visibility the visibility of the interface.
      */

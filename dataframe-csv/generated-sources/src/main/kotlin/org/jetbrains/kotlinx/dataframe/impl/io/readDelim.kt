@@ -119,7 +119,7 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([<code>DataFrame.parser</code>][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
+ *   ([<code>DataFrame.parser</code>][org.jetbrains.kotlinx.dataframe.api.parser]) will be queried.
  *
  *   The only exceptions are:
  *   - [<code>nullStrings</code>][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
@@ -150,9 +150,10 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  *   This is usually faster but can be turned off for debugging.
  * @param compression The compression of the data.
  *   Default: [<code>Compression.None</code>][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
- * @param adjustCsvSpecs Optional extra [<code>CsvSpecs</code>][CsvSpecs] configuration. Default: `{ it }`.
+ * @param adjustCsvSpecs Optional extra [<code>CsvSpecs</code>][io.deephaven.csv.CsvSpecs] configuration. Default: `{ it }`.
  *
- *   Before instantiating the [<code>CsvSpecs</code>][CsvSpecs], the [<code>CsvSpecs.Builder</code>][CsvSpecs.Builder] will be passed to this lambda.
+ *   Before instantiating the [<code>CsvSpecs</code>][io.deephaven.csv.CsvSpecs],
+ *   the [<code>CsvSpecs.Builder</code>][io.deephaven.csv.CsvSpecs.Builder] will be passed to this lambda.
  *   This will allow you to configure/overwrite any CSV / TSV parsing options.
  */
 internal fun readDelimImpl(
