@@ -188,6 +188,8 @@ internal const val GROUPED_PERCENTILE_FOR_BINARY_COMPAT = "This is here for bina
 
 internal const val SUGGEST_IF_NULL = "This is here for binary compatibility. $MESSAGE_1_0"
 
+internal const val INDICES_BASE_COLUMN = "This function is only here for binary compatibility. $MESSAGE_1_0"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1

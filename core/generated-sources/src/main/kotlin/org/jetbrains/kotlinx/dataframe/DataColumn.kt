@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.util.CREATE_INLINE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.CREATE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.CREATE_WITH_TYPE_INFERENCE
 import org.jetbrains.kotlinx.dataframe.util.CREATE_WITH_TYPE_INFERENCE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.INDICES_BASE_COLUMN
 import org.jetbrains.kotlinx.dataframe.util.TYPE_SUGGESTION_IMPORT
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -322,4 +323,10 @@ public val DataColumn<*>.typeClass: KClass<*>
     get() = type.classifier as? KClass<*>
         ?: error("Cannot cast ${type.classifier?.javaClass} to a ${KClass::class}. Column $name: $type")
 
+public fun DataColumn<*>.indices(): IntRange = 0 until size()
+
+@Deprecated(
+    message = INDICES_BASE_COLUMN,
+    level = DeprecationLevel.HIDDEN, // clashes with the new indices overload on DataColumn
+)
 public fun AnyBaseCol.indices(): IntRange = 0 until size()
