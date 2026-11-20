@@ -3,12 +3,14 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -25,190 +27,96 @@ import kotlin.reflect.KProperty
 // region docs
 
 /**
- * Extracts the values of the selected columns of this [DataFrame] into a lazy [Sequence].
- *
- * By default, the values come column by column: all values of the first selected column,
- * then all values of the second one, and so on. With the row-by-row traversal enabled, the
- * values come row by row instead: for each row, the values of the selected columns in the
- * order the columns were selected.
- *
- * The [Sequence] is lazy — the values are pulled from this [DataFrame] one by one, as the
- * sequence is consumed.
- *
- * Don't confuse this `values` with the aggregation [values][Grouped.values], which collects
- * the values of the selected columns for every group of a [groupBy][DataFrame.groupBy] or
- * [pivot][DataFrame.pivot] result.
- *
- * See also:
- * - [valuesNotNull][DataFrame.valuesNotNull] — the same, but `null` values are skipped.
- * - [asSequence][DataFrame.asSequence] — a [Sequence] over the [rows][DataRow] of this [DataFrame].
- *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
- *
- * For more information: {@include [DocumentationUrls.Values]}
- *
- * ### This `values` overload
+ * {@comment KDoc-helpers for the `values` aggregation on [Grouped] and [Pivot].}
  */
 @ExcludeFromSources
 internal interface ValuesDocs {
 
     /**
-     * @param [\byRow] When `true`, the values come row by row: for each row, the values of
-     *   all selected columns in the order the columns were selected. When `false` (default),
-     *   the values come column by column: all values of the first selected column, then all
-     *   values of the second one, and so on.
+     * {@comment The parts all [Grouped.values] aggregation overloads have in common. KDoc-snippet.}
+     *
+     * Aggregates this [GroupBy] by collecting the values of {@get [COLUMNS]}
+     * from all rows of each group into a [List].
+     *
+     * Returns a new [DataFrame] with one row per group, containing the grouping key columns
+     * and one result column per selected column. Each result column is named after
+     * its source column and contains the [List] of that column's values
+     * collected from all rows of the group.
+     *
+     * Values from a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * are collected into a [DataFrame] instead of a [List],
+     * making the corresponding result column a [FrameColumn].
+     *
+     * Check out [`groupBy` Grammar][GroupByDocs.Grammar].
+     *
+     * For more information: {@include [DocumentationUrls.GroupBy]} {@include [DocumentationUrls.Values]}
+     *
+     * Don't confuse this with [values][ReducedGroupBy.values] on a [ReducedGroupBy],
+     * which takes the values of the single reduced row of each group instead of all its rows.
+     *
+     * See also:
+     * - [into][GroupBy.into] — collects the values computed for each row of a group into a new column,
+     *   or stores the groups themselves in a [FrameColumn].
+     * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
+     * - [GroupBy aggregation][GroupByDocs.Aggregation] — all other ways to aggregate a [GroupBy].
      */
-    typealias ByRowSnippet = Nothing
+    interface GroupedValuesSnippet {
+
+        /*
+         * The key for a @set that defines how the columns to collect the values from are selected.
+         */
+        typealias COLUMNS = Nothing
+    }
 
     /**
-     * @param [\columns] The [ColumnsSelector] used to select the columns to extract
-     *   the values from.
+     * {@comment The parts all [Pivot.values] aggregation overloads have in common. KDoc-snippet.}
+     *
+     * Aggregates this [Pivot] by collecting the values of {@get [COLUMNS]}
+     * from all rows of each pivot group.
+     *
+     * Returns a new [DataRow] with the [pivot] keys as top-level columns
+     * (or as [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * for multiple or nested pivot keys).
+     * The value of each [pivot] key is aggregated from the corresponding group:
+     *
+     * @include [CommonStatisticsDocs.PivotCellOneOrManyResultSnippet]
+     *
+     * If a single column is selected, its values are stored directly under the [pivot] keys.
+     * If several columns are selected, each [pivot] key contains one subcolumn
+     * per selected column, named after it
+     * (or, if [separate\] is `true`, the results are grouped
+     * by the selected columns first, and by the [pivot] keys second).
+     *
+     * Values from a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * are collected into a [DataFrame], so the corresponding pivot cell contains that [DataFrame].
+     *
+     * Check out [`pivot` Grammar][PivotDocs.Grammar].
+     *
+     * For more information: {@include [DocumentationUrls.Pivot]} {@include [DocumentationUrls.Values]}
+     *
+     * Don't confuse this with [values][ReducedPivot.values] on a [ReducedPivot],
+     * which takes the values of the single reduced row of each group instead of all its rows.
+     *
+     * See also:
+     * - [aggregate][Pivot.aggregate] — the general way to aggregate pivot groups.
+     * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
      */
-    typealias ColumnsSelectorParamSnippet = Nothing
+    interface PivotValuesSnippet {
+
+        /*
+         * The key for a @set that defines how the columns to collect the values from are selected.
+         */
+        typealias COLUMNS = Nothing
+    }
 
     /**
-     * @return A lazy [Sequence] of the values of the selected columns.
+     * @param [dropNA\] If `true`, {@include [NALink]} values (`null`, [Double.NaN] or [Float.NaN])
+     *   are removed from the collected values. `false` by default.
+     * @param [distinct\] If `true`, duplicate values are removed from the collected values,
+     *   keeping the first occurrence of each. `false` by default.
+     * @comment The shared `dropNA` and `distinct` parameters documentation. KDoc-snippet.
      */
-    typealias ReturnSnippet = Nothing
-}
-
-/**
- * Extracts the values of the selected columns of this [DataFrame] into a lazy [Sequence],
- * skipping `null` values.
- *
- * The order of the values is the same as in [values][DataFrame.values]: column by column
- * by default, row by row with `byRow = true`.
- *
- * See also:
- * - [values][DataFrame.values] — the same, but `null` values are included.
- *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
- *
- * For more information: {@include [DocumentationUrls.Values]}
- *
- * ### This `valuesNotNull` overload
- */
-@ExcludeFromSources
-internal interface ValuesNotNullDocs {
-
-    /**
-     * @return A lazy [Sequence] of the non-`null` values of the selected columns.
-     */
-    typealias ReturnSnippet = Nothing
-}
-
-/**
- * Collects the values of the selected columns for every group.
- *
- * Each selected column is collected into its own column of the result.
- *
- * Don't confuse this `values` with [values][DataFrame.values] on a [DataFrame], which
- * extracts the values of the selected columns into a lazy [Sequence], without any grouping.
- *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
- *
- * For more information: {@include [DocumentationUrls.Values]}
- *
- * ### This `values` overload
- */
-@ExcludeFromSources
-internal interface ValuesInAggregationDocs {
-
-    /**
-     * @param [\dropNA] When `true`, {@include [NALink]} values are removed from the collected
-     *   values. `false` by default. Each column is filtered independently of the others.
-     */
-    typealias DropNASnippet = Nothing
-
-    /**
-     * @param [\distinct] When `true`, only distinct values are collected: the first occurrence
-     *   of each value, in the order the values appear. `false` by default.
-     */
-    typealias DistinctSnippet = Nothing
-
-    /**
-     * @param [\separate] When several columns are selected: when `true`, each selected column
-     *   becomes its own column group with one nested column per pivot value; when `false`
-     *   (default), each pivot value becomes its own column group with one nested column per
-     *   selected column. When a single column is selected, its values go directly into the
-     *   pivot cells, and this parameter has no effect.
-     */
-    typealias SeparateSnippet = Nothing
-
-    /**
-     * @param [\columns] The [ColumnsForAggregateSelector] used to select the columns to
-     *   collect the values from.
-     */
-    typealias ColumnsForAggregateSelectorParamSnippet = Nothing
-
-    /**
-     * @param [\columns] The names of the columns to collect the values from.
-     */
-    typealias ColumnNamesParamSnippet = Nothing
-
-    /**
-     * When the groups have lost track of the key columns — this can happen after
-     * [updateGroups][GroupBy.updateGroups], [filter][GroupBy.filter], or [add][GroupBy.add]
-     * changed the columns inside the groups — the collected columns can collide with the key
-     * columns, and a [DuplicateColumnPathInsertException] is thrown with a hint about the
-     * cause. Try renaming the columns inside the groups or aggregate them manually instead.
-     */
-    typealias LostKeyColumnsSnippet = Nothing
-
-    /**
-     * the single value if there is exactly one, a [List] if there are several, and an empty
-     *   cell if there is nothing to collect. When the other cells of that column hold
-     *   lists, a cell holds a [List] too: a single value as a one-element [List], a cell
-     *   with no rows as an empty [List]; a cell with no rows is `null` otherwise, and a
-     *   cell emptied by `dropNA` is always `null`. A selected column group is collected
-     *   as a nested [DataFrame] with the collected rows of the columns inside it, instead
-     *   of a [List].
-     */
-    typealias OneOrManyCellSnippet = Nothing
-
-    /**
-     * @return A new [DataFrame] with one row per group: the group keys, and, per selected
-     *   column, a [List] with all values from the group. A selected column group is
-     *   collected as a nested [DataFrame] with the collected rows of the columns inside it.
-     */
-    typealias GroupedReturnSnippet = Nothing
-
-    /**
-     * @return A new [DataFrame] with one row per group: the group keys, and, per selected
-     *   column, the value from the row that the reduction (for example, `minBy`) picked in
-     *   that group, or `null` if the reduction picked no row.
-     */
-    typealias ReducedGroupByReturnSnippet = Nothing
-
-    /**
-     * @return A single [DataRow] with one (nested) column per unique combination of the pivot
-     *   column values; every cell holds the collected values of the rows with that pivot
-     *   value: {@include [OneOrManyCellSnippet]}
-     */
-    typealias PivotReturnSnippet = Nothing
-
-    /**
-     * @return A new [DataFrame] with one row per combination of the [groupBy][DataFrame.groupBy]
-     *   key values and one (nested) column per unique combination of the pivot column values;
-     *   every cell holds the collected values of the corresponding rows: {@include [OneOrManyCellSnippet]}
-     */
-    typealias PivotGroupByReturnSnippet = Nothing
-
-    /**
-     * @return A single [DataRow] with one (nested) column per unique combination of the pivot
-     *   column values; every cell holds, per selected column, the value from the row that the
-     *   reduction (for example, `minBy`) picked for that pivot value, or `null` if the
-     *   reduction picked no row.
-     */
-    typealias ReducedPivotReturnSnippet = Nothing
-
-    /**
-     * @return A new [DataFrame] with one row per combination of the [groupBy][DataFrame.groupBy]
-     *   key values and one (nested) column per unique combination of the pivot column values;
-     *   every cell holds, per selected column, the value from the row that the reduction
-     *   (for example, `minBy`) picked in that cell, or `null` if the reduction picked no row.
-     */
-    typealias ReducedPivotGroupByReturnSnippet = Nothing
+    typealias DropNAAndDistinctParams = Nothing
 }
 
 // endregion
@@ -309,19 +217,19 @@ public fun <T> Grouped<T>.values(
 ): DataFrame<T> = values(dropNA, distinct) { columns.toColumnSet() }
 
 /**
- * @include [ValuesInAggregationDocs]
- * @include [ValuesInAggregationDocs.LostKeyColumnsSnippet]
+ * @include [ValuesDocs.GroupedValuesSnippet]
+ * {@set [ValuesDocs.GroupedValuesSnippet.COLUMNS] the columns with the given names}
+ *
  * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInGroupBy_strings]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.valuesOnGroupBySelectedColumns_strings]
  *
- * @param [T] The schema marker type of this [DataFrame].
- * @include [ValuesInAggregationDocs.ColumnNamesParamSnippet]
- * @include [ValuesInAggregationDocs.DropNASnippet]
- * @include [ValuesInAggregationDocs.DistinctSnippet]
- * @include [ValuesInAggregationDocs.GroupedReturnSnippet]
+ * @param [columns] The names of the columns to collect the values from.
+ * @include [ValuesDocs.DropNAAndDistinctParams]
+ * @return A new [DataFrame] with the grouping key columns
+ *   and the collected values of the columns with the given names.
  */
 public fun <T> Grouped<T>.values(
     vararg columns: String,
@@ -330,23 +238,21 @@ public fun <T> Grouped<T>.values(
 ): DataFrame<T> = values(dropNA, distinct) { columns.toColumnSet() }
 
 /**
- * @include [ValuesInAggregationDocs]
- * @include [ValuesInAggregationDocs.LostKeyColumnsSnippet]
- * @include [SelectingColumns.ColumnsSelectionDsl]
+ * @include [ValuesDocs.GroupedValuesSnippet]
+ * {@set [ValuesDocs.GroupedValuesSnippet.COLUMNS] the selected columns}
+ *
+ * @include [CommonStatisticsDocs.AggregateColumnsSelectorWithoutDefaultSnippet]
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInGroupBy_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.valuesOnGroupBySelectedColumns_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.valuesOnGroupByRenameColumns_properties]
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInGroupByDropNA_properties]
- *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInGroupByDistinct_properties]
- *
- * @param [T] The schema marker type of this [DataFrame].
- * @include [ValuesInAggregationDocs.ColumnsForAggregateSelectorParamSnippet]
- * @include [ValuesInAggregationDocs.DropNASnippet]
- * @include [ValuesInAggregationDocs.DistinctSnippet]
- * @include [ValuesInAggregationDocs.GroupedReturnSnippet]
+ * @include [ValuesDocs.DropNAAndDistinctParams]
+ * @param [columns] The [ColumnsForAggregateSelector] used to select the columns to collect the values from.
+ * @return A new [DataFrame] with the grouping key columns and the collected values of the selected columns.
  */
 public fun <T> Grouped<T>.values(
     dropNA: Boolean = false,
@@ -360,19 +266,16 @@ public fun <T> Grouped<T>.values(
     }
 
 /**
- * @include [ValuesInAggregationDocs]
- * @include [ValuesInAggregationDocs.LostKeyColumnsSnippet]
- *
- * This overload collects the values from all columns except the group keys.
+ * @include [ValuesDocs.GroupedValuesSnippet]
+ * {@set [ValuesDocs.GroupedValuesSnippet.COLUMNS] all remaining columns (all group columns except the grouping keys)}
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInGroupByAll_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.valuesOnGroupByAllColumns_properties]
  *
- * @param [T] The schema marker type of this [DataFrame].
- * @include [ValuesInAggregationDocs.DropNASnippet]
- * @include [ValuesInAggregationDocs.DistinctSnippet]
- * @include [ValuesInAggregationDocs.GroupedReturnSnippet]
+ * @include [ValuesDocs.DropNAAndDistinctParams]
+ * @return A new [DataFrame] with the grouping key columns
+ *   and the collected values of all remaining columns.
  */
 public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> =
     values(dropNA, distinct, remainingColumnsSelector())
@@ -479,19 +382,22 @@ public fun <T, G> ReducedGroupBy<T, G>.values(columns: ColumnsForAggregateSelect
 // region Pivot
 
 /**
- * @include [ValuesInAggregationDocs]
- * @include [SelectingColumns.ColumnsSelectionDsl]
+ * @include [ValuesDocs.PivotValuesSnippet]
+ * {@set [ValuesDocs.PivotValuesSnippet.COLUMNS] the selected columns}
+ *
+ * @include [CommonStatisticsDocs.AggregateColumnsSelectorSnippet]
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInPivot_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotValuesAggregate_properties]
  *
- * @param [T] The schema marker type of the original [DataFrame].
- * @include [ValuesInAggregationDocs.ColumnsForAggregateSelectorParamSnippet]
- * @include [ValuesInAggregationDocs.DropNASnippet]
- * @include [ValuesInAggregationDocs.DistinctSnippet]
- * @include [ValuesInAggregationDocs.SeparateSnippet]
- * @include [ValuesInAggregationDocs.PivotReturnSnippet]
+ * @param [T] The schema marker type of the pivoted [DataFrame].
+ * @include [ValuesDocs.DropNAAndDistinctParams]
+ * @include [CommonStatisticsDocs.SeparateParam]
+ * @param [columns] The [ColumnsForAggregateSelector] used to select the columns to collect the values from.
+ * @return A new [DataRow] with the [pivot] keys and the collected values of the selected columns.
  */
 public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
@@ -510,19 +416,21 @@ public fun <T> Pivot<T>.values(
 ): DataRow<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 /**
- * @include [ValuesInAggregationDocs]
+ * @include [ValuesDocs.PivotValuesSnippet]
+ * {@set [ValuesDocs.PivotValuesSnippet.COLUMNS] the columns with the given names}
+ *
  * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInPivot_strings]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotValuesAggregate_strings]
  *
- * @param [T] The schema marker type of the original [DataFrame].
- * @include [ValuesInAggregationDocs.ColumnNamesParamSnippet]
- * @include [ValuesInAggregationDocs.DropNASnippet]
- * @include [ValuesInAggregationDocs.DistinctSnippet]
- * @include [ValuesInAggregationDocs.SeparateSnippet]
- * @include [ValuesInAggregationDocs.PivotReturnSnippet]
+ * @param [T] The schema marker type of the pivoted [DataFrame].
+ * @param [columns] The names of the columns to collect the values from.
+ * @include [ValuesDocs.DropNAAndDistinctParams]
+ * @include [CommonStatisticsDocs.SeparateParam]
+ * @return A new [DataRow] with the [pivot] keys
+ *   and the collected values of the columns with the given names.
  */
 public fun <T> Pivot<T>.values(
     vararg columns: String,
@@ -541,19 +449,17 @@ public fun <T> Pivot<T>.values(
 ): DataRow<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 /**
- * @include [ValuesInAggregationDocs]
- *
- * This overload collects the values from all columns except the pivot columns.
+ * @include [ValuesDocs.PivotValuesSnippet]
+ * {@set [ValuesDocs.PivotValuesSnippet.COLUMNS] all remaining columns (all columns except the pivoted columns)}
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ValuesSamples.valuesInPivot_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotValuesAggregateAll_properties]
  *
- * @param [T] The schema marker type of the original [DataFrame].
- * @include [ValuesInAggregationDocs.DropNASnippet]
- * @include [ValuesInAggregationDocs.DistinctSnippet]
- * @include [ValuesInAggregationDocs.SeparateSnippet]
- * @include [ValuesInAggregationDocs.PivotReturnSnippet]
+ * @param [T] The schema marker type of the pivoted [DataFrame].
+ * @include [ValuesDocs.DropNAAndDistinctParams]
+ * @include [CommonStatisticsDocs.SeparateParam]
+ * @return A new [DataRow] with the [pivot] keys and the collected values of all remaining columns.
  */
 public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
