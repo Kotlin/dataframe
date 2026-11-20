@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
-import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
@@ -16,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
+import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpressionLink
 import org.jetbrains.kotlinx.dataframe.documentation.ConstructorsDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
@@ -45,35 +45,15 @@ import kotlin.reflect.typeOf
 
 // region column
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a column reference:
- * ```kotlin
- * val age by column<Int>()
- * ```
- * The referenced column name is taken from the property name; the [ColumnName] annotation overrides it.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
 
-/**
- * Creates a [ColumnAccessor] for the column with the given [name].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
 
-/**
- * Creates a [ColumnAccessor] for the column at the given [path].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(path)
@@ -82,38 +62,15 @@ public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(
 @AccessApiOverload
 public fun <T> column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccessorImpl(property.name)
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a column reference nested in the receiver
- * column group: the referenced column path is the receiver's path with the property name appended:
- * ```kotlin
- * val personal = columnGroup("personal")
- * val age by personal.column<Int>() // references personal/age
- * ```
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun <T> ColumnReference<DataRow<*>>.column(): ColumnDelegate<T> = ColumnDelegate(this)
 
-/**
- * Creates a [ColumnAccessor] for the column with the given [name] nested in the receiver column group:
- * the created path is the receiver's path with [name] appended.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ColumnReference<DataRow<*>>.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
 
-/**
- * Creates a [ColumnAccessor] for the column at the given [path] nested in the receiver column group:
- * the created path is the receiver's path with [path] appended.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced column, relative to the receiver.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ColumnReference<DataRow<*>>.column(path: ColumnPath): ColumnAccessor<T> =
@@ -125,16 +82,13 @@ public fun <T> ColumnReference<DataRow<*>>.column(property: KProperty<T>): Colum
     ColumnAccessorImpl(this.path() + property.name)
 
 /**
- * Creates a reference to a column computed from a row by [expression].
- * The reference can be stored and reused in operations like `select` and `add`:
- * ```kotlin
- * // `this` is an untyped DataRow, so the value is cast to Int
- * val isAdult = column<Boolean>("isAdult") { (this["age"] as Int) > 18 }
- * val withColumn = dataFrameOf("age")(20, 15).add { add(isAdult) }
- * ```
- * Inside [expression], `this` is the current [DataRow].
+ * Creates an [expression column][ColumnExpressionLink] — a reference to a column computed from a row by [expression],
+ * with `this` inside [expression] being the current [DataRow].
+ * The reference can be stored and reused in operations like `add`.
  *
  * For more information: {@include [DocumentationUrls.Expr]}
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateColumnSamples.createComputedColumnReference_strings]
  *
  * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
  * @param [name] Name of the computed column.
@@ -147,11 +101,13 @@ public inline fun <reified T> column(
 ): ColumnReference<T> = createComputedColumnReference(name, typeOf<T>(), infer, expression)
 
 /**
- * Creates a reference to a column computed from a row by [expression].
- * Inside [expression], `this` is a [DataRow]`<T>` typed by the schema marker of [df].
+ * Creates an [expression column][ColumnExpressionLink] — a reference to a column computed from a row by [expression],
+ * with `this` inside [expression] being a [DataRow]`<T>` typed by the schema marker of [df].
  * The resulting reference is not tied to [df]: it can be used with any [DataFrame].
  *
  * For more information: {@include [DocumentationUrls.Expr]}
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateColumnSamples.createComputedColumnReference_properties]
  *
  * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
  * @param [df] The [DataFrame] whose schema marker types [expression]. It is not used otherwise.
@@ -170,68 +126,33 @@ public inline fun <T, reified C> column(
 
 // region valueColumn
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a value column reference.
- * Without a type argument, the referenced values have type `Any?`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun valueColumn(): ColumnDelegate<Any?> = column()
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a value column reference.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("valueColumnTyped")
 @Suppress("DEPRECATION")
 public fun <T> valueColumn(): ColumnDelegate<T> = column()
 
-/**
- * Creates a [ColumnAccessor] for the value column with the given [name].
- * Without a type argument, the referenced values have type `Any?`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced column.
- */
 @Suppress("DEPRECATION")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun valueColumn(name: String): ColumnAccessor<Any?> = column(name)
 
-/**
- * Creates a [ColumnAccessor] for the value column with the given [name].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("valueColumnTyped")
 @Suppress("DEPRECATION")
 public fun <T> valueColumn(name: String): ColumnAccessor<T> = column(name)
 
-/**
- * Creates a [ColumnAccessor] for the value column at the given [path].
- * Without a type argument, the referenced values have type `Any?`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun valueColumn(path: ColumnPath): ColumnAccessor<Any?> = column(path)
 
-/**
- * Creates a [ColumnAccessor] for the value column at the given [path].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("valueColumnTyped")
@@ -243,74 +164,33 @@ public fun <T> valueColumn(path: ColumnPath): ColumnAccessor<T> = column(path)
 @Suppress("DEPRECATION")
 public fun <T> valueColumn(property: KProperty<T>): ColumnAccessor<T> = column(property.name)
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a value column reference nested in the
- * receiver column group: the referenced column path is the receiver's path with the property name appended.
- * Without a type argument, the referenced values have type `Any?`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun ColumnReference<DataRow<*>>.valueColumn(): ColumnDelegate<Any?> = ColumnDelegate(this)
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a value column reference nested in the
- * receiver column group: the referenced column path is the receiver's path with the property name appended.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("valueColumnTyped")
 @Suppress("DEPRECATION")
 public fun <T> ColumnReference<DataRow<*>>.valueColumn(): ColumnDelegate<T> = ColumnDelegate(this)
 
-/**
- * Creates a [ColumnAccessor] for the value column with the given [name] nested in the receiver column group:
- * the created path is the receiver's path with [name] appended.
- * Without a type argument, the referenced values have type `Any?`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun ColumnReference<DataRow<*>>.valueColumn(name: String): ColumnAccessor<Any?> =
     ColumnAccessorImpl(path() + name)
 
-/**
- * Creates a [ColumnAccessor] for the value column with the given [name] nested in the receiver column group:
- * the created path is the receiver's path with [name] appended.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("valueColumnTyped")
 public fun <T> ColumnReference<DataRow<*>>.valueColumn(name: String): ColumnAccessor<T> =
     ColumnAccessorImpl(path() + name)
 
-/**
- * Creates a [ColumnAccessor] for the value column at the given [path] nested in the receiver column group:
- * the created path is the receiver's path with [path] appended.
- * Without a type argument, the referenced values have type `Any?`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced column, relative to the receiver.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun ColumnReference<DataRow<*>>.valueColumn(path: ColumnPath): ColumnAccessor<Any?> =
     ColumnAccessorImpl(this.path() + path)
 
-/**
- * Creates a [ColumnAccessor] for the value column at the given [path] nested in the receiver column group:
- * the created path is the receiver's path with [path] appended.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced column, relative to the receiver.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("valueColumnTyped")
@@ -326,74 +206,33 @@ public fun <T> ColumnReference<DataRow<*>>.valueColumn(property: KProperty<T>): 
 
 // region columnGroup
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a column group reference.
- * The cells of a column group are themselves rows; see [ColumnGroup].
- * Without a type argument, the referenced rows have type [DataRow]`<*>`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun columnGroup(): ColumnDelegate<DataRow<*>> = column()
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a column group reference.
- * The cells of a column group are themselves rows; see [ColumnGroup].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("columnGroupTyped")
 @Suppress("DEPRECATION")
 public fun <T> columnGroup(): ColumnDelegate<DataRow<T>> = column()
 
-/**
- * Creates a [ColumnAccessor] for the column group with the given [name].
- * The cells of a column group are themselves rows; see [ColumnGroup].
- * Without a type argument, the referenced rows have type [DataRow]`<*>`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced column group.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun columnGroup(name: String): ColumnAccessor<DataRow<*>> = column(name)
 
-/**
- * Creates a [ColumnAccessor] for the column group with the given [name].
- * The cells of a column group are themselves rows; see [ColumnGroup].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced column group.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("columnGroupTyped")
 @Suppress("DEPRECATION")
 public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(name)
 
-/**
- * Creates a [ColumnAccessor] for the column group at the given [path].
- * The cells of a column group are themselves rows; see [ColumnGroup].
- * Without a type argument, the referenced rows have type [DataRow]`<*>`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced column group.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = column(path)
 
-/**
- * Creates a [ColumnAccessor] for the column group at the given [path].
- * The cells of a column group are themselves rows; see [ColumnGroup].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced column group.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("columnGroupTyped")
@@ -411,80 +250,33 @@ public fun <T> columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<Data
 @Suppress("DEPRECATION")
 public fun <T> columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> = column(property.name)
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a column group reference nested in the
- * receiver column group: the referenced column path is the receiver's path with the property name appended.
- * The cells of a column group are themselves rows; see [ColumnGroup].
- * Without a type argument, the referenced rows have type [DataRow]`<*>`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun ColumnReference<DataRow<*>>.columnGroup(): ColumnDelegate<DataRow<*>> = ColumnDelegate(this)
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a column group reference nested in the
- * receiver column group: the referenced column path is the receiver's path with the property name appended.
- * The cells of a column group are themselves rows; see [ColumnGroup].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("columnGroupTyped")
 @Suppress("DEPRECATION")
 public fun <T> ColumnReference<DataRow<*>>.columnGroup(): ColumnDelegate<DataRow<T>> = ColumnDelegate(this)
 
-/**
- * Creates a [ColumnAccessor] for the column group with the given [name] nested in the receiver column group:
- * the created path is the receiver's path with [name] appended.
- * The cells of a column group are themselves rows; see [ColumnGroup].
- * Without a type argument, the referenced rows have type [DataRow]`<*>`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced column group.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun ColumnReference<DataRow<*>>.columnGroup(name: String): ColumnAccessor<DataRow<*>> =
     ColumnAccessorImpl(path() + name)
 
-/**
- * Creates a [ColumnAccessor] for the column group with the given [name] nested in the receiver column group:
- * the created path is the receiver's path with [name] appended.
- * The cells of a column group are themselves rows; see [ColumnGroup].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced column group.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("columnGroupTyped")
 public fun <T> ColumnReference<DataRow<*>>.columnGroup(name: String): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(path() + name)
 
-/**
- * Creates a [ColumnAccessor] for the column group at the given [path] nested in the receiver column group:
- * the created path is the receiver's path with [path] appended.
- * The cells of a column group are themselves rows; see [ColumnGroup].
- * Without a type argument, the referenced rows have type [DataRow]`<*>`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced column group, relative to the receiver.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun ColumnReference<DataRow<*>>.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
     ColumnAccessorImpl(this.path() + path)
 
-/**
- * Creates a [ColumnAccessor] for the column group at the given [path] nested in the receiver column group:
- * the created path is the receiver's path with [path] appended.
- * The cells of a column group are themselves rows; see [ColumnGroup].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced column group, relative to the receiver.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("columnGroupTyped")
@@ -506,74 +298,33 @@ public fun <T> ColumnReference<DataRow<*>>.columnGroup(property: KProperty<T>): 
 
 // region frameColumn
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a frame column reference.
- * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
- * Without a type argument, the referenced frames have type [DataFrame]`<*>`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun frameColumn(): ColumnDelegate<DataFrame<*>> = column()
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a frame column reference.
- * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("frameColumnTyped")
 @Suppress("DEPRECATION")
 public fun <T> frameColumn(): ColumnDelegate<DataFrame<T>> = column()
 
-/**
- * Creates a [ColumnAccessor] for the frame column with the given [name].
- * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
- * Without a type argument, the referenced frames have type [DataFrame]`<*>`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced frame column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun frameColumn(name: String): ColumnAccessor<DataFrame<*>> = column(name)
 
-/**
- * Creates a [ColumnAccessor] for the frame column with the given [name].
- * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced frame column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("frameColumnTyped")
 @Suppress("DEPRECATION")
 public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(name)
 
-/**
- * Creates a [ColumnAccessor] for the frame column at the given [path].
- * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
- * Without a type argument, the referenced frames have type [DataFrame]`<*>`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced frame column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<*>> = column(path)
 
-/**
- * Creates a [ColumnAccessor] for the frame column at the given [path].
- * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced frame column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("frameColumnTyped")
@@ -591,80 +342,33 @@ public fun <T> frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<Da
 @Suppress("DEPRECATION")
 public fun <T> frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> = column(property.name)
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a frame column reference nested in the
- * receiver column group: the referenced column path is the receiver's path with the property name appended.
- * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
- * Without a type argument, the referenced frames have type [DataFrame]`<*>`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @Suppress("DEPRECATION")
 public fun ColumnReference<DataRow<*>>.frameColumn(): ColumnDelegate<DataFrame<*>> = ColumnDelegate(this)
 
-/**
- * Creates a [ColumnDelegate] for the `by` property syntax of a frame column reference nested in the
- * receiver column group: the referenced column path is the receiver's path with the property name appended.
- * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("frameColumnTyped")
 @Suppress("DEPRECATION")
 public fun <T> ColumnReference<DataRow<*>>.frameColumn(): ColumnDelegate<DataFrame<T>> = ColumnDelegate(this)
 
-/**
- * Creates a [ColumnAccessor] for the frame column with the given [name] nested in the receiver column group:
- * the created path is the receiver's path with [name] appended.
- * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
- * Without a type argument, the referenced frames have type [DataFrame]`<*>`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced frame column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun ColumnReference<DataRow<*>>.frameColumn(name: String): ColumnAccessor<DataFrame<*>> =
     ColumnAccessorImpl(path() + name)
 
-/**
- * Creates a [ColumnAccessor] for the frame column with the given [name] nested in the receiver column group:
- * the created path is the receiver's path with [name] appended.
- * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [name] Name of the referenced frame column.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("frameColumnTyped")
 public fun <T> ColumnReference<DataRow<*>>.frameColumn(name: String): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(path() + name)
 
-/**
- * Creates a [ColumnAccessor] for the frame column at the given [path] nested in the receiver column group:
- * the created path is the receiver's path with [path] appended.
- * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
- * Without a type argument, the referenced frames have type [DataFrame]`<*>`.
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced frame column, relative to the receiver.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun ColumnReference<DataRow<*>>.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<*>> =
     ColumnAccessorImpl(this.path() + path)
 
-/**
- * Creates a [ColumnAccessor] for the frame column at the given [path] nested in the receiver column group:
- * the created path is the receiver's path with [path] appended.
- * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
- * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
- *
- * @param [path] Path to the referenced frame column, relative to the receiver.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 @JvmName("frameColumnTyped")
@@ -685,37 +389,14 @@ public fun <T> ColumnReference<DataRow<*>>.frameColumn(property: KProperty<List<
 
 // endregion
 
-/**
- * A delegate for the `by` property syntax of column references:
- * ```kotlin
- * val age by column<Int>() // reference to the column named "age"
- * ```
- * The referenced column name is taken from the property name; the [ColumnName] annotation overrides it.
- * When the delegate is created on a parent column group reference, the property name is appended
- * to the parent's path.
- *
- * For more information: {@include [DocumentationUrls.ColumnSelectors]}
- */
 @Suppress("DEPRECATION")
 @Deprecated(DEPRECATED_ACCESS_API)
 public class ColumnDelegate<T>(private val parent: ColumnReference<DataRow<*>>? = null) {
 
-    /**
-     * Creates a [ColumnAccessor] named after [property]; the [ColumnName] annotation overrides the name.
-     * With a parent column group reference, the name is appended to its path.
-     *
-     * @param [property] The property whose name is used for the referenced column.
-     */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.columnName)
 
-    /**
-     * Creates a [ColumnAccessor] with the given [name] instead of a property name.
-     * With a parent column group reference, [name] is appended to its path.
-     *
-     * @param [name] Name of the referenced column.
-     */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public infix fun named(name: String): ColumnAccessor<T> =
@@ -737,15 +418,18 @@ public class ColumnDelegate<T>(private val parent: ColumnReference<DataRow<*>>? 
  * Lists and other collections are stored as cell values: `columnOf(listOf(1, 2))` creates
  * a value column of type `List<Int>`, not a column group.
  *
- * See also `column`, `valueColumn`, `columnGroup` and `frameColumn`,
- * which create references to columns rather than columns.
+ * This overload is on par with the more specific ones: passing [DataFrame]s creates a [FrameColumn],
+ * passing [DataRow]s or columns creates a [ColumnGroup], anything else a [ValueColumn].
+ *
+ * See also [`column(values: Iterable<T>)`][column] if you want the values of a list
+ * to be unpacked into a column, and the other [columnOf] overloads
+ * creating a [ColumnGroup] or a [FrameColumn] from columns or frames.
  *
  * For more information: {@include [DocumentationUrls.ColumnOf]}
  *
- * Example:
- * ```kotlin
- * val numbers = columnOf(listOf(1, 2), listOf(3, 4)) // a value column of List<Int>
- * ```
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateColumnSamples.createValueByColumnOf]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateColumnSamples.createColumnOfMixedValues]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateColumnSamples.createColumnOfLists]
  *
  * @param [values] The values of the column.
  */
@@ -759,6 +443,9 @@ public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
 
 /**
  * Creates a [ColumnGroup] with the given [values] as its children and an empty name.
+ * Each child column keeps its own name; to name the group itself, use `named`.
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateColumnSamples.createColumnGroup]
  *
  * @param [values] The columns that become the children of the group.
  */
@@ -786,6 +473,8 @@ public fun columnOf(vararg columns: Pair<String, BaseColumn<*>>): ColumnGroup<*>
 
 /**
  * Creates a [FrameColumn] with the given [frames] as its values and an empty name.
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateColumnSamples.createFrameColumn]
  *
  * @param [frames] The frames that become the values of the column.
  */
@@ -822,7 +511,6 @@ public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> =
  *
  * Unlike `columnOf`, the declared type [T] is used as is, without inference from the values:
  * `column(listOf<Number>(1, 2))` has type `Number`, while `columnOf(1, 2)` has type `Int`.
- * To create an empty column with a declared type, pass an empty list: `column(emptyList<Int>())`.
  *
  * For more information: {@include [DocumentationUrls.ColumnOf]}
  *
@@ -855,16 +543,7 @@ public fun dataFrameOf(columns: Iterable<BaseColumn<*>>): DataFrame<*> {
 /**
  * Creates a [DataFrame] from the given name-to-column [columns] pairs.
  *
- * Example:
- * ```kotlin
- * val df = dataFrameOf(
- *     "a" to columnOf(1, 2),
- *     "b" to columnOf(1.0, 2.0),
- *     "group" to columnOf(
- *         "nestedA" to columnOf("42", "abc"),
- *     )
- * )
- * ```
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFromColumns]
  *
  * @include [ConstructorsDocs.DataFrameOfContractSnippet]
  *
@@ -899,6 +578,8 @@ public fun dataFrameOf(vararg columns: BaseColumn<*>): DataFrame<*> = dataFrameO
 /**
  * Creates a [DataFrameBuilder] for a [DataFrame] with the given column [header].
  * Call the builder with the cell values in row-major order — see [DataFrameBuilder].
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameOf]
  *
  * For more information: {@include [DocumentationUrls.DataFrameOf]}
  *
@@ -988,10 +669,9 @@ public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(
  *
  * Call [invoke][DataFrameBuilder.invoke] with all cell values in row-major order:
  * the values are distributed to the columns row by row, and the type of each column
- * is inferred from its values:
- * ```kotlin
- * val df = dataFrameOf("a", "b")(1, 2, 3, 4) // a: [1, 3], b: [2, 4]
- * ```
+ * is inferred from its values.
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameOf]
  *
  * Alternatively, [withColumns] or [invoke][DataFrameBuilder.invoke] with a values builder
  * create the columns one by one, and the [fill], [nulls] and `random*` functions create
@@ -1079,6 +759,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      * Creates a [DataFrame] where every column has [nrow] cells equal to [value].
      * The column type is [C]; a `null` [value] makes the columns nullable.
      *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameBuilderFill]
+     *
      * @param [nrow] The number of rows in every column.
      * @param [value] The value of every cell.
      */
@@ -1110,6 +792,8 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     /**
      * Creates a [DataFrame] where every column has [nrow] `null` values of type [C]`?`.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameBuilderFill]
      *
      * @param [nrow] The number of rows in every column.
      */

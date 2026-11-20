@@ -105,11 +105,13 @@ val empty = dataFrameOf("a", "b").nulls<Int>(3)
 <!---FUN createDataFrameFromMap-->
 
 ```kotlin
-val map = mapOf("name" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(15, 20, 22))
+val map = mapOf(
+    "name" to listOf("Alice", "Bob", "Charlie"),
+    "age" to listOf(15, 20, 22),
+)
 
 // DataFrame with 2 columns
-map
-    .toDataFrame()
+map.toDataFrame()
 ```
 
 <inline-frame src="./resources/createDataFrameFromMap.html" width="100%" height="500px"></inline-frame>
@@ -211,7 +213,7 @@ This also works for arrays: each array is stored in the `value` column as it is.
 
 ```kotlin
 val names = listOf("Alice", "Bob", "Charlie")
-val df = names.toDataFrame() as DataFrame<ValueProperty<String>>
+val df = names.toDataFrame()
 df.add("length") { value.length }
 ```
 
@@ -270,7 +272,11 @@ lines.chunked(4) { it.take(3) }
 ```kotlin
 data class Person(val name: String, val age: Int)
 
-val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
+val persons = listOf(
+    Person("Alice", 15),
+    Person("Bob", 20),
+    Person("Charlie", 22),
+)
 
 val df = persons.toDataFrame()
 ```
@@ -357,7 +363,8 @@ fun peek(vararg dataframes: AnyFrame): AnyFrame {
 }
 
 val col by columnOf(1, 2, 3)
-peek(dataFrameOf(col), dataFrameOf(col))
+val other = columnOf(4, 5, 6) named "col"
+peek(dataFrameOf(col), dataFrameOf(other))
 ```
 
 <inline-frame src="./resources/duplicatedColumns.html" width="100%" height="500px"></inline-frame>

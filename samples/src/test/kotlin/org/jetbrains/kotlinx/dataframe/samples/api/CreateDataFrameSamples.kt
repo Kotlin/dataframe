@@ -5,15 +5,14 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.DynamicDataFrameBuilder
-import org.jetbrains.kotlinx.dataframe.api.ValueProperty
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.preserve
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.value
@@ -102,11 +101,13 @@ class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
     @Test
     fun createDataFrameFromMap() {
         // SampleStart
-        val map = mapOf("name" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(15, 20, 22))
+        val map = mapOf(
+            "name" to listOf("Alice", "Bob", "Charlie"),
+            "age" to listOf(15, 20, 22),
+        )
 
         // DataFrame with 2 columns
-        map
-            .toDataFrame()
+        map.toDataFrame()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -192,7 +193,7 @@ class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
     fun readDataFrameFromValues() {
         // SampleStart
         val names = listOf("Alice", "Bob", "Charlie")
-        val df = names.toDataFrame() as DataFrame<ValueProperty<String>>
+        val df = names.toDataFrame()
         df.add("length") { value.length }
         // SampleEnd
         df.value.toList() shouldBe names
@@ -231,7 +232,11 @@ class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
         // SampleStart
         data class Person(val name: String, val age: Int)
 
-        val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
+        val persons = listOf(
+            Person("Alice", 15),
+            Person("Bob", 20),
+            Person("Charlie", 22),
+        )
 
         val df = persons.toDataFrame()
         // SampleEnd
@@ -303,7 +308,8 @@ class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
         }
 
         val col by columnOf(1, 2, 3)
-        peek(dataFrameOf(col), dataFrameOf(col))
+        val other = columnOf(4, 5, 6) named "col"
+        peek(dataFrameOf(col), dataFrameOf(other))
             // SampleEnd
             .saveDfHtmlSample()
     }

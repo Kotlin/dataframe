@@ -49,8 +49,13 @@ When column elements are [`DataFrame`](DataFrame.md) objects, it returns a [`Fra
 <!---FUN createFrameColumn-->
 
 ```kotlin
-val df1 = dataFrameOf("name", "age")("Alice", 20, "Bob", 25)
-val df2 = dataFrameOf("name", "temp")("Charlie", 36.6)
+val df1 = dataFrameOf("name", "age")(
+    "Alice", 20,
+    "Bob", 25,
+)
+val df2 = dataFrameOf("name", "temp")(
+    "Charlie", 36.6,
+)
 
 // Create FrameColumn with two elements of type DataFrame
 val frames by columnOf(df1, df2)
@@ -82,41 +87,7 @@ val numbers by columnOf(listOf(1, 2), listOf(3, 4))
 
 <!---END-->
 
-### column
-
-Returns a `ColumnAccessor` — a reference to a column that doesn't have to exist in a
-[`DataFrame`](DataFrame.md) yet. Use the reference later to select, add or update the column.
-
-<!---FUN createColumnAccessor-->
-
-```kotlin
-val df = dataFrameOf("age", "city")(20, "London", 15, "Milan")
-
-// Reference to the column named "age"
-val age = column<Int>("age")
-// The name is taken from the property
-val city by column<String>()
-
-val selected = df.select { age and city }
-```
-
-<!---END-->
-
-`valueColumn`, `columnGroup` and `frameColumn` create the same kind of reference for a value column,
-a column group and a frame column.
-
-To reference a column nested inside a group, create the reference on the group reference —
-the property name is appended to the group's path:
-
-<!---FUN createNestedColumnAccessor-->
-
-```kotlin
-val personal = columnGroup("personal")
-// Reference to the nested column "personal"/"age"
-val age by personal.column<Int>()
-```
-
-<!---END-->
+### Expression columns
 
 `column` with an expression creates a reference to a column computed from a row:
 

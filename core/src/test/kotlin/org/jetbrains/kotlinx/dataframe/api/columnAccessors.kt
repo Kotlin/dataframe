@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
@@ -18,10 +20,12 @@ private class ColumnNameHolder {
 }
 
 /**
- * Tests for the column reference factories (`column`, `valueColumn`, `columnGroup`, `frameColumn`):
- * property-name delegates and [ColumnName] overrides, access by name and by path, typed and untyped
- * overloads, nested references via a receiver, the deprecated [KProperty] overload, computed column
- * references, and usage in `select`, `add` and `update`.
+ * Tests for the column reference factories (`column`, `valueColumn`, `columnGroup`, `frameColumn`) —
+ * the whole family is deprecated (`DEPRECATED_ACCESS_API`), so these tests pin its current behaviour
+ * under `@Suppress("DEPRECATION")` until it is removed. Covered: property-name delegates and
+ * [ColumnName] overrides, access by name and by path, typed and untyped overloads, nested references
+ * via a receiver, the [KProperty] overloads, computed column references, and usage in `select`,
+ * `add` and `update`.
  */
 @Suppress("ktlint:standard:argument-list-wrapping")
 class ColumnAccessorsTests {

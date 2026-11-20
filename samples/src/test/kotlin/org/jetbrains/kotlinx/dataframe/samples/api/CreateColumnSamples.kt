@@ -1,17 +1,15 @@
+@file:Suppress("ktlint")
+
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.getValue
 import org.jetbrains.kotlinx.dataframe.api.named
-import org.jetbrains.kotlinx.dataframe.api.pathOf
-import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
@@ -51,8 +49,13 @@ class CreateColumnSamples : DataFrameSampleHelper("createColumn", "api") {
     @Test
     fun createFrameColumn() {
         // SampleStart
-        val df1 = dataFrameOf("name", "age")("Alice", 20, "Bob", 25)
-        val df2 = dataFrameOf("name", "temp")("Charlie", 36.6)
+        val df1 = dataFrameOf("name", "age")(
+            "Alice", 20,
+            "Bob", 25,
+        )
+        val df2 = dataFrameOf("name", "temp")(
+            "Charlie", 36.6,
+        )
 
         // Create FrameColumn with two elements of type DataFrame
         val frames by columnOf(df1, df2)
@@ -75,32 +78,6 @@ class CreateColumnSamples : DataFrameSampleHelper("createColumn", "api") {
         val numbers by columnOf(listOf(1, 2), listOf(3, 4))
         // SampleEnd
         numbers.type shouldBe typeOf<List<Int>>()
-    }
-
-    @Test
-    fun createColumnAccessor() {
-        // SampleStart
-        val df = dataFrameOf("age", "city")(20, "London", 15, "Milan")
-
-        // Reference to the column named "age"
-        val age = column<Int>("age")
-        // The name is taken from the property
-        val city by column<String>()
-
-        val selected = df.select { age and city }
-        // SampleEnd
-        selected.columnNames() shouldBe listOf("age", "city")
-        selected["age"].values shouldBe listOf(20, 15)
-    }
-
-    @Test
-    fun createNestedColumnAccessor() {
-        // SampleStart
-        val personal = columnGroup("personal")
-        // Reference to the nested column "personal"/"age"
-        val age by personal.column<Int>()
-        // SampleEnd
-        age.path() shouldBe pathOf("personal", "age")
     }
 
     @Test

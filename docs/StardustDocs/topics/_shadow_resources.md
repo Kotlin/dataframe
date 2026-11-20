@@ -498,16 +498,6 @@
 <resource src="readDataFrameFromObject.html"></resource>
 <resource src="toDataFrameColumn.html"></resource>
 <resource src="toDataFrameLists.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameWithFill.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createNestedRandomDataFrame.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createRandomDataFrame.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.duplicatedColumns.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObject.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObjectWithExclude.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromObject.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameLists.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerColumns.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerValues.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareLeft.html"></resource>

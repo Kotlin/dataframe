@@ -657,23 +657,6 @@ class ConstructorsTests {
     }
 
     @Test
-    fun `KDoc example dataFrameOf of name to column pairs`() {
-        val df = dataFrameOf(
-            "a" to columnOf(1, 2),
-            "b" to columnOf(1.0, 2.0),
-            "group" to columnOf(
-                "nestedA" to columnOf("42", "abc"),
-            ),
-        )
-
-        df.columnNames() shouldBe listOf("a", "b", "group")
-        df["a"].values shouldBe listOf(1, 2)
-        df["b"].values shouldBe listOf(1.0, 2.0)
-        df["group"].kind() shouldBe ColumnKind.Group
-        df["group"]["nestedA"].values shouldBe listOf("42", "abc")
-    }
-
-    @Test
     fun `builder invoke requires equal column count`() {
         val e = shouldThrow<IllegalArgumentException> {
             dataFrameOf("a", "b").invoke(listOf(columnOf(1)))
