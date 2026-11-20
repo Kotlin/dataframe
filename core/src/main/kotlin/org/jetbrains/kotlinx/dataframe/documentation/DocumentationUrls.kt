@@ -155,6 +155,9 @@ public interface DocumentationUrls {
     /** [See `convertTo` on the documentation website.]({@include [Url]}/convertto.html) */
     public typealias ConvertTo = Nothing
 
+    /** [See `inferType` on the documentation website.]({@include [Url]}/infertype.html) */
+    public typealias InferType = Nothing
+
     /** [See `toList` on the documentation website.]({@include [Url]}/tolist.html) */
     public typealias ToList = Nothing
 

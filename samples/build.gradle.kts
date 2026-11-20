@@ -128,6 +128,7 @@ korro {
                 include("concat.md")
                 include("concatDf.md")
                 include("groupBy.md")
+                include("inferType.md")
                 include("map.md")
                 include("merge.md")
                 include("iterate.md")

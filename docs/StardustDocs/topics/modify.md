@@ -60,6 +60,7 @@ as [`DataFrame`](DataFrame.md) can be interpreted as a [`Collection`](https://ko
 
 **Value modification:**
 * [convert](convert.md) — convert values into new types
+* [inferType](inferType.md) — refine the type of a column from the values stored in it
 * [parse](parse.md) — try to convert `String` values into appropriate types
 * [unfold](unfold.md) — convert / "unfold" objects to [`ColumnGroup`](DataColumn.md#columngroup)
 * [update](update.md) — update values preserving column types
