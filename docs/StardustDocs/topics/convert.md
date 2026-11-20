@@ -89,12 +89,12 @@ df.convert { "age"<Int>() }.with { it.toDouble() }
 
 <!---END-->
 
-Calculate a running total of the `age` column:
+Calculate a running total of the `age` column and rename it to `runningAge` in place:
 
 <!---FUN convertRunningTotal-->
 
 ```kotlin
-df.convert { age }.with {
+df.convert { age into "runningAge" }.with {
     (prev()?.newValue<Int>() ?: 0) + it
 }
 ```

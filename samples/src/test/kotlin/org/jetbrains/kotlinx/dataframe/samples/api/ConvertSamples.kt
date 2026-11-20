@@ -206,11 +206,11 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
     @Test
     fun convertRunningTotal() {
         // SampleStart
-        df.convert { age }.with {
+        df.convert { age into "runningAge" }.with {
             (prev()?.newValue<Int>() ?: 0) + it
         }
             // SampleEnd
-            .also { it.age.toList() shouldBe listOf(15, 60, 80, 120, 150, 170, 200) }
+            .also { it["runningAge"].values() shouldBe listOf(15, 60, 80, 120, 150, 170, 200) }
             .saveDfHtmlSample()
     }
 
