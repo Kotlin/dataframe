@@ -40,7 +40,7 @@ age
 <!---FUN extensionGeneratedWithAnIncompatibleSchema-->
 
 ```kotlin
-val df = DataFrame.readCsv(simpleCsvFile).cast<Schema>()
+val df = DataFrame.readCsv(simpleCsvFile).cast<Schema>(verify = false)
 
 // Compiles correctly but fails on runtime
 df.filter { age > "20" }
@@ -55,7 +55,8 @@ df.filter { age > "20" }
 If you define the initial data schema manually,
 make sure your data schema is compatible with the dataframe.
 
-* Use [`.cast<Schema>()`](cast.md) with `verify=true` for verifying the `Schema` compatibility.
+* Use [`.cast<Schema>()`](cast.md) to verify the `Schema` compatibility: it checks the data by default
+  and fails right away, while `.castUnchecked<Schema>()` defers the error to the property access, as above.
 * Use [special methods](DataSchemaGenerationMethods.md) for generating a data schema code 
 instead of defining data schema manually. However, you may still need to edit a generated schema —
 adjust a type nullability or the whole type, since sometimes a type can be inferred incorrectly 
