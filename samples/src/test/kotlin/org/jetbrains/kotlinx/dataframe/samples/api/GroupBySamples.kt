@@ -714,7 +714,7 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupBySelectedColumns_properties() {
         // SampleStart
-        // Collect the "name" and "age" values of all rows of each group
+        // Collect the "name" and "age" values of all rows of each group into lists
         df.groupBy { isHappy }.values { name and age }
             // SampleEnd
             .saveDfHtmlSample()
@@ -723,7 +723,7 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupBySelectedColumns_strings() {
         // SampleStart
-        // Collect the "name" and "age" values of all rows of each group
+        // Collect the "name" and "age" values of all rows of each group into lists
         df.groupBy("isHappy").values("name", "age")
         // SampleEnd
     }
@@ -731,7 +731,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupByAllColumns_properties() {
         // SampleStart
-        // Collect the values of all columns except the grouping keys from all rows of each group
+        // Collect the values of all columns except the grouping keys
+        // from all rows of each group into lists
         df.groupBy { isHappy }.values()
             // SampleEnd
             .saveDfHtmlSample()
@@ -740,7 +741,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupByAllColumns_strings() {
         // SampleStart
-        // Collect the values of all columns except the grouping keys from all rows of each group
+        // Collect the values of all columns except the grouping keys
+        // from all rows of each group into lists
         df.groupBy("isHappy").values()
         // SampleEnd
     }
@@ -748,7 +750,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupByRenameColumns_properties() {
         // SampleStart
-        // Collect the "age" column values of all rows of each group into a new "ages" column
+        // Collect the "age" column values of all rows of each group into a list,
+        // and store it in a new "ages" column
         df.groupBy { isHappy }.values { age into "ages" }
             // SampleEnd
             .saveDfHtmlSample()
@@ -757,7 +760,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupByRenameColumns_strings() {
         // SampleStart
-        // Collect the "age" column values of all rows of each group into a new "ages" column
+        // Collect the "age" column values of all rows of each group into a list,
+        // and store it in a new "ages" column
         df.groupBy("isHappy").values { "age" into "ages" }
         // SampleEnd
     }

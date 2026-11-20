@@ -474,9 +474,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotValuesAggregate_properties() {
         // SampleStart
-        // For each "isHappy" value group, collect the "name" and "age"
-        // values of all rows of the group into a single list
-        // and store them in the nested columns of the same name as the original ones
+        // For each "isHappy" value, collect the "name" and "age" values of all rows of the group
+        // into lists and store them in the nested columns with the same names as the original ones
         df.pivot { isHappy }.values { name and age }
             // SampleEnd
             .toDataFrame()
@@ -486,9 +485,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotValuesAggregate_strings() {
         // SampleStart
-        // For each "isHappy" value group, collect the "name" and "age"
-        // values of all rows of the group into a single list
-        // and store them in the nested columns of the same name as the original ones
+        // For each "isHappy" value, collect the "name" and "age" values of all rows of the group
+        // into lists and store them in the nested columns with the same names as the original ones
         df.pivot("isHappy").values("name", "age")
         // SampleEnd
     }
@@ -496,9 +494,9 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotValuesAggregateAll_properties() {
         // SampleStart
-        // For each "isHappy" value, collect the values for each column except the pivoted one
-        // of all rows of the group into a single list
-        // and store them in the nested columns of the same name as the original ones
+        // For each "isHappy" value, collect the values of all columns except the pivoted one
+        // from all rows of the group into lists
+        // and store them in the nested columns with the same names as the original ones
         df.pivot { isHappy }.values()
             // SampleEnd
             .toDataFrame()
@@ -509,7 +507,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     fun pivotValuesAggregateAll_strings() {
         // SampleStart
         // For each "isHappy" value, collect the values of all columns except the pivoted one
-        // into a single list and store them in the nested columns of the same name as the original ones
+        // from all rows of the group into lists
+        // and store them in the nested columns with the same names as the original ones
         df.pivot("isHappy").values()
         // SampleEnd
     }
@@ -633,7 +632,7 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotAggregate_properties() {
         // SampleStart
-        // The value is not stored with `into`,
+        // The last expression is not stored with `into`,
         // so its value is stored directly under the pivot keys
         df.pivot { isHappy }.aggregate { minBy { age }.name }
             // SampleEnd
@@ -644,7 +643,7 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotAggregate_strings() {
         // SampleStart
-        // The value is not stored with `into`,
+        // The last expression is not stored with `into`,
         // so its value is stored directly under the pivot keys
         df.pivot("isHappy").aggregate { minBy("age")["name"] }
         // SampleEnd

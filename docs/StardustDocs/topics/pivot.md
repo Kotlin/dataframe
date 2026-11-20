@@ -523,6 +523,7 @@ Each of these methods returns a new [`DataRow`](DataRow.md) with `Pivot` keys as
 <tab title="Properties">
 
 ```kotlin
+// Keep the group of rows of each "isHappy" value as is, in a frame column
 df.pivot { isHappy }.frames()
 ```
 
@@ -530,6 +531,7 @@ df.pivot { isHappy }.frames()
 <tab title="Strings">
 
 ```kotlin
+// Keep the group of rows of each "isHappy" value as is, in a frame column
 df.pivot("isHappy").frames()
 ```
 
@@ -544,6 +546,8 @@ df.pivot("isHappy").frames()
 <tab title="Properties">
 
 ```kotlin
+// For each "isHappy" value, collect the "name" and "age" values of all rows of the group
+// into lists and store them in the nested columns with the same names as the original ones
 df.pivot { isHappy }.values { name and age }
 ```
 
@@ -551,6 +555,8 @@ df.pivot { isHappy }.values { name and age }
 <tab title="Strings">
 
 ```kotlin
+// For each "isHappy" value, collect the "name" and "age" values of all rows of the group
+// into lists and store them in the nested columns with the same names as the original ones
 df.pivot("isHappy").values("name", "age")
 ```
 
@@ -564,6 +570,9 @@ df.pivot("isHappy").values("name", "age")
 <tab title="Properties">
 
 ```kotlin
+// For each "isHappy" value, collect the values of all columns except the pivoted one
+// from all rows of the group into lists
+// and store them in the nested columns with the same names as the original ones
 df.pivot { isHappy }.values()
 ```
 
@@ -571,6 +580,9 @@ df.pivot { isHappy }.values()
 <tab title="Strings">
 
 ```kotlin
+// For each "isHappy" value, collect the values of all columns except the pivoted one
+// from all rows of the group into lists
+// and store them in the nested columns with the same names as the original ones
 df.pivot("isHappy").values()
 ```
 
@@ -628,10 +640,24 @@ df.pivot("isHappy").with { "name"["lastName"]<String>() }
 
 ```kotlin
 df.pivot { isHappy }.aggregate {
+    // Count rows within each pivot group and store the result
+    // into a new "total" column (a new sub-column under each "isHappy" key column)
     count() into "total"
+
+    // Count rows with "age" of at least 18 within each pivot group
+    // and store the result into a new "adults" column
     count { age >= 18 } into "adults"
+
+    // Compute the median of the "age" column values within each pivot group
+    // and store it into a new "median age" column
     median { age } into "median age"
+
+    // Compute the minimum of the "age" column values within each pivot group
+    // and store it into a new "min age" column
     min { age } into "min age"
+
+    // Store the "name" column group of the oldest person within each pivot group
+    // as a new "oldest" column group
     maxBy { age }.name into "oldest"
 }
 ```
@@ -641,10 +667,24 @@ df.pivot { isHappy }.aggregate {
 
 ```kotlin
 df.pivot("isHappy").aggregate {
+    // Count rows within each pivot group and store the result
+    // into a new "total" column (a new sub-column under each "isHappy" key column)
     count() into "total"
+
+    // Count rows with "age" of at least 18 within each pivot group
+    // and store the result into a new "adults" column
     count { "age"<Int>() > 18 } into "adults"
+
+    // Compute the median of the "age" column values within each pivot group
+    // and store it into a new "median age" column
     median("age") into "median age"
+
+    // Compute the minimum of the "age" column values within each pivot group
+    // and store it into a new "min age" column
     min("age") into "min age"
+
+    // Store the "name" column group of the oldest person within each pivot group
+    // as a new "oldest" column group
     maxBy("age")["name"] into "oldest"
 }
 ```
@@ -660,6 +700,8 @@ If only one aggregation function is used, the column name can be omitted:
 <tab title="Properties">
 
 ```kotlin
+// The last expression is not stored with `into`,
+// so its value is stored directly under the pivot keys
 df.pivot { isHappy }.aggregate { minBy { age }.name }
 ```
 
@@ -667,6 +709,8 @@ df.pivot { isHappy }.aggregate { minBy { age }.name }
 <tab title="Strings">
 
 ```kotlin
+// The last expression is not stored with `into`,
+// so its value is stored directly under the pivot keys
 df.pivot("isHappy").aggregate { minBy("age")["name"] }
 ```
 
@@ -1077,10 +1121,20 @@ This allows combining column pivoting with other [`groupBy`](groupBy.md) aggrega
 
 ```kotlin
 df.groupBy { name.firstName }.aggregate {
+    // Pivot the "isHappy" column within each group,
+    // creating a PivotGroupBy with "name.firstName" as grouping keys
+    // and "isHappy" as pivoted columns
     pivot { isHappy }.aggregate(separate = true) {
+        // Compute the mean of the "age" column values for each
+        // "firstName" × "isHappy" combination group into the "mean age" column
         mean { age } into "mean age"
+
+        // Count rows within each "firstName" × "isHappy" combination group
+        // into the "count" column
         count() into "count"
     }
+
+    // Common `count` aggregation into the "total" column
     count() into "total"
 }
 ```
@@ -1090,10 +1144,20 @@ df.groupBy { name.firstName }.aggregate {
 
 ```kotlin
 df.groupBy { "name"["firstName"] }.aggregate {
+    // Pivot the "isHappy" column within each group,
+    // creating a PivotGroupBy with "name.firstName" as grouping keys
+    // and "isHappy" as pivoted columns
     pivot("isHappy").aggregate(separate = true) {
+        // Compute the mean of the "age" column values for each
+        // "firstName" × "isHappy" combination group into the "mean age" column
         mean("age") into "mean age"
+
+        // Count rows within each "firstName" × "isHappy" combination group
+        // into the "count" column
         count() into "count"
     }
+
+    // Common `count` aggregation into the "total" column
     count() into "total"
 }
 ```

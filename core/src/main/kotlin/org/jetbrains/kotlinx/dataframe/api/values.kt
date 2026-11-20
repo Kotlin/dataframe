@@ -72,7 +72,7 @@ internal interface ValuesDocs {
      * {@comment The parts all [Pivot.values] aggregation overloads have in common. KDoc-snippet.}
      *
      * Aggregates this [Pivot] by collecting the values of {@get [COLUMNS]}
-     * from all rows of each pivot group.
+     * from all rows of each pivot group into a [List].
      *
      * Returns a new [DataRow] with the [pivot] keys as top-level columns
      * (or as [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
