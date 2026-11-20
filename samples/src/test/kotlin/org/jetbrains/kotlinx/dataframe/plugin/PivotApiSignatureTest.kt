@@ -25,9 +25,7 @@ class PivotApiSignatureTest {
         "pivotCounts",
     )
 
-    private fun isDeprecatedAccessApi(
-        function: KoFunctionDeclaration,
-    ): Boolean =
+    private fun isDeprecatedAccessApi(function: KoFunctionDeclaration): Boolean =
         function.hasAnnotation { it.name == "Deprecated" } ||
             function.hasAnnotation { it.name == "AccessApiOverload" }
 

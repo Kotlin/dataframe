@@ -34,13 +34,13 @@ class FramesTests : TestBase() {
     // `df` comes from `TestBase`: seven rows, five of them happy, and
     // "Alice", "Bob" and "Charlie" as the three first names.
 
-    // the return type annotation asserts the contract of `PivotGroupBy.frames`
-    private fun framesByFirstName(): DataFrame<Person> = df.pivot { isHappy }.groupBy { name.firstName }.frames()
+    // the return type annotation asserts the contract of `PivotGroupBy.frames`: no original schema type
+    private fun framesByFirstName(): DataFrame<*> = df.pivot { isHappy }.groupBy { name.firstName }.frames()
 
     @Test
     fun `pivot frames keeps each pivot group as a frame value`() {
-        // the type annotation asserts the return type, which is part of the contract
-        val pivoted: DataRow<Person> = df.pivot { isHappy }.frames()
+        // the type annotation asserts the return type, which is part of the contract (no original schema type)
+        val pivoted: DataRow<*> = df.pivot { isHappy }.frames()
         pivoted.columnNames() shouldBe listOf("true", "false")
         (pivoted["true"] as DataFrame<*>) shouldBe df.filter { isHappy }
         (pivoted["false"] as DataFrame<*>) shouldBe df.filter { !isHappy }
@@ -106,8 +106,8 @@ class FramesTests : TestBase() {
 
     @Test
     fun `pivot groupBy frames returns one row per grouping value with the pivot keys inside a column group`() {
-        // the type annotation asserts the return type, which is part of the contract
-        val grouped: DataFrame<Person> = framesByFirstName()
+        // the type annotation asserts the return type, which is part of the contract (no original schema type)
+        val grouped: DataFrame<*> = framesByFirstName()
         grouped.rowsCount() shouldBe 3
         grouped.columnNames() shouldBe listOf("firstName", "isHappy")
         grouped["firstName"].values() shouldBe listOf("Alice", "Bob", "Charlie")

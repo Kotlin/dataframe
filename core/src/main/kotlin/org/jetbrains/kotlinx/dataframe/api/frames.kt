@@ -2,10 +2,10 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 
 // region Pivot
 
