@@ -332,18 +332,6 @@ class ConstructorsTests {
         col.values.map { v -> v?.let { (it as DataFrame<*>).rowsCount() } } shouldBe listOf(2, 0)
     }
 
-    @Test
-    fun `KDoc example columnOf of name to column pairs`() {
-        val columnGroup = columnOf(
-            "a" to columnOf("a1", "a2", "a3"),
-            "b" to columnOf(1, 2, 3),
-        )
-
-        columnGroup.kind() shouldBe ColumnKind.Group
-        columnGroup.getColumn(0).values shouldBe listOf("a1", "a2", "a3")
-        columnGroup.getColumn(1).values shouldBe listOf(1, 2, 3)
-    }
-
     // endregion
 
     // region dataFrameOf

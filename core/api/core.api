@@ -1848,7 +1848,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataFrameBuilder {
 	public final fun randomInt (I)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public final fun randomInt (ILkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public final fun randomLong (I)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public final fun randomLong (ILkotlin/ranges/ClosedRange;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public final fun randomLong (ILkotlin/ranges/LongRange;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public final fun withColumns (Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 

@@ -5,11 +5,14 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.DynamicDataFrameBuilder
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.named
@@ -84,6 +87,7 @@ class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
             "Charlie", 100,
         )
         // SampleEnd
+        df.saveDfHtmlSample()
     }
 
     @Test
@@ -312,5 +316,130 @@ class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
         peek(dataFrameOf(col), dataFrameOf(other))
             // SampleEnd
             .saveDfHtmlSample()
+    }
+
+    @Test
+    fun createDataFrameFromIterableHeader() {
+        // SampleStart
+        val header = listOf("name", "age")
+        val df = dataFrameOf(header)("Alice", 20, "Bob", 25)
+        // SampleEnd
+        df.columnNames() shouldBe listOf("name", "age")
+    }
+
+    @Test
+    fun createDataFrameFromPairsOfLists() {
+        // SampleStart
+        val df = dataFrameOf(
+            "name" to listOf("Alice", "Bob"),
+            "age" to listOf(15, 20),
+        )
+        // SampleEnd
+        df["age"].values shouldBe listOf(15, 20)
+    }
+
+    @Test
+    fun createDataFrameFromVarargHeaderFill() {
+        // SampleStart
+        // The reified argument is an upper bound: with Number, the columns are inferred as Int
+        val df = dataFrameOf("a", "b") { listOf<Number>(1, 2) }
+        // SampleEnd
+        df["a"].type shouldBe typeOf<Int>()
+    }
+
+    @Test
+    fun createDataFrameFromHeaderFill() {
+        // SampleStart
+        // The reified argument is an upper bound: with Number, the columns are inferred as Int
+        val df = dataFrameOf(listOf("a", "b")) { listOf<Number>(1, 2) }
+        // SampleEnd
+        df["a"].type shouldBe typeOf<Int>()
+    }
+
+    @Test
+    fun createDataFrameFromChars() {
+        // SampleStart
+        // The characters become the column names
+        val df = dataFrameOf('a'..'c')(1, 2, 3, 4, 5, 6)
+        // SampleEnd
+        df.columnNames() shouldBe listOf("a", "b", "c")
+    }
+
+    @Test
+    fun createDataFrameFromBuilderColumns() {
+        // SampleStart
+        // The columns are renamed to the header names
+        val df = dataFrameOf("name", "age")(columnOf("Alice", "Bob"), columnOf(15, 20))
+        // SampleEnd
+        df["name"].values shouldBe listOf("Alice", "Bob")
+    }
+
+    @Test
+    fun createDataFrameFromValuesBuilder() {
+        // SampleStart
+        // The lambda receives the column name and returns the values of that column
+        val df = dataFrameOf("a", "bb") { name -> listOf(name.length, name.length * 2) }
+        // SampleEnd
+        df["a"].values shouldBe listOf(1, 2)
+        df["bb"].values shouldBe listOf(2, 4)
+    }
+
+    @Test
+    fun createDataFrameWithColumns() {
+        // SampleStart
+        // The lambda receives the column name and builds the whole column
+        val df = dataFrameOf("a", "bb").withColumns { name -> columnOf(name.length, name.length + 1) }
+        // SampleEnd
+        df["a"].values shouldBe listOf(1, 2)
+        df["bb"].values shouldBe listOf(2, 3)
+    }
+
+    @Test
+    fun createDataFrameFillFrameColumn() {
+        // SampleStart
+        val userDf = dataFrameOf("name")("Alice", "Bob")
+
+        // Every cell holds the whole DataFrame
+        val df = dataFrameOf("user1", "user2").fill(2, userDf)
+        // SampleEnd
+        df["user1"].values.count() shouldBe 2
+        (df["user1"].values.first() as DataFrame<*>).columnNames() shouldBe listOf("name")
+    }
+
+    @Test
+    fun createDataFrameFillIndexed() {
+        // SampleStart
+        // The lambda receives the row index and the column name
+        val df = dataFrameOf("a", "b").fillIndexed(3) { index, _ -> index }
+        // SampleEnd
+        df["a"].values shouldBe listOf(0, 1, 2)
+        df["b"].values shouldBe listOf(0, 1, 2)
+    }
+
+    @Test
+    fun createDataFrameFillByIndex() {
+        // SampleStart
+        // The lambda receives the row index
+        val df = dataFrameOf("a", "b").fill(3) { it * it }
+        // SampleEnd
+        df["a"].values shouldBe listOf(0, 1, 4)
+        df["b"].values shouldBe listOf(0, 1, 4)
+    }
+
+    @Test
+    fun createDataFrameRandomBuilders() {
+        // SampleStart
+        val ints = dataFrameOf("i").randomInt(3)
+        val boundedInts = dataFrameOf("bi").randomInt(3, 1..10)
+        val longs = dataFrameOf("l").randomLong(3)
+        val boundedLongs = dataFrameOf("bl").randomLong(3, 1L..10L)
+        val doubles = dataFrameOf("d").randomDouble(3)
+        val boundedDoubles = dataFrameOf("bd").randomDouble(3, 1.0..10.0)
+        val floats = dataFrameOf("f").randomFloat(3)
+        val flags = dataFrameOf("flag").randomBoolean(3)
+        // SampleEnd
+        ints.rowsCount() shouldBe 3
+        boundedLongs["bl"].values.all { (it as Long) in 1L..10L } shouldBe true
+        boundedDoubles["bd"].values.all { (it as Double) < 10.0 } shouldBe true
     }
 }

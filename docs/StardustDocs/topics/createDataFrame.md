@@ -75,6 +75,8 @@ val df = dataFrameOf("name", "age")(
 )
 ```
 
+<inline-frame src="./resources/createDataFrameOf.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 The values are distributed to the columns row by row: in the example above,

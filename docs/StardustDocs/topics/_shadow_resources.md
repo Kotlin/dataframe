@@ -489,6 +489,7 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotManySeparate.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotSingle.html"></resource>
 <resource src="createDataFrameFromMap.html"></resource>
+<resource src="createDataFrameOf.html"></resource>
 <resource src="createDataFrameWithFill.html"></resource>
 <resource src="createNestedRandomDataFrame.html"></resource>
 <resource src="createRandomDataFrame.html"></resource>

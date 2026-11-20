@@ -2,6 +2,7 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.add
@@ -10,8 +11,11 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.getValue
 import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
+import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
+import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.values
@@ -78,6 +82,34 @@ class CreateColumnSamples : DataFrameSampleHelper("createColumn", "api") {
         val numbers by columnOf(listOf(1, 2), listOf(3, 4))
         // SampleEnd
         numbers.type shouldBe typeOf<List<Int>>()
+    }
+
+    @Test
+    fun createColumnOfPairs() {
+        // SampleStart
+        // A ColumnGroup: each column is renamed to its key
+        val personal = columnOf(
+            "firstName" to columnOf("Alice", "Bob"),
+            "lastName" to columnOf("Cooper", "Marley"),
+        )
+        // SampleEnd
+        personal.columnNames() shouldBe listOf("firstName", "lastName")
+        personal["firstName"].values shouldBe listOf("Alice", "Bob")
+        shouldThrow<DuplicateColumnNamesException> {
+            columnOf("a" to columnOf(1), "a" to columnOf(2))
+        }
+        shouldThrow<UnequalColumnSizesException> {
+            columnOf("a" to columnOf(1, 2), "b" to columnOf(1))
+        }
+    }
+
+    @Test
+    fun createColumnPath() {
+        // SampleStart
+        val path = pathOf("personal", "age")
+        // SampleEnd
+        path.path shouldBe listOf("personal", "age")
+        path.name() shouldBe "age"
     }
 
     @Test

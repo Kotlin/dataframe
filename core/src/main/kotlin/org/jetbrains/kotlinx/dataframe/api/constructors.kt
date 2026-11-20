@@ -82,9 +82,10 @@ public fun <T> ColumnReference<DataRow<*>>.column(property: KProperty<T>): Colum
     ColumnAccessorImpl(this.path() + property.name)
 
 /**
- * Creates an [expression column][ColumnExpressionLink] — a reference to a column computed from a row by [expression],
+ * Creates an expression column — a reference to a column computed from a row by [expression],
  * with `this` inside [expression] being the current [DataRow].
  * The reference can be stored and reused in operations like `add`.
+ * For the general column-expression mechanism, see {@include [ColumnExpressionLink]}.
  *
  * For more information: {@include [DocumentationUrls.Expr]}
  *
@@ -101,9 +102,10 @@ public inline fun <reified T> column(
 ): ColumnReference<T> = createComputedColumnReference(name, typeOf<T>(), infer, expression)
 
 /**
- * Creates an [expression column][ColumnExpressionLink] — a reference to a column computed from a row by [expression],
+ * Creates an expression column — a reference to a column computed from a row by [expression],
  * with `this` inside [expression] being a [DataRow]`<T>` typed by the schema marker of [df].
  * The resulting reference is not tied to [df]: it can be used with any [DataFrame].
+ * For the general column-expression mechanism, see {@include [ColumnExpressionLink]}.
  *
  * For more information: {@include [DocumentationUrls.Expr]}
  *
@@ -452,15 +454,19 @@ public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
 public fun columnOf(vararg values: BaseColumn<*>): DataColumn<DataRow<*>> = columnOf(values.asIterable()).forceResolve()
 
 /**
- * {@include [DocumentationUrls.ColumnOf]}
+ * Creates a [ColumnGroup] from the given name-to-column [columns] pairs,
+ * with each column renamed to its key and the group itself left with an empty name.
+ * Since the group is built as a [DataFrame], the keys must be unique
+ * and the columns must have equal sizes.
  *
- * Example:
- * ```kotlin
- * val columnGroup = columnOf(
- *   "a" to columnOf("a1", "a2", "a3"),
- *   "b" to columnOf(1, 2, 3),
- * )
- * ```
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateColumnSamples.createColumnOfPairs]
+ *
+ * @throws [DuplicateColumnNamesException] if the keys are not unique.
+ * @throws [UnequalColumnSizesException] if the columns have different sizes.
+ *
+ * For more information: {@include [DocumentationUrls.ColumnOf]}
+ *
+ * @param [columns] The name-to-column pairs of the group.
  */
 @Refine
 @Interpretable("ColumnOfPairs")
@@ -598,6 +604,8 @@ public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(he
  *
  * @param [header] The names of the columns.
  * @param [fill] Produces the values of a column by its name.
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFromVarargHeaderFill]
  */
 public inline fun <reified C> dataFrameOf(
     vararg header: String,
@@ -611,6 +619,8 @@ public inline fun <reified C> dataFrameOf(
  * For more information: {@include [DocumentationUrls.DataFrameOf]}
  *
  * @param [header] The names of the columns.
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFromIterableHeader]
  */
 public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBuilder(header.asList())
 
@@ -621,6 +631,8 @@ public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBu
  * @include [ConstructorsDocs.DataFrameOfContractSnippet]
  *
  * @param [columns] The name-to-values pairs of the new [DataFrame].
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFromPairsOfLists]
  */
 @Refine
 @Interpretable("DataFrameOf3")
@@ -644,6 +656,8 @@ public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): DataFr
  *
  * @param [header] The elements naming the columns.
  * @param [fill] Produces the values of a column from its header element.
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFromHeaderFill]
  */
 public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): DataFrame<*> =
     header.map { value ->
@@ -661,6 +675,8 @@ public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> I
  * For more information: {@include [DocumentationUrls.DataFrameOf]}
  *
  * @param [header] The characters naming the columns.
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFromChars]
  */
 public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
 
@@ -685,6 +701,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      * Creates a [DataFrame] from [columns], renaming them to the header names.
      *
      * @throws [IllegalArgumentException] if the number of [columns] differs from the number of header names.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFromBuilderColumns]
      */
     public operator fun invoke(vararg columns: DataColumn<*>): DataFrame<*> = invoke(columns.asIterable())
 
@@ -692,6 +710,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      * Creates a [DataFrame] from [columns], renaming them to the header names.
      *
      * @throws [IllegalArgumentException] if the number of [columns] differs from the number of header names.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFromBuilderColumns]
      */
     public operator fun invoke(columns: Iterable<DataColumn<*>>): DataFrame<*> {
         val cols = columns.asList()
@@ -732,6 +752,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      * the created column is renamed to its header name.
      *
      * @param [columnBuilder] Builds a column by its header name.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameWithColumns]
      */
     public fun withColumns(columnBuilder: (String) -> DataColumn<*>): DataFrame<*> =
         header
@@ -745,6 +767,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      * @include [ConstructorsDocs.InferredColumnTypeSnippet]
      *
      * @param [valuesBuilder] Produces the values of a column by its name.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFromValuesBuilder]
      */
     public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): DataFrame<*> =
         withColumns { name ->
@@ -780,6 +804,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      *
      * @param [nrow] The number of rows in every column.
      * @param [dataFrame] The [DataFrame] stored in every cell.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFillFrameColumn]
      */
     public fun fill(nrow: Int, dataFrame: DataFrame<*>): DataFrame<*> =
         withColumns { name ->
@@ -807,6 +833,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      *
      * @param [nrow] The number of rows in every column.
      * @param [init] Produces the value of a cell from its row index and column name.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFillIndexed]
      */
     @Refine
     @Interpretable("DataFrameBuilderFillIndexed")
@@ -824,6 +852,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      *
      * @param [nrow] The number of rows in every column.
      * @param [init] Produces the value of a cell from its row index.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFillByIndex]
      */
     @Refine
     @Interpretable("DataFrameBuilderFill")
@@ -849,6 +879,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      * Convenient for tests and demos.
      *
      * @param [nrow] The number of rows in every column.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameRandomBuilders]
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomInt")
@@ -860,6 +892,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      *
      * @param [range] The range of the random values (both bounds included).
      * @throws [IllegalArgumentException] if [range] is empty.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameRandomBuilders]
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomIntRange")
@@ -870,6 +904,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      * Convenient for tests and demos.
      *
      * @param [nrow] The number of rows in every column.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameRandomBuilders]
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomDouble")
@@ -882,6 +918,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      * @param [nrow] The number of rows in every column.
      * @param [range] The range of the random values: the lower bound is included, the upper bound is not.
      * @throws [IllegalArgumentException] if [range] is empty or its bounds are equal — no random value can be produced.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameRandomBuilders]
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomDoubleRange")
@@ -893,6 +931,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      * Convenient for tests and demos.
      *
      * @param [nrow] The number of rows in every column.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameRandomBuilders]
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomFloat")
@@ -903,6 +943,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      * Convenient for tests and demos.
      *
      * @param [nrow] The number of rows in every column.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameRandomBuilders]
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomLong")
@@ -915,17 +957,20 @@ public class DataFrameBuilder(private val header: List<String>) {
      * @param [nrow] The number of rows in every column.
      * @param [range] The range of the random values (both bounds included).
      * @throws [IllegalArgumentException] if [range] is empty.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameRandomBuilders]
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomLongRange")
-    public fun randomLong(nrow: Int, range: ClosedRange<Long>): DataFrame<*> =
-        fillNotNull(nrow) { Random.nextLong(range.start..range.endInclusive) }
+    public fun randomLong(nrow: Int, range: LongRange): DataFrame<*> = fillNotNull(nrow) { Random.nextLong(range) }
 
     /**
      * Creates a [DataFrame] where every column has [nrow] random [Boolean] values.
      * Convenient for tests and demos.
      *
      * @param [nrow] The number of rows in every column.
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameRandomBuilders]
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomBoolean")
@@ -1041,6 +1086,8 @@ public inline fun <reified T> emptyDataFrame(): DataFrame<T> = DataFrame.emptyOf
  * For more information: {@include [DocumentationUrls.PathOf]}
  *
  * @param [columnNames] The names of the columns along the path.
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateColumnSamples.createColumnPath]
  */
 @Interpretable("PathOf")
 public fun pathOf(vararg columnNames: String): ColumnPath =
