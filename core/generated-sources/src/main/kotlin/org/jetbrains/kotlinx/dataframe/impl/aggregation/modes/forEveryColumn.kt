@@ -27,7 +27,7 @@ internal fun <T, C, R : Any?> Aggregator<*, R>.aggregateFor(
     data: PivotGroupBy<T>,
     separate: Boolean,
     columns: ColumnsForAggregateSelector<T, C?>,
-): DataFrame<T> =
+): DataFrame<*> =
     data.aggregate(separate) {
         internal().aggregateFor(columns, cast())
     }
