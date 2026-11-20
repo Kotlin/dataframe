@@ -11,7 +11,7 @@ interface DsSalaries {
     val companyLocation: String
 
     @ColumnName("company_size")
-    val companySize: String
+    val companySize: Char
 
     @ColumnName("employee_residence")
     val employeeResidence: String

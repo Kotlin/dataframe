@@ -190,6 +190,10 @@ internal const val SUGGEST_IF_NULL = "This is here for binary compatibility. $ME
 
 internal const val INDICES_BASE_COLUMN = "This function is only here for binary compatibility. $MESSAGE_1_0"
 
+internal const val CAST_UNCHECKED =
+    "Unchecked `cast<T>()` was renamed to `castUnchecked<T>()`; `cast<T>()` now verifies the schema. " +
+        "This function is only here for binary compatibility."
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1

@@ -127,6 +127,9 @@ internal fun AnyFrame.convertToImpl(
                 when {
                     targetSchema.compare(currentSchema).matches() -> originalColumn
 
+                    //  accept String column for String? schema type. there's no conversion but type soundness holds
+                    !allowConversion && targetSchema.compare(currentSchema).isSuperOrMatches() -> originalColumn
+
                     !allowConversion -> {
                         val originalSchema = mapOf(originalColumn.name to currentSchema)
                             .render(0, StringBuilder(), "\t")
