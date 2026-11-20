@@ -820,6 +820,8 @@ df.groupBy("isHappy").into("ages") { "age"<Int>() }
 <tab title="Properties">
 
 ```kotlin
+// Collect the values of all columns except the grouping keys
+// from all rows of each group into lists
 df.groupBy { isHappy }.values()
 ```
 
@@ -827,6 +829,8 @@ df.groupBy { isHappy }.values()
 <tab title="Strings">
 
 ```kotlin
+// Collect the values of all columns except the grouping keys
+// from all rows of each group into lists
 df.groupBy("isHappy").values()
 ```
 
@@ -841,6 +845,7 @@ df.groupBy("isHappy").values()
 <tab title="Properties">
 
 ```kotlin
+// Collect the "name" and "age" values of all rows of each group into lists
 df.groupBy { isHappy }.values { name and age }
 ```
 
@@ -848,6 +853,7 @@ df.groupBy { isHappy }.values { name and age }
 <tab title="Strings">
 
 ```kotlin
+// Collect the "name" and "age" values of all rows of each group into lists
 df.groupBy("isHappy").values("name", "age")
 ```
 
@@ -862,6 +868,8 @@ df.groupBy("isHappy").values("name", "age")
 <tab title="Properties">
 
 ```kotlin
+// Collect the "age" column values of all rows of each group into a list,
+// and store it in a new "ages" column
 df.groupBy { isHappy }.values { age into "ages" }
 ```
 
@@ -869,6 +877,8 @@ df.groupBy { isHappy }.values { age into "ages" }
 <tab title="Strings">
 
 ```kotlin
+// Collect the "age" column values of all rows of each group into a list,
+// and store it in a new "ages" column
 df.groupBy("isHappy").values { "age" into "ages" }
 ```
 
@@ -926,10 +936,24 @@ df.groupBy("city").countDistinct { "name"["firstName"] }
 
 ```kotlin
 df.groupBy { city }.aggregate {
+    // Count rows within each group and store the result
+    // into a new "total" column
     count() into "total"
+
+    // Count rows with "age" column value greater than 18 within each group
+    // and store the result into a new "adults" column
     count { age > 18 } into "adults"
+
+    // Compute the median of the "age" column values within each group
+    // and store it into a new "median age" column
     median { age } into "median age"
+
+    // Compute the minimum of the "age" column values within each group
+    // and store it into a new "min age" column
     min { age } into "min age"
+
+    // Store the "name" column group of the oldest person in each group
+    // as a new "oldest" column group
     maxBy { age }.name into "oldest"
 }
 ```
@@ -939,10 +963,24 @@ df.groupBy { city }.aggregate {
 
 ```kotlin
 df.groupBy("city").aggregate {
+    // Count rows within each group and store the result
+    // into a new "total" column
     count() into "total"
+
+    // Count rows with "age" column value greater than 18 within each group
+    // and store the result into a new "adults" column
     count { "age"<Int>() > 18 } into "adults"
+
+    // Compute the median of the "age" column values within each group
+    // and store it into a new "median age" column
     median("age") into "median age"
+
+    // Compute the minimum of the "age" column values within each group
+    // and store it into a new "min age" column
     min("age") into "min age"
+
+    // Store the "name" column group of the oldest person in each group
+    // as a new "oldest" column group
     maxBy("age")["name"] into "oldest"
 }
 // or
@@ -967,6 +1005,8 @@ If only one aggregation function is used, the column name can be omitted:
 <tab title="Properties">
 
 ```kotlin
+// The last expression is not stored with `into`,
+// so its value is stored in a new column named "aggregated"
 df.groupBy { city }.aggregate { maxBy { age }.name }
 ```
 
@@ -974,6 +1014,8 @@ df.groupBy { city }.aggregate { maxBy { age }.name }
 <tab title="Strings">
 
 ```kotlin
+// The last expression is not stored with `into`,
+// so its value is stored in a new column named "aggregated"
 df.groupBy("city").aggregate { maxBy("age")["name"] }
 ```
 
