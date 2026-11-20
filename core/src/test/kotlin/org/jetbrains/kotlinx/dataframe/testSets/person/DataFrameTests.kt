@@ -512,7 +512,6 @@ class DataFrameTests : BaseTest() {
 
         df.filter { it[Person::age] > limit && it[Person::weight] != null }.check()
 
-        df.filter { age > limit && weight() != null }.check()
         df.filter { it[age] > limit && this[weight] != null }.check()
 
         df.filter { "age"<Int>() > limit && "weight"<Int?>() != null }.check()
@@ -746,7 +745,7 @@ class DataFrameTests : BaseTest() {
 
         df.groupBy(name).aggregate {
             count() into "n"
-            count { age > 25 } into "old count"
+            count { "age"<Int>() > 25 } into "old count"
             median(age) into "median age"
             min(age) into "min age"
             all { weight() != null } into "all with weights"
@@ -886,8 +885,6 @@ class DataFrameTests : BaseTest() {
         typed.add("year") { now - age }.check()
         typed.add("year") { now - it.age }.check()
 
-        df.add("year") { now - age }.check()
-
         df.add("year") { now - "age"<Int>() }.check()
     }
 
@@ -995,8 +992,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `compare comparable`() {
         val new = df.add("date") { LocalDate.now().minusDays(index.toLong()) }
-        val date by column<LocalDate>()
-        new.filter { date >= LocalDate.now().minusDays(3) }.nrow shouldBe 4
+        new.filter { "date"<LocalDate>() >= LocalDate.now().minusDays(3) }.nrow shouldBe 4
     }
 
     @Test
@@ -2216,7 +2212,7 @@ class DataFrameTests : BaseTest() {
             counter++
             2021 - it
         }
-        df.filter { year > 2000 }.nrow shouldBe 3
+        df.filter { year.getValue(this) > 2000 }.nrow shouldBe 3
         counter shouldBe df.nrow
         // SampleEnd
     }

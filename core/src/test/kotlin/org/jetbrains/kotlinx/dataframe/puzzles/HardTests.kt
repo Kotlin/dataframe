@@ -95,7 +95,7 @@ class HardTests {
         )
 
         val means = df
-            .filter { vals >= 0 }
+            .filter { "vals"<Int>() >= 0 }
             .groupBy { grps }.mean()
             .pivot { grps }.values { vals }
 

@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.concepts
 
+import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
@@ -9,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -32,6 +35,13 @@ class AccessApis {
         val age: Int
     }
 
+    @DataSchema
+    interface PersonInfo {
+        val name: String
+        val age: Int
+        val height: Double
+    }
+
     val df = dataFrameOf(
         columnOf(
             columnOf("Alice") named "firstName",
@@ -39,6 +49,12 @@ class AccessApis {
         ) named "fullName",
         columnOf(20) named "age",
     ).cast<Person>()
+
+    val personInfoDf: DataFrame<PersonInfo> = dataFrameOf(
+        "name" to columnOf("Alice", "Bob"),
+        "age" to columnOf(23, 27),
+        "height" to columnOf(175.5, 160.2),
+    ).cast()
 
     @Test
     fun stringApiExample1() {
@@ -87,6 +103,25 @@ class AccessApis {
             fullName.firstName == "Alice" && age >= 18
         }
         // SampleEnd
+    }
+
+    @Test
+    fun extensionPropertiesApiExample2() {
+        // SampleStart
+        // Access the "name" column
+        val nameCol: DataColumn<String> = personInfoDf.name
+
+        // Take the "name" value from the first row
+        val nameValue: String = personInfoDf.first().name
+
+        // Select the "age" and "height" columns
+        personInfoDf.select { age and height }
+
+        // Filter rows where "age" > 18 and "name" starts with 'A'
+        personInfoDf.filter { age > 18 && name.startsWith("A") }
+        // SampleEnd
+        nameCol.values() shouldBe listOf("Alice", "Bob")
+        nameValue shouldBe "Alice"
     }
 
     @Ignore
