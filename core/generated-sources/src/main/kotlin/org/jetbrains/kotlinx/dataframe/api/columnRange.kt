@@ -57,11 +57,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      *
      */
-    public interface Grammar {
-
-        /** [<code>**`..`**</code>][ColumnsSelectionDsl.rangeTo] */
-        public typealias PlainDslName = Nothing
-    }
+    public interface Grammar
 
     /**
      * ## Range of Columns

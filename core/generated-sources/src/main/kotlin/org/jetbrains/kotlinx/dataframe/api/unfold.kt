@@ -104,7 +104,7 @@ internal interface UnfoldDocs {
  *
  * A column that cannot be unfolded stays as it is.
  * These are columns of simple values, such as numbers, strings, or enums,
- * columns of objects without public properties,
+ * columns of objects without public properties or getter-like functions,
  * columns where both `T` and the [<code>type</code>][DataColumn.type] are [<code>Any</code>][Any] (for example, with objects of different classes),
  * [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]s, and [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]s.
  *
@@ -170,7 +170,7 @@ public inline fun <reified T> DataColumn<T>.unfold(vararg roots: KCallable<*>, m
  *
  * A column that cannot be unfolded stays as it is.
  * These are columns of simple values, such as numbers, strings, or enums,
- * columns of objects without public properties,
+ * columns of objects without public properties or getter-like functions,
  * columns whose [<code>type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] is [<code>Any</code>][Any] (for example, with objects of different classes),
  * [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]s, and [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]s.
  *
@@ -271,7 +271,7 @@ public fun <T> DataFrame<T>.unfold(
  *
  * A column that cannot be unfolded stays as it is.
  * These are columns of simple values, such as numbers, strings, or enums,
- * columns of objects without public properties,
+ * columns of objects without public properties or getter-like functions,
  * columns whose [<code>type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] is [<code>Any</code>][Any] (for example, with objects of different classes),
  * [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]s, and [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]s.
  *

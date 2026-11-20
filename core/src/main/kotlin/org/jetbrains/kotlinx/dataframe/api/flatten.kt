@@ -40,8 +40,6 @@ import kotlin.reflect.KProperty
  *
  * @see {@include [DocumentationUrls.Flatten]}
  */
-@ExcludeFromSources
-@Suppress("ClassName")
 private interface FlattenDocs {
     typealias FLATTEN_PARAM = Nothing
     typealias GROUPS = Nothing

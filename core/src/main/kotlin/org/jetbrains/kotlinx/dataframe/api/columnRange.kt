@@ -40,6 +40,7 @@ public interface ColumnRangeColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`..`**][ColumnsSelectionDsl.rangeTo] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
     }
 

@@ -249,14 +249,4 @@ class Access : TestBase() {
         df.xs("Moscow", true) { city and isHappy }
         // SampleEnd
     }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun values() {
-        // SampleStart
-        df.values()
-        df.values(byRows = true)
-        df.values { age and weight }
-        // SampleEnd
-    }
 }

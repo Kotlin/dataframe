@@ -73,7 +73,7 @@ public fun readOpenApiAsString(
  *
  * @param swaggerParseResult the result of parsing an OpenAPI specification, created using [readOpenApi] or [readOpenApiAsString].
  * @param extensionProperties whether to add extension properties to the generated interfaces. This is usually not
- *   necessary, since both the KSP- and the Gradle plugin, will add extension properties to the generated code.
+ *   necessary, since both the KSP- and the Gradle plugin will add extension properties to the generated code.
  * @param visibility the visibility of the generated marker classes.
  *
  * @return a [Code] object, representing the generated code.
@@ -184,13 +184,13 @@ private fun readOpenApi(
 
 /**
  * Converts named OpenApi schemas to a list of [OpenApiMarker]s.
- * Will cause an exception for circular references, however they shouldn't occur in OpenApi specs.
+ * Will cause an exception for circular references; however, they shouldn't occur in OpenApi specs.
  *
  * Some explanation:
  * OpenApi provides schemas for all the types used. For each type, we want to generate a [Marker]
  * (Which can be an interface, enum or typealias). However, the OpenApi schema is not ordered per se,
  * so when we are reading the schema it might be that we have a reference to a (super)type
- * (which are queried using `getRefMarker`) for which we have not yet created a [Marker].
+ * (which is queried using `getRefMarker`) for which we have not yet created a [Marker].
  * In that case, we "pause" that one (by returning `CannotFindRefMarker`) and try to read another type schema first.
  * Circular references cannot exist since it's encoded in JSON, so we never get stuck in an infinite loop.
  * When all markers are "retrieved" (so turned from a [RetrievableMarker] to a [MarkerResult.OpenApiMarker]),
@@ -277,7 +277,7 @@ private fun Map<String, Schema<*>>.toMarkers(topInterfaceName: ValidFieldName): 
  * - `enum:` creating an enum of any type.
  * - `type: object`
  *     - `properties:` (`additionalProperties` are ignored) creating an [OpenApiMarker.Interface] using the fields in the properties.
- *     - `additionalProperties:` (if `properties` is not present) creating an [OpenApiMarker.AdditionalPropertiesInterface] using the additionalProperties schema as type of `value`.
+ *     - `additionalProperties:` (if `properties` is not present) creating an [OpenApiMarker.AdditionalPropertyInterface] using the additionalProperties schema as type of `value`.
  * - `type:` if type is something else, generating a type alias for it. This can be an [OpenApiMarker.TypeAlias] or an [OpenApiMarker.MarkerAlias].
  *
  * @param typeName The name of the schema / type to convert.

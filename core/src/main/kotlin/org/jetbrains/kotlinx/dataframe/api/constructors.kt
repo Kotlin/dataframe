@@ -53,6 +53,9 @@ import kotlin.reflect.typeOf
  * The referenced column name is taken from the property name; the [ColumnName] annotation overrides it.
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
 
 /**
@@ -61,6 +64,8 @@ public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
  *
  * @param [name] Name of the referenced column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
 
 /**
@@ -69,6 +74,8 @@ public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name
  *
  * @param [path] Path to the referenced column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(path)
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -84,6 +91,9 @@ public fun <T> column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccesso
  * ```
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> ColumnReference<DataRow<*>>.column(): ColumnDelegate<T> = ColumnDelegate(this)
 
 /**
@@ -93,6 +103,8 @@ public fun <T> ColumnReference<DataRow<*>>.column(): ColumnDelegate<T> = ColumnD
  *
  * @param [name] Name of the referenced column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun <T> ColumnReference<DataRow<*>>.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
 
 /**
@@ -102,6 +114,8 @@ public fun <T> ColumnReference<DataRow<*>>.column(name: String): ColumnAccessor<
  *
  * @param [path] Path to the referenced column, relative to the receiver.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun <T> ColumnReference<DataRow<*>>.column(path: ColumnPath): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + path)
 
@@ -161,13 +175,19 @@ public inline fun <T, reified C> column(
  * Without a type argument, the referenced values have type `Any?`.
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun valueColumn(): ColumnDelegate<Any?> = column()
 
 /**
  * Creates a [ColumnDelegate] for the `by` property syntax of a value column reference.
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("valueColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> valueColumn(): ColumnDelegate<T> = column()
 
 /**
@@ -177,6 +197,9 @@ public fun <T> valueColumn(): ColumnDelegate<T> = column()
  *
  * @param [name] Name of the referenced column.
  */
+@Suppress("DEPRECATION")
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun valueColumn(name: String): ColumnAccessor<Any?> = column(name)
 
 /**
@@ -185,7 +208,10 @@ public fun valueColumn(name: String): ColumnAccessor<Any?> = column(name)
  *
  * @param [name] Name of the referenced column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("valueColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> valueColumn(name: String): ColumnAccessor<T> = column(name)
 
 /**
@@ -195,6 +221,9 @@ public fun <T> valueColumn(name: String): ColumnAccessor<T> = column(name)
  *
  * @param [path] Path to the referenced column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun valueColumn(path: ColumnPath): ColumnAccessor<Any?> = column(path)
 
 /**
@@ -203,11 +232,15 @@ public fun valueColumn(path: ColumnPath): ColumnAccessor<Any?> = column(path)
  *
  * @param [path] Path to the referenced column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("valueColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> valueColumn(path: ColumnPath): ColumnAccessor<T> = column(path)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> valueColumn(property: KProperty<T>): ColumnAccessor<T> = column(property.name)
 
 /**
@@ -216,6 +249,9 @@ public fun <T> valueColumn(property: KProperty<T>): ColumnAccessor<T> = column(p
  * Without a type argument, the referenced values have type `Any?`.
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun ColumnReference<DataRow<*>>.valueColumn(): ColumnDelegate<Any?> = ColumnDelegate(this)
 
 /**
@@ -223,7 +259,10 @@ public fun ColumnReference<DataRow<*>>.valueColumn(): ColumnDelegate<Any?> = Col
  * receiver column group: the referenced column path is the receiver's path with the property name appended.
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("valueColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> ColumnReference<DataRow<*>>.valueColumn(): ColumnDelegate<T> = ColumnDelegate(this)
 
 /**
@@ -234,6 +273,8 @@ public fun <T> ColumnReference<DataRow<*>>.valueColumn(): ColumnDelegate<T> = Co
  *
  * @param [name] Name of the referenced column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun ColumnReference<DataRow<*>>.valueColumn(name: String): ColumnAccessor<Any?> =
     ColumnAccessorImpl(path() + name)
 
@@ -244,6 +285,8 @@ public fun ColumnReference<DataRow<*>>.valueColumn(name: String): ColumnAccessor
  *
  * @param [name] Name of the referenced column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("valueColumnTyped")
 public fun <T> ColumnReference<DataRow<*>>.valueColumn(name: String): ColumnAccessor<T> =
     ColumnAccessorImpl(path() + name)
@@ -256,6 +299,8 @@ public fun <T> ColumnReference<DataRow<*>>.valueColumn(name: String): ColumnAcce
  *
  * @param [path] Path to the referenced column, relative to the receiver.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun ColumnReference<DataRow<*>>.valueColumn(path: ColumnPath): ColumnAccessor<Any?> =
     ColumnAccessorImpl(this.path() + path)
 
@@ -266,6 +311,8 @@ public fun ColumnReference<DataRow<*>>.valueColumn(path: ColumnPath): ColumnAcce
  *
  * @param [path] Path to the referenced column, relative to the receiver.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("valueColumnTyped")
 public fun <T> ColumnReference<DataRow<*>>.valueColumn(path: ColumnPath): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + path)
@@ -285,6 +332,9 @@ public fun <T> ColumnReference<DataRow<*>>.valueColumn(property: KProperty<T>): 
  * Without a type argument, the referenced rows have type [DataRow]`<*>`.
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun columnGroup(): ColumnDelegate<DataRow<*>> = column()
 
 /**
@@ -292,7 +342,10 @@ public fun columnGroup(): ColumnDelegate<DataRow<*>> = column()
  * The cells of a column group are themselves rows; see [ColumnGroup].
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("columnGroupTyped")
+@Suppress("DEPRECATION")
 public fun <T> columnGroup(): ColumnDelegate<DataRow<T>> = column()
 
 /**
@@ -303,6 +356,9 @@ public fun <T> columnGroup(): ColumnDelegate<DataRow<T>> = column()
  *
  * @param [name] Name of the referenced column group.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun columnGroup(name: String): ColumnAccessor<DataRow<*>> = column(name)
 
 /**
@@ -312,7 +368,10 @@ public fun columnGroup(name: String): ColumnAccessor<DataRow<*>> = column(name)
  *
  * @param [name] Name of the referenced column group.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("columnGroupTyped")
+@Suppress("DEPRECATION")
 public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(name)
 
 /**
@@ -323,6 +382,9 @@ public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(na
  *
  * @param [path] Path to the referenced column group.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = column(path)
 
 /**
@@ -332,16 +394,21 @@ public fun columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = column(pa
  *
  * @param [path] Path to the referenced column group.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("columnGroupTyped")
+@Suppress("DEPRECATION")
 public fun <T> columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = column(path)
 
 @JvmName("columnGroupDataRowKProperty")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> = column(property)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> = column(property.name)
 
 /**
@@ -351,6 +418,9 @@ public fun <T> columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> =
  * Without a type argument, the referenced rows have type [DataRow]`<*>`.
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun ColumnReference<DataRow<*>>.columnGroup(): ColumnDelegate<DataRow<*>> = ColumnDelegate(this)
 
 /**
@@ -359,7 +429,10 @@ public fun ColumnReference<DataRow<*>>.columnGroup(): ColumnDelegate<DataRow<*>>
  * The cells of a column group are themselves rows; see [ColumnGroup].
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("columnGroupTyped")
+@Suppress("DEPRECATION")
 public fun <T> ColumnReference<DataRow<*>>.columnGroup(): ColumnDelegate<DataRow<T>> = ColumnDelegate(this)
 
 /**
@@ -371,6 +444,8 @@ public fun <T> ColumnReference<DataRow<*>>.columnGroup(): ColumnDelegate<DataRow
  *
  * @param [name] Name of the referenced column group.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun ColumnReference<DataRow<*>>.columnGroup(name: String): ColumnAccessor<DataRow<*>> =
     ColumnAccessorImpl(path() + name)
 
@@ -382,6 +457,8 @@ public fun ColumnReference<DataRow<*>>.columnGroup(name: String): ColumnAccessor
  *
  * @param [name] Name of the referenced column group.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("columnGroupTyped")
 public fun <T> ColumnReference<DataRow<*>>.columnGroup(name: String): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(path() + name)
@@ -395,6 +472,8 @@ public fun <T> ColumnReference<DataRow<*>>.columnGroup(name: String): ColumnAcce
  *
  * @param [path] Path to the referenced column group, relative to the receiver.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun ColumnReference<DataRow<*>>.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
     ColumnAccessorImpl(this.path() + path)
 
@@ -406,6 +485,8 @@ public fun ColumnReference<DataRow<*>>.columnGroup(path: ColumnPath): ColumnAcce
  *
  * @param [path] Path to the referenced column group, relative to the receiver.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("columnGroupTyped")
 public fun <T> ColumnReference<DataRow<*>>.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(this.path() + path)
@@ -431,6 +512,9 @@ public fun <T> ColumnReference<DataRow<*>>.columnGroup(property: KProperty<T>): 
  * Without a type argument, the referenced frames have type [DataFrame]`<*>`.
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun frameColumn(): ColumnDelegate<DataFrame<*>> = column()
 
 /**
@@ -438,7 +522,10 @@ public fun frameColumn(): ColumnDelegate<DataFrame<*>> = column()
  * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("frameColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> frameColumn(): ColumnDelegate<DataFrame<T>> = column()
 
 /**
@@ -449,6 +536,9 @@ public fun <T> frameColumn(): ColumnDelegate<DataFrame<T>> = column()
  *
  * @param [name] Name of the referenced frame column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun frameColumn(name: String): ColumnAccessor<DataFrame<*>> = column(name)
 
 /**
@@ -458,7 +548,10 @@ public fun frameColumn(name: String): ColumnAccessor<DataFrame<*>> = column(name
  *
  * @param [name] Name of the referenced frame column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("frameColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(name)
 
 /**
@@ -469,6 +562,9 @@ public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(
  *
  * @param [path] Path to the referenced frame column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<*>> = column(path)
 
 /**
@@ -478,16 +574,21 @@ public fun frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<*>> = column(
  *
  * @param [path] Path to the referenced frame column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("frameColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = column(path)
 
 @JvmName("frameColumnDataFrameKProperty")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> = column(property)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
+@Suppress("DEPRECATION")
 public fun <T> frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> = column(property.name)
 
 /**
@@ -497,6 +598,9 @@ public fun <T> frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFra
  * Without a type argument, the referenced frames have type [DataFrame]`<*>`.
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+@Suppress("DEPRECATION")
 public fun ColumnReference<DataRow<*>>.frameColumn(): ColumnDelegate<DataFrame<*>> = ColumnDelegate(this)
 
 /**
@@ -505,7 +609,10 @@ public fun ColumnReference<DataRow<*>>.frameColumn(): ColumnDelegate<DataFrame<*
  * Each cell of a frame column is a whole [DataFrame]; see [FrameColumn].
  * @include [ConstructorsDocs.ColumnReferenceUsageSnippet]
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("frameColumnTyped")
+@Suppress("DEPRECATION")
 public fun <T> ColumnReference<DataRow<*>>.frameColumn(): ColumnDelegate<DataFrame<T>> = ColumnDelegate(this)
 
 /**
@@ -517,6 +624,8 @@ public fun <T> ColumnReference<DataRow<*>>.frameColumn(): ColumnDelegate<DataFra
  *
  * @param [name] Name of the referenced frame column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun ColumnReference<DataRow<*>>.frameColumn(name: String): ColumnAccessor<DataFrame<*>> =
     ColumnAccessorImpl(path() + name)
 
@@ -528,6 +637,8 @@ public fun ColumnReference<DataRow<*>>.frameColumn(name: String): ColumnAccessor
  *
  * @param [name] Name of the referenced frame column.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("frameColumnTyped")
 public fun <T> ColumnReference<DataRow<*>>.frameColumn(name: String): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(path() + name)
@@ -541,6 +652,8 @@ public fun <T> ColumnReference<DataRow<*>>.frameColumn(name: String): ColumnAcce
  *
  * @param [path] Path to the referenced frame column, relative to the receiver.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun ColumnReference<DataRow<*>>.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<*>> =
     ColumnAccessorImpl(this.path() + path)
 
@@ -552,6 +665,8 @@ public fun ColumnReference<DataRow<*>>.frameColumn(path: ColumnPath): ColumnAcce
  *
  * @param [path] Path to the referenced frame column, relative to the receiver.
  */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 @JvmName("frameColumnTyped")
 public fun <T> ColumnReference<DataRow<*>>.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(this.path() + path)
@@ -581,6 +696,8 @@ public fun <T> ColumnReference<DataRow<*>>.frameColumn(property: KProperty<List<
  *
  * For more information: {@include [DocumentationUrls.ColumnSelectors]}
  */
+@Suppress("DEPRECATION")
+@Deprecated(DEPRECATED_ACCESS_API)
 public class ColumnDelegate<T>(private val parent: ColumnReference<DataRow<*>>? = null) {
 
     /**
@@ -589,6 +706,8 @@ public class ColumnDelegate<T>(private val parent: ColumnReference<DataRow<*>>? 
      *
      * @param [property] The property whose name is used for the referenced column.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.columnName)
 
     /**
@@ -597,6 +716,8 @@ public class ColumnDelegate<T>(private val parent: ColumnReference<DataRow<*>>? 
      *
      * @param [name] Name of the referenced column.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public infix fun named(name: String): ColumnAccessor<T> =
         parent?.let { ColumnAccessorImpl(it.path() + name) } ?: ColumnAccessorImpl(name)
 }

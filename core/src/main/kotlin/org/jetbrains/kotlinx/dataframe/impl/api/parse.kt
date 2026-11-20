@@ -904,7 +904,7 @@ internal object Parsers : GlobalParserOptions {
         stringParserWithOptions<Month> { options, isConverter ->
             if (canUseKotlinDateTime(options, isConverter)) {
                 parseBy {
-                    Month.entries.firstOrNull { month -> month.name == it.lowercase() }
+                    Month.entries.firstOrNull { month -> month.name.equals(it, ignoreCase = true) }
                 }
             } else {
                 SKIP_PARSER
@@ -914,7 +914,7 @@ internal object Parsers : GlobalParserOptions {
         stringParserWithOptions<DayOfWeek> { options, isConverter ->
             if (canUseKotlinDateTime(options, isConverter)) {
                 parseBy {
-                    DayOfWeek.entries.firstOrNull { day -> day.name == it.lowercase() }
+                    DayOfWeek.entries.firstOrNull { day -> day.name.equals(it, ignoreCase = true) }
                 }
             } else {
                 SKIP_PARSER
@@ -1089,7 +1089,7 @@ internal fun DateTimeFormat.Companion.fromPattern(pattern: String, formatType: K
  *
  * For more information: {@include [DocumentationUrls.ParseOnDataColumn]}
  *
- * @param options options for parsing, like providing a locale or a custom date-time formatter
+ * @param [options] options for parsing, like providing a locale or a custom date-time formatter
  * @throws IllegalStateException if no valid parser is found (unlikely, unless the `String` parser is disabled)
  * @return a new column with parsed values
  */

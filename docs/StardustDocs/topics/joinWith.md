@@ -233,9 +233,9 @@ df1.innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["ag
 <!---END-->
 
 Here columns from both [`DataFrame`](DataFrame.md) objects are presented as is.
-So [join](join.md) is better suited for `equals` relation, and joinWith is for everything else.
+So [join](join.md) is better suited for the `equals` relation, and `joinWith` is for everything else.
 Below are two more examples with join types that allow mismatches.
-Note the difference in `null` values
+Note the difference in `null` values:
 
 <!---FUN compareLeft-->
 

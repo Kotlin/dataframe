@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -91,12 +92,15 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`cols`**][ColumnsSelectionDsl.cols] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`cols`**][ColumnsSelectionDsl.cols] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`cols`**][ColumnsSelectionDsl.cols] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
@@ -128,6 +132,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * {@get [CommonColsDocs.Examples]}
      *
      */
+    @ExcludeFromSources
     private interface CommonColsDocs {
 
         /**
@@ -193,6 +198,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [otherIndices\] The other indices of the columns to retrieve.
      * @return A [ColumnSet] containing the columns found at the given indices.
      */
+    @ExcludeFromSources
     private interface CommonColsIndicesDocs {
 
         /** Example argument */
@@ -226,6 +232,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [range\] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet] containing the columns found at the given indices.
      */
+    @ExcludeFromSources
     private interface CommonColsRangeDocs {
 
         /** Example argument */
@@ -251,6 +258,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.all\]
      * @see [ColumnsSelectionDsl.filter\]
      */
+    @ExcludeFromSources
     private typealias ColumnSetColsPredicateDocs = Nothing
 
     /** @include [ColumnSetColsPredicateDocs] */
@@ -281,6 +289,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * @see [ColumnsSelectionDsl.all\]
      */
+    @ExcludeFromSources
     private typealias ColumnsSelectionDslColsPredicateDocs = Nothing
 
     /** @include [ColumnsSelectionDslColsPredicateDocs] */
@@ -309,6 +318,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * @see [ColumnsSelectionDsl.allCols\]
      */
+    @ExcludeFromSources
     private typealias SingleColumnAnyRowColsPredicateDocs = Nothing
 
     /** @include [SingleColumnAnyRowColsPredicateDocs] */
@@ -337,6 +347,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "myGroupCol".`[`cols`][String.cols]`() }`
      */
+    @ExcludeFromSources
     private typealias StringColsPredicateDocs = Nothing
 
     /** @include [StringColsPredicateDocs] */
@@ -362,6 +373,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * @see [ColumnsSelectionDsl.allCols\]
      */
+    @ExcludeFromSources
     private typealias KPropertyColsPredicateDocs = Nothing
 
     /** @include [KPropertyColsPredicateDocs] */
@@ -386,6 +398,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["myGroupCol"].`[`cols`][ColumnPath.cols]`() } // identity call, same as `[`allCols`][ColumnsSelectionDsl.allCols]
      */
+    @ExcludeFromSources
     private typealias ColumnPathPredicateDocs = Nothing
 
     /** @include [ColumnPathPredicateDocs] */
@@ -411,6 +424,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
      */
+    @ExcludeFromSources
     private typealias ColumnsSelectionDslColsVarargColumnReferenceDocs = Nothing
 
     /** @include [ColumnsSelectionDslColsVarargColumnReferenceDocs] */
@@ -435,6 +449,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, columnB`[`]`][SingleColumn.cols]` }`
      */
+    @ExcludeFromSources
     private typealias SingleColumnColsVarargColumnReferenceDocs = Nothing
 
     /** @include [SingleColumnColsVarargColumnReferenceDocs] */
@@ -459,6 +474,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`columnA, columnB`[`]`][String.cols]` }`
      */
+    @ExcludeFromSources
     private typealias StringColsVarargColumnReferenceDocs = Nothing
 
     /** @include [StringColsVarargColumnReferenceDocs] */
@@ -479,6 +495,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][KProperty.cols]` }`
      */
+    @ExcludeFromSources
     private typealias KPropertyColsVarargColumnReferenceDocs = Nothing
 
     /** @include [KPropertyColsVarargColumnReferenceDocs] */
@@ -507,6 +524,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`columnA, columnB`[`]`][ColumnPath.cols]` }`
      */
+    @ExcludeFromSources
     private typealias ColumnPathColsVarargColumnReferenceDocs = Nothing
 
     /** @include [ColumnPathColsVarargColumnReferenceDocs] */
@@ -533,19 +551,23 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][ColumnsSelectionDsl.cols]` }`
      */
+    @ExcludeFromSources
     private typealias ColumnsSelectionDslVarargStringDocs = Nothing
 
     /** @include [ColumnsSelectionDslVarargStringDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("DslColsString")
     public fun ColumnsSelectionDsl<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
     /** @include [ColumnsSelectionDslVarargStringDocs] */
+    @Interpretable("DslColsString")
     public fun <T> ColumnsSelectionDsl<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<T> =
         this.asSingleColumn().cols(firstCol, *otherCols).cast()
 
     /** @include [ColumnsSelectionDslVarargStringDocs] */
+    @Interpretable("DslColsString")
     public operator fun ColumnsSelectionDsl<*>.get(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -557,21 +579,25 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
      */
+    @ExcludeFromSources
     private typealias SingleColumnColsVarargStringDocs = Nothing
 
     /** @include [SingleColumnColsVarargStringDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("SingleColumnColsString")
     public fun SingleColumn<DataRow<*>>.cols(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
     /** @include [SingleColumnColsVarargStringDocs] */
+    @Interpretable("SingleColumnColsString")
     public fun <T> SingleColumn<DataRow<*>>.cols(firstCol: String, vararg otherCols: String): ColumnSet<T> =
         colsInternal(listOf(firstCol, *otherCols).map { pathOf(it) }).cast()
 
     /**
      * @include [SingleColumnColsVarargStringDocs]
      */
+    @Interpretable("SingleColumnColsString")
     public operator fun SingleColumn<DataRow<*>>.get(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -583,18 +609,22 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`"columnA", "columnB"`[`]`][String.cols]` }`
      */
+    @ExcludeFromSources
     private typealias StringColsVarargStringDocs = Nothing
 
     /** @include [StringColsVarargStringDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("StringColsString")
     public fun String.cols(firstCol: String, vararg otherCols: String): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /** @include [StringColsVarargStringDocs] */
+    @Interpretable("StringColsString")
     public fun <T> String.cols(firstCol: String, vararg otherCols: String): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
     /** @include [StringColsVarargStringDocs] */
+    @Interpretable("StringColsString")
     public operator fun String.get(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -606,6 +636,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      */
+    @ExcludeFromSources
     private typealias KPropertiesColsVarargStringDocs = Nothing
 
     /** @include [KPropertiesColsVarargStringDocs] */
@@ -636,19 +667,23 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"columnA", "columnB"`[`]`][ColumnPath.cols]` }`
      */
+    @ExcludeFromSources
     private typealias ColumnPathColsVarargStringDocs = Nothing
 
     /** @include [ColumnPathColsVarargStringDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("ColumnPathColsString")
     public fun ColumnPath.cols(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
     /** @include [ColumnPathColsVarargStringDocs] */
+    @Interpretable("ColumnPathColsString")
     public fun <T> ColumnPath.cols(firstCol: String, vararg otherCols: String): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
     /** @include [ColumnPathColsVarargStringDocs] */
+    @Interpretable("ColumnPathColsString")
     public operator fun ColumnPath.get(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -666,19 +701,23 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnsSelectionDsl.cols]` }`
      */
+    @ExcludeFromSources
     private typealias ColumnsSelectionDslVarargColumnPathDocs = Nothing
 
     /** @include [ColumnsSelectionDslVarargColumnPathDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("DslColsColumnPath")
     public fun ColumnsSelectionDsl<*>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
     /** @include [ColumnsSelectionDslVarargColumnPathDocs] */
+    @Interpretable("DslColsColumnPath")
     public fun <T> ColumnsSelectionDsl<*>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<T> =
         asSingleColumn().cols<T>(firstCol, *otherCols)
 
     /** @include [ColumnsSelectionDslVarargColumnPathDocs] */
+    @Interpretable("DslColsColumnPath")
     public operator fun ColumnsSelectionDsl<*>.get(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -692,21 +731,25 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][SingleColumn.cols]` }`
      */
+    @ExcludeFromSources
     private typealias SingleColumnColsVarargColumnPathDocs = Nothing
 
     /** @include [SingleColumnColsVarargColumnPathDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("SingleColumnColsColumnPath")
     public fun SingleColumn<DataRow<*>>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
     /** @include [SingleColumnColsVarargColumnPathDocs] */
+    @Interpretable("SingleColumnColsColumnPath")
     public fun <T> SingleColumn<DataRow<*>>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<T> =
         colsInternal(listOf(firstCol, *otherCols)).cast()
 
     /**
      * @include [SingleColumnColsVarargColumnPathDocs]
      */
+    @Interpretable("SingleColumnColsColumnPath")
     public operator fun SingleColumn<DataRow<*>>.get(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
@@ -722,19 +765,23 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
      */
+    @ExcludeFromSources
     private typealias StringColsVarargColumnPathDocs = Nothing
 
     /** @include [StringColsVarargColumnPathDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("StringColsColumnPath")
     public fun String.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
     /** @include [StringColsVarargColumnPathDocs] */
+    @Interpretable("StringColsColumnPath")
     public fun <T> String.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
     /** @include [StringColsVarargColumnPathDocs] */
+    @Interpretable("StringColsColumnPath")
     public operator fun String.get(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -748,6 +795,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      */
+    @ExcludeFromSources
     private typealias KPropertiesColsVarargColumnPathDocs = Nothing
 
     /** @include [KPropertiesColsVarargColumnPathDocs] */
@@ -780,19 +828,23 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
      */
+    @ExcludeFromSources
     private typealias ColumnPathColsVarargColumnPathDocs = Nothing
 
     /** @include [ColumnPathColsVarargColumnPathDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("ColumnPathColsColumnPath")
     public fun ColumnPath.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
     /** @include [ColumnPathColsVarargColumnPathDocs] */
+    @Interpretable("ColumnPathColsColumnPath")
     public fun <T> ColumnPath.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
     /** @include [ColumnPathColsVarargColumnPathDocs] */
+    @Interpretable("ColumnPathColsColumnPath")
     public operator fun ColumnPath.get(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -808,6 +860,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][ColumnsSelectionDsl.cols]` }`
      */
+    @ExcludeFromSources
     private typealias ColumnsSelectionDslColsVarargKPropertyDocs = Nothing
 
     /** @include [ColumnsSelectionDslColsVarargKPropertyDocs] */
@@ -832,6 +885,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
      */
+    @ExcludeFromSources
     private typealias SingleColumnColsVarargKPropertyDocs = Nothing
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */
@@ -858,6 +912,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`Type::colA, Type::colB`[`]`][String.cols]` }`
      */
+    @ExcludeFromSources
     private typealias StringColsVarargKPropertyDocs = Nothing
 
     /** @include [StringColsVarargKPropertyDocs] */
@@ -880,6 +935,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
      */
+    @ExcludeFromSources
     private typealias KPropertyColsVarargKPropertyDocs = Nothing
 
     /** @include [KPropertyColsVarargKPropertyDocs] */
@@ -902,6 +958,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`Type::colA, Type::colB`[`]`][ColumnPath.cols]` }`
      */
+    @ExcludeFromSources
     private typealias ColumnPathColsVarargKPropertyDocs = Nothing
 
     /** @include [ColumnPathColsVarargKPropertyDocs] */
@@ -928,6 +985,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]`  {  `[`all`][ColumnsSelectionDsl.all]`()`[`[`][ColumnSet.cols]`5, 1`[`]`][ColumnSet.cols]` }`
      */
+    @ExcludeFromSources
     private typealias ColumnSetColsIndicesDocs = Nothing
 
     /** @include [ColumnSetColsIndicesDocs] */
@@ -947,6 +1005,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`<`[`String`][String]`>(1, 3) }`
      */
+    @ExcludeFromSources
     private typealias ColumnsSelectionDslColsIndicesDocs = Nothing
 
     /** @include [ColumnsSelectionDslColsIndicesDocs] */
@@ -967,6 +1026,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>(3, 4) }`
      */
+    @ExcludeFromSources
     private typealias SingleColumnColsIndicesDocs = Nothing
 
     /** @include [SingleColumnColsIndicesDocs] */
@@ -987,6 +1047,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`cols`][String.cols]`<`[`String`][String]`>(5, 3, 1) }`
      */
+    @ExcludeFromSources
     private typealias StringColsIndicesDocs = Nothing
 
     /** @include [StringColsIndicesDocs] */
@@ -1007,6 +1068,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>(5, 4) }`
      */
+    @ExcludeFromSources
     private typealias KPropertyColsIndicesDocs = Nothing
 
     /** @include [KPropertyColsIndicesDocs] */
@@ -1031,6 +1093,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["myColGroup"].`[`cols`][ColumnPath.cols]`<`[`String`][String]`>(0, 1) }`
      */
+    @ExcludeFromSources
     private typealias ColumnPathColsIndicesDocs = Nothing
 
     /** @include [ColumnPathColsIndicesDocs] */
@@ -1055,6 +1118,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]`  {  `[`all`][all]`()`[`[`][ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
      */
+    @ExcludeFromSources
     private typealias ColumnSetColsRangeDocs = Nothing
 
     /** @include [ColumnSetColsRangeDocs] */
@@ -1072,6 +1136,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`<`[`String`][String]`>(1`[`..`][Int.rangeTo]`3) }`
      */
+    @ExcludeFromSources
     private typealias ColumnsSelectionDslColsRangeDocs = Nothing
 
     /** @include [ColumnsSelectionDslColsRangeDocs] */
@@ -1091,6 +1156,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>(1`[`..`][Int.rangeTo]`3) }`
      */
+    @ExcludeFromSources
     private typealias SingleColumnColsRangeDocs = Nothing
 
     /** @include [SingleColumnColsRangeDocs] */
@@ -1110,6 +1176,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`cols`][String.cols]`<`[`String`][String]`>(1`[`..`][Int.rangeTo]`3) }`
      */
+    @ExcludeFromSources
     private typealias StringColsRangeDocs = Nothing
 
     /** @include [StringColsRangeDocs] */
@@ -1129,6 +1196,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>(1`[`..`][Int.rangeTo]`3) }`
      *
      */
+    @ExcludeFromSources
     private typealias KPropertyColsRangeDocs = Nothing
 
     /** @include [KPropertyColsRangeDocs] */
@@ -1151,6 +1219,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["myColGroup"].`[`cols`][ColumnPath.cols]`<`[`String`][String]`>(0`[`..`][Int.rangeTo]`1) }`
      */
+    @ExcludeFromSources
     private typealias ColumnPathColsRangeDocs = Nothing
 
     /** @include [ColumnPathColsRangeDocs] */

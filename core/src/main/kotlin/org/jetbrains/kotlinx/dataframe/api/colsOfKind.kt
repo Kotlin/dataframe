@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -14,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -59,12 +61,15 @@ public interface ColsOfKindColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`colsOfKind`**][ColumnsSelectionDsl.colsOfKind] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colsOfKind`**][ColumnsSelectionDsl.colsOfKind] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsOfKind`**][ColumnsSelectionDsl.colsOfKind] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
@@ -102,6 +107,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups\]
      * @see [ColumnsSelectionDsl.cols\]
      */
+    @ExcludeFromSources
     private interface CommonColsOfKindDocs {
 
         /** Example argument */
@@ -118,6 +124,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
+    @Interpretable("ColumnSetColsOfKind")
     public fun ColumnSet<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
@@ -134,6 +141,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
+    @Interpretable("DslColsOfKind")
     public fun ColumnsSelectionDsl<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
@@ -150,6 +158,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOfKind][SingleColumn.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */
+    @Interpretable("SingleColumnColsOfKind")
     public fun SingleColumn<DataRow<*>>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
@@ -166,6 +175,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOfKind][SingleColumn.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */
+    @Interpretable("StringColsOfKind")
     public fun String.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
@@ -192,6 +202,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsOfKind][ColumnPath.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */
+    @Interpretable("ColumnPathColsOfKind")
     public fun ColumnPath.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,

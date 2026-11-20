@@ -446,7 +446,7 @@ or [`ColumnSet`](#column-resolvers) that are a subtype of the specified type `T`
 Returns a new [`ColumnSet`](#column-resolvers) from the specified [`ColumnSet`](#column-resolvers) in 'simplified' form.
 This function simplifies the structure of the [`ColumnSet`](#column-resolvers) by removing columns that are already present in
 [column groups](DataColumn.md#columngroup), returning only these groups, 
-plus columns not belonging in any of the groups.
+plus columns not belonging to any of the groups.
 
 In other words, this means that if a column in the [`ColumnSet`](#column-resolvers) is inside a [column group](DataColumn.md#columngroup) 
 in the [`ColumnSet`](#column-resolvers), it will not be included in the result.

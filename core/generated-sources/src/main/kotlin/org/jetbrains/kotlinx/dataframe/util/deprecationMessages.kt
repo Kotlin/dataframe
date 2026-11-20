@@ -188,6 +188,8 @@ internal const val GROUPED_PERCENTILE_FOR_BINARY_COMPAT = "This is here for bina
 
 internal const val SUGGEST_IF_NULL = "This is here for binary compatibility. $MESSAGE_1_0"
 
+internal const val INDICES_BASE_COLUMN = "This function is only here for binary compatibility. $MESSAGE_1_0"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
@@ -310,6 +312,14 @@ internal const val NAME_REPAIR_STRATEGY: String =
 
 internal const val DESC_TO_REVERSED: String =
     "This function is deprecated and renamed to `reversed()` to better reflect its purpose. $MESSAGE_1_1"
+
+internal const val SORT_BY_COUNT_TO_SORT_BY_COUNT_DESC: String =
+    "This function is deprecated and renamed to `sortByCountDesc()` to better reflect its purpose. $MESSAGE_1_1"
+
+internal const val AGGREGATE_DSL_PATH: String =
+    "This function duplicates `pathOf()` and is deprecated in favor of it. $MESSAGE_1_1"
+internal const val AGGREGATE_DSL_PATH_REPLACE = "pathOf(*names)"
+internal const val PATH_OF_IMPORT = "org.jetbrains.kotlinx.dataframe.api.pathOf"
 
 // endregion
 

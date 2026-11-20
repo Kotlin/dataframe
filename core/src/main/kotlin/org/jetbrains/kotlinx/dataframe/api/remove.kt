@@ -32,6 +32,7 @@ import kotlin.reflect.KProperty
  *
  * For more information: {@include [DocumentationUrls.Remove]}
  */
+@ExcludeFromSources
 internal typealias Remove = Nothing
 
 /** {@set [SelectingColumns.OPERATION] [remove][remove]} */

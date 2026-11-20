@@ -41,7 +41,7 @@ internal interface UnfoldDocs {
      *
      * A column that cannot be unfolded stays as it is.
      * These are columns of simple values, such as numbers, strings, or enums,
-     * columns of objects without public properties,
+     * columns of objects without public properties or getter-like functions,
      * {@get [ANY_COLUMNS]} (for example, with objects of different classes),
      * [ColumnGroup]s, and [FrameColumn]s.
      */
