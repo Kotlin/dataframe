@@ -1,9 +1,9 @@
 [//]: # (title: Create DataColumn)
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.CreateColumnSamples-->
 
 This section describes ways to create a [`DataColumn`](DataColumn.md).
 
-**API reference**: [`columnOf`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/column-of.html), [`toColumn`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/to-column.html)
+**API reference**: [`columnOf`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/column-of.html), [`column`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/column.html), [`toColumn`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/to-column.html)
 
 ### columnOf
 
@@ -49,14 +49,70 @@ When column elements are [`DataFrame`](DataFrame.md) objects, it returns a [`Fra
 <!---FUN createFrameColumn-->
 
 ```kotlin
-val df1 = dataFrameOf("name", "age")("Alice", 20, "Bob", 25)
-val df2 = dataFrameOf("name", "temp")("Charlie", 36.6)
+val df1 = dataFrameOf("name", "age")(
+    "Alice", 20,
+    "Bob", 25,
+)
+val df2 = dataFrameOf("name", "temp")(
+    "Charlie", 36.6,
+)
 
 // Create FrameColumn with two elements of type DataFrame
 val frames by columnOf(df1, df2)
 ```
 
 <!---END-->
+
+When the elements mix different numeric types, pass the column type explicitly —
+without an explicit type argument such a call does not compile:
+
+<!---FUN createColumnOfMixedValues-->
+
+```kotlin
+// Mixed values need an explicit type argument
+val weights = columnOf<Number>(1, 2.5)
+```
+
+<!---END-->
+
+Lists are stored as cell values, so a column of lists is a [`ValueColumn`](DataColumn.md#valuecolumn),
+not a [`ColumnGroup`](DataColumn.md#columngroup):
+
+<!---FUN createColumnOfLists-->
+
+```kotlin
+// Lists are stored as cell values: a ValueColumn of List<Int>, not a ColumnGroup
+val numbers by columnOf(listOf(1, 2), listOf(3, 4))
+```
+
+<!---END-->
+
+### Expression columns
+
+`column` with an expression creates a reference to a column computed from a row:
+
+<!---FUN createComputedColumnReference-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+val isAdult = column(peopleDf, "isAdult") { age > 18 }
+val withColumn = peopleDf.add { add(isAdult) }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+val isAdult = column<Boolean>("isAdult") { getValue<Int>("age") > 18 }
+val withColumn = peopleDf.add { add(isAdult) }
+```
+
+</tab></tabs>
+<!---END-->
+
+For the full story on column references and paths,
+see [`Column Selectors`](ColumnSelectors.md#column-resolvers).
 
 ### toColumn
 

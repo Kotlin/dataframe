@@ -117,6 +117,8 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   `.saveTextSample()` for `String`/`CodeString` — see above) and add highlighting (`.format` / `.formatHeader` /
   `.defaultHeaderFormatting { }` — rows for row-oriented operations, headers for column-oriented ones). Korro puts
   every saved output into the topic itself, inside the sample's `FUN`/`END` block.
+  When the sample's result is an expression, keep `val df =` out of the shown code by putting `// SampleEnd`
+  mid-chain and continuing with `.saveDfHtmlSample()` on the next line (`MapSamples.mapDf` is the pattern).
 - **Assert the shown code, not a copy of it — one asserted statement per sample.** Chain assertions (`.also { }`)
   and the output-saving calls onto the shown statement after `// SampleEnd` — korro excludes everything past the
   mark from the snippet, so the test exercises exactly the code the page shows. Never assert a shown statement
@@ -136,6 +138,9 @@ recreate it), then run in this order (`korro` **must** run after `test`):
 - A DSL function used inside a lambda body needs its import even when it reads like a member:
   `preserve<Name>()` inside `properties { }` is an extension on `TraversePropertiesDsl`, so the sample
   needs `import org.jetbrains.kotlinx.dataframe.api.preserve` — there are no wildcard imports here.
+- Shown sample code is page content: when its faithful shape violates ktlint, suppress at file level
+  (`@file:Suppress("ktlint")`, as `Generate.kt` and `TestBase.kt` do) rather than letting `ktlintFormat` rewrite
+  what the page displays.
 - **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without
   deprecation warnings.
 - Conversion shortcuts with `@Refine` (e.g. `toLocalDate(format)`, `toJavaLocalDate(formatter)`) change the
