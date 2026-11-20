@@ -1879,7 +1879,9 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataFrameGetKt {
 	public static final fun getColumns (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/util/List;
 	public static final fun getColumns (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Ljava/util/List;
 	public static final fun getColumnsWithPaths (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/util/List;
+	public static final fun getFrameColumn (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;I)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
 	public static final fun getFrameColumn (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
+	public static final fun getFrameColumn (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
 	public static final fun getFrameColumn (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
 	public static final fun getOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;I)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun getRows (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;

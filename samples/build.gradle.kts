@@ -137,6 +137,7 @@ korro {
                 include("drop.md")
                 include("duplicate.md")
                 include("filter.md")
+                include("getColumn.md")
                 include("toList.md")
                 include("count.md")
                 include("valueCounts.md")

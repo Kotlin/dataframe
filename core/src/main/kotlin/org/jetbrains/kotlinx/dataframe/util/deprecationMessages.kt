@@ -321,6 +321,11 @@ internal const val AGGREGATE_DSL_PATH: String =
 internal const val AGGREGATE_DSL_PATH_REPLACE = "pathOf(*names)"
 internal const val PATH_OF_IMPORT = "org.jetbrains.kotlinx.dataframe.api.pathOf"
 
+internal const val GET_COLUMN_GROUP_OR_NULL: String =
+    "This function is the only `OrNull` variant of `getColumnGroup` and is deprecated in favor of `getColumnOrNull(name)?.asColumnGroup()`. $MESSAGE_1_1"
+internal const val GET_COLUMN_GROUP_OR_NULL_REPLACE = "this.getColumnOrNull(name)?.asColumnGroup()"
+internal const val AS_COLUMN_GROUP_IMPORT = "org.jetbrains.kotlinx.dataframe.api.asColumnGroup"
+
 // endregion
 
 // region keep across releases
