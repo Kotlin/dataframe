@@ -1,11 +1,12 @@
-package org.jetbrains.kotlinx.dataframe.lint
+package org.jetbrains.kotlinx.dataframe.plugin
 
 import com.lemonappdev.konsist.api.Konsist
+import com.lemonappdev.konsist.api.declaration.KoFunctionDeclaration
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import org.junit.Test
 
-class PivotApiLintTest {
+class PivotApiSignatureTest {
 
     private val pivotReceivers = setOf(
         "Pivot",
@@ -25,7 +26,7 @@ class PivotApiLintTest {
     )
 
     private fun isDeprecatedAccessApi(
-        function: com.lemonappdev.konsist.api.declaration.KoFunctionDeclaration,
+        function: KoFunctionDeclaration,
     ): Boolean =
         function.hasAnnotation { it.name == "Deprecated" } ||
             function.hasAnnotation { it.name == "AccessApiOverload" }
