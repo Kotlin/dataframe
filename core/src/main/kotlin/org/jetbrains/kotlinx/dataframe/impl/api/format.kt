@@ -8,10 +8,9 @@ import org.jetbrains.kotlinx.dataframe.api.RgbColor
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.getColumnPaths
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
-import org.jetbrains.kotlinx.dataframe.path
 
 internal class SingleAttribute(val key: String, val value: String) : CellAttributes {
     override fun attributes() = listOf(key to value)
@@ -63,7 +62,7 @@ internal inline fun <T, C> FormatClause<T, C>.formatImpl(
             if (col.path in columns) {
                 val value = col[row] as C
                 if (clause.filter(row, value)) {
-                    return@FormattedFrame oldAttributes and formatter(FormattingDsl, row.cast(), col.cast())
+                    return@FormattedFrame oldAttributes and formatter(FormattingDsl, row.castUnchecked(), col.cast())
                 }
             }
             oldAttributes

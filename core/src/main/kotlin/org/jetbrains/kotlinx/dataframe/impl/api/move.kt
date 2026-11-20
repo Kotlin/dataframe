@@ -9,11 +9,10 @@ import org.jetbrains.kotlinx.dataframe.api.MoveClause
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
-import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
-import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.replace
@@ -31,7 +30,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
 import org.jetbrains.kotlinx.dataframe.path
-import kotlin.collections.first
 
 internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>, isAfter: Boolean): DataFrame<T> {
     val removeResult = df.removeImpl(columns = columns)
@@ -130,7 +128,7 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int): DataFrame<T> {
             } else {
                 emptyList()
             }
-    return newColumnList.toDataFrame().cast()
+    return newColumnList.toDataFrame().castUnchecked()
 }
 
 internal fun <T, C> MoveClause<T, C>.moveToImpl(columnIndex: Int, insideGroup: Boolean): DataFrame<T> {

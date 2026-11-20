@@ -65,7 +65,7 @@ class JoinWith : TestBase() {
         "Autumn Sale", LocalDate(2023, 10, 1), LocalDate(2023, 10, 31),
     ).cast<Campaigns>()
 
-    private val visits = dataFrameOf("date", "usedId")(
+    private val visits = dataFrameOf("date", "userId")(
         LocalDate(2023, 1, 10), 1,
         LocalDate(2023, 1, 20), 2,
         LocalDate(2023, 4, 15), 1,
@@ -134,7 +134,7 @@ class JoinWith : TestBase() {
     )
 
     @Suppress("ktlint:standard:chain-method-continuation", "ktlint:standard:max-line-length")
-    private val coloredVisits = dataFrameOf("date", "usedId")(
+    private val coloredVisits = dataFrameOf("date", "userId")(
         LocalDate(2023, 1, 10).winter(), 1.winter(),
         LocalDate(2023, 1, 20).winter(), 2.winter(),
         LocalDate(2023, 4, 15).spring(), 1.spring(),

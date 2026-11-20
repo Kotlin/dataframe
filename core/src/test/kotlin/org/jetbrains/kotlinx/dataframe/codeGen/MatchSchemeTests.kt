@@ -14,25 +14,20 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
-import org.jetbrains.kotlinx.dataframe.schema.CompareResult
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsDerived
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsSuper
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.Matches
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.None
-import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.LENIENT
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT_FOR_NESTED_SCHEMAS
-import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class MatchSchemeTests {
 
@@ -106,7 +101,7 @@ class MatchSchemeTests {
         val generated = codeGen.process(df, ::df)
         generated.declarations.shouldBeEmpty()
         generated.declarationsWithCastExpression("df") shouldBe
-            "df.cast<org.jetbrains.kotlinx.dataframe.codeGen.MatchSchemeTests.DataRecord>()"
+            "df.castUnchecked<org.jetbrains.kotlinx.dataframe.codeGen.MatchSchemeTests.DataRecord>()"
     }
 
     val modified = df.add("new") { 4 }

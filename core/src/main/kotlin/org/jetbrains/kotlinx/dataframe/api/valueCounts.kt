@@ -157,7 +157,7 @@ public fun <T> DataColumn<T>.valueCounts(
         }
     val countName = if (resultColumn == name()) resultColumn + "1" else resultColumn
     val counts = DataColumn.createByType(countName, grouped.map { it.second }, typeOf<Int>())
-    return dataFrameOf(values, counts).cast()
+    return dataFrameOf(values, counts).castUnchecked()
 }
 
 // endregion
@@ -204,7 +204,7 @@ public fun <T> DataFrame<T>.valueCounts(
         .asDataColumn()
         .valueCounts(sort, ascending, dropNA, countName)
         .ungroup { rows }
-        .cast()
+        .castUnchecked()
 }
 
 /**
