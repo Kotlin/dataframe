@@ -418,6 +418,7 @@ public fun <T> Pivot<T>.last(predicate: RowFilter<T>): ReducedPivot<T> = reduce 
  * the last [<code>row</code>][DataRow] of the corresponding [<code>DataFrame</code>][DataFrame] formed by this pivot–group pair,
  * or a [<code>row</code>][DataRow] with `null` values (except the grouping key) if this [<code>DataFrame</code>][DataFrame] is empty.
  */
+@Interpretable("PivotGroupByLast0")
 public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrNull() }
 
 /**
@@ -473,6 +474,7 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  * the last matching the [<code>predicate</code>][predicate] [<code>row</code>][DataRow] of the corresponding [<code>DataFrame</code>][DataFrame] formed by this pivot–group pair,
  * or a [<code>row</code>][DataRow] with `null` values if this [<code>DataFrame</code>][DataFrame] does not contain any rows matching the [<code>predicate</code>][predicate].
  */
+@Interpretable("PivotGroupByLast1")
 public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupBy<T> = reduce { lastOrNull(predicate) }
 
 // endregion
