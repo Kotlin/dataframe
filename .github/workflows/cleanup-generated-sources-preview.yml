@@ -1,0 +1,43 @@
+name: Cleanup Generated Code Previews
+
+# Removes the `generated-sources/pr-<number>/docs-update-<run>` branches pushed by generated-sources.yml
+# once their PR is closed or merged.
+
+permissions:
+  contents: write
+
+on:
+  # `pull_request_target` (not `pull_request`) so the token can delete branches for PRs from forks too.
+  # Safe: this workflow never checks out or executes code from the PR.
+  pull_request_target:
+    types:
+      - closed
+
+jobs:
+  cleanup_preview_branches:
+    name: Delete preview branches of generated code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete preview branches
+        uses: actions/github-script@v9
+        with:
+          # language=js
+          script: |
+            const { owner, repo } = context.repo;
+            const prefix = `heads/generated-sources/pr-${context.payload.pull_request.number}/`;
+
+            const refs = await github.paginate(github.rest.git.listMatchingRefs, { owner, repo, ref: prefix });
+            core.info(`Found ${refs.length} branch(es) matching '${prefix}'`);
+
+            for (const { ref } of refs) {
+              try {
+                await github.rest.git.deleteRef({ owner, repo, ref: ref.replace(/^refs\//, '') });
+                core.info(`Deleted ${ref}`);
+              } catch (e) {
+                if (e.status === 404 || e.status === 422) {
+                  core.info(`Already gone: ${ref}`);
+                } else {
+                  throw e;
+                }
+              }
+            }
