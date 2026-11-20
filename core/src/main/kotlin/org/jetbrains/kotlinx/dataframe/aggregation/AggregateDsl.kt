@@ -27,6 +27,7 @@ import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.percentile
 import org.jetbrains.kotlinx.dataframe.api.percentileFor
 import org.jetbrains.kotlinx.dataframe.api.percentileOf
+import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.stdFor
 import org.jetbrains.kotlinx.dataframe.api.stdOf
@@ -160,8 +161,13 @@ public abstract class AggregateDsl<out T> :
         internal().yield(pathOf(column.columnName), this, typeOf<R>())
 
     /**
-     * Sets the default value for the aggregation operation.
-     * All `null` values will be replaced with this value.
+     * Sets the default value for the aggregation result.
+     *
+     * In pivot aggregations (of a [Pivot], a [PivotGroupBy],
+     * or a [pivot][AggregateGroupedDsl.pivot] inside an aggregation),
+     * `null` results — including the pivot cells without any rows —
+     * are replaced with [defaultValue].
+     * Outside of pivot aggregations, `null` results are not replaced.
      *
      * Can be used before or after [into].
      *

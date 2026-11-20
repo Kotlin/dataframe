@@ -714,6 +714,7 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupBySelectedColumns_properties() {
         // SampleStart
+        // Collect the "name" and "age" values of all rows of each group
         df.groupBy { isHappy }.values { name and age }
             // SampleEnd
             .saveDfHtmlSample()
@@ -722,6 +723,7 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupBySelectedColumns_strings() {
         // SampleStart
+        // Collect the "name" and "age" values of all rows of each group
         df.groupBy("isHappy").values("name", "age")
         // SampleEnd
     }
@@ -729,6 +731,7 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupByAllColumns_properties() {
         // SampleStart
+        // Collect the values of all columns except the grouping keys from all rows of each group
         df.groupBy { isHappy }.values()
             // SampleEnd
             .saveDfHtmlSample()
@@ -737,6 +740,7 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupByAllColumns_strings() {
         // SampleStart
+        // Collect the values of all columns except the grouping keys from all rows of each group
         df.groupBy("isHappy").values()
         // SampleEnd
     }
@@ -744,6 +748,7 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupByRenameColumns_properties() {
         // SampleStart
+        // Collect the "age" column values of all rows of each group into a new "ages" column
         df.groupBy { isHappy }.values { age into "ages" }
             // SampleEnd
             .saveDfHtmlSample()
@@ -752,6 +757,7 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupByRenameColumns_strings() {
         // SampleStart
+        // Collect the "age" column values of all rows of each group into a new "ages" column
         df.groupBy("isHappy").values { "age" into "ages" }
         // SampleEnd
     }
@@ -792,10 +798,24 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun aggregateOnGroupBy_properties() {
         // SampleStart
         df.groupBy { city }.aggregate {
+            // Count rows within each group and store the result
+            // into a new "total" column
             count() into "total"
+
+            // Count rows with "age" column value greater than 18 within each group
+            // and store the result into a new "adults" column
             count { age > 18 } into "adults"
+
+            // Compute the median of the "age" column values within each group
+            // and store it into a new "median age" column
             median { age } into "median age"
+
+            // Compute the minimum of the "age" column values within each group
+            // and store it into a new "min age" column
             min { age } into "min age"
+
+            // Store the "name" column group values of the oldest person in each group
+            // as a new "oldest" column group
             maxBy { age }.name into "oldest"
         }
             // SampleEnd
@@ -806,10 +826,24 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun aggregateOnGroupBy_strings() {
         // SampleStart
         df.groupBy("city").aggregate {
+            // Count rows within each group and store the result
+            // into a new "total" column
             count() into "total"
+
+            // Count rows with "age" column value greater than 18 within each group
+            // and store the result into a new "adults" column
             count { "age"<Int>() > 18 } into "adults"
+
+            // Compute the median of the "age" column values within each group
+            // and store it into a new "median age" column
             median("age") into "median age"
+
+            // Compute the minimum of the "age" column values within each group
+            // and store it into a new "min age" column
             min("age") into "min age"
+
+            // Store the "name" column group values of the oldest person in each group
+            // as a new "oldest" column group
             maxBy("age")["name"] into "oldest"
         }
         // or
@@ -826,6 +860,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun aggregateOnGroupByWithoutInto_properties() {
         // SampleStart
+        // The last expression is not stored with `into`,
+        // so its value is stored in a new column named "aggregated"
         df.groupBy { city }.aggregate { maxBy { age }.name }
             // SampleEnd
             .saveDfHtmlSample()
@@ -834,6 +870,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun aggregateOnGroupByWithoutInto_strings() {
         // SampleStart
+        // The last expression is not stored with `into`,
+        // so its value is stored in a new column named "aggregated"
         df.groupBy("city").aggregate { maxBy("age")["name"] }
         // SampleEnd
     }

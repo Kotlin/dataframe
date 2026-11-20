@@ -723,6 +723,15 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 /**
  * Represents a dataframe-like structure with grouped values, offering aggregation capabilities.
  *
+ * Implemented by [GroupBy], which consists of the grouping [keys][GroupBy.keys]
+ * and the corresponding [groups][GroupBy.groups] of rows.
+ * A [GroupBy] can be:
+ * * [transformed][GroupByDocs.Transformation] into a new [GroupBy];
+ * * [reduced][GroupByDocs.Reducing] into a [DataFrame], where each group is collapsed
+ *   into a single representative row;
+ * * [aggregated][GroupByDocs.Aggregation] into a [DataFrame], where each group is transformed
+ *   into one or more rows of derived values.
+ *
  * For more information: {@include [DocumentationUrls.GroupBy]}
  */
 public interface Grouped<out T> : Aggregatable<T>
