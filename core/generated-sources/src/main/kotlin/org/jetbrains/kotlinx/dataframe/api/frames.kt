@@ -2,6 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 
 // region Pivot
@@ -35,7 +37,7 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
  *
  * @return A single [<code>DataRow</code>][DataRow] with one [<code>FrameColumn</code>][FrameColumn] per pivot group, holding each group as a [<code>DataFrame</code>][DataFrame].
  */
-public fun <T> Pivot<T>.frames(): DataRow<T> = aggregate { this }
+public fun <T> Pivot<T>.frames(): DataRow<*> = aggregate { this }
 
 // endregion
 
@@ -69,6 +71,8 @@ public fun <T> Pivot<T>.frames(): DataRow<T> = aggregate { this }
  * @return A [<code>DataFrame</code>][DataFrame] with one row per combination of grouping values, with the pivot groups as
  * [<code>DataFrame</code>][DataFrame] values inside [<code>FrameColumn</code>][FrameColumn]s.
  */
-public fun <T> PivotGroupBy<T>.frames(): DataFrame<T> = aggregate { this }
+@Refine
+@Interpretable("PivotGroupByFrames")
+public fun <T> PivotGroupBy<T>.frames(): DataFrame<*> = aggregate { this }
 
 // endregion
