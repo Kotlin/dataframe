@@ -18,20 +18,25 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.verifyGroupBySchemaImpl
+import org.jetbrains.kotlinx.dataframe.util.CAST_UNCHECKED
 import kotlin.reflect.typeOf
 
-@Check
+@Deprecated(CAST_UNCHECKED, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<*>.cast(): DataFrame<T> = this as DataFrame<T>
 
+public fun <T> DataFrame<*>.castUnchecked(): DataFrame<T> = this as DataFrame<T>
+
+@Check
 public inline fun <reified T> DataFrame<*>.cast(verify: Boolean = true): DataFrame<T> =
     if (verify) {
         convertToImpl(
             typeOf<T>(),
             allowConversion = false,
             ExcessiveColumns.Keep,
-        ).cast()
+        ).castUnchecked()
     } else {
-        cast()
+        castUnchecked()
     }
 
 public inline fun <reified T> DataFrame<*>.castTo(
@@ -71,7 +76,10 @@ public inline fun <reified T> DataFrame<*>.castTo(
     verify: Boolean = true,
 ): DataFrame<T> = cast<T>(verify = verify)
 
+@Deprecated(CAST_UNCHECKED, level = DeprecationLevel.HIDDEN)
 public fun <T> DataRow<*>.cast(): DataRow<T> = this as DataRow<T>
+
+public fun <T> DataRow<*>.castUnchecked(): DataRow<T> = this as DataRow<T>
 
 public inline fun <reified T> DataRow<*>.cast(verify: Boolean = true): DataRow<T> = df().cast<T>(verify)[index()]
 
@@ -82,7 +90,17 @@ public fun <T> ValueColumn<*>.cast(): ValueColumn<T> = this as ValueColumn<T>
 
 public fun <T> FrameColumn<*>.castFrameColumn(): FrameColumn<T> = this as FrameColumn<T>
 
+@Deprecated(CAST_UNCHECKED, level = DeprecationLevel.HIDDEN)
 public fun <T> ColumnGroup<*>.cast(): ColumnGroup<T> = this as ColumnGroup<T>
+
+public fun <T> ColumnGroup<*>.castUnchecked(): ColumnGroup<T> = this as ColumnGroup<T>
+
+public inline fun <reified T> ColumnGroup<*>.cast(verify: Boolean = true): ColumnGroup<T> {
+    if (verify) {
+        convertToImpl(typeOf<T>(), allowConversion = false, ExcessiveColumns.Keep)
+    }
+    return castUnchecked()
+}
 
 public fun <T> ColumnWithPath<*>.cast(): ColumnWithPath<T> = this as ColumnWithPath<T>
 
@@ -99,4 +117,14 @@ public fun <C> SingleColumn<*>.cast(): SingleColumn<C> = this as SingleColumn<C>
 
 public fun <C> ColumnReference<*>.cast(): ColumnReference<C> = this as ColumnReference<C>
 
+@Deprecated(CAST_UNCHECKED, level = DeprecationLevel.HIDDEN)
 public fun <T, G> GroupBy<*, *>.cast(): GroupBy<T, G> = this as GroupBy<T, G>
+
+public fun <T, G> GroupBy<*, *>.castUnchecked(): GroupBy<T, G> = this as GroupBy<T, G>
+
+public inline fun <reified T, reified G> GroupBy<*, *>.cast(verify: Boolean = true): GroupBy<T, G> {
+    if (verify) {
+        verifyGroupBySchemaImpl(typeOf<T>(), typeOf<G>())
+    }
+    return castUnchecked()
+}

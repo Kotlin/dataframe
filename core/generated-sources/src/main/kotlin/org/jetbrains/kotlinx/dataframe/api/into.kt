@@ -239,8 +239,11 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
  * ### Examples
  *
  * ```kotlin
- * // For each `isHappy` value, the whole row of the youngest person in the "youngest" column group
  * df.groupBy { isHappy }.minBy { age }.into("youngest")
+ * ```
+ *
+ * ```kotlin
+ * df.groupBy("isHappy").minBy("age").into("youngest")
  * ```
  *
  * @param [T] The schema marker type of the grouping keys in the underlying [<code>GroupBy</code>][GroupBy].

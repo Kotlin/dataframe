@@ -15,6 +15,9 @@ Top-level public interfaces, each in its own file at `…/`:
   properties (see Codegen). Impl in `impl/DataFrameImpl.kt`.
 - **`DataColumn<out T>`** (`DataColumn.kt`) — named, typed column; its companion is the main factory
   (`createValueColumn`, `createColumnGroup`, `createFrameColumn`, `createByInference`).
+  `columnOf`/`dataFrameOf` infer a column's runtime type from its values (`createColumnGuessingType`,
+  the explicit generic is only an upper bound) — a runtime type check sees the inferred type, not the
+  static Kotlin type.
 - **`DataRow<out T>`** (`DataRow.kt`) — a single row (`index()`, `df()`, cell getters). Impl `impl/DataRowImpl.kt`.
 - Access hierarchy: **`ColumnsScope`** (`ColumnsScope.kt`, minimal `get(name)`) ⊃ **`ColumnsContainer`**
   (`ColumnsContainer.kt`) ⊃ `DataFrame`. Generated extension properties hang off `ColumnsScope<Schema>`.

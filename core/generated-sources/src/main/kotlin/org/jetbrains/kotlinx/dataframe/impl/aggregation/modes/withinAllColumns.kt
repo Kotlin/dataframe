@@ -29,7 +29,7 @@ internal fun <T, C : Any?, R : Any?> Aggregator<*, R>.aggregateAll(
 internal fun <T, C : Any?, R : Any?> Aggregator<*, R>.aggregateAll(
     data: PivotGroupBy<T>,
     columns: ColumnsSelector<T, C>,
-): DataFrame<T> = data.aggregateAll(cast(), columns)
+): DataFrame<*> = data.aggregateAll(cast(), columns)
 
 internal fun <T, C : Any?, R : Any?> DataFrame<T>.aggregateAll(
     aggregator: Aggregator<C & Any, R>,
@@ -53,7 +53,7 @@ internal fun <T, C : Any?, R : Any?> Grouped<T>.aggregateAll(
 internal fun <T, C : Any?, R : Any?> PivotGroupBy<T>.aggregateAll(
     aggregator: Aggregator<C & Any, R>,
     columns: ColumnsSelector<T, C>,
-): DataFrame<T> =
+): DataFrame<*> =
     aggregate {
         val cols = get(columns)
         if (cols.size == 1) {

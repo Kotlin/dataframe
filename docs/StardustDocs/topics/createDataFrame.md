@@ -174,10 +174,13 @@ Use `from` in combination with loops to generate a DataFrame:
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameWithFill.html" width="100%"/>
 <!---END-->
 
-#### `DataFrame` from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
+#### `DataFrame` from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html):
 
 The return type of these overloads is a typed [`DataFrame`](DataFrame.md).
 Its data schema defines the column that can be used right after the conversion for additional computations.
+
+This also works for arrays: each array is stored in the `value` column as it is.
+(A Kotlin `Array` is not an `Iterable`, so the receiver itself has to be a list or another iterable.)
 
 <!---FUN readDataFrameFromValues-->
 
@@ -252,7 +255,7 @@ Scans object properties using reflection and creates a [ValueColumn](DataColumn.
 The scope of properties for scanning is defined at compile-time by the formal types of the objects in the [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/),
 so the properties of implementation classes will not be scanned.
 
-Specify the `depth` parameter to perform deep object graph traversal
+Specify the `maxDepth` parameter to perform deep object graph traversal
 and convert nested objects into [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn):
 
 <!---FUN readDataFrameFromDeepObject-->

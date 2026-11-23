@@ -838,6 +838,49 @@ internal class ArrowKtTest {
         fromIpc shouldBe original
     }
 
+    /**
+     * An empty column has the non-nullable `Nothing` type, which — being a subtype of every type — used to match
+     * the `String?` branch in `KType.toArrowField`: written as `Utf8`, read back as `String`, with no
+     * [ConvertingMismatch] reported (issue #1812). The nullable sibling, a column of nulls, is pinned above.
+     */
+    @Test
+    fun testEmptyNothingColumnRoundtrip() {
+        val original = dataFrameOf("emptyCol" to DataColumn.empty())
+
+        // No `SavedAsString` mismatch is reported either: the `Nothing` column routes to the `Null` branch,
+        // not to the unmapped-type fallback.
+        val mismatches = mutableListOf<ConvertingMismatch>()
+        original.columns().toArrowSchema { mismatches += it }.findField("emptyCol").type shouldBe ArrowType.Null()
+        mismatches shouldBe emptyList()
+
+        val featherBytes = original.saveArrowFeatherToByteArray()
+        val fromFeather = DataFrame.readArrowFeather(featherBytes)
+        fromFeather shouldBe original
+        fromFeather["emptyCol"].type() shouldBe nothingType(false)
+
+        val ipcBytes = original.saveArrowIPCToByteArray()
+        val fromIpc = DataFrame.readArrowIPC(ipcBytes)
+        fromIpc shouldBe original
+    }
+
+    /**
+     * The written `Null` field is nullable even though the column is not — an Arrow `NullVector` carries no
+     * validity bitmap, so a non-nullable `Null` field is not representable. Both nullability modes that take the
+     * nullability from the field rather than from the data (`Checking` and `Widening`) therefore read the empty
+     * column back as `Nothing?`; the default `Infer` looks at the (empty) data and keeps the round-tripped
+     * `Nothing`, pinned above.
+     */
+    @Test
+    fun testEmptyNothingColumnNullabilityModes() {
+        val featherBytes = dataFrameOf("emptyCol" to DataColumn.empty()).saveArrowFeatherToByteArray()
+
+        val checked = DataFrame.readArrowFeather(featherBytes, NullabilityOptions.Checking)
+        checked["emptyCol"].type() shouldBe nothingType(true)
+
+        val widened = DataFrame.readArrowFeather(featherBytes, NullabilityOptions.Widening)
+        widened["emptyCol"].type() shouldBe nothingType(true)
+    }
+
     @Test
     fun testReadParquetWithListColumns() {
         val resourceUrl = testResource("lists.parquet")

@@ -206,7 +206,9 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.groupByIntoColumnGroup]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.groupByIntoColumnGroup_properties]
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.groupByIntoColumnGroup_strings]
  *
  * @param [T] The schema marker type of the grouping keys in the underlying [GroupBy].
  * @param [G] The schema marker type of the groups.

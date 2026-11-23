@@ -11,7 +11,7 @@ convertTo<Schema>(
 ) { customization }
 ```
 
-**Related operations**: [](adjustSchema.md), [](convert.md), [](cast.md)
+**Related operations**: [](adjustSchema.md), [](convert.md), [](cast.md), [](require.md)
 
 > `convertTo` is the name of two different operations, and they are easily mixed up:
 >

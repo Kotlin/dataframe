@@ -188,6 +188,12 @@ internal const val GROUPED_PERCENTILE_FOR_BINARY_COMPAT = "This is here for bina
 
 internal const val SUGGEST_IF_NULL = "This is here for binary compatibility. $MESSAGE_1_0"
 
+internal const val INDICES_BASE_COLUMN = "This function is only here for binary compatibility. $MESSAGE_1_0"
+
+internal const val CAST_UNCHECKED =
+    "Unchecked `cast<T>()` was renamed to `castUnchecked<T>()`; `cast<T>()` now verifies the schema. " +
+        "This function is only here for binary compatibility."
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
@@ -296,7 +302,7 @@ internal const val GET_ROW_REPLACE = "df().getRow(index)"
 internal const val GET_ROWS_ITERABLE_REPLACE = "df().getRows(indices)"
 internal const val GET_ROWS_RANGE_REPLACE = "df().getRows(indices)"
 internal const val GET_ROW_OR_NULL_REPLACE = "df().getRowOrNull(index)"
-internal const val COPY_REPLACE = "columns().toDataFrame().cast()"
+internal const val COPY_REPLACE = "columns().toDataFrame().castUnchecked()"
 
 internal const val LISTS_TO_DATAFRAME_MIGRATION =
     "Function moved from io to api package, and a new `header` parameter is introduced. $MESSAGE_1_1"

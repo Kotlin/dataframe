@@ -589,6 +589,9 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df.groupBy { isHappy }.minBy { age }.into("youngest") { name }
             // SampleEnd
+            .also { result ->
+                result["youngest"]["lastName"].toList() shouldBe listOf("Cooper", "Brown")
+            }
             .saveDfHtmlSample()
     }
 
@@ -596,7 +599,10 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun groupByInto_strings() {
         // SampleStart
         df.groupBy("isHappy").minBy("age").into("youngest") { getColumnGroup("name") }
-        // SampleEnd
+            // SampleEnd
+            .also { result ->
+                result["youngest"]["firstName"].toList() shouldBe listOf("Alice", "Bob")
+            }
     }
 
     @Test
@@ -612,14 +618,24 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     }
 
     @Test
-    fun groupByIntoColumnGroup() {
+    fun groupByIntoColumnGroup_properties() {
         // SampleStart
-        // For each `isHappy` value, the whole row of the youngest person in the "youngest" column group
         df.groupBy { isHappy }.minBy { age }.into("youngest")
             // SampleEnd
             .also { result ->
                 result.columnNames() shouldBe listOf("isHappy", "youngest")
                 result["youngest"]["name"]["lastName"].toList() shouldBe listOf("Cooper", "Brown")
+            }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun groupByIntoColumnGroup_strings() {
+        // SampleStart
+        df.groupBy("isHappy").minBy("age").into("youngest")
+            // SampleEnd
+            .also { result ->
+                result.columnNames() shouldBe listOf("isHappy", "youngest")
             }
     }
 
@@ -678,7 +694,10 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df.groupBy { isHappy }.into("ages") { age }
             // SampleEnd
-            .defaultHeaderFormatting { "ages"<List<String>>() }
+            .also { result ->
+                result["ages"][0] shouldBe listOf(15, 45, 40, 30, 30)
+            }
+            .defaultHeaderFormatting { "ages"<List<Int>>() }
             .saveDfHtmlSample()
     }
 
@@ -686,7 +705,10 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun intoOnGroupBy_strings() {
         // SampleStart
         df.groupBy("isHappy").into("ages") { "age"<Int>() }
-        // SampleEnd
+            // SampleEnd
+            .also { result ->
+                result["ages"][1] shouldBe listOf(20, 20, 30, 15, 18)
+            }
     }
 
     @Test

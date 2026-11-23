@@ -75,7 +75,7 @@ public fun <T> DataFrame<T>.addAll(vararg columns: BaseColumn<*>): DataFrame<T> 
  * @return new [<code>DataFrame</code>][DataFrame] with added columns.
  */
 public fun <T> DataFrame<T>.addAll(columns: Iterable<BaseColumn<*>>): DataFrame<T> =
-    dataFrameOf(columns() + columns).cast()
+    dataFrameOf(columns() + columns).castUnchecked()
 
 /**
  * Adds all columns from the given [<code>dataFrames</code>][dataFrames] to the end of this [<code>DataFrame</code>][DataFrame] (at the top level).
@@ -299,6 +299,7 @@ public class AddDsl<T>(
     @Interpretable("AddDslReferencePlus")
     public operator fun ColumnReference<*>.unaryPlus(): Boolean = add(this)
 
+    @Interpretable("AddDslStringPlus")
     public operator fun String.unaryPlus(): Boolean = add(df[this])
 
     @PublishedApi
@@ -308,6 +309,7 @@ public class AddDsl<T>(
         noinline expression: AddExpression<T, R>,
     ): Boolean = add(df.mapToColumn(name, infer, expression))
 
+    @Interpretable("AddDslExpr")
     public inline fun <reified R> expr(
         infer: Infer = Infer.Nulls,
         noinline expression: AddExpression<T, R>,
@@ -328,6 +330,7 @@ public class AddDsl<T>(
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: AddExpression<T, R>): Boolean =
         add(name, Infer.Nulls, expression)
 
+    @Interpretable("AddDslFromString")
     public infix fun String.from(column: ColumnReference<*>): Boolean = add(column.rename(this))
 
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -420,7 +423,7 @@ public class AddDsl<T>(
 public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)
     body(dsl)
-    return dataFrameOf(this@add.columns() + dsl.columns).cast()
+    return dataFrameOf(this@add.columns() + dsl.columns).castUnchecked()
 }
 
 /**

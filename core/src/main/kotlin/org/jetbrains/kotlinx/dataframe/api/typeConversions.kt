@@ -373,7 +373,7 @@ public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> =
  * See also [AnyCol.asColumnGroup], [DataColumn.asDataFrame].
  */
 @JvmName("asGroupedT")
-public fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = (this as AnyCol).asColumnGroup().cast()
+public fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = (this as AnyCol).asColumnGroup().castUnchecked()
 
 /**
  * Casts this column of [DataRow]s to a [DataFrame] — a view of the group's rows.
@@ -768,7 +768,7 @@ public fun Iterable<BaseColumn<*>>.toColumnGroup(name: String): ColumnGroup<*> =
 @Deprecated(DEPRECATED_ACCESS_API, ReplaceWith("toColumnGroupOf(column.name())"))
 @AccessApiOverload
 public fun <T> Iterable<BaseColumn<*>>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> =
-    dataFrameOf(this).cast<T>().asColumnGroup(column)
+    dataFrameOf(this).castUnchecked<T>().asColumnGroup(column)
 
 /**
  * Creates a new [ColumnGroup] named [name] that nests this iterable's columns,
@@ -776,7 +776,8 @@ public fun <T> Iterable<BaseColumn<*>>.toColumnGroup(column: ColumnGroupAccessor
  *
  * See also [Iterable.toColumnGroup].
  */
-public fun <T> Iterable<BaseColumn<*>>.toColumnGroupOf(name: String): ColumnGroup<T> = toColumnGroup(name).cast()
+public fun <T> Iterable<BaseColumn<*>>.toColumnGroupOf(name: String): ColumnGroup<T> =
+    toColumnGroup(name).castUnchecked()
 
 // endregion
 

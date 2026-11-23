@@ -102,6 +102,8 @@ internal class ArrowTypeMappingTest {
 
     private val writeCases = listOf(
         WriteCase(typeOf<Nothing?>(), ArrowType.Null()),
+        // The empty column's type: a `DataColumn.empty()` column is `Nothing`, not `Nothing?` (issue #1812).
+        WriteCase(nothingType(false), ArrowType.Null()),
         WriteCase(typeOf<String>(), ArrowType.Utf8()),
         WriteCase(typeOf<Boolean>(), ArrowType.Bool()),
         WriteCase(typeOf<Byte>(), ArrowType.Int(8, true)),
@@ -221,6 +223,8 @@ internal class ArrowTypeMappingTest {
     @Test
     fun `the documented mappings round-trip`() {
         val roundTripped = mapOf(
+            nothingType(false) to typeOf<Nothing?>(),
+            typeOf<Nothing?>() to typeOf<Nothing?>(),
             typeOf<String>() to typeOf<String?>(),
             typeOf<Boolean>() to typeOf<Boolean?>(),
             typeOf<Byte>() to typeOf<Byte?>(),

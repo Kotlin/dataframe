@@ -107,7 +107,11 @@ recreate it), then run in this order (`korro` **must** run after `test`):
 - If the operation selects columns or uses row values, the basic example is a `x_properties` / `x_strings` pair
   (Extension Properties API / String API). If the operation can't take plain `String` names, write `_strings` with
   `String` column accessors (`col<Int>("age")`, `getValue<Int>("age")`, …) — never the outdated "Invoked String API"
-  (`"age"<Int>()`). Use the Extension Properties API in the remaining examples.
+  (`"age"<Int>()`). The ban covers **column selection**: inside a row expression (`filter { }`, `into { }`,
+  `add { }`, `minBy { }`), `"age"<Int>()` on a `DataRow` is the String API cell read (a non-deprecated member
+  operator; `concepts/AccessApis.kt` teaches this form), and `col<T>(name)` resolves only in the
+  columns-selection DSL (the receiver of any `ColumnsSelector` lambda), not in a row expression
+  (`DataRow` receiver). Use the Extension Properties API in the remaining examples.
 - **After** `// SampleEnd`: save outputs (`.saveDfHtmlSample()` for `DataFrame`/`DataColumn`/`GroupBy`, using
   `.toDataFrame()`/`.values()`/`.frames()` if needed; `.savePlotSVGSample()` for plots; `.saveSample()` /
   `.saveTextSample()` for `String`/`CodeString` — see above) and add highlighting (`.format` / `.formatHeader` /
@@ -127,6 +131,11 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   render the declaration header either — a class `FUN` target emits only the `// SampleStart`–`// SampleEnd`
   region inside the body, never the `enum class X { … }` line — so the `text` fence is the only shape that can
   show it.
+  Numbers that read as real-world facts (star counts, prices, view counts) are either copied from a tracked
+  dataset (e.g. `data/*.csv`) or clearly synthetic — the rendered iframe presents them to the reader as real.
+- A DSL function used inside a lambda body needs its import even when it reads like a member:
+  `preserve<Name>()` inside `properties { }` is an extension on `TraversePropertiesDsl`, so the sample
+  needs `import org.jetbrains.kotlinx.dataframe.api.preserve` — there are no wildcard imports here.
 - **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without
   deprecation warnings.
 - Conversion shortcuts with `@Refine` (e.g. `toLocalDate(format)`, `toJavaLocalDate(formatter)`) change the

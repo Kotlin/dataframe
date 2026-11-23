@@ -189,6 +189,12 @@ public interface DocumentationUrls {
         public typealias OnGroupBy = Nothing
     }
 
+    /** [See `append` on the documentation website.]({@include [Url]}/append.html) */
+    public typealias Append = Nothing
+
+    /** [See `appendNulls` on the documentation website.]({@include [Url]}/appendnulls.html) */
+    public typealias AppendNulls = Nothing
+
     /** [See `all` on the documentation website.]({@include [Url]}/all.html) */
     public typealias All = Nothing
 
@@ -315,6 +321,9 @@ public interface DocumentationUrls {
     /** [See `valueCounts` on the documentation website.]({@include [Url]}/valuecounts.html) */
     public typealias ValueCounts = Nothing
 
+    /** [See `values` on the documentation website.]({@include [Url]}/values.html) */
+    public typealias Values = Nothing
+
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
     public typealias Explode = Nothing
 
@@ -338,6 +347,9 @@ public interface DocumentationUrls {
 
     /** [See `rename` on the documentation website.]({@include [Url]}/rename.html) */
     public typealias Rename = Nothing
+
+    /** [See `replace` on the documentation website.]({@include [Url]}/replace.html) */
+    public typealias Replace = Nothing
 
     /** [See `groupBy` on the documentation website.]({@include [Url]}/groupby.html) */
     public typealias GroupBy = Nothing
@@ -603,6 +615,9 @@ public interface DocumentationUrls {
 
     /** [See DataFrame from Iterable<T> on the documentation website.]({@include [Url]}/createdataframe.html#dataframe-from-iterable-t) */
     public typealias CreateDataFrameFromIterable = Nothing
+
+    /** [See DataFrame from Map<String, List<*>> on the documentation website.]({@include [Url]}/createdataframe.html#dataframe-from-map-string-list) */
+    public typealias CreateDataFrameFromMap = Nothing
 
     /** [See Global Parser Options on the documentation website.]({@include [Url]}/parse.html#global-parser-options) */
     public typealias GlobalParserOptions = Nothing

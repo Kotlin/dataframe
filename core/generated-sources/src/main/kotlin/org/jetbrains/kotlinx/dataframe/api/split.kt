@@ -1402,6 +1402,8 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inward(
  *   starting from `1`. If `null`, such columns are named `split1`, `split2`, and so on.
  * @return A new [<code>DataFrame</code>][DataFrame] with the selected columns replaced by column groups with the new column groups.
  */
+@Refine
+@Interpretable("SplitDataFrameInward")
 @JvmName("splitDataFrameInward")
 public fun <T, C : DataFrame<R>, R> Split<T, C>.inward(
     vararg names: String,

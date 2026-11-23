@@ -1223,6 +1223,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("DslColsString")
     public fun ColumnsSelectionDsl<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -1263,6 +1264,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("DslColsString")
     public fun <T> ColumnsSelectionDsl<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<T> =
         this.asSingleColumn().cols(firstCol, *otherCols).cast()
 
@@ -1303,6 +1305,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("DslColsString")
     public operator fun ColumnsSelectionDsl<*>.get(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -1343,6 +1346,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("SingleColumnColsString")
     public fun SingleColumn<DataRow<*>>.cols(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -1381,6 +1385,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("SingleColumnColsString")
     public fun <T> SingleColumn<DataRow<*>>.cols(firstCol: String, vararg otherCols: String): ColumnSet<T> =
         colsInternal(listOf(firstCol, *otherCols).map { pathOf(it) }).cast()
 
@@ -1420,6 +1425,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("SingleColumnColsString")
     public operator fun SingleColumn<DataRow<*>>.get(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -1460,6 +1466,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("StringColsString")
     public fun String.cols(firstCol: String, vararg otherCols: String): ColumnSet<*> = cols<Any?>(firstCol, *otherCols)
 
     /** ## Cols
@@ -1497,6 +1504,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("StringColsString")
     public fun <T> String.cols(firstCol: String, vararg otherCols: String): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
@@ -1535,6 +1543,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("StringColsString")
     public operator fun String.get(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -1697,6 +1706,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("ColumnPathColsString")
     public fun ColumnPath.cols(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -1735,6 +1745,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("ColumnPathColsString")
     public fun <T> ColumnPath.cols(firstCol: String, vararg otherCols: String): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
@@ -1773,6 +1784,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("ColumnPathColsString")
     public operator fun ColumnPath.get(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -1819,6 +1831,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("DslColsColumnPath")
     public fun ColumnsSelectionDsl<*>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -1859,6 +1872,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("DslColsColumnPath")
     public fun <T> ColumnsSelectionDsl<*>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<T> =
         asSingleColumn().cols<T>(firstCol, *otherCols)
 
@@ -1899,6 +1913,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("DslColsColumnPath")
     public operator fun ColumnsSelectionDsl<*>.get(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -1941,6 +1956,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("SingleColumnColsColumnPath")
     public fun SingleColumn<DataRow<*>>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -1981,6 +1997,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("SingleColumnColsColumnPath")
     public fun <T> SingleColumn<DataRow<*>>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<T> =
         colsInternal(listOf(firstCol, *otherCols)).cast()
 
@@ -2022,6 +2039,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("SingleColumnColsColumnPath")
     public operator fun SingleColumn<DataRow<*>>.get(
         firstCol: ColumnPath,
         vararg otherCols: ColumnPath,
@@ -2066,6 +2084,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("StringColsColumnPath")
     public fun String.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -2106,6 +2125,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("StringColsColumnPath")
     public fun <T> String.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
@@ -2146,6 +2166,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("StringColsColumnPath")
     public operator fun String.get(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -2316,6 +2337,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Interpretable("ColumnPathColsColumnPath")
     public fun ColumnPath.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -2356,6 +2378,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("ColumnPathColsColumnPath")
     public fun <T> ColumnPath.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
@@ -2396,6 +2419,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("ColumnPathColsColumnPath")
     public operator fun ColumnPath.get(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
