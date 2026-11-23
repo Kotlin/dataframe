@@ -1774,7 +1774,10 @@ public fun <T> Convert<T, *>.toLocalDate(): DataFrame<T> = asColumn { it.convert
  * are interpreted in [zone]. Columns of other types are converted as if [zone] was not passed:
  * conversions that do not depend on a time zone ignore it, while the remaining zone-dependent
  * sources ([Byte], [Short], [java.time.Instant]) fall back to the system current time zone,
- * as does calling the same function without arguments.
+ * as does calling the same function without arguments. A column inferred as a common supertype (a mixed
+ * [Long] and [Int] column is a [Number] column) is converted per value: [Long], [Int],
+ * [kotlin.time.Instant] and [kotlinx.datetime.Instant] values are interpreted in [zone], other values
+ * fall back to the system current time zone.
  *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
@@ -2155,7 +2158,10 @@ public fun <T> Convert<T, *>.toLocalTime(): DataFrame<T> = asColumn { it.convert
  * are interpreted in [zone]. Columns of other types are converted as if [zone] was not passed:
  * conversions that do not depend on a time zone ignore it, while the remaining zone-dependent
  * sources ([Byte], [Short], [java.time.Instant]) fall back to the system current time zone,
- * as does calling the same function without arguments.
+ * as does calling the same function without arguments. A column inferred as a common supertype (a mixed
+ * [Long] and [Int] column is a [Number] column) is converted per value: [Long], [Int],
+ * [kotlin.time.Instant] and [kotlinx.datetime.Instant] values are interpreted in [zone], other values
+ * fall back to the system current time zone.
  *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
@@ -2558,7 +2564,10 @@ public fun <T> Convert<T, *>.toLocalDateTime(): DataFrame<T> = asColumn { it.con
  * are interpreted in [zone]. Columns of other types are converted as if [zone] was not passed:
  * conversions that do not depend on a time zone ignore it, while the remaining zone-dependent
  * sources ([Byte], [Short], [java.time.Instant]) fall back to the system current time zone,
- * as does calling the same function without arguments.
+ * as does calling the same function without arguments. A column inferred as a common supertype (a mixed
+ * [Long] and [Int] column is a [Number] column) is converted per value: [Long], [Int],
+ * [kotlin.time.Instant] and [kotlinx.datetime.Instant] values are interpreted in [zone], other values
+ * fall back to the system current time zone.
  *
  * For more information: {@include [DocumentationUrls.Convert]}
  *

@@ -886,6 +886,62 @@ class ConvertTests {
     }
 
     @Test
+    fun `toLocalDate with a time zone works on a mixed Long and Int column selected by name`() {
+        val df = dataFrameOf("ts")(nearMidnightMillis, nearMidnightIntMillis)
+        withDefaultTimeZone("Europe/Berlin") {
+            df.convert("ts").toLocalDate(TimeZone.UTC)["ts"].values().toList() shouldBe
+                listOf(LocalDate(2024, 1, 1), LocalDate(1970, 1, 20))
+        }
+        df.convert("ts").toLocalDate(berlin)["ts"].values().toList() shouldBe
+            listOf(LocalDate(2024, 1, 2), LocalDate(1970, 1, 21))
+    }
+
+    @Test
+    fun `toLocalTime with a time zone works on a mixed Long and Int column selected by name`() {
+        val df = dataFrameOf("ts")(nearMidnightMillis, nearMidnightIntMillis)
+        withDefaultTimeZone("Europe/Berlin") {
+            df.convert("ts").toLocalTime(TimeZone.UTC)["ts"].values().toList() shouldBe
+                listOf(LocalTime(23, 30), LocalTime(23, 30))
+        }
+    }
+
+    @Test
+    fun `toLocalDateTime with a time zone works on a mixed Long and Int column selected by name`() {
+        val df = dataFrameOf("ts")(nearMidnightMillis, nearMidnightIntMillis)
+        withDefaultTimeZone("Europe/Berlin") {
+            df.convert("ts").toLocalDateTime(TimeZone.UTC)["ts"].values().toList() shouldBe
+                listOf(LocalDateTime(2024, 1, 1, 23, 30), LocalDateTime(1970, 1, 20, 23, 30))
+        }
+    }
+
+    @Test
+    fun `toLocalDate with a time zone works on a mixed column of both Instant types selected by name`() {
+        val df = dataFrameOf("ts")(nearMidnightStdlib, Instant.parse("2024-06-15T08:45:00Z"))
+        withDefaultTimeZone("Europe/Berlin") {
+            df.convert("ts").toLocalDate(TimeZone.UTC)["ts"].values().toList() shouldBe
+                listOf(LocalDate(2024, 1, 1), LocalDate(2024, 6, 15))
+        }
+    }
+
+    @Test
+    fun `toLocalDate with a time zone preserves nulls in a mixed column selected by name`() {
+        val df = dataFrameOf("ts")(nearMidnightMillis, null, nearMidnightIntMillis)
+        withDefaultTimeZone("Europe/Berlin") {
+            df.convert("ts").toLocalDate(TimeZone.UTC)["ts"].values().toList() shouldBe
+                listOf(LocalDate(2024, 1, 1), null, LocalDate(1970, 1, 20))
+        }
+    }
+
+    @Test
+    fun `a java time Instant value in a mixed column keeps the system current time zone`() {
+        val df = dataFrameOf("ts")(nearMidnightMillis, JavaInstant.parse("2024-01-01T23:30:00Z"))
+        withDefaultTimeZone("Europe/Berlin") {
+            df.convert("ts").toLocalDate(TimeZone.UTC)["ts"].values().toList() shouldBe
+                listOf(LocalDate(2024, 1, 1), LocalDate(2024, 1, 2))
+        }
+    }
+
+    @Test
     fun `a time zone conversion keeps the converted column in place`() {
         val df = dataFrameOf("name", "ts")("Alice", nearMidnightMillis)
         val converted = df.convert("ts").toLocalDate(TimeZone.UTC)
