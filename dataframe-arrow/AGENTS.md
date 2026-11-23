@@ -67,9 +67,8 @@ timestamp as an offset from `1970-01-01T00:00:00Z`, so `ArrowWriterImpl` routes 
 `convertToInstantInUtc` / `convertToLocalDateTimeInUtc`, which pin UTC for every source that needs a zone
 (local date-times, dates, and numbers read as epoch millis). Guarded by
 `ArrowTimestampTzTest.writing does not depend on the default time zone`, which writes one column of each under
-four shifted default zones. The `core`-side root cause is tracked as
-[#2072](https://github.com/Kotlin/dataframe/issues/2072) — if it is fixed there with a UTC default, these two
-local helpers become redundant. The `Date(DAY)` and `Time(unit)` branches are **not** pinned yet: same bug, only
+four shifted default zones. `core`'s zone-taking conversions default to the system time zone, so the writer keeps
+pinning UTC locally. The `Date(DAY)` and `Time(unit)` branches are **not** pinned yet: same bug, only
 reachable with an explicit target `Schema`.
 
 **Every write failure goes through the `ConvertingMismatch` subscriber.** A value the target field cannot hold is

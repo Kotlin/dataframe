@@ -121,6 +121,11 @@ To add one:
    back over `topics/**` at the end of the run. A page you `git rm` is therefore silently restored as an
    untracked file by the next `core:korro` / `samples:korro`, and `--rerun-tasks` does **not** clear the
    staging dir. Delete the staged copies as well, then re-run and confirm the page stayed gone.
+   The same copy-back also **restores topics the current change never touched**: a page rewritten in an
+   earlier run stays in the staging dir, and the next korro invocation copies it back over the checkout.
+   After any korro run, read the `topics/**` diff for pages you did not open — a topic that reappeared from
+   staging has no samples and no iframes in this branch, and does not belong in this change's commit; the
+   branch that owns it carries it.
 
 ## How content is injected
 

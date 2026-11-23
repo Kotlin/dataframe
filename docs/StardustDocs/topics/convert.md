@@ -388,6 +388,8 @@ dataFrameOf("value")("1", "2") // note that values are strings; conversion is do
 The specialized functions give you control over the
 [pattern and the format](https://kotlinlang.org/api/kotlinx-datetime/kotlinx-datetime/kotlinx.datetime.format/)
 and the time zone.
+`Long`, `Int` and `Instant` timestamps are interpreted in the given `zone`,
+or in the system current time zone when no `zone` is passed.
 The following examples use this [`DataFrame`](DataFrame.md):
 
 <!---FUN datesDfInput-->
@@ -408,6 +410,40 @@ datesDf.convert { millis }.toLocalDate(TimeZone.UTC)
 ```
 
 <inline-frame src="./resources/convertToLocalDateMillis.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+A `kotlin.time.Instant` column converts the same way. These examples use this [`DataFrame`](DataFrame.md):
+
+<!---FUN instantsDfInput-->
+
+```kotlin
+instantsDf
+```
+
+<inline-frame src="./resources/instantsDfInput.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN convertInstantToLocalDate-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// kotlin.time.Instant -> kotlinx.datetime.LocalDate in the given time zone
+instantsDf.convert { instant }.toLocalDate(TimeZone.of("Europe/Berlin"))
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// a column selected by name converts in the given time zone too
+instantsDf.convert("instant").toLocalDate(TimeZone.of("Europe/Berlin"))
+```
+
+</tab></tabs>
+<inline-frame src="./resources/convertInstantToLocalDate.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 
