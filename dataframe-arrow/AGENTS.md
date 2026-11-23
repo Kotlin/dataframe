@@ -61,6 +61,12 @@ still matches the criteria and is reused (`./gradlew --stop`, then `JAVA_HOME=<j
 Implementation is in `arrowReadingImpl.kt`, `ArrowWriterImpl.kt`, and `arrowTypesMatching.kt` (Arrow ↔ Kotlin type
 mapping); `ConvertingMismatch.kt` defines the mismatch model. Follow the `api → impl` split when editing.
 
+**Batches are joined without type inference.** Every reader goes through `readArrowImpl`, which converts each
+Arrow batch with `readField` (one branch per vector type) and joins the batches with `concatKeepingSchema`. The
+join takes each column's type, and a frame column's schema, from the first batch and only widens nullability, so
+a per-batch type or column-kind problem from `readField` is not reconciled there. When a multi-batch read comes
+out wrong, check what `readField` returns for a single batch first.
+
 **Never convert a date-time column with `core`'s plain `convertTo`/`convertToLocalDateTime` in the writer.** They
 resolve against the JVM default time zone, so the output would depend on the machine. Arrow and Parquet define a
 timestamp as an offset from `1970-01-01T00:00:00Z`, so `ArrowWriterImpl` routes these conversions through its own

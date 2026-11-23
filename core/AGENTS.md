@@ -45,13 +45,26 @@ A typical operation file exposes public extension functions on `DataFrame<T>` (p
 `ColumnsSelector` lambda, `vararg String`, and (deprecated) `KProperty`/`ColumnReference`.
 
 **Delegation convention — follow it when adding/changing operations:** the `api/xxx.kt` function is a thin façade;
-the real logic lives in `impl/api/xxxImpl.kt`. `impl/` mirrors the public packages (`impl/api/`, `impl/columns/`,
+the real logic is in `impl/api/xxx.kt` (`xxxImpl`). `impl/` mirrors the public packages (`impl/api/`, `impl/columns/`,
 `impl/aggregation/`, `impl/schema/`, `impl/codeGen/`, `impl/io/`) and holds all concrete classes and helpers
 (`DataFrameImpl`, `GroupByImpl`, `TypeUtils`, resolution decorators like `ColumnWithParent`). Keep new internal
 logic in `impl/`, not in the public file.
 
 Operations are annotated for the compiler / IntelliJ plugins (`@Refine`, `@Interpretable("…")`, `@AccessApiOverload`,
 `@RequiredByIntellijPlugin`, from `annotations/`). Preserve these annotations when editing signatures.
+The exception is a new parameter on a `@Refine`/`@Interpretable` operation: it goes into a separate overload without
+them, or the plugin materializes an empty schema (see `dataframe-compiler-plugin-core/AGENTS.md`).
+
+**The compiler plugin resolves columns without their parent.** It returns a plain `ColumnWithPath(DataColumn, path)`,
+while a runtime selector wraps the column in `ColumnWithParent`, so `impl` code that takes `getColumns(…)` and reads
+`.path` off a column breaks only in the plugin — keep the resolved paths (`getColumnsWithPaths`). The `MoveTests` case
+`custom compiler plugin-like columns resolver` (`core/src/test/…/api/move.kt`) reproduces this in `core`.
+
+**Statistics choose their default columns in one place.** The selector-less overloads (`df.sum()`, `df.median()`,
+`groupBy.max()`, …) take their columns from `impl/aggregation/getColumns.kt`: `sum`/`mean`/`std` use
+`primitiveOrMixedNumberColumns()`, `min`/`max`/`median`/`percentile` use `intraComparableColumns()`. Which value
+types a statistic can compute is checked separately in `math/` (e.g. `math/median.kt`) — to change what a default
+overload covers, change the selector helper and keep the `math/` checks.
 
 ## Column(s) Selection DSL
 
@@ -105,8 +118,9 @@ KDoc** (KoDEx resolves all `{@include …}`/`@set`/`@get` there).
 - `dataTypes/` — rich cell value types for rendering (`IMG`, `IFRAME`).
 - `jupyter/` — helper utilities (`JupyterConfiguration`, `CellRenderer`, `KotlinNotebookPluginUtils`, …); the
   actual Kotlin Notebook integration lives in `:dataframe-jupyter`.
-- `io/` — read/write helpers and the **deprecated** in-core csv/tsv/html integrations (`csv.kt`, `tsv.kt`,
-  `html.kt`, `guess.kt`, `Compression.kt`); prefer the dedicated `dataframe-csv`/`dataframe-json` modules.
+- `io/` — read/write helpers and the **deprecated** in-core csv/tsv integrations (`csv.kt`, `tsv.kt`, `guess.kt`);
+  prefer the dedicated `dataframe-csv`/`dataframe-json` modules. `html.kt` is not deprecated: it is the HTML
+  renderer (`toHtml`, `toStaticHtml`, `DisplayConfiguration`) that `:dataframe-jupyter` uses.
 - `documentation/` — see below. `exceptions/` — custom exceptions. `util/` — deprecation-message constants.
 
 ## KoDEx documentation-only pattern (core specifics)
