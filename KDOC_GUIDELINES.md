@@ -514,6 +514,10 @@ public fun <T> DataColumn<T>.concat(vararg other: DataColumn<T>): DataColumn<T>
 
 with the sample in [`ConcatSamples.kt`](samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/ConcatSamples.kt):
 
+The order in the example above matters: `@sample` and any text after it go above the first block tag
+(`@param`, `@throws`) — anything below a block tag becomes part of that tag in the rendered KDoc
+(`KODEX_KDOC_PREPROCESSING.md` → Notation explains the mechanism).
+
 ```kotlin
 @Test
 fun concatDataColumns() {
