@@ -46,6 +46,8 @@ See also:
 * [`convertTo`](convertTo.md) — converts column values to match a target schema.
 * [Adjust schema](adjustSchema.md) — explains how to align a dataframe's schema type argument with its contents.
 * [Data schemas](schemas.md) — schema markers and generated extension properties.
+* [`requireColumn`](require.md) — resolves a column and checks that its runtime type is a subtype of the required type;
+  with the compiler plugin, the column is added to the compile-time schema.
 
 ### Parameters {id="parameters_df"}
 
