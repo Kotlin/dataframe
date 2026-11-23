@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
-import org.junit.Ignore
 import org.junit.Test
 import java.util.NoSuchElementException
 import kotlin.reflect.typeOf
@@ -397,22 +396,20 @@ class TypeConversionsTests {
         df["a"].toList() shouldBe listOf(1, 2)
     }
 
-    // The live-storage leak pinned below is tracked by a follow-up issue (linked in the PR description);
-    // toMap() was fixed in this PR, but toList() and values() still expose the same storage.
-
-    @Ignore("TODO: unpin when toList() and values() stop exposing the live storage — see the issue linked in PR #2244")
     @Test
     fun `toList returns a detached list, mutating it doesn't affect the DataFrame`() {
         val df = dataFrameOf("a")(1, 2)
+        // the downcast proves the returned list is a detached copy: the mutation succeeds
+        // while the DataFrame still sees its original values
         (df["a"].toList() as MutableList<Any?>).add(99)
         df["a"].toList() shouldBe listOf(1, 2)
     }
 
-    @Ignore("TODO: unpin when toList() and values() stop exposing the live storage — see the issue linked in PR #2244")
     @Test
-    fun `values returns a detached iterable, mutating it doesn't affect the DataFrame`() {
+    fun `values returns a read-only view, mutating it throws and doesn't affect the DataFrame`() {
         val df = dataFrameOf("a")(1, 2)
-        (df["a"].values() as MutableList<Any?>).add(99)
+        // the downcast succeeds (any Java List is a MutableList), but the mutation throws
+        shouldThrow<UnsupportedOperationException> { (df["a"].values() as MutableList<Any?>).add(99) }
         df["a"].toList() shouldBe listOf(1, 2)
     }
 

@@ -789,8 +789,7 @@ public fun <T> Iterable<BaseColumn<*>>.toColumnGroupOf(name: String): ColumnGrou
  *
  * See also [DataRow.toMap] for a single row, [Map.toDataFrame] for the reverse direction.
  */
-public fun DataFrame<*>.toMap(): Map<String, List<Any?>> =
-    columns().associateBy({ it.name }, { it.toList().toMutableList() })
+public fun DataFrame<*>.toMap(): Map<String, List<Any?>> = columns().associateBy({ it.name }, { it.toList() })
 
 /**
  * Wraps this [DataFrame] into a [ColumnGroup] — a single group column named [name]
