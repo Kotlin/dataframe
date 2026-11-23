@@ -5,7 +5,6 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -18,17 +17,12 @@ import kotlin.reflect.typeOf
 
 /**
  * Pins the KDoc contracts of `api/typeConversions.kt`: casts and nullability (`asNumbers`, `asComparable`,
- * `castTo*`, `setNullable`), to-array conversions, unchecked kind casts, identity views, column builders
+ * `castTo*`), to-array conversions, unchecked kind casts, identity views, column builders
  * from iterables and arrays, accessors, ColumnSet casts, DataFrame/DataRow/Map conversions,
  * and `NullabilityOptions.applyNullability`.
  */
 @Suppress("ktlint:standard:argument-list-wrapping")
 class TypeConversionsTests {
-
-    interface Schema {
-        @ColumnName("custom")
-        val original: Int
-    }
 
     // region asNumbers / asComparable
 
@@ -94,27 +88,6 @@ class TypeConversionsTests {
         // the cast succeeds, but the stored type of the column is still Int
         col.castToNullable().hasNulls() shouldBe false
         col.castToNullable().type() shouldBe typeOf<Int>()
-    }
-
-    @Test
-    fun `setNullable false throws when the column has nulls`() {
-        val col: DataColumn<Int?> = columnOf(1, null, 3).rename("x")
-        val exception = shouldThrow<IllegalArgumentException> { col.setNullable(false) }
-        exception.message shouldBe "Column `x` has nulls"
-    }
-
-    @Test
-    fun `setNullable true changes only the static type`() {
-        val col: DataColumn<Int> = columnOf(1, 2, 3)
-        col.setNullable(true).hasNulls() shouldBe false
-        col.setNullable(true).type() shouldBe typeOf<Int>()
-    }
-
-    @Test
-    fun `setNullable returns the same column`() {
-        val col: DataColumn<Int> = columnOf(1, 2, 3)
-        (col.setNullable(true) as Any === col as Any) shouldBe true
-        (col.setNullable(false) as Any === col as Any) shouldBe true
     }
 
     // endregion
@@ -289,16 +262,6 @@ class TypeConversionsTests {
     }
 
     @Test
-    fun `toValueColumn uses the name of the given column accessor`() {
-        listOf(1, 2).toValueColumn("a".toColumnOf<Int>()).name() shouldBe "a"
-    }
-
-    @Test
-    fun `toColumn names the column after the given reference`() {
-        listOf(1, 2).toColumn("a".toColumnOf<Int>()).name() shouldBe "a"
-    }
-
-    @Test
     fun `toFrameColumn creates a frame column from the frames`() {
         val df1 = dataFrameOf("name", "age")("Alice", 20, "Bob", 25)
         val df2 = dataFrameOf("name", "age")("Charlie", 30)
@@ -316,16 +279,6 @@ class TypeConversionsTests {
         group.kind() shouldBe ColumnKind.Group
         group.name() shouldBe "fullName"
         group.columnNames() shouldBe listOf("first", "last")
-    }
-
-    @Test
-    fun `toColumnGroup names the group after the given accessor`() {
-        val first = columnOf("Alice", "Bob")
-        val last = columnOf("Cooper", "Marley")
-        val accessor = ColumnPath(listOf("fullName")).toColumnGroupAccessor()
-        val group = listOf<BaseColumn<*>>(first, last).toColumnGroup(accessor)
-        group.kind() shouldBe ColumnKind.Group
-        group.name() shouldBe "fullName"
     }
 
     @Test
@@ -381,29 +334,10 @@ class TypeConversionsTests {
     }
 
     @Test
-    fun `KProperty toColumnAccessor takes the ColumnName annotation into account`() {
-        Schema::original.toColumnAccessor().name() shouldBe "custom"
-    }
-
-    @Test
     fun `ColumnPath toColumnAccessor resolves a nested column`() {
         val person = dataFrameOf("first" to columnOf("Alice", "Bob")).asColumnGroup("person")
         val df = dataFrameOf("person" to person.asDataColumn())
         df.getColumn { ColumnPath(listOf("person", "first")).toColumnAccessor() }.name() shouldBe "first"
-    }
-
-    @Test
-    fun `ColumnPath toColumnOf resolves a nested column with the given type`() {
-        val person = dataFrameOf("first" to columnOf("Alice", "Bob")).asColumnGroup("person")
-        val df = dataFrameOf("person" to person.asDataColumn())
-        df.getColumn { ColumnPath(listOf("person", "first")).toColumnOf<String>() }.name() shouldBe "first"
-    }
-
-    @Test
-    fun `ColumnPath toFrameColumnAccessor resolves a frame column`() {
-        val frameCol = DataColumn.createFrameColumn("data", listOf(dataFrameOf("name")("Alice")))
-        val df = dataFrameOf("data" to frameCol)
-        df.getColumn { ColumnPath(listOf("data")).toFrameColumnAccessor() }.name() shouldBe "data"
     }
 
     // endregion
@@ -500,12 +434,6 @@ class TypeConversionsTests {
         val renamed = group.asColumnGroup("new")
         renamed.name() shouldBe "new"
         (renamed.columns().single() as Any === group.columns().single() as Any) shouldBe true
-    }
-
-    @Test
-    fun `asColumnGroup names the group after the given accessor`() {
-        val df = dataFrameOf("x")(1, 2)
-        df.asColumnGroup(ColumnPath(listOf("g")).toColumnGroupAccessor()).name() shouldBe "g"
     }
 
     private fun groupedDf(): DataFrame<*> {

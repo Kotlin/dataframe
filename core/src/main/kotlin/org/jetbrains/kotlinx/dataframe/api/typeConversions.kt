@@ -31,7 +31,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asValues
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.util.COLUMN_REFERENCE_CAST_TO_NOT_NULLABLE
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.SET_NULLABLE
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
@@ -44,7 +46,7 @@ import kotlin.reflect.typeOf
  * or anywhere a [ColumnReference] is accepted.
  *
  * See also [String.toColumnOf] (typed variant), [ColumnPath.toColumnAccessor] (for nested columns),
- * [KProperty.toColumnAccessor], [ColumnReference.toColumnAccessor].
+ * [ColumnReference.toColumnAccessor].
  */
 public fun String.toColumnAccessor(): ColumnAccessor<Any?> = ColumnAccessorImpl(this)
 
@@ -54,7 +56,7 @@ public fun String.toColumnAccessor(): ColumnAccessor<Any?> = ColumnAccessorImpl(
  * [T] is not checked at runtime — no column or values are inspected, only the static type of
  * the accessor changes. Useful when the schema is known.
  *
- * See also [String.toColumnAccessor], [ColumnPath.toColumnOf].
+ * See also [String.toColumnAccessor].
  */
 public fun <T> String.toColumnOf(): ColumnAccessor<T> = ColumnAccessorImpl(this)
 
@@ -69,14 +71,13 @@ public fun <T> String.toColumnOf(): ColumnAccessor<T> = ColumnAccessorImpl(this)
  *
  * See also [ColumnPath.toColumnAccessor], [String.toColumnOf].
  */
+@Deprecated(DEPRECATED_ACCESS_API)
 public fun <T> ColumnPath.toColumnOf(): ColumnAccessor<T> = ColumnAccessorImpl(this)
 
 /**
  * Creates a [ColumnAccessor] — a [ColumnReference] to a column identified by this path.
  *
  * Unlike [String.toColumnAccessor], the path can address a column nested inside a [ColumnGroup].
- *
- * See also [ColumnPath.toColumnOf], [ColumnPath.toColumnGroupAccessor], [ColumnPath.toFrameColumnAccessor].
  */
 public fun ColumnPath.toColumnAccessor(): ColumnAccessor<Any?> = ColumnAccessorImpl(this)
 
@@ -86,6 +87,7 @@ public fun ColumnPath.toColumnAccessor(): ColumnAccessor<Any?> = ColumnAccessorI
  *
  * See also [ColumnPath.toColumnAccessor], [ColumnPath.toFrameColumnAccessor].
  */
+@Deprecated(DEPRECATED_ACCESS_API)
 public fun ColumnPath.toColumnGroupAccessor(): ColumnAccessor<DataRow<*>> = ColumnAccessorImpl(this)
 
 /**
@@ -94,6 +96,7 @@ public fun ColumnPath.toColumnGroupAccessor(): ColumnAccessor<DataRow<*>> = Colu
  *
  * See also [ColumnPath.toColumnAccessor], [ColumnPath.toColumnGroupAccessor].
  */
+@Deprecated(DEPRECATED_ACCESS_API)
 public fun ColumnPath.toFrameColumnAccessor(): ColumnAccessor<DataFrame<*>> = ColumnAccessorImpl(this)
 
 // endregion
@@ -106,7 +109,7 @@ public fun ColumnPath.toFrameColumnAccessor(): ColumnAccessor<DataFrame<*>> = Co
  * If this reference is already a [ColumnAccessor], the same object is returned;
  * otherwise a new accessor for the reference's [path][ColumnPath] is created.
  *
- * See also [String.toColumnAccessor], [ColumnPath.toColumnAccessor], [KProperty.toColumnAccessor].
+ * See also [String.toColumnAccessor], [ColumnPath.toColumnAccessor].
  */
 public fun <T> ColumnReference<T>.toColumnAccessor(): ColumnAccessor<T> =
     when (this) {
@@ -125,6 +128,7 @@ public fun <T> ColumnReference<T>.toColumnAccessor(): ColumnAccessor<T> =
  *
  * See also [String.toColumnAccessor], [ColumnPath.toColumnAccessor], [ColumnReference.toColumnAccessor].
  */
+@Deprecated(DEPRECATED_ACCESS_API)
 public fun <T> KProperty<T>.toColumnAccessor(): ColumnAccessor<T> = ColumnAccessorImpl<T>(columnName)
 
 // endregion
@@ -215,6 +219,7 @@ public fun <T : Any?> DataColumn<T?>.asComparable(): DataColumn<Comparable<T>?> 
  * See also [DataColumn.castToNotNullable], which checks the column first, and
  * [ColumnReference.castToNullable] for the reverse cast.
  */
+@Deprecated(COLUMN_REFERENCE_CAST_TO_NOT_NULLABLE, ReplaceWith("cast()"))
 public fun <T> ColumnReference<T?>.castToNotNullable(): ColumnReference<T> = cast()
 
 /**
@@ -224,7 +229,7 @@ public fun <T> ColumnReference<T?>.castToNotNullable(): ColumnReference<T> = cas
  *
  * NOTE: This is a cast, not a conversion: no values are copied or converted.
  *
- * See also [DataColumn.castToNullable] for the reverse cast, [ColumnReference.castToNotNullable].
+ * See also [DataColumn.castToNullable] for the reverse cast.
  */
 public fun <T> DataColumn<T?>.castToNotNullable(): DataColumn<T> {
     require(!hasNulls()) { "Column `$name` has nulls" }
@@ -242,8 +247,6 @@ public fun <T> DataColumn<T>.castToNullable(): DataColumn<T?> = cast()
 /**
  * Changes the static type of this [ColumnReference] from [T] to [T]?.
  * This cast always succeeds: no checks are performed.
- *
- * See also [ColumnReference.castToNotNullable] for the reverse cast.
  */
 public fun <T> ColumnReference<T>.castToNullable(): ColumnReference<T?> = cast()
 
@@ -255,6 +258,7 @@ public fun <T> ColumnReference<T>.castToNullable(): ColumnReference<T?> = cast()
  * NOTE: The column is not changed: [type][DataColumn.type] and [hasNulls][DataColumn.hasNulls] stay
  * the same, and the [DataColumn]`<*>` return type doesn't expose the new static nullability.
  */
+@Deprecated(SET_NULLABLE)
 public fun DataColumn<*>.setNullable(nullable: Boolean): DataColumn<*> =
     if (nullable) {
         this.castToNullable()
@@ -573,6 +577,8 @@ public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): Valu
  *
  * See also [Iterable.toValueColumn].
  */
+@Deprecated(DEPRECATED_ACCESS_API, ReplaceWith("toValueColumn(column.name())"))
+@AccessApiOverload
 public inline fun <reified T> Iterable<T>.toValueColumn(column: ColumnAccessor<T>): ValueColumn<T> =
     toValueColumn(column.name())
 
@@ -729,6 +735,8 @@ public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataCol
  *
  * See also [Iterable.toColumn].
  */
+@Deprecated(DEPRECATED_ACCESS_API, ReplaceWith("toColumn(ref.name())"))
+@AccessApiOverload
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
     DataColumn.createByType(ref.name(), asList()).forceResolve()
 
@@ -757,6 +765,8 @@ public fun Iterable<BaseColumn<*>>.toColumnGroup(name: String): ColumnGroup<*> =
  *
  * See also [Iterable.toColumnGroup].
  */
+@Deprecated(DEPRECATED_ACCESS_API, ReplaceWith("toColumnGroupOf(column.name())"))
+@AccessApiOverload
 public fun <T> Iterable<BaseColumn<*>>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> =
     dataFrameOf(this).cast<T>().asColumnGroup(column)
 
@@ -789,8 +799,7 @@ public fun DataFrame<*>.toMap(): Map<String, List<Any?>> =
  * If `this` is already a [ColumnGroup], only the name changes (like in [rename]);
  * otherwise a new group column is created. The nested columns are not copied.
  *
- * See also [Iterable.toColumnGroup], [BaseColumn.toDataFrame], and the overload taking
- * a [ColumnGroupAccessor].
+ * See also [Iterable.toColumnGroup], [BaseColumn.toDataFrame].
  */
 public fun <T> DataFrame<T>.asColumnGroup(name: String = ""): ColumnGroup<T> =
     when (this) {
@@ -802,6 +811,8 @@ public fun <T> DataFrame<T>.asColumnGroup(name: String = ""): ColumnGroup<T> =
  * Wraps this [DataFrame] into a [ColumnGroup] named as [column],
  * equivalent to [asColumnGroup] with the [name][ColumnGroupAccessor.name] of [column].
  */
+@Deprecated(DEPRECATED_ACCESS_API, ReplaceWith("asColumnGroup(column.name())"))
+@AccessApiOverload
 public fun <T> DataFrame<T>.asColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> = asColumnGroup(column.name)
 
 // region as GroupedDataFrame
