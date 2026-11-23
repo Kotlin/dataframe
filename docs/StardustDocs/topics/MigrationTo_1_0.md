@@ -298,6 +298,7 @@ The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `df.sortBy { col.desc() }` / `df.sortByDesc { col.desc() }`                                              | `df.sortBy { col.reversed() }` / `df.sortByDesc { col.reversed() }`                                                           | Renamed to better reflect its purpose.                                       |
 | `gb.sortByCount()`                                                                                       | `gb.sortByCountDesc()`                                                                                                         | Renamed to better reflect its purpose.                                       |
 | `df.sumFor { cols into path(..) }`                                                     | `df.sumFor { cols into pathOf(..) }`                                                                        | Removed duplicated functionality. All methods with `ColumnsForAggregateSelector` lambda.                                           |
+| `df.getColumnGroupOrNull(name)`                                                                          | `df.getColumnOrNull(name)?.asColumnGroup()`                                                                                   | Removed a shortcut; it was the only `OrNull` variant of `getColumnGroup`.    |
 
 ## Parsing and Converting Date-Time
 
