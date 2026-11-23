@@ -776,6 +776,9 @@ But keep these things in mind:
 - A `@set` value that is a markdown link (`[Float][Float]`) does not render as a link when `{@get}`
   substitutes it inside a code span — it comes out as literal `[Float][Float]Array`. When composing a
   name from `{@get [TYPE]}` plus literal characters inside backticks, pass plain values (`Float`), not links.
+- A trailing `?` composed from `{@get [TYPE]}` plus literal characters goes **after** the closing backtick:
+  `[Comparable]`<`[T]`>`?` renders `Comparable<T>?`, while putting it inside — `` `<`[T]`?`>` `` — renders
+  `Comparable<T?>`. The notation is silent — check the expanded output.
 - Use `&nbsp;` (or `{@include [Indent]}`) to add non-breaking-space-based indents in your code samples.
 - Never put `!` directly in front of a `[]` reference, like `if ![skipNaN]`. KoDEx turns the reference into
   `![<code>skipNaN</code>][skipNaN]`, which Markdown reads as an image without a URL, crashing Dokka with a
