@@ -773,6 +773,9 @@ But keep these things in mind:
 - KoDEx reads `$` even inside a ` ``` ` block, so a Kotlin string template in an example is silently eaten:
   `"${i + 1}. $name"` came out of `processKDocsMain` as `"+ 1. "`. Escape every `$` you mean literally as
   `\$` — the escape character is removed in the last processing wave, so the generated KDoc shows `$` again.
+- A `@set` value that is a markdown link (`[Float][Float]`) does not render as a link when `{@get}`
+  substitutes it inside a code span — it comes out as literal `[Float][Float]Array`. When composing a
+  name from `{@get [TYPE]}` plus literal characters inside backticks, pass plain values (`Float`), not links.
 - Use `&nbsp;` (or `{@include [Indent]}`) to add non-breaking-space-based indents in your code samples.
 - Never put `!` directly in front of a `[]` reference, like `if ![skipNaN]`. KoDEx turns the reference into
   `![<code>skipNaN</code>][skipNaN]`, which Markdown reads as an image without a URL, crashing Dokka with a
