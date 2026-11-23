@@ -37,6 +37,7 @@ import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.between
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castToNullable
 import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
@@ -971,7 +972,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `merge different dataframes`() {
         val height by column<Int>()
-        val heightOrNull = height.nullable()
+        val heightOrNull = height.castToNullable()
 
         @Suppress("ktlint:standard:argument-list-wrapping")
         val other = dataFrameOf(name, height)(
@@ -981,7 +982,7 @@ class DataFrameTests : BaseTest() {
 
         val res = typed.concat(other)
         res.nrow shouldBe typed.nrow + other.nrow
-        res.take(typed.nrow).rows().forEach { it[heightOrNull] == null }
+        res.take(typed.nrow).rows().forEach { it[heightOrNull] shouldBe null }
         val q = res.takeLast(other.nrow)
         q.rows().forEach { it[name] shouldBe other[it.index][name] }
         q.rows().forEach { it[heightOrNull] shouldBe other[it.index][height] }
