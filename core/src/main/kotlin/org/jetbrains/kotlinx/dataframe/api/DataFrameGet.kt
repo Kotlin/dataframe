@@ -127,7 +127,7 @@ internal interface GetColumnGroupDocs {
  * They throw if the column doesn't exist, and they don't check the kind of the column:
  * a column that isn't a [FrameColumn] leads to a [ClassCastException].
  *
- * For more information: {@include [DocumentationUrls.GetColumn]}
+ * For more information: {@include [DocumentationUrls.GetColumn.GetFrameColumn]}
  *
  * See also:
  * - [getColumnOrNull][ColumnsContainer.getColumnOrNull], that returns `null` instead of throwing;
@@ -164,7 +164,7 @@ internal interface GetColumnsDocs {
  * A [ColumnPath] is the chain of column names from the top level of this [DataFrame] to the column,
  * through its parent [column groups][ColumnGroup], like [pathOf]`("name", "firstName")`.
  *
- * For more information: {@include [DocumentationUrls.ColumnSelectors]}
+ * For more information: $[GetColumnPathsDocs.URL]
  *
  * See also $[GetColumnPathsDocs.SEE_ALSO]
  *
@@ -176,6 +176,7 @@ internal interface GetColumnsDocs {
 internal interface GetColumnPathsDocs {
     typealias SAMPLE = Nothing
     typealias SEE_ALSO = Nothing
+    typealias URL = Nothing
 }
 
 /**
@@ -225,6 +226,7 @@ internal interface RowsDocs {
  *
  * {@set [GetColumnPathsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnsWithPathsBySelector]}
  * {@set [GetColumnPathsDocs.SEE_ALSO] [getColumnPath] and [getColumnPaths], which return only the paths; [getColumnWithPath], which returns one column with its path; and [getColumns], which returns only the columns.}
+ * {@set [GetColumnPathsDocs.URL] {@include [DocumentationUrls.GetColumn.GetColumnsWithPaths]}}
  * @include [GetColumnPathsDocs]
  *
  * @param [selector] A [ColumnsSelector] that selects the columns.
@@ -242,6 +244,7 @@ public fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, 
  *
  * {@set [GetColumnPathsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnPathBySelector]}
  * {@set [GetColumnPathsDocs.SEE_ALSO] [getColumnPaths], which returns paths for multiple columns; [getColumnWithPath] and [getColumnsWithPaths], which return columns together with their paths; and [getColumns], which returns only the columns.}
+ * {@set [GetColumnPathsDocs.URL] {@include [DocumentationUrls.GetColumn.GetColumnPaths]}}
  * @include [GetColumnPathsDocs]
  *
  * @param [selector] A [ColumnSelector] that selects exactly one column.
@@ -258,6 +261,7 @@ public fun <T, C> DataFrame<T>.getColumnPath(selector: ColumnSelector<T, C>): Co
  *
  * {@set [GetColumnPathsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnPathsBySelector]}
  * {@set [GetColumnPathsDocs.SEE_ALSO] [getColumnPath], which returns a single path; [getColumnWithPath] and [getColumnsWithPaths], which return columns together with their paths; and [getColumns], which returns only the columns.}
+ * {@set [GetColumnPathsDocs.URL] {@include [DocumentationUrls.GetColumn.GetColumnPaths]}}
  * @include [GetColumnPathsDocs]
  *
  * @param [selector] A [ColumnsSelector] that selects the columns.
@@ -275,6 +279,7 @@ public fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>): 
  *
  * {@set [GetColumnPathsDocs.SAMPLE] @sample [org.jetbrains.kotlinx.dataframe.samples.api.GetColumnSamples.getColumnWithPathBySelector]}
  * {@set [GetColumnPathsDocs.SEE_ALSO] [getColumnPath] and [getColumnPaths], which return only the paths; [getColumnsWithPaths], which returns several columns together with their paths; and [getColumns], which returns only the columns.}
+ * {@set [GetColumnPathsDocs.URL] {@include [DocumentationUrls.GetColumn.GetColumnsWithPaths]}}
  * @include [GetColumnPathsDocs]
  *
  * @param [selector] A [ColumnSelector] that selects exactly one column.
@@ -325,7 +330,7 @@ public fun <T> DataFrame<T>.getColumns(vararg columns: String): List<DataColumn<
  * Returns the zero-based index of the top-level column with the same name as [col],
  * or `-1` if there is no such column; it doesn't throw.
  *
- * For more information: {@include [DocumentationUrls.GetColumn]}
+ * For more information: {@include [DocumentationUrls.GetColumn.GetColumnIndex]}
  *
  * See also [getColumnIndex][ColumnsContainer.getColumnIndex], that takes the column name,
  * and [getColumn], that returns the column at an index.

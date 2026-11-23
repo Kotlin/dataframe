@@ -26,7 +26,7 @@ They throw if the requested column does not exist. A selector must resolve to ex
 `IllegalStateException` if the selector refers to a missing column, `NoSuchElementException` if it resolves to no columns,
 or `IllegalArgumentException` if it resolves to more than one column.
 
-```text
+```kotlin
 df.getColumn(name: String): DataColumn<*>
 df.getColumn(path: ColumnPath): DataColumn<*>
 df.getColumn(index: Int): DataColumn<*>
@@ -112,7 +112,7 @@ or a single [column selector](ColumnSelectors.md) for a nested column. An index 
 column; an out-of-range index returns `null`. A selector that resolves to anything other than one column also returns
 `null`.
 
-```text
+```kotlin
 df.getColumnOrNull(name: String): DataColumn<*>?
 df.getColumnOrNull(path: ColumnPath): DataColumn<*>?
 df.getColumnOrNull(index: Int): DataColumn<*>?
@@ -138,7 +138,6 @@ Get a column that exists, or safely handle a missing column:
 
 ```kotlin
 val column = df.getColumnOrNull { age }
-df.getColumnOrNull(-1)
 ```
 
 </tab>
@@ -163,7 +162,7 @@ find nested columns. A name, path, or index that does not resolve to a column th
 To get `null` instead of an exception when the column is missing, combine [`getColumnOrNull`](#getcolumnornull) with
 `asColumnGroup()` (see the examples below).
 
-```text
+```kotlin
 df.getColumnGroup(name: String): ColumnGroup<*>
 df.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*>
 df.getColumnGroup(index: Int): ColumnGroup<*>
@@ -203,20 +202,6 @@ df.getColumnGroup("name")
 
 <!---END-->
 
-Get a column group, or `null` if there is no column with that name.
-Only a missing column gives `null`; an existing column that is not a column group still causes a `ClassCastException`:
-
-<!---FUN getColumnOrNullAsColumnGroup-->
-
-```kotlin
-val group = df.getColumnOrNull("name")?.asColumnGroup()
-df.getColumnOrNull("address")?.asColumnGroup()
-```
-
-<inline-frame src="./resources/getColumnOrNullAsColumnGroup.html" width="100%" height="500px"></inline-frame>
-
-<!---END-->
-
 ## getFrameColumn
 
 Returns a column as a [`FrameColumn`](DataColumn.md#framecolumn) from a [`DataFrame`](DataFrame.md) or a
@@ -226,7 +211,7 @@ overload returns a typed `FrameColumn`; the others return `FrameColumn<*>`. The 
 if there is no such column, if the selector doesn't select exactly one column, or if the selected column is not a frame
 column; the last case causes a `ClassCastException`.
 
-```text
+```kotlin
 df.getFrameColumn(columnName: String): FrameColumn<*>
 df.getFrameColumn(columnPath: ColumnPath): FrameColumn<*>
 df.getFrameColumn(index: Int): FrameColumn<*>
@@ -325,7 +310,7 @@ Returns the selected columns as a list, in the order they are selected, from a [
 overload accepts top-level column names; the [Columns Selection DSL](ColumnSelectors.md) overload can also select columns
 nested inside column groups. A missing name or a selector referring to a missing column throws `IllegalStateException`.
 
-```text
+```kotlin
 df.getColumns(vararg columns: String): List<DataColumn<*>>
 df.getColumns(selector: ColumnsSelector<T, C>): List<DataColumn<C>>
 ```
@@ -353,7 +338,8 @@ val columns = df.getColumns { age and name.firstName }
 <tab title="Strings">
 
 ```kotlin
-df.getColumns("age", "city")
+val columnsTopLevel = df.getColumns("age", "city") // top-level only
+val columns = df.getColumns { "age" and "name"["firstName"] } // nested
 ```
 
 </tab></tabs>
@@ -365,7 +351,7 @@ df.getColumns("age", "city")
 
 Returns the zero-based index of a top-level column with the given name, or `-1` if there is no such top-level column.
 
-```text
+```kotlin
 df.getColumnIndex(name: String): Int
 df.getColumnIndex(col: DataColumn<*>): Int
 ```
@@ -409,7 +395,7 @@ the [Columns Selection DSL](ColumnSelectors.md). The selector for `getColumnPath
 `IllegalArgumentException` if it resolves to more than one column. An unresolved selector passed to `getColumnPaths` throws
 `IllegalStateException`.
 
-```text
+```kotlin
 df.getColumnPath(selector: ColumnSelector<T, C>): ColumnPath
 df.getColumnPaths(selector: ColumnsSelector<T, C>): List<ColumnPath>
 ```
@@ -451,7 +437,7 @@ The selector for `getColumnWithPath` must select exactly one column; it throws `
 missing column, `NoSuchElementException` if it resolves to no columns, or `IllegalArgumentException` if it resolves to more
 than one column. An unresolved selector passed to `getColumnsWithPaths` throws `IllegalStateException`.
 
-```text
+```kotlin
 df.getColumnWithPath(selector: ColumnSelector<T, C>): ColumnWithPath<C>
 df.getColumnsWithPaths(selector: ColumnsSelector<T, C>): List<ColumnWithPath<C>>
 ```

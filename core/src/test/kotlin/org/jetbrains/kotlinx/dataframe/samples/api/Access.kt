@@ -4,27 +4,13 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
-import org.jetbrains.kotlinx.dataframe.api.dropLast
-import org.jetbrains.kotlinx.dataframe.api.dropNA
-import org.jetbrains.kotlinx.dataframe.api.dropNaNs
-import org.jetbrains.kotlinx.dataframe.api.dropNulls
-import org.jetbrains.kotlinx.dataframe.api.dropWhile
 import org.jetbrains.kotlinx.dataframe.api.first
-import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.mapToRows
-import org.jetbrains.kotlinx.dataframe.api.maxBy
-import org.jetbrains.kotlinx.dataframe.api.maxByOrNull
-import org.jetbrains.kotlinx.dataframe.api.minBy
-import org.jetbrains.kotlinx.dataframe.api.minus
-import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.takeLast
-import org.jetbrains.kotlinx.dataframe.api.takeWhile
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.xs
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
@@ -57,38 +43,6 @@ class Access : TestBase() {
         // SampleStart
         df.getColumn(2)
         df.getColumnGroup(0).getColumn(1)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getRowByIndex() {
-        // SampleStart
-        df[2]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getRowByCondition_properties() {
-        // SampleStart
-        df.single { age == 45 }
-        df.first { weight != null }
-        df.minBy { age }
-        df.maxBy { name.firstName.length }
-        df.maxByOrNull { weight }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getRowByCondition_strings() {
-        // SampleStart
-        df.single { "age"<Int>() == 45 }
-        df.first { it["weight"] != null }
-        df.minBy("weight")
-        df.maxBy { "name"["firstName"]<String>().length }
-        df.maxByOrNull("weight")
         // SampleEnd
     }
 
