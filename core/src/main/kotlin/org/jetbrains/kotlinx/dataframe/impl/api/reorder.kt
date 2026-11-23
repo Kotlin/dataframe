@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Reorder
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
@@ -74,7 +75,7 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
                         // pass both flags on, so that frame columns nested in this frame are reordered too,
                         // and with `atAnyDepth = false` a single column group in this frame keeps its nested columns
                         .map(typeOf<AnyFrame>()) {
-                            Reorder(it.cast<T>(), columns, inFrameColumns)
+                            Reorder(it.castUnchecked<T>(), columns, inFrameColumns)
                                 .reorderImpl(desc, expression, unwrapSingleColumnGroup)
                         }
                         .cast()
@@ -83,7 +84,7 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
             }
             val newGroup = removed.df.insertImpl(toInsert)
             df = if (parentPath.isEmpty()) {
-                newGroup.cast()
+                newGroup.castUnchecked()
             } else {
                 df.replace { parentPath }.with { newGroup.asColumnGroup(it.name()) }
             }

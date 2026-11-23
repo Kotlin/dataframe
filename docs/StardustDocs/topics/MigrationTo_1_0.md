@@ -238,6 +238,17 @@ with the String API, or [`cast`](cast.md) the result to a `@DataSchema` that des
 | `df.pivot { city }.groupBy { name }.count().filter { name == "Alice" }` | `df.pivot { city }.groupBy { name }.count().filter { "name"<String>() == "Alice" }` |
 | `df.groupBy { name }.pivotCounts { city }.sortBy { name }`              | `df.groupBy { name }.pivotCounts { city }.sortBy("name")`                           |
 
+### `cast<T>()` verifies the schema by default
+
+`cast<T>()` on a `DataFrame`, `DataRow` or `ColumnGroup` now checks the data against `T`,
+and `cast<Keys, Groups>()` on a `GroupBy` checks the key columns against `Keys` and every group against `Groups`.
+If the schema was only partially correct, the code now throws an exception.
+Migrate such calls to `castUnchecked()` or `cast(verify = false)`, or fix the schema itself.
+
+`Keys` of a `GroupBy` describes only the key columns. So `groupBy.cast<FullSchema, FullSchema>()`,
+where `FullSchema` is the schema of the original `DataFrame`, now throws unless every column is a key:
+replace it with `groupBy.castUnchecked<FullSchema, FullSchema>()`.
+
 ### Removed functions and classes
 
 The following functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
@@ -281,7 +292,7 @@ The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `df.add(columns)` / `df.add(dataframes)`                                                                 | `df.addAll(columns)` / `df.addAll(dataframes)`                                                                                | Renamed to improve completion.                                               |
 | `row.isEmpty()` / `row.isNotEmpty()`                                                                     | `row.values().all { it == null }` / `row.values().any { it != null }`                                                         | Removed a shortcut to clarify the behaviour;                                 |
 | `row.getRow(index)` /  `row.getRowOrNull(index)` / `row.getRows(indices)`                                | `row.df().getRow(index)` /  `row.df().getRowOrNull(index)` / `row.df().getRows(indices)`                                      | Removed a shortcut to clarify the behaviour;                                 |
-| `df.copy()`                                                                                              | `df.columns().toDataFrame().cast()`                                                                                           | Removed a shortcut to clarify the behaviour;                                 |
+| `df.copy()`                                                                                              | `df.columns().toDataFrame().castUnchecked()`                                                                                  | Removed a shortcut to clarify the behaviour;                                 |
 | `KeyValueProperty<T>`                                                                                    | `NameValueProperty<T>`                                                                                                        | Removed duplicated functionality.                                            |
 | `rename { columns }.into(..)` (will remain WARNING)                                                      | `rename { columns }.to(..)`                                                                                                   | Renamed to better reflect the English sentence "rename this column to that". |
 | `df.sortBy { col.desc() }` / `df.sortByDesc { col.desc() }`                                              | `df.sortBy { col.reversed() }` / `df.sortByDesc { col.reversed() }`                                                           | Renamed to better reflect its purpose.                                       |

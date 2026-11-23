@@ -643,11 +643,11 @@ public final class org/jetbrains/kotlinx/dataframe/api/BetweenKt {
 
 public final class org/jetbrains/kotlinx/dataframe/api/CastKt {
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
+	public static final synthetic fun cast (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun cast (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final synthetic fun cast (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;
-	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
+	public static final synthetic fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnWithPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnWithPath;
@@ -655,6 +655,10 @@ public final class org/jetbrains/kotlinx/dataframe/api/CastKt {
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
 	public static final fun castFrameColumn (Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
+	public static final fun castUnchecked (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun castUnchecked (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun castUnchecked (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
+	public static final fun castUnchecked (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/CellAttributes {
@@ -5712,6 +5716,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/receivers/AggregateInternalDslKt {
 	public static final fun internal (Lorg/jetbrains/kotlinx/dataframe/aggregation/AggregateDsl;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/receivers/AggregateInternalDsl;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/impl/api/CastKt {
+	public static final fun verifyGroupBySchemaImpl (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lkotlin/reflect/KType;Lkotlin/reflect/KType;)V
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/api/ConstructorsKt {

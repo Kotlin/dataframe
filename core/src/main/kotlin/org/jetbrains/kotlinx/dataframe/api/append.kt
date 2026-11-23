@@ -81,7 +81,7 @@ public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
     return columns().mapIndexed { colIndex, col ->
         val newValues = (0 until newRows).map { values[colIndex + it * ncol] }
         col.updateWith(col.values + newValues)
-    }.toDataFrame().cast()
+    }.toDataFrame().castUnchecked()
 }
 
 /**
@@ -126,10 +126,10 @@ public fun <T> DataFrame<T>.appendNulls(numberOfRows: Int = 1): DataFrame<T> {
         "numberOfRows must not be negative, but was: $numberOfRows"
     }
     if (numberOfRows == 0) return this
-    if (ncol == 0) return DataFrame.empty(nrow + numberOfRows).cast()
+    if (ncol == 0) return DataFrame.empty(nrow + numberOfRows).castUnchecked()
     return columns().map { col ->
         col.updateWith(col.values + arrayOfNulls(numberOfRows))
-    }.toDataFrame().cast()
+    }.toDataFrame().castUnchecked()
 }
 
 // endregion
