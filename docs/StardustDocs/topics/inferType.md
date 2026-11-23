@@ -16,18 +16,20 @@ inferType(columnName: String, ...)
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 The name, the position, and the values of every column stay the same; only the type can change.
+A column group stays a column group, and the value columns inside it are inferred.
+A frame column is returned as it is: the dataframes inside it keep their schema.
 
 ## When to use it
 
-`inferType` is useful when the values are more specific than the column type:
+`inferType` exists for one practical case: a column can be created with a not precise type, for example
+`Any?` — after reading data without a schema, after [filter](filter.md), or after a transformation that
+disabled inference, such as [convert](convert.md) with `Infer.None`. `inferType` checks whether such a type
+can be a more useful, specific one: in a [`DataFrame`](DataFrame.md) it is preferred to know what is inside
+the columns.
 
-* after [filter](filter.md), which keeps the original column type even when all remaining values
-  have a narrower type;
-* after a transformation that disabled inference, such as [convert](convert.md) with `Infer.None`;
-* after reading data without a schema, when columns get broad types like `Any?`.
-
-More precise column types then help operations that depend on the schema, such as selecting
-columns by type with [colsOf](ColumnSelectors.md#cols-of), [convertTo](convertTo.md), or schema checks.
+More precise column types then help operations that depend on the schema, such as
+[colsOf](ColumnSelectors.md#cols-of), [convertTo](convertTo.md),
+[generateDataClasses](DataSchemaGenerationMethods.md#generatedataclasses), or schema checks.
 
 The basic examples on this page use a [`DataFrame`](DataFrame.md) with a loosely typed `value` column:
 
@@ -131,7 +133,8 @@ value: kotlin.Int?
 ## Selected columns
 
 Use a [column selector](ColumnSelectors.md) or column names to refine only some of the columns.
-Among the selected columns, only value columns are inferred; column groups and frame columns are left unchanged.
+Among the selected columns, value columns are inferred, including the value columns inside a selected
+column group; a selected column group stays a column group, and a frame column is returned as it is.
 
 <!---FUN inferTypeSelectedColumns-->
 <tabs>

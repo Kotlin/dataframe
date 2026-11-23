@@ -28,7 +28,8 @@ import kotlin.reflect.KProperty
  * The inferred type is nullable if the column contains `null` values, and non-nullable otherwise.
  *
  * The name, the position, and the values of the column stay the same; only its type can change.
- * Column groups and frame columns are not inference subjects: they stay as they are.
+ * A column group stays a column group, and the value columns inside it are inferred.
+ * A frame column is returned as it is: the dataframes inside it keep their schema.
  * `inferType` does not parse or convert values: `1` stays `1`, and a column of strings stays a column
  * of strings — `"1"` does not become `1`.
  * To parse string values into typed values, use [parse][DataFrame.parse].
@@ -37,13 +38,14 @@ import kotlin.reflect.KProperty
  * Only the runtime types of the columns change: the static types known to the compiler
  * are not affected, so in a project with the compiler plugin the column accessors keep the old types.
  *
- * `inferType` is useful when the values are more specific than the column type:
- * - after [filter][DataFrame.filter], which keeps the original column type even when all remaining values
- *   have a narrower type;
- * - after a transformation that disabled inference, such as [convert][DataFrame.convert] with [Infer.None];
- * - after reading data without a schema, when columns get broad types like `Any?`.
- * More precise column types then help operations that depend on the schema, such as selecting columns
- * by type with [colsOf][ColumnsSelectionDsl.colsOf], [convertTo][DataFrame.convertTo], or schema checks.
+ * `inferType` exists for one practical case: a column can be created with a not precise type, for example
+ * `Any?` — after reading data without a schema, after [filter][DataFrame.filter], or after a transformation
+ * that disabled inference, such as [convert][DataFrame.convert] with [Infer.None]. `inferType` checks
+ * whether such a type can be a more useful, specific one: in a [DataFrame] it is preferred to know what
+ * is inside the columns.
+ * More precise column types then help operations that depend on the schema, such as
+ * [colsOf][ColumnsSelectionDsl.colsOf], [convertTo][DataFrame.convertTo],
+ * [generateDataClasses][DataFrame.generateDataClasses], or schema checks.
  *
  * For more information: {@include [DocumentationUrls.InferType]}
  *
@@ -76,19 +78,22 @@ private typealias SetInferTypeOperationArg = Nothing
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.InferTypeSamples.inferTypeMixedValues]
  *
- * @return This column with its type inferred from the values stored in it;
- * a column group or a frame column is returned as it is.
+ * @return This column with its type inferred from the values stored in it; a column group stays a column
+ * group with the value columns inside it inferred, and a frame column is returned as it is.
  */
 public fun DataColumn<*>.inferType(): DataColumn<*> =
-    // column groups and frame columns are not inference subjects: leave them as they are
-    if (isValueColumn()) {
-        createColumnGuessingType(
+    when {
+        // consistent with parse: a column group recurses into its nested value columns
+        isColumnGroup() -> asColumnGroup().inferType().asColumnGroup(name).asDataColumn()
+
+        // the dataframes inside a frame column keep their schema
+        isFrameColumn() -> this
+
+        else -> createColumnGuessingType(
             name = name,
             values = toList(),
             suggestedType = TypeSuggestion.InferWithUpperbound(type),
         )
-    } else {
-        this
     }
 
 // endregion
@@ -116,8 +121,8 @@ public fun <T> DataFrame<T>.inferType(): DataFrame<T> =
 /**
  * @include [InferTypeDocs]
  *
- * Among the selected columns, only value columns are inferred; column groups and frame columns are left
- * unchanged.
+ * Among the selected columns, value columns are inferred, including the value columns inside a selected
+ * column group; a selected column group stays a column group, and a frame column is returned as it is.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -138,8 +143,8 @@ public fun <T> DataFrame<T>.inferType(columns: ColumnsSelector<T, *>): DataFrame
  * @include [InferTypeDocs]
  * @include [SelectingColumns.ColumnNamesApi] {@include [SetInferTypeOperationArg]}
  *
- * Among the selected columns, only value columns are inferred; column groups and frame columns are left
- * unchanged.
+ * Among the selected columns, value columns are inferred, including the value columns inside a selected
+ * column group; a selected column group stays a column group, and a frame column is returned as it is.
  *
  * ### Examples
  *

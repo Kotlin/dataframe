@@ -99,44 +99,44 @@ class InferTypeTests {
         return dataFrameOf(a, b).group { a and b }.into("g")
     }
 
-    /** The column group `g` keeps its kind, its nested types, and its values. */
-    private fun assertGroupUntouched(df: AnyFrame) {
+    /** The column group `g` keeps its kind and values; its nested value columns are refined. */
+    private fun assertGroupRefined(df: AnyFrame) {
         val g = df["g"].asColumnGroup()
         g.kind() shouldBe ColumnKind.Group
-        g["a"].type() shouldBe typeOf<Any?>()
-        g["b"].type() shouldBe typeOf<Any?>()
+        g["a"].type() shouldBe typeOf<String>()
+        g["b"].type() shouldBe typeOf<Long>()
         g["a"].values().toList() shouldBe listOf("x", "y")
         g["b"].values().toList() shouldBe listOf(1L, 2L)
     }
 
     @Test
-    fun `infer type on a column group returns it unchanged`() {
+    fun `infer type on a column group refines its nested value columns`() {
         val col: DataColumn<*> = groupedFrame()["g"]
 
         val inferred = col.inferType()
 
         val g = inferred.asColumnGroup()
         g.kind() shouldBe ColumnKind.Group
-        g["a"].type() shouldBe typeOf<Any?>()
-        g["b"].type() shouldBe typeOf<Any?>()
+        g["a"].type() shouldBe typeOf<String>()
+        g["b"].type() shouldBe typeOf<Long>()
     }
 
     @Test
-    fun `infer type leaves a selected column group unchanged`() {
+    fun `infer type refines the value columns of a selected column group`() {
         val df = groupedFrame()
 
         val inferred = df.inferType("g")
 
-        assertGroupUntouched(inferred)
+        assertGroupRefined(inferred)
     }
 
     @Test
-    fun `infer type by columns selector leaves a selected column group unchanged`() {
+    fun `infer type by columns selector refines the value columns of a selected column group`() {
         val df = groupedFrame()
 
         val inferred = df.inferType { pathOf("g") }
 
-        assertGroupUntouched(inferred)
+        assertGroupRefined(inferred)
     }
 
     @Test
