@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataRow
-import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.schema
@@ -83,14 +83,14 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
         ColumnToInsert(path, column, null)
     }
 
-    val keyColumnsDf = dataFrameOf(keyColumnsToInsert).cast<T>()
+    val keyColumnsDf = dataFrameOf(keyColumnsToInsert).castUnchecked<T>()
 
     val groupSizes = IntArray(nGroups) { groups[it].size }
     val groupedColumns: List<ColumnGroupByResult> = columns().map { column ->
         distributeColumnValuesIntoGroups(column, nRows, nGroups, groupSizes, rowToGroup, groups)
     }
     val groupDataFrames: List<DataFrame<T>> = List(nGroups) { groupIndex ->
-        groupedColumns.map { it[groupIndex] }.toDataFrame().cast<T>()
+        groupedColumns.map { it[groupIndex] }.toDataFrame().castUnchecked<T>()
     }
 
     val groupedColumnName = keyColumnsDf.nameGenerator().addUnique(GroupBy.groupedColumnAccessor.name())

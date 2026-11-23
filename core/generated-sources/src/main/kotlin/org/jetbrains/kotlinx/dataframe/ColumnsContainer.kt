@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -98,7 +99,7 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> =
-        get(column.columnName).asColumnGroup().cast()
+        get(column.columnName).asColumnGroup().castUnchecked()
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload

@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -81,5 +81,5 @@ internal fun <T> DataFrame<T>.removeImpl(
         .sortedBy { originalOrder[it.first] }
         .map { it.second }
 
-    return RemoveResult(newDf.cast(), removedColumns)
+    return RemoveResult(newDf.castUnchecked(), removedColumns)
 }

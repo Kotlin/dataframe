@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -93,7 +94,7 @@ private fun <C, R> ColumnGroup<C>.replaceRowsIf(
         .map { if (condition(it)) from[it.index] else it }
         .toColumn(name)
         .asColumnGroup()
-        .cast()
+        .castUnchecked()
 
 internal fun <T, C> DataColumn<C>.updateImpl(
     df: DataFrame<T>,
