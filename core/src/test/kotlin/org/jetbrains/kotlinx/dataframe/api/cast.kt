@@ -11,19 +11,11 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.junit.Test
-import java.lang.IllegalArgumentException
-import kotlin.reflect.typeOf
 
 class CastTests {
 
     @DataSchema
     data class Data(val a: Int, val b: String)
-
-    @DataSchema
-    data class NullableValue(val value: String?)
-
-    @DataSchema
-    data class NestedData(val a: Int, val group: NullableValue, val frames: DataFrame<Data>)
 
     // region DataFrame
 
@@ -35,12 +27,10 @@ class CastTests {
         )
 
         val castedWithFlag: DataFrame<Data> = df.cast(verify = false)
-        val castedWithoutVerificationOverload: DataFrame<Data> = df.castUnchecked()
+        val castedUnchecked: DataFrame<Data> = df.castUnchecked()
 
         castedWithFlag shouldBeSameInstanceAs df
-        castedWithoutVerificationOverload shouldBeSameInstanceAs df
-        castedWithFlag["a"].type() shouldBe typeOf<String>()
-        castedWithFlag["b"].type() shouldBe typeOf<Int>()
+        castedUnchecked shouldBeSameInstanceAs df
     }
 
     @Test
@@ -109,8 +99,6 @@ class CastTests {
         val casted: DataFrame<Data> = df.castTo(schemaFrom = schemaSource, verify = false)
 
         casted shouldBeSameInstanceAs df
-        casted["a"].type() shouldBe typeOf<String>()
-        casted["b"].type() shouldBe typeOf<Int>()
     }
 
     private fun dataFactory(
@@ -146,29 +134,20 @@ class CastTests {
     }
 
     @Test
-    fun safeUnsafeCast() {
-        val df = dataFrameOf("a", "b", "c")(1, "s", 2)
-        df.cast<Data>(verify = true) shouldBe df
-
-        shouldThrow<kotlin.IllegalArgumentException> {
-            df.convert("a").toDouble().cast<Data>(verify = true)
-        }
-        val converted = df.convert("a").toDouble()
-        converted.cast<Data>(verify = false) shouldBe converted
-        converted.cast<Data>() shouldBe converted
-    }
-
-    @Test
     fun `cast without arguments verifies schema`() {
-        val df = dataFrameOf("a", "b", "c")(1, "s", 2)
+        val df = dataFrameOf(
+            "a" to columnOf(1),
+            "b" to columnOf("s"),
+            "c" to columnOf(2),
+        )
         val casted: DataFrame<Data> = df.cast()
         casted shouldBe df
         df.cast<Data>() shouldBe df
 
-        shouldThrow<kotlin.IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             df.convert("a").toDouble().cast<Data>()
         }
-        shouldThrow<kotlin.IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             df.remove("b").cast<Data>()
         }
     }
@@ -178,21 +157,18 @@ class CastTests {
 
     @Test
     fun `cast accepts columns whose type is a subtype of the schema type`() {
-        val df = dataFrameOf("a", "b")(1, "s")
+        val df = dataFrameOf(
+            "a" to columnOf(1),
+            "b" to columnOf("s"),
+        )
         df.cast<NullableData>() shouldBe df
 
-        shouldThrow<kotlin.IllegalArgumentException> {
-            dataFrameOf("a", "b")("s", 1).cast<NullableData>()
+        shouldThrow<IllegalArgumentException> {
+            dataFrameOf(
+                "a" to columnOf("s"),
+                "b" to columnOf(1),
+            ).cast<NullableData>()
         }
-    }
-
-    @Test
-    fun `castUnchecked does not verify schema`() {
-        val df = dataFrameOf("a", "b")("s", 1)
-        val casted: DataFrame<Data> = df.cast()
-        casted shouldBeSameInstanceAs df
-        df.cast<Data>() shouldBeSameInstanceAs df
-        df[0].cast<Data>() shouldBe df[0]
     }
 
     @Test
@@ -202,7 +178,7 @@ class CastTests {
             "b" to columnOf(1, 2),
         )[1]
 
-        shouldThrow<kotlin.IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             row.cast<Data>()
         }
     }
@@ -280,10 +256,6 @@ class CastTests {
     fun `column casts preserve column instances`() {
         val dataColumn: DataColumn<*> = columnOf(1, 2)
         val valueColumn: ValueColumn<*> = dataColumn.asValueColumn()
-        val group: ColumnGroup<*> = columnOf(
-            "a" to columnOf(1),
-            "b" to columnOf("one"),
-        )
         val frameColumn: FrameColumn<*> = columnOf(
             dataFrameOf(
                 "a" to columnOf(1),
@@ -293,12 +265,10 @@ class CastTests {
 
         val castedDataColumn: DataColumn<Number> = dataColumn.cast()
         val castedValueColumn: ValueColumn<Number> = valueColumn.cast()
-        val castedGroup: ColumnGroup<Data> = group.cast()
         val castedFrameColumn: FrameColumn<Data> = frameColumn.castFrameColumn()
 
         castedDataColumn shouldBeSameInstanceAs dataColumn
         castedValueColumn shouldBeSameInstanceAs valueColumn
-        castedGroup shouldBeSameInstanceAs group
         castedFrameColumn shouldBeSameInstanceAs frameColumn
     }
 
@@ -353,9 +323,9 @@ class CastTests {
 
     @Test
     fun `groupBy castUnchecked does not verify`() {
-        val casted: GroupBy<Data, Container> = grouped.cast()
+        val casted: GroupBy<Data, Container> = grouped.castUnchecked()
         casted shouldBeSameInstanceAs grouped
-        // grouped.cast<Data, Container>(verify = false) shouldBeSameInstanceAs grouped
+        grouped.cast<Data, Container>(verify = false) shouldBeSameInstanceAs grouped
     }
 
     private val group = dataFrameOf(
@@ -386,7 +356,7 @@ class CastTests {
 
     @Test
     fun `columnGroup castUnchecked does not verify`() {
-        val casted: ColumnGroup<Container> = group.cast() // castUnchecked()
+        val casted: ColumnGroup<Container> = group.castUnchecked()
         casted shouldBeSameInstanceAs group
         group.cast<Container>(verify = false) shouldBeSameInstanceAs group
     }

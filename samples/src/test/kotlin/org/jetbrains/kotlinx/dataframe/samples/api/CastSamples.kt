@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.asValueColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.castTo
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -18,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.toList
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.io.toJson
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
@@ -81,7 +81,7 @@ class CastSamples : DataFrameSampleHelper("cast", "api") {
     @Test
     fun verifiedCast() {
         // SampleStart
-        df.cast<Person>(verify = true)
+        df.cast<Person>()
             // SampleEnd
             .also { it shouldBeSameInstanceAs df }
     }
@@ -89,7 +89,7 @@ class CastSamples : DataFrameSampleHelper("cast", "api") {
     @Test
     fun uncheckedCast() {
         // SampleStart
-        df.cast<Person>()
+        df.castUnchecked<Person>()
             // SampleEnd
             .also { it shouldBeSameInstanceAs df }
     }
@@ -117,7 +117,7 @@ class CastSamples : DataFrameSampleHelper("cast", "api") {
     fun castExtensionPropertyFailsAtRuntime() {
         shouldThrow<IllegalStateException> {
             // SampleStart
-            val people = dataFrameOf("name" to columnOf("Alice")).cast<Person>()
+            val people = dataFrameOf("name" to columnOf("Alice")).castUnchecked<Person>()
             // Throws IllegalStateException because there is no age column.
             people.age
             // SampleEnd
@@ -227,7 +227,7 @@ class CastSamples : DataFrameSampleHelper("cast", "api") {
     @Test
     fun rowCast() {
         // SampleStart
-        df[0].cast<Person>(verify = true)
+        df[0].cast<Person>()
             // SampleEnd
             .also { it shouldBe df[0] }
             .toDataFrame()
@@ -238,7 +238,7 @@ class CastSamples : DataFrameSampleHelper("cast", "api") {
     fun uncheckedRowCast() {
         // SampleStart
         val row = df[0]
-        row.cast<Person>()
+        row.castUnchecked<Person>()
             // SampleEnd
             .also { it shouldBeSameInstanceAs row }
     }
