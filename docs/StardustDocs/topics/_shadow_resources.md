@@ -24,6 +24,11 @@
 <resource src="appendNullsOneRow.html"></resource>
 <resource src="appendNullsSeveralRows.html"></resource>
 <resource src="appendNullsZeroRows.html"></resource>
+<resource src="inferTypeAllColumns.html"></resource>
+<resource src="inferTypeDoesNotParseStrings.html"></resource>
+<resource src="inferTypeInput.html"></resource>
+<resource src="inferTypeSelectByType.html"></resource>
+<resource src="inferTypeSelectedColumns.html"></resource>
 <resource src="notebook_test_between_1.html"></resource>
 <resource src="notebook_test_between_2.html"></resource>
 <resource src="notebook_test_between_3.html"></resource>
