@@ -36,6 +36,9 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.convertToLocalDateInZone
+import org.jetbrains.kotlinx.dataframe.impl.api.convertToLocalDateTimeInZone
+import org.jetbrains.kotlinx.dataframe.impl.api.convertToLocalTimeInZone
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.defaultTimeZone
 import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDate
@@ -1622,6 +1625,55 @@ public fun DataColumn<Int?>.convertToLocalDate(zone: TimeZone = defaultTimeZone)
     map { it?.toLong()?.toLocalDate(zone) }
 
 /**
+ * Converts values in this [<code>kotlin.time.Instant</code>][kotlin.time.Instant] column to [<code>LocalDate</code>][LocalDate].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlin.time.Instant</code>][kotlin.time.Instant] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [<code>DataColumn</code>][DataColumn] with the [<code>LocalDate</code>][LocalDate] values.
+ */
+@JvmName("convertToLocalDateFromStdlibInstant")
+public fun DataColumn<StdlibInstant>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate> =
+    map { it.toLocalDate(zone) }
+
+/**
+ * Converts values in this [<code>kotlin.time.Instant</code>][kotlin.time.Instant] column to [<code>LocalDate</code>][LocalDate]. Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlin.time.Instant</code>][kotlin.time.Instant] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [<code>DataColumn</code>][DataColumn] with the [<code>LocalDate</code>][LocalDate] nullable values.
+ */
+@JvmName("convertToLocalDateFromStdlibInstantNullable")
+public fun DataColumn<StdlibInstant?>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate?> =
+    map { it?.toLocalDate(zone) }
+
+/**
+ * Converts values in this [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] column to [<code>LocalDate</code>][LocalDate].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [<code>DataColumn</code>][DataColumn] with the [<code>LocalDate</code>][LocalDate] values.
+ */
+@JvmName("convertToLocalDateFromDeprecatedInstant")
+public fun DataColumn<DeprecatedInstant>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate> =
+    map { it.toStdlibInstant().toLocalDate(zone) }
+
+/**
+ * Converts values in this [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] column to [<code>LocalDate</code>][LocalDate]. Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [<code>DataColumn</code>][DataColumn] with the [<code>LocalDate</code>][LocalDate] nullable values.
+ */
+@JvmName("convertToLocalDateFromDeprecatedInstantNullable")
+public fun DataColumn<DeprecatedInstant?>.convertToLocalDate(
+    zone: TimeZone = defaultTimeZone,
+): DataColumn<LocalDate?> = map { it?.toStdlibInstant()?.toLocalDate(zone) }
+
+/**
  * Converts values in this [<code>String</code>][String] column to [<code>LocalDate</code>][LocalDate].
  *
  * Trims each string and attempts to parse it using the specified [<code>format</code>][format].
@@ -1754,6 +1806,56 @@ public fun <T> Convert<T, Int?>.toLocalDate(zone: TimeZone = defaultTimeZone): D
     asColumn { it.convertToLocalDate(zone) }
 
 /**
+ * Converts values in the [<code>kotlin.time.Instant</code>][kotlin.time.Instant] columns previously selected with [<code>convert</code>][convert] to [<code>LocalDate</code>][LocalDate],
+ * preserving their original names and positions within the [<code>DataFrame</code>][DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * // kotlin.time.Instant -> kotlinx.datetime.LocalDate in the given time zone
+ * instantsDf.convert { instant }.toLocalDate(TimeZone.of("Europe/Berlin"))
+ * ```
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlin.time.Instant</code>][kotlin.time.Instant] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalDate</code>][LocalDate].
+ */
+@JvmName("toLocalDateFromTStdlibInstant")
+@Refine
+@Converter(LocalDate::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, StdlibInstant?>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+    asColumn { it.convertToLocalDate(zone) }
+
+/**
+ * Converts values in the [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] columns previously selected with [<code>convert</code>][convert] to [<code>LocalDate</code>][LocalDate],
+ * preserving their original names and positions within the [<code>DataFrame</code>][DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * val ts by columnOf(
+ *     DeprecatedInstant.parse("2024-01-01T23:30:00Z"),
+ *     DeprecatedInstant.parse("2024-06-15T08:45:00Z"),
+ * )
+ * // kotlinx.datetime.Instant -> kotlinx.datetime.LocalDate in the given time zone
+ * ts.toDataFrame().convert { ts }.toLocalDate(TimeZone.UTC)
+ * ```
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalDate</code>][LocalDate].
+ */
+@JvmName("toLocalDateFromTDeprecatedInstant")
+@Refine
+@Converter(LocalDate::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, DeprecatedInstant?>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+    asColumn { it.convertToLocalDate(zone) }
+
+/**
  * Converts values in the [<code>String</code>][String] columns previously selected with [<code>convert</code>][convert] to [<code>LocalDate</code>][LocalDate],
  * preserving their original names and positions within the [<code>DataFrame</code>][DataFrame].
  * Preserves null values.
@@ -1820,6 +1922,7 @@ public fun <T> Convert<T, DateTimeComponents?>.toLocalDate(): DataFrame<T> = asC
 /**
  * Converts values in the columns previously selected with [<code>convert</code>][convert] to [<code>LocalDate</code>][LocalDate],
  * preserving their original names and positions within the [<code>DataFrame</code>][DataFrame].
+ * Zone-dependent source types are interpreted in the system current time zone.
  *
  * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
  *
@@ -1834,6 +1937,38 @@ public fun <T> Convert<T, DateTimeComponents?>.toLocalDate(): DataFrame<T> = asC
 @Converter(LocalDate::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, *>.toLocalDate(): DataFrame<T> = asColumn { it.convertTo<LocalDate>() }
+
+/**
+ * Converts values in the columns previously selected with [<code>convert</code>][convert] to [<code>LocalDate</code>][LocalDate],
+ * preserving their original names and positions within the [<code>DataFrame</code>][DataFrame].
+ * Preserves null values.
+ *
+ * Zone-dependent source columns ([<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant], [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant])
+ * are interpreted in [<code>zone</code>][zone]. Columns of other types are converted as if [<code>zone</code>][zone] was not passed:
+ * conversions that do not depend on a time zone ignore it, while the remaining zone-dependent
+ * sources ([<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>java.time.Instant</code>][java.time.Instant]) fall back to the system current time zone,
+ * as does calling the same function without arguments. A column inferred as a common supertype (a mixed
+ * [<code>Long</code>][Long] and [<code>Int</code>][Int] column is a [<code>Number</code>][Number] column) is converted per value: [<code>Long</code>][Long], [<code>Int</code>][Int],
+ * [<code>kotlin.time.Instant</code>][kotlin.time.Instant] and [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] values are interpreted in [<code>zone</code>][zone], other values
+ * fall back to the system current time zone.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * val df = dataFrameOf("timestamp")(1_704_151_800_000L) // 2024-01-01T23:30:00Z
+ * df.convert("timestamp").toLocalDate(TimeZone.UTC)
+ * ```
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret zone-dependent timestamps.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalDate</code>][LocalDate].
+ */
+@JvmName("toLocalDateFromTAny")
+@Refine
+@Converter(LocalDate::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Any?>.toLocalDate(zone: TimeZone): DataFrame<T> =
+    asColumn { it.convertToLocalDateInZone(zone) }
 
 // endregion
 
@@ -1885,6 +2020,55 @@ public fun DataColumn<Int>.convertToLocalTime(zone: TimeZone = defaultTimeZone):
 @JvmName("convertToLocalTimeIntNullable")
 public fun DataColumn<Int?>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime?> =
     map { it?.toLong()?.toLocalTime(zone) }
+
+/**
+ * Converts values in this [<code>kotlin.time.Instant</code>][kotlin.time.Instant] column to [<code>LocalTime</code>][LocalTime].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlin.time.Instant</code>][kotlin.time.Instant] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [<code>DataColumn</code>][DataColumn] with the [<code>LocalTime</code>][LocalTime] values.
+ */
+@JvmName("convertToLocalTimeFromStdlibInstant")
+public fun DataColumn<StdlibInstant>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime> =
+    map { it.toLocalTime(zone) }
+
+/**
+ * Converts values in this [<code>kotlin.time.Instant</code>][kotlin.time.Instant] column to [<code>LocalTime</code>][LocalTime]. Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlin.time.Instant</code>][kotlin.time.Instant] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [<code>DataColumn</code>][DataColumn] with the [<code>LocalTime</code>][LocalTime] nullable values.
+ */
+@JvmName("convertToLocalTimeFromStdlibInstantNullable")
+public fun DataColumn<StdlibInstant?>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime?> =
+    map { it?.toLocalTime(zone) }
+
+/**
+ * Converts values in this [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] column to [<code>LocalTime</code>][LocalTime].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [<code>DataColumn</code>][DataColumn] with the [<code>LocalTime</code>][LocalTime] values.
+ */
+@JvmName("convertToLocalTimeFromDeprecatedInstant")
+public fun DataColumn<DeprecatedInstant>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime> =
+    map { it.toStdlibInstant().toLocalTime(zone) }
+
+/**
+ * Converts values in this [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] column to [<code>LocalTime</code>][LocalTime]. Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [<code>DataColumn</code>][DataColumn] with the [<code>LocalTime</code>][LocalTime] nullable values.
+ */
+@JvmName("convertToLocalTimeFromDeprecatedInstantNullable")
+public fun DataColumn<DeprecatedInstant?>.convertToLocalTime(
+    zone: TimeZone = defaultTimeZone,
+): DataColumn<LocalTime?> = map { it?.toStdlibInstant()?.toLocalTime(zone) }
 
 /**
  * Converts values in this [<code>String</code>][String] column to [<code>LocalTime</code>][LocalTime].
@@ -2019,6 +2203,56 @@ public fun <T> Convert<T, Int?>.toLocalTime(zone: TimeZone = defaultTimeZone): D
     asColumn { it.convertToLocalTime(zone) }
 
 /**
+ * Converts values in the [<code>kotlin.time.Instant</code>][kotlin.time.Instant] columns previously selected with [<code>convert</code>][convert] to [<code>LocalTime</code>][LocalTime],
+ * preserving their original names and positions within the [<code>DataFrame</code>][DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * // kotlin.time.Instant -> kotlinx.datetime.LocalTime in the given time zone
+ * instantsDf.convert { instant }.toLocalTime(TimeZone.UTC)
+ * ```
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlin.time.Instant</code>][kotlin.time.Instant] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalTime</code>][LocalTime].
+ */
+@JvmName("toLocalTimeFromTStdlibInstant")
+@Refine
+@Converter(LocalTime::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, StdlibInstant?>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+    asColumn { it.convertToLocalTime(zone) }
+
+/**
+ * Converts values in the [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] columns previously selected with [<code>convert</code>][convert] to [<code>LocalTime</code>][LocalTime],
+ * preserving their original names and positions within the [<code>DataFrame</code>][DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * val ts by columnOf(
+ *     DeprecatedInstant.parse("2024-01-01T23:30:00Z"),
+ *     DeprecatedInstant.parse("2024-06-15T08:45:00Z"),
+ * )
+ * // kotlinx.datetime.Instant -> kotlinx.datetime.LocalTime in the given time zone
+ * ts.toDataFrame().convert { ts }.toLocalTime(TimeZone.UTC)
+ * ```
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalTime</code>][LocalTime].
+ */
+@JvmName("toLocalTimeFromTDeprecatedInstant")
+@Refine
+@Converter(LocalTime::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, DeprecatedInstant?>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+    asColumn { it.convertToLocalTime(zone) }
+
+/**
  * Converts values in the [<code>String</code>][String] columns previously selected with [<code>convert</code>][convert] to [<code>LocalTime</code>][LocalTime],
  * preserving their original names and positions within the [<code>DataFrame</code>][DataFrame].
  * Preserves null values.
@@ -2085,6 +2319,7 @@ public fun <T> Convert<T, DateTimeComponents?>.toLocalTime(): DataFrame<T> = asC
 /**
  * Converts values in the columns previously selected with [<code>convert</code>][convert] to [<code>LocalTime</code>][LocalTime],
  * preserving their original names and positions within the [<code>DataFrame</code>][DataFrame].
+ * Zone-dependent source types are interpreted in the system current time zone.
  *
  * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
  *
@@ -2100,6 +2335,38 @@ public fun <T> Convert<T, DateTimeComponents?>.toLocalTime(): DataFrame<T> = asC
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, *>.toLocalTime(): DataFrame<T> = asColumn { it.convertTo<LocalTime>() }
 
+/**
+ * Converts values in the columns previously selected with [<code>convert</code>][convert] to [<code>LocalTime</code>][LocalTime],
+ * preserving their original names and positions within the [<code>DataFrame</code>][DataFrame].
+ * Preserves null values.
+ *
+ * Zone-dependent source columns ([<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant], [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant])
+ * are interpreted in [<code>zone</code>][zone]. Columns of other types are converted as if [<code>zone</code>][zone] was not passed:
+ * conversions that do not depend on a time zone ignore it, while the remaining zone-dependent
+ * sources ([<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>java.time.Instant</code>][java.time.Instant]) fall back to the system current time zone,
+ * as does calling the same function without arguments. A column inferred as a common supertype (a mixed
+ * [<code>Long</code>][Long] and [<code>Int</code>][Int] column is a [<code>Number</code>][Number] column) is converted per value: [<code>Long</code>][Long], [<code>Int</code>][Int],
+ * [<code>kotlin.time.Instant</code>][kotlin.time.Instant] and [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] values are interpreted in [<code>zone</code>][zone], other values
+ * fall back to the system current time zone.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * val df = dataFrameOf("timestamp")(1_704_151_800_000L) // 2024-01-01T23:30:00Z
+ * df.convert("timestamp").toLocalTime(TimeZone.UTC)
+ * ```
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret zone-dependent timestamps.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalTime</code>][LocalTime].
+ */
+@JvmName("toLocalTimeFromTAny")
+@Refine
+@Converter(LocalTime::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Any?>.toLocalTime(zone: TimeZone): DataFrame<T> =
+    asColumn { it.convertToLocalTimeInZone(zone) }
+
 // endregion
 
 // region toLocalDateTime
@@ -2111,7 +2378,7 @@ public fun <T> Convert<T, *>.toLocalTime(): DataFrame<T> = asColumn { it.convert
  *
  * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>Long</code>][Long] timestamp as a date-time.
  * Defaults to the system current time zone.
- * @return A new [<code>DataColumn</code>][DataColumn] with the [<code>LocalDate</code>][LocalDate] values.
+ * @return A new [<code>DataColumn</code>][DataColumn] with the [<code>LocalDateTime</code>][LocalDateTime] values.
  */
 @JvmName("convertToLocalDateTimeFromLong")
 public fun DataColumn<Long>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> =
@@ -2317,7 +2584,7 @@ public fun DataColumn<DateTimeComponents?>.convertToLocalDateTime(): DataColumn<
  * df.convert { timestamp }.toLocalDateTime()
  * ```
  *
- * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>Long</code>][Long] timestamp as a time. Defaults to the system current time zone.
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>Long</code>][Long] timestamp as a date-time. Defaults to the system current time zone.
  * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalDateTime</code>][LocalDateTime].
  */
 @JvmName("toLocalDateTimeFromTLong")
@@ -2339,7 +2606,7 @@ public fun <T> Convert<T, Long?>.toLocalDateTime(zone: TimeZone = defaultTimeZon
  * df.convert { timestamp }.toLocalDateTime()
  * ```
  *
- * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] timestamp as a time. Defaults to the system current time zone.
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] timestamp as a date-time. Defaults to the system current time zone.
  * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalDateTime</code>][LocalDateTime].
  */
 @JvmName("toLocalDateTimeFromTDeprecatedInstant")
@@ -2361,7 +2628,7 @@ public fun <T> Convert<T, DeprecatedInstant?>.toLocalDateTime(zone: TimeZone = d
  * df.convert { timestamp }.toLocalDateTime()
  * ```
  *
- * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlin.time.Instant</code>][kotlin.time.Instant] timestamp as a time. Defaults to the system current time zone.
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>kotlin.time.Instant</code>][kotlin.time.Instant] timestamp as a date-time. Defaults to the system current time zone.
  * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalDateTime</code>][LocalDateTime].
  */
 @JvmName("toLocalDateTimeFromTStdlibInstant")
@@ -2383,7 +2650,7 @@ public fun <T> Convert<T, StdlibInstant?>.toLocalDateTime(zone: TimeZone = defau
  * df.convert { timestamp }.toLocalDateTime()
  * ```
  *
- * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>Int</code>][Int] timestamp as a time. Defaults to the system current time zone.
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret the [<code>Int</code>][Int] timestamp as a date-time. Defaults to the system current time zone.
  * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalDateTime</code>][LocalDateTime].
  */
 @JvmName("toLocalDateTimeFromTInt")
@@ -2405,7 +2672,7 @@ public fun <T> Convert<T, Int?>.toLocalDateTime(zone: TimeZone = defaultTimeZone
  *
  * ### Examples:
  * ```kotlin
- * df.convert { timestamp }.toLocalTime()
+ * df.convert { timestamp }.toLocalDateTime()
  * ```
  *
  * @param [format] An optional [<code>DateTimeFormat</code>][DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
@@ -2429,7 +2696,7 @@ public fun <T> Convert<T, String?>.toLocalDateTime(format: DateTimeFormat<LocalD
  *
  * ### Examples:
  * ```kotlin
- * df.convert { timestamp }.toLocalTime()
+ * df.convert { timestamp }.toLocalDateTime()
  * ```
  *
  * @param pattern An optional date pattern to use for parsing.
@@ -2461,20 +2728,53 @@ public fun <T> Convert<T, DateTimeComponents?>.toLocalDateTime(): DataFrame<T> =
 /**
  * Converts values in the columns previously selected with [<code>convert</code>][convert] to [<code>LocalDateTime</code>][LocalDateTime],
  * preserving their original names and positions within the [<code>DataFrame</code>][DataFrame].
+ * Zone-dependent source types are interpreted in the system current time zone.
  *
  * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
  *
  * ### Examples:
  * ```kotlin
- * df.convert { timestamp }.toLocalTime()
+ * df.convert { timestamp }.toLocalDateTime()
  * ```
  *
- *  @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalDateTime</code>][LocalDateTime].
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalDateTime</code>][LocalDateTime].
  */
 @Refine
 @Converter(LocalDateTime::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, *>.toLocalDateTime(): DataFrame<T> = asColumn { it.convertTo<LocalDateTime>() }
+
+/**
+ * Converts values in the columns previously selected with [<code>convert</code>][convert] to [<code>LocalDateTime</code>][LocalDateTime],
+ * preserving their original names and positions within the [<code>DataFrame</code>][DataFrame].
+ * Preserves null values.
+ *
+ * Zone-dependent source columns ([<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant], [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant])
+ * are interpreted in [<code>zone</code>][zone]. Columns of other types are converted as if [<code>zone</code>][zone] was not passed:
+ * conversions that do not depend on a time zone ignore it, while the remaining zone-dependent
+ * sources ([<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>java.time.Instant</code>][java.time.Instant]) fall back to the system current time zone,
+ * as does calling the same function without arguments. A column inferred as a common supertype (a mixed
+ * [<code>Long</code>][Long] and [<code>Int</code>][Int] column is a [<code>Number</code>][Number] column) is converted per value: [<code>Long</code>][Long], [<code>Int</code>][Int],
+ * [<code>kotlin.time.Instant</code>][kotlin.time.Instant] and [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] values are interpreted in [<code>zone</code>][zone], other values
+ * fall back to the system current time zone.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * val df = dataFrameOf("timestamp")(1_704_151_800_000L) // 2024-01-01T23:30:00Z
+ * df.convert("timestamp").toLocalDateTime(TimeZone.UTC)
+ * ```
+ *
+ * @param zone The [<code>TimeZone</code>][TimeZone] used to interpret zone-dependent timestamps.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>LocalDateTime</code>][LocalDateTime].
+ */
+@JvmName("toLocalDateTimeFromTAny")
+@Refine
+@Converter(LocalDateTime::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Any?>.toLocalDateTime(zone: TimeZone): DataFrame<T> =
+    asColumn { it.convertToLocalDateTimeInZone(zone) }
 
 // endregion
 
@@ -2613,7 +2913,7 @@ public fun <T> Convert<T, String?>.toDateTimeComponents(pattern: String): DataFr
  * df.convert { timestamp }.toDateTimeComponents()
  * ```
  *
- *  @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>DateTimeComponents</code>][DateTimeComponents].
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>DateTimeComponents</code>][DateTimeComponents].
  */
 @Refine
 @Converter(DateTimeComponents::class, nullable = false)
@@ -3459,7 +3759,7 @@ public fun <T> Convert<T, String?>.toJavaLocalDateTime(pattern: String, locale: 
  * df.convert { colsOf<Double>() }.toInt()
  * ```
  *
- *  @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>Int</code>][Int].
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>Int</code>][Int].
  */
 @Refine
 @Converter(Int::class, nullable = true)
@@ -3479,7 +3779,7 @@ public fun <T> Convert<T, Any?>.toInt(): DataFrame<T> = to<Int?>()
  * df.convert { colsOf<Double>() }.toLong()
  * ```
  *
- *  @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>Long</code>][Long].
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>Long</code>][Long].
  */
 @Refine
 @Converter(Long::class, nullable = true)
@@ -3519,7 +3819,7 @@ public fun <T> Convert<T, Any?>.toStr(): DataFrame<T> = to<String?>()
  * df.convert { colsOf<Number?>() }.toDouble()
  * ```
  *
- *  @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>Double</code>][Double].
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>Double</code>][Double].
  */
 @Refine
 @Converter(Double::class, nullable = true)
@@ -3539,7 +3839,7 @@ public fun <T> Convert<T, Any?>.toDouble(): DataFrame<T> = to<Double?>()
  * df.convert { colsOf<Double>() }.toFloat()
  * ```
  *
- *  @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>Float</code>][Float].
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>Float</code>][Float].
  */
 @Refine
 @Converter(Float::class, nullable = true)
@@ -3559,7 +3859,7 @@ public fun <T> Convert<T, Any?>.toFloat(): DataFrame<T> = to<Float?>()
  * df.convert { colsOf<Double>() }.toBigDecimal()
  * ```
  *
- *  @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>BigDecimal</code>][BigDecimal].
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>BigDecimal</code>][BigDecimal].
  */
 @Refine
 @Converter(BigDecimal::class, nullable = true)
@@ -3579,7 +3879,7 @@ public fun <T> Convert<T, Any?>.toBigDecimal(): DataFrame<T> = to<BigDecimal?>()
  * df.convert { colsOf<Double?>() }.toBigInteger()
  * ```
  *
- *  @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>BigInteger</code>][BigInteger].
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>BigInteger</code>][BigInteger].
  */
 @Refine
 @Converter(BigInteger::class, nullable = true)
@@ -3599,7 +3899,7 @@ public fun <T> Convert<T, Any?>.toBigInteger(): DataFrame<T> = to<BigInteger?>()
  * df.convert { colsOf<String?> { it.name.startsWith("it") } }.toBoolean()
  * ```
  *
- *  @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>Boolean</code>][Boolean].
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>Boolean</code>][Boolean].
  */
 @Refine
 @Converter(Boolean::class, nullable = true)
@@ -3625,7 +3925,7 @@ public fun <T> Convert<T, Any?>.toBoolean(): DataFrame<T> = to<Boolean?>()
  * @param containsColumns If `true`, treats each nested list as a column with its first element as the column name.
  *                        Otherwise, the first list is treated as the header.
  *                        Defaults to `false`.
- *  @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>DataFrame</code>][DataFrame].
+ * @return A new [<code>DataFrame</code>][DataFrame] with the values converted to [<code>DataFrame</code>][DataFrame].
  */
 public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolean = false): DataFrame<T> =
     asColumn { it.toDataFrames(containsColumns) }
@@ -3642,7 +3942,7 @@ public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolea
  * @param containsColumns If `true`, treats each nested list as a column with its first element as the column name.
  *                        Otherwise, the first list is treated as the header.
  *                        Defaults to `false`.
- *  @return A new [<code>DataColumn</code>][DataColumn] with the values converted to [<code>DataFrame</code>][DataFrame].
+ * @return A new [<code>DataColumn</code>][DataColumn] with the values converted to [<code>DataFrame</code>][DataFrame].
  */
 public fun <T> DataColumn<List<List<T>>>.toDataFrames(containsColumns: Boolean = false): DataColumn<DataFrame<*>> =
     map { it.toDataFrame(containsColumns = containsColumns) }
