@@ -279,6 +279,12 @@ public interface DocumentationUrls {
     /** [See `columnOf` on the documentation website.]({@include [Url]}/createcolumn.html#columnof) */
     public typealias ColumnOf = Nothing
 
+    /** [See `toColumn` on the documentation website.]({@include [Url]}/createcolumn.html#tocolumn) */
+    public typealias ToColumn = Nothing
+
+    /** [See `toColumnOf` on the documentation website.]({@include [Url]}/createcolumn.html#tocolumnof) */
+    public typealias ToColumnOf = Nothing
+
     /** [See `dataFrameOf` on the documentation website.]({@include [Url]}/createdataframe.html#dataframeof) */
     public typealias DataFrameOf = Nothing
 
