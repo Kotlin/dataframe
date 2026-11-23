@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -146,7 +145,8 @@ internal interface Select {
  */
 @Refine
 @Interpretable("Select0")
-public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().cast()
+public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> =
+    get(columns).toDataFrame().castUnchecked()
 
 /**
  * ## The Select Operation

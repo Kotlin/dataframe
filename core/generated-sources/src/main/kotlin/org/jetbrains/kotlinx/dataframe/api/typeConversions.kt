@@ -145,7 +145,7 @@ public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> =
     (this as AnyCol).asAnyFrameColumn().castFrameColumn()
 
 @JvmName("asGroupedT")
-public fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = (this as AnyCol).asColumnGroup().cast()
+public fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = (this as AnyCol).asColumnGroup().castUnchecked()
 
 public fun <T> DataColumn<DataRow<T>>.asDataFrame(): DataFrame<T> = asColumnGroup()
 
@@ -353,9 +353,10 @@ public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
 public fun Iterable<BaseColumn<*>>.toColumnGroup(name: String): ColumnGroup<*> = dataFrameOf(this).asColumnGroup(name)
 
 public fun <T> Iterable<BaseColumn<*>>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> =
-    dataFrameOf(this).cast<T>().asColumnGroup(column)
+    dataFrameOf(this).castUnchecked<T>().asColumnGroup(column)
 
-public fun <T> Iterable<BaseColumn<*>>.toColumnGroupOf(name: String): ColumnGroup<T> = toColumnGroup(name).cast()
+public fun <T> Iterable<BaseColumn<*>>.toColumnGroupOf(name: String): ColumnGroup<T> =
+    toColumnGroup(name).castUnchecked()
 
 // endregion
 

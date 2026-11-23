@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.map
@@ -82,7 +83,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
         data.values.count { it == top }
     }.move(ColumnDescription::freq).after(ColumnDescription::top)
 
-    return df.cast()
+    return df.castUnchecked()
 }
 
 private fun List<AnyCol>.collectAll(atAnyDepth: Boolean): List<AnyCol> =
