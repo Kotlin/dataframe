@@ -139,8 +139,6 @@ public fun <T> KProperty<T>.toColumnAccessor(): ColumnAccessor<T> = ColumnAccess
 public fun BaseColumn<*>.toDataFrame(): DataFrame<*> = dataFrameOf(listOf(this))
 
 /**
- * ## As Numbers
- *
  * Casts this column to a [ValueColumn] of {@get [AsNumbersDocs.TYPE] [Number][Number]}.
  * Requires [isNumber] to be `true` for this column, otherwise throws an [IllegalArgumentException].
  *
@@ -175,8 +173,6 @@ public fun DataColumn<Any>.asNumbers(): ValueColumn<Number> {
 }
 
 /**
- * ## As Comparable
- *
  * Casts this column to a [DataColumn] of {@get [AsComparableDocs.TYPE] Comparable<T>} so its values can be
  * ordered and compared with each other.
  * Requires [valuesAreComparable] to be `true` for this column, otherwise throws
@@ -203,7 +199,7 @@ public fun <T : Any> DataColumn<T>.asComparable(): DataColumn<Comparable<T>> {
 
 /**
  * @include [AsComparableDocs]
- * @set [AsComparableDocs.TYPE] [Comparable]`<`[T]?`>`
+ * @set [AsComparableDocs.TYPE] [Comparable]`<`[T]`>`?
  */
 @JvmName("asComparableNullable")
 public fun <T : Any?> DataColumn<T?>.asComparable(): DataColumn<Comparable<T>?> {
@@ -252,11 +248,12 @@ public fun <T> DataColumn<T>.castToNullable(): DataColumn<T?> = cast()
 public fun <T> ColumnReference<T>.castToNullable(): ColumnReference<T?> = cast()
 
 /**
- * Returns this column with the static nullability of its type set to [nullable].
+ * Returns this column: with [nullable] = `true` it is [castToNullable][DataColumn.castToNullable],
+ * with [nullable] = `false` it is [castToNotNullable][DataColumn.castToNotNullable], which throws
+ * an [IllegalArgumentException] when the column [has nulls][DataColumn.hasNulls].
  *
- * If [nullable] is `false`, this is [castToNotNullable][DataColumn.castToNotNullable]:
- * an [IllegalArgumentException] is thrown when the column
- * [has nulls][DataColumn.hasNulls]. Otherwise [castToNullable][DataColumn.castToNullable] is used.
+ * NOTE: The column is not changed: [type][DataColumn.type] and [hasNulls][DataColumn.hasNulls] stay
+ * the same, and the [DataColumn]`<*>` return type doesn't expose the new static nullability.
  */
 public fun DataColumn<*>.setNullable(nullable: Boolean): DataColumn<*> =
     if (nullable) {
@@ -268,8 +265,6 @@ public fun DataColumn<*>.setNullable(nullable: Boolean): DataColumn<*> =
 // region to array
 
 /**
- * ## To {@get [ToArrayDocs.TYPE] Float} Array
- *
  * Converts the values of this [DataColumn]`<`[Number]`>` to {@get [ToArrayDocs.TYPE] Float} and returns them
  * as a new primitive `{@get [ToArrayDocs.TYPE] Float}Array`. The values are converted the same way
  * [convertTo] does, and the returned array is a copy — changing it doesn't affect the column.
@@ -461,8 +456,6 @@ public fun <T> FrameColumn<T>.toValueColumn(): ValueColumn<DataFrame<T>?> =
 // region ColumnSet
 
 /**
- * ## As {@get [AsCastDocs.TYPE] [Number]}
- *
  * Changes the static type argument of this {@get [AsCastDocs.RECEIVER] [ColumnSet]} to {@get [AsCastDocs.TYPE] [Number]}
  * without any checks or data changes.
  *

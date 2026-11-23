@@ -127,12 +127,6 @@ An included snippet must stay true in every function it is included into: re-rea
 host's signature, not only where it was written. A wording that names one host's behaviour — printing,
 mutating, returning — is false on a host that does something else with the same parameters.
 
-A snippet nested inside a class or enum must not reference its enclosing type by `[Name]`: when the
-snippet is included into another declaration, the reference resolves to a doubled fully qualified path
-(`Infer` referenced from inside `enum class Infer` came out as `…api.Infer.Infer` — a broken link in
-every consumer). Reference the enclosing type from plain text, or inline the sentence instead of
-including the snippet.
-
 Also, you can use
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
 along with `@include` to change variable values in common parts. This is especially useful for 

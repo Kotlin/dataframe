@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
+import org.junit.Ignore
 import org.junit.Test
 import java.util.NoSuchElementException
 import kotlin.reflect.typeOf
@@ -107,6 +108,13 @@ class TypeConversionsTests {
         val col: DataColumn<Int> = columnOf(1, 2, 3)
         col.setNullable(true).hasNulls() shouldBe false
         col.setNullable(true).type() shouldBe typeOf<Int>()
+    }
+
+    @Test
+    fun `setNullable returns the same column`() {
+        val col: DataColumn<Int> = columnOf(1, 2, 3)
+        (col.setNullable(true) as Any === col as Any) shouldBe true
+        (col.setNullable(false) as Any === col as Any) shouldBe true
     }
 
     // endregion
@@ -452,6 +460,25 @@ class TypeConversionsTests {
         // the downcast proves the returned list is a detached copy: the mutation succeeds
         // while the DataFrame still sees its original values
         (map["a"]!! as MutableList<Any?>).add(99)
+        df["a"].toList() shouldBe listOf(1, 2)
+    }
+
+    // The live-storage leak pinned below is tracked by a follow-up issue (linked in the PR description);
+    // toMap() was fixed in this PR, but toList() and values() still expose the same storage.
+
+    @Ignore("TODO: unpin when toList() and values() stop exposing the live storage — see the issue linked in PR #2244")
+    @Test
+    fun `toList returns a detached list, mutating it doesn't affect the DataFrame`() {
+        val df = dataFrameOf("a")(1, 2)
+        (df["a"].toList() as MutableList<Any?>).add(99)
+        df["a"].toList() shouldBe listOf(1, 2)
+    }
+
+    @Ignore("TODO: unpin when toList() and values() stop exposing the live storage — see the issue linked in PR #2244")
+    @Test
+    fun `values returns a detached iterable, mutating it doesn't affect the DataFrame`() {
+        val df = dataFrameOf("a")(1, 2)
+        (df["a"].values() as MutableList<Any?>).add(99)
         df["a"].toList() shouldBe listOf(1, 2)
     }
 
