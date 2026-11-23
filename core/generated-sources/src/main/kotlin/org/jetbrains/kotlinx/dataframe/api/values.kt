@@ -5,6 +5,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
@@ -733,7 +736,7 @@ public fun <T> Pivot<T>.values(
     distinct: Boolean = false,
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,
-): DataRow<T> = delegate { values(dropNA, distinct, separate, columns) }
+): DataRow<*> = delegate { values(dropNA, distinct, separate, columns) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -742,7 +745,7 @@ public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
+): DataRow<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 /**
  * Collects the values of the selected columns for every group.
@@ -796,7 +799,7 @@ public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
+): DataRow<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -805,7 +808,7 @@ public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
+): DataRow<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 /**
  * Collects the values of the selected columns for every group.
@@ -858,7 +861,7 @@ public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataRow<T> =
+): DataRow<*> =
     delegate {
         values(dropNA, distinct, separate)
     }
@@ -926,12 +929,12 @@ public fun <T> Pivot<T>.values(
  *   reduction (for example, `minBy`) picked for that pivot value, or `null` if the
  *   reduction picked no row.
  */
-public fun <T> ReducedPivot<T>.values(separate: Boolean = false): DataRow<T> =
+public fun <T> ReducedPivot<T>.values(separate: Boolean = false): DataRow<*> =
     pivot.delegate { reduce(reducer).values(separate = separate) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ReducedPivot<T>.values(vararg columns: ColumnReference<*>, separate: Boolean = false): DataRow<T> =
+public fun <T> ReducedPivot<T>.values(vararg columns: ColumnReference<*>, separate: Boolean = false): DataRow<*> =
     values(separate) { columns.toColumnSet() }
 
 /**
@@ -994,12 +997,12 @@ public fun <T> ReducedPivot<T>.values(vararg columns: ColumnReference<*>, separa
  *   reduction (for example, `minBy`) picked for that pivot value, or `null` if the
  *   reduction picked no row.
  */
-public fun <T> ReducedPivot<T>.values(vararg columns: String, separate: Boolean = false): DataRow<T> =
+public fun <T> ReducedPivot<T>.values(vararg columns: String, separate: Boolean = false): DataRow<*> =
     values(separate) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataRow<T> =
+public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataRow<*> =
     values(separate) { columns.toColumnSet() }
 
 /**
@@ -1083,7 +1086,7 @@ public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Bo
 public fun <T> ReducedPivot<T>.values(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,
-): DataRow<T> = pivot.delegate { reduce(reducer).values(separate = separate, columns = columns) }
+): DataRow<*> = pivot.delegate { reduce(reducer).values(separate = separate, columns = columns) }
 
 // endregion
 
@@ -1128,11 +1131,13 @@ public fun <T> ReducedPivot<T>.values(
  *   as a nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the collected rows of the columns inside it, instead
  *   of a [<code>List</code>][List].
  */
+@Refine
+@Interpretable("PivotGroupByValues0")
 public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataFrame<T> = values(dropNA, distinct, separate, remainingColumnsSelector())
+): DataFrame<*> = values(dropNA, distinct, separate, remainingColumnsSelector())
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1141,7 +1146,7 @@ public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
+): DataFrame<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 /**
  * Collects the values of the selected columns for every group.
@@ -1190,12 +1195,14 @@ public fun <T> PivotGroupBy<T>.values(
  *   as a nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the collected rows of the columns inside it, instead
  *   of a [<code>List</code>][List].
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByValues1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.values(
     vararg columns: String,
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
+): DataFrame<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1204,7 +1211,7 @@ public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
+): DataFrame<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 /**
  * Collects the values of the selected columns for every group.
@@ -1273,12 +1280,14 @@ public fun <T> PivotGroupBy<T>.values(
  *   as a nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the collected rows of the columns inside it, instead
  *   of a [<code>List</code>][List].
  */
+@Refine
+@Interpretable("PivotGroupByValues1")
 public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,
-): DataFrame<T> =
+): DataFrame<*> =
     try {
         aggregate(separate = separate) { internal().columnValues(columns, false, dropNA, distinct) }
     } catch (e: DuplicateColumnPathInsertException) {
@@ -1319,7 +1328,9 @@ public fun <T> PivotGroupBy<T>.values(
  *   every cell holds, per selected column, the value from the row that the reduction
  *   (for example, `minBy`) picked in that cell, or `null` if the reduction picked no row.
  */
-public fun <T> ReducedPivotGroupBy<T>.values(separate: Boolean = false): DataFrame<T> =
+@Refine
+@Interpretable("ReducedPivotGroupByValues0")
+public fun <T> ReducedPivotGroupBy<T>.values(separate: Boolean = false): DataFrame<*> =
     values(separate, pivot.remainingColumnsSelector())
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -1327,7 +1338,7 @@ public fun <T> ReducedPivotGroupBy<T>.values(separate: Boolean = false): DataFra
 public fun <T> ReducedPivotGroupBy<T>.values(
     vararg columns: ColumnReference<*>,
     separate: Boolean = false,
-): DataFrame<T> = values(separate) { columns.toColumnSet() }
+): DataFrame<*> = values(separate) { columns.toColumnSet() }
 
 /**
  * Collects the values of the selected columns for every group.
@@ -1367,12 +1378,18 @@ public fun <T> ReducedPivotGroupBy<T>.values(
  *   every cell holds, per selected column, the value from the row that the reduction
  *   (for example, `minBy`) picked in that cell, or `null` if the reduction picked no row.
  */
-public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: String, separate: Boolean = false): DataFrame<T> =
+@Refine
+@StringApiInterpretable(
+    interpreter = "ReducedPivotGroupByValues1",
+    stringArgument = "columns",
+    targetArgument = "columns",
+)
+public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: String, separate: Boolean = false): DataFrame<*> =
     values(separate) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataFrame<T> =
+public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataFrame<*> =
     values(separate) { columns.toColumnSet() }
 
 /**
@@ -1429,10 +1446,12 @@ public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: KProperty<*>, separ
  *   every cell holds, per selected column, the value from the row that the reduction
  *   (for example, `minBy`) picked in that cell, or `null` if the reduction picked no row.
  */
+@Refine
+@Interpretable("ReducedPivotGroupByValues1")
 public fun <T> ReducedPivotGroupBy<T>.values(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,
-): DataFrame<T> =
+): DataFrame<*> =
     try {
         pivot.aggregate(separate = separate) { internal().columnValues(columns, reducer) }
     } catch (e: DuplicateColumnPathInsertException) {
