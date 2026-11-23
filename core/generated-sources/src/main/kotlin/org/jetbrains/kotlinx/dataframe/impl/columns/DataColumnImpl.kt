@@ -80,7 +80,10 @@ internal abstract class DataColumnImpl<T>(
 
     override fun hashCode() = hashCode
 
-    override operator fun get(range: IntRange) = createWithValues(values.subList(range.first, range.last + 1))
+    override operator fun get(range: IntRange) =
+        createWithValues(
+            if (range.isEmpty()) emptyList() else values.subList(range.first, range.last + 1),
+        )
 
     protected abstract fun createWithValues(values: List<T>, hasNulls: Boolean? = null): DataColumn<T>
 }
