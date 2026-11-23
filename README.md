@@ -45,7 +45,7 @@ Integrates with [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-ov
 Inspired by [krangl](https://github.com/holgerbrandl/krangl), Kotlin Collections
 and [pandas](https://pandas.pydata.org/)
 
-## 🚀 Quickstart
+## Quickstart
 
 Looking for a fast and simple way to learn the basics?  
 Get started in minutes with our [Quickstart Guide](https://kotlin.github.io/dataframe/quickstart.html).
