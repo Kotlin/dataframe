@@ -332,6 +332,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
  * df.convert("valueA", "valueB") { it.toString().trim() }
  * ```
  * @param [expression] The expression that provides a new value for every selected cell given its row and original value.
+ * It uses [AddDataRow] as its receiver, which provides access to the new value in the preceding row.
  * @return A new [DataFrame] with the converted values.
  */
 @Refine
@@ -515,6 +516,7 @@ private typealias SeeAlsoConvertAsColumn = Nothing
  * @param infer [Infer] strategy that defines how the [type][DataColumn.type] of the resulting column should be determined.
  * Defaults to [Infer.Nulls].
  * @param [rowConverter] The expression that provides a new value for every selected cell given its row and original value.
+ * It uses [AddDataRow] as its receiver, which provides access to the new value in the preceding row.
  * @return A new [DataFrame] with the converted values.
  */
 @Refine
