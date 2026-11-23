@@ -25,9 +25,9 @@ import kotlin.reflect.typeOf
 @Deprecated(CAST_UNCHECKED, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<*>.cast(): DataFrame<T> = this as DataFrame<T>
 
-@Check
 public fun <T> DataFrame<*>.castUnchecked(): DataFrame<T> = this as DataFrame<T>
 
+@Check
 public inline fun <reified T> DataFrame<*>.cast(verify: Boolean = true): DataFrame<T> =
     if (verify) {
         convertToImpl(
