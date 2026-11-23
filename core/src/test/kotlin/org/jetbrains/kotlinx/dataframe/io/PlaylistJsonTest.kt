@@ -6,11 +6,11 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.aggregate
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.getColumnGroupOrNull
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.minBy
@@ -176,7 +176,7 @@ class PlaylistJsonTest {
                 snippet.thumbnails.standard
         }
         item2.snippet.columnsCount() shouldBe item.snippet.columnsCount() - 1
-        item2.snippet.getColumnGroupOrNull("thumbnails") shouldBe null
+        item2.snippet.getColumnOrNull("thumbnails")?.asColumnGroup() shouldBe null
     }
 
     @Test
