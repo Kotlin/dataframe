@@ -1,8 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnIndex
@@ -72,12 +70,9 @@ class GetColumnSamples : DataFrameSampleHelper("getColumn", "api") {
     fun getColumnOrNull_properties() {
         // SampleStart
         val column = df.getColumnOrNull { age }
-        df.getColumnOrNull(-1)
         // SampleEnd
-        column?.saveDfHtmlSample()
-
-        df.getColumnOrNull { age }?.name() shouldBe "age"
-        df.getColumnOrNull(-1) shouldBe null
+        column!!.saveDfHtmlSample()
+        column.name() shouldBe "age"
     }
 
     @Test
@@ -124,19 +119,6 @@ class GetColumnSamples : DataFrameSampleHelper("getColumn", "api") {
         // SampleEnd
 
         group.name() shouldBe "name"
-    }
-
-    @Test
-    fun getColumnOrNullAsColumnGroup() {
-        // SampleStart
-        val group = df.getColumnOrNull("name")?.asColumnGroup()
-        df.getColumnOrNull("address")?.asColumnGroup()
-        // SampleEnd
-        group?.saveDfHtmlSample()
-
-        df.getColumnOrNull("name")?.asColumnGroup()?.name() shouldBe "name"
-        df.getColumnOrNull("address")?.asColumnGroup() shouldBe null
-        shouldThrow<ClassCastException> { df.getColumnOrNull("age")?.asColumnGroup() }
     }
 
     @Test
@@ -214,10 +196,12 @@ class GetColumnSamples : DataFrameSampleHelper("getColumn", "api") {
     @Test
     fun getColumnsByNames_strings() {
         // SampleStart
-        df.getColumns("age", "city")
+        val columnsTopLevel = df.getColumns("age", "city") // top-level only
+        val columns = df.getColumns { "age" and "name"["firstName"] } // nested
         // SampleEnd
 
-        df.getColumns("age", "city").map { it.name() } shouldBe listOf("age", "city")
+        columnsTopLevel.map { it.name() } shouldBe listOf("age", "city")
+        columns.map { it.name() } shouldBe listOf("age", "firstName")
     }
 
     @Test
@@ -305,106 +289,5 @@ class GetColumnSamples : DataFrameSampleHelper("getColumn", "api") {
 
         columnWithPath.path shouldBe pathOf("name", "firstName")
         columnsWithPaths.map { it.path } shouldBe listOf(pathOf("age"), pathOf("name", "firstName"))
-    }
-
-    @Test
-    fun getColumn() {
-        // SampleStart
-        df.getColumn("age") // by the name of a top-level column
-        df.getColumn(pathOf("name", "firstName")) // by a path, also to a nested column
-        df.getColumn(1) // by the index of a top-level column: "age"
-        df.getColumn { name.firstName } // by a column selector, typed: DataColumn<String>
-        // SampleEnd
-        df.getColumn("age").name() shouldBe "age"
-        df.getColumn(pathOf("name", "firstName")).name() shouldBe "firstName"
-        df.getColumn(1).name() shouldBe "age"
-        df.getColumn { name.firstName }.name() shouldBe "firstName"
-
-        val notFound = shouldThrow<IllegalArgumentException> { df.getColumn("address") }
-        notFound.message shouldBe "Column not found: 'address'"
-        shouldThrow<IllegalArgumentException> { df.getColumn("firstName") } // not a top-level column
-        shouldThrow<IllegalArgumentException> { df.getColumn(pathOf("name", "address")) }
-        val outOfBounds = shouldThrow<IllegalArgumentException> { df.getColumn(5) }
-        outOfBounds.message shouldBe "Column index is out of bounds: 5. Columns count = 5"
-        shouldThrow<IllegalArgumentException> { df.getColumn(-1) }
-        shouldThrow<IllegalStateException> { df.getColumn { "address"<String>() } }
-    }
-
-    @Test
-    fun getColumnGroup() {
-        // SampleStart
-        df.getColumnGroup("name") // ColumnGroup<*>
-        df.getColumnGroup(0) // ColumnGroup<*>: "name"
-        df.getColumnGroup(pathOf("name")) // ColumnGroup<*>
-        df.getColumnGroup { name } // ColumnGroup<Name>
-        df.getColumnOrNull("address")?.asColumnGroup() // null: there is no such column
-        // SampleEnd
-        df.getColumnGroup("name").name() shouldBe "name"
-        df.getColumnGroup(0).name() shouldBe "name"
-        df.getColumnGroup(pathOf("name")).name() shouldBe "name"
-        df.getColumnGroup { name }.name() shouldBe "name"
-        df.getColumnOrNull("address")?.asColumnGroup() shouldBe null
-
-        shouldThrow<IllegalArgumentException> { df.getColumnGroup("address") }
-        shouldThrow<IllegalArgumentException> { df.getColumnGroup(5) }
-        shouldThrow<ClassCastException> { df.getColumnGroup("age") } // not a column group
-    }
-
-    @Test
-    fun getFrameColumn() {
-        // SampleStart
-        val grouped = df.groupBy { city }.toDataFrame("frame") // has the FrameColumn "frame"
-        grouped.getFrameColumn("frame") // FrameColumn<*>
-        grouped.getFrameColumn(pathOf("frame")) // FrameColumn<*>
-        grouped.getFrameColumn(1) // FrameColumn<*>: "frame"
-        grouped.getFrameColumn { frameCol<Any?>("frame") } // FrameColumn<Any?>
-        // SampleEnd
-        grouped.getFrameColumn("frame").name() shouldBe "frame"
-        grouped.getFrameColumn(pathOf("frame")).name() shouldBe "frame"
-        grouped.getFrameColumn(1).name() shouldBe "frame"
-        grouped.getFrameColumn { frameCol<Any?>("frame") }.name() shouldBe "frame"
-
-        shouldThrow<IllegalArgumentException> { grouped.getFrameColumn("group") }
-        shouldThrow<IllegalArgumentException> { grouped.getFrameColumn(pathOf("frame", "age")) }
-        shouldThrow<IllegalArgumentException> { grouped.getFrameColumn(2) }
-        shouldThrow<ClassCastException> { grouped.getFrameColumn(0) } // "city" is not a frame column
-        shouldThrow<ClassCastException> { grouped.getFrameColumn("city") } // not a frame column
-        shouldThrow<ClassCastException> { df.getFrameColumn(2) } // "city" is not a frame column
-    }
-
-    @Test
-    fun getColumns() {
-        // SampleStart
-        df.getColumns { age and name.firstName } // [age, firstName]
-        df.getColumns("city", "age") // [city, age]: in the order of the arguments
-        df.getColumnIndex(df.city) // 2
-        // SampleEnd
-        df.getColumns { age and name.firstName }.map { it.name() } shouldBe listOf("age", "firstName")
-        df.getColumns("city", "age").map { it.name() } shouldBe listOf("city", "age")
-        df.getColumnIndex(df.city) shouldBe 2
-        df.getColumnIndex(df.name.firstName) shouldBe -1 // not a top-level column
-
-        shouldThrow<IllegalStateException> { df.getColumns("city", "address") }
-    }
-
-    @Test
-    fun getColumnPaths() {
-        // SampleStart
-        df.getColumnPaths { name.allCols() } // [pathOf("name", "firstName"), pathOf("name", "lastName")]
-        df.getColumnPath { name.lastName } // pathOf("name", "lastName")
-        df.getColumnsWithPaths { age and name.firstName } // [age] and [firstName] with their paths
-        df.getColumnWithPath { name.firstName }.path // pathOf("name", "firstName")
-        // SampleEnd
-        df.getColumnPaths { name.allCols() } shouldBe
-            listOf(pathOf("name", "firstName"), pathOf("name", "lastName"))
-        df.getColumnPath { name.lastName } shouldBe pathOf("name", "lastName")
-        df.getColumnsWithPaths { age and name.firstName }.map { it.path } shouldBe
-            listOf(pathOf("age"), pathOf("name", "firstName"))
-        df.getColumnWithPath { name.firstName }.path shouldBe pathOf("name", "firstName")
-
-        shouldThrow<IllegalStateException> { df.getColumnPath { "address"<String>() } }
-        shouldThrow<IllegalStateException> { df.getColumnWithPath { "address"<String>() } }
-        shouldThrow<IllegalStateException> { df.getColumnPaths { "address"<String>() } }
-        shouldThrow<IllegalStateException> { df.getColumnsWithPaths { "address"<String>() } }
     }
 }

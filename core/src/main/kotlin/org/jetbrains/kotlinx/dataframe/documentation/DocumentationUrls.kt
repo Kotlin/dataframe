@@ -642,6 +642,18 @@ public interface DocumentationUrls {
 
         /** [See `getColumns` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumns) */
         public typealias GetColumns = Nothing
+
+        /** [See `getFrameColumn` on the documentation website.]({@include [Url]}/getcolumn.html#getframecolumn) */
+        public typealias GetFrameColumn = Nothing
+
+        /** [See `getColumnIndex` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumnindex) */
+        public typealias GetColumnIndex = Nothing
+
+        /** [See `getColumnPath` and `getColumnPaths` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumnpath-and-getcolumnpaths) */
+        public typealias GetColumnPaths = Nothing
+
+        /** [See `getColumnWithPath` and `getColumnsWithPaths` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumnwithpath-and-getcolumnswithpaths) */
+        public typealias GetColumnsWithPaths = Nothing
     }
 
     /** [See "Get rows" on the documentation website.]({@include [Url]}/getrow.html) */
