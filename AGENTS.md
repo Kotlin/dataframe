@@ -19,10 +19,18 @@ Gradle (Kotlin DSL), multi-module. Use the wrapper (`./gradlew`, or `gradlew.bat
 - `./gradlew build` — full build; runs all tests **and** the ktlint check.
 - `./gradlew <module>:test` — test a single module (e.g. `./gradlew core:test`); much faster during development.
 - `./gradlew <module>:test --tests "org.jetbrains.kotlinx.dataframe.SomeTest"` — run a single test class/method.
+  The filter matches the class name, and test files are named after what they test, not after their class:
+  `api/map.kt` declares `MapTests` and `io/sqliteTest.kt` declares `SqliteTest`, so `--tests "…api.map"` runs nothing.
 - Add `-Pkotlin.dataframe.debug=true` when validating changes. It enables extra, heavier correctness checks that
   are off in production. PR/CI builds run with this flag (`build -Pkotlin.dataframe.debug=true`), so match it locally.
 - `./gradlew publishToMavenLocal -PskipKodex` — publish locally for iteration. `-PskipKodex` skips `apiCheck` and KDoc
   preprocessing (see below); the result has "broken" KDocs, so it is for local dev only.
+- While iterating, run `apiDump`/`apiCheck` once the signatures settle, not after every edit. In the KoDEx modules
+  they read the KoDEx jar (see below), so after a source change each run redoes `processKDocsMain` and compiles the
+  processed copy of `main` (`mainKodex`). `build` runs `apiCheck` too, and `core:testJava16`; `<module>:test` runs
+  neither. **`-PskipKodex` turns off `apiDump` as well there**: `apiDump -PskipKodex` reports `SKIPPED` and writes
+  no dump. `-Pkotlin.dataframe.debug` is compiled into the generated `BuildConfig` of `core`, `dataframe-jdbc` and
+  `dataframe-jupyter`, so switching it between runs recompiles those modules.
 - `./gradlew dokkaGeneratePublicationHtml` — build the multi-module Dokka API reference into `build/dokka/html`
   (what CI deploys under `https://kotlin.github.io/dataframe/api-docs/`). Takes several minutes, as it runs KoDEx first.
 
@@ -34,8 +42,8 @@ Module names for `<module>:` come from `settings.gradle.kts` (e.g. `core`, `data
 Dependency graph is rooted at `core`, with I/O and integration split into optional modules (see `MODULES.md`):
 
 - **`core`** — base module, no deps. DataFrame/DataColumn/DataRow types, the operations API (`core/.../api/`),
-  aggregations, math, schema handling, codegen, and the `impl/` internals. Also holds deprecated csv/tsv and HTML
-  integrations that now live in dedicated modules.
+  aggregations, math, schema handling, codegen, and the `impl/` internals. Also holds deprecated csv/tsv
+  integrations that now live in dedicated modules, and the HTML renderer (`io/html.kt`) that `dataframe-jupyter` uses.
 - **I/O modules** (each depends on `core`): `dataframe-csv`, `dataframe-json`, `dataframe-excel`,
   `dataframe-arrow`, `dataframe-jdbc`. The root `dataframe` artifact re-exports Arrow/Excel/JDBC/CSV/JSON as `api`.
   `dataframe-jdbc` ships built-in `DbType` support for **H2, MariaDB, MySQL, MS SQL Server, PostgreSQL, SQLite, and
@@ -151,5 +159,9 @@ Rules for website topics and samples are in `DOCUMENTATION_GUIDELINES.md`; for a
   not only the KDoc of an internal function or an extension point.
 - Public API is guarded by **binary-compatibility-validator** in every publishable module — when you change public
   signatures, run the `apiDump`/`apiCheck` Gradle tasks and commit the module's updated `api/*.api` dump.
+  To change a public signature without breaking compiled callers, keep the old one as a delegating
+  `DeprecationLevel.HIDDEN` overload (e.g. `SUM_NO_SKIPNAN` in `core/.../api/sum.kt`).
+- A deprecation or removal needs a row in the Migration Guide (`docs/StardustDocs/topics/MigrationTo_1_0.md`) in
+  the same PR, as the header of `core/.../util/deprecationMessages.kt` (the message constants) asks.
 - DB tests in `dataframe-jdbc` are structured to run against either Dockerized or locally installed DBMS
   (`io/local/` per-database tests, `io/db/` type tests, `io/h2/`). Do not point tests at production databases.

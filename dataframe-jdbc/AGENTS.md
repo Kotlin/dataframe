@@ -125,6 +125,9 @@ Test layout under `src/test/kotlin/.../io/` splits by how the DB is provided:
 - `io/local/` — integration tests against a **real DBMS** (`postgresTest`, `mysqlTest`, `mariadbTest`,
   `mssqlTest`, `duckDbTest`, `imdbTest`). They connect to either a Dockerized or a locally installed server;
   don't point them at a production database.
+- `io/testcontainers/` — the same server suites (`*ContainerTest`) against Docker. **The plain `test` task runs
+  neither these nor the `io.local.*LocalTest` classes** (`build.gradle.kts` excludes both): a change for a server
+  database needs `./gradlew dataframe-jdbc:testcontainersTest` (Docker) or `dataframe-jdbc:localDbTest` (localhost).
 - `io/db/jdbcTypesTest.kt` — SQL-type-to-KType mapping, asserted against synthetic
   `TableColumnMetadata` rather than a live driver. Its metadata is only as true as its source: copy
   `jdbcType` and `javaClassName` from a probe of the real driver, and do not cite such a test as evidence

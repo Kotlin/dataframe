@@ -46,6 +46,8 @@ dependency on `:samples`), so a `:core` test cannot reach `TestBase.peopleDf` an
 - The module applies the DataFrame **compiler plugin** (`libs.plugins.dataframe.compiler.plugin`), so samples get
   compile-time type-safe accessors. It depends on the built jars of the I/O modules (`runtimeOnly(projects.dataframe)`)
   — "must depend on jars for the compiler plugin to work".
+  Of those modules' own dependencies, `build.gradle.kts` re-declares only the external `api(...)` ones, so a
+  third-party type in a module's public signature must be `api(...)` there, or samples cannot name it.
 - **Running the tests emits korro output lines** (into `build/korroOutputLines/`). Then the `korro` task injects the
   sample code + output between the `<!---FUN x-->` / `<!---END-->` marks of the topic markdown. Korro's
   `docs`/`samples` includes in `build.gradle.kts` define exactly which `docs/StardustDocs/topics/**` files and sample
