@@ -2,9 +2,6 @@
 
 package org.jetbrains.kotlinx.dataframe.documentation
 
-import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
-import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
-
 /** {@comment Shared KDoc fragments for the constructor APIs in `api/constructors.kt`.} */
 internal interface ConstructorsDocs {
 
@@ -16,8 +13,8 @@ internal interface ConstructorsDocs {
      *
      * For more information: {@include [DocumentationUrls.DataFrameOf]}
      *
-     * @throws [DuplicateColumnNamesException] if column names are not unique
-     * @throws [UnequalColumnSizesException] if column sizes are not equal
+     * @throws DuplicateColumnNamesException if column names are not unique
+     * @throws UnequalColumnSizesException if column sizes are not equal
      */
     typealias DataFrameOfContractSnippet = Nothing
 

@@ -1031,8 +1031,13 @@ All functions described above for selecting columns in various ways return a `Co
   It can also be renamed during selection.
   - **`ColumnPath`** — a wrapper for a [`DataColumn`](DataColumn.md) path
     in a [`DataFrame`](DataFrame.md) that can also serve as a `ColumnAccessor`.
-    Create one with `pathOf("group2", "info")`; `pathOf()` without names returns the empty path,
-    which has no name — calling `name()` on it throws a `NoSuchElementException`.
+    Create one with `pathOf("group2", "info")`.
+- **`ColumnSet`** — resolves to an ordered list of [`DataColumn`s](DataColumn.md).
+
+#### pathOf
+
+`pathOf` creates a `ColumnPath` from the given column names, outermost first:
+
 ```kotlin
 // Select all columns from the group by path "group2"/"info":
 df.select { pathOf("group2", "info").allCols() }
@@ -1041,4 +1046,3 @@ df.select { pathOf("group2", "info").allCols() }
 df.group { colsAtAnyDepth().colsOf<String>() }
 .into { it.path.dropLast(2) }
 ```
-- **`ColumnSet`** — resolves to an ordered list of [`DataColumn`s](DataColumn.md).

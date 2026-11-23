@@ -628,6 +628,7 @@ class ConstructorsTests {
     }
 
     @Test
+    @Suppress("DEPRECATION")
     fun `dataFrameOf of column references takes their names`() {
         val df = dataFrameOf(column<String>("a"), column<String>("b")).fill(2, 0)
 
@@ -733,7 +734,7 @@ class ConstructorsTests {
     @Test
     fun `builder randomLong on empty range throws`() {
         shouldThrow<IllegalArgumentException> {
-            dataFrameOf("x").randomLong(3, 5L..1L)
+            dataFrameOf("x").randomLong(3, LongRange.EMPTY)
         }
     }
 

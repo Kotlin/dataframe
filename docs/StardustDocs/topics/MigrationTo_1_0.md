@@ -218,6 +218,18 @@ Calling `indices()` on a variable typed as `BaseColumn` no longer compiles — e
 a different value. The old overload stays in the jar, hidden from overload resolution, so code compiled
 against earlier versions keeps linking.
 
+### `randomLong` now takes a `LongRange` and includes both bounds
+
+[`DataFrameBuilder.randomLong(nrow, range)`](createdataframe.html#dataframeof) now accepts a `LongRange`
+instead of a `ClosedRange<Long>` and includes both bounds of the range, like `randomInt` does.
+Calls that pass a range literal, such as `randomLong(3, 1L..5L)`, keep compiling;
+a value typed as `ClosedRange<Long>` must be changed to `LongRange`.
+
+The bounds are included now: `randomLong(3, 1L..2L)` can produce `2`, and a single-value range
+such as `5L..5L` returns `5` instead of throwing.
+`randomDouble(nrow, range)` keeps the standard library's exclusive upper bound,
+so a single-value range still throws there.
+
 ### Removed functions and classes
 
 The following functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
@@ -267,6 +279,7 @@ The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `df.sortBy { col.desc() }` / `df.sortByDesc { col.desc() }`                                              | `df.sortBy { col.reversed() }` / `df.sortByDesc { col.reversed() }`                                                           | Renamed to better reflect its purpose.                                       |
 | `gb.sortByCount()`                                                                                       | `gb.sortByCountDesc()`                                                                                                         | Renamed to better reflect its purpose.                                       |
 | `df.sumFor { cols into path(..) }`                                                     | `df.sumFor { cols into pathOf(..) }`                                                                        | Removed duplicated functionality. All methods with `ColumnsForAggregateSelector` lambda.                                           |
+| `dataFrameOf(column<String>("age"), column<String>("name"))`                                            | `dataFrameOf("age", "name")`                                                                                                 | Column Accessors API.                                                        |
 
 ## Parsing and Converting Date-Time
 

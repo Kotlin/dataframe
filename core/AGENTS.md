@@ -53,6 +53,10 @@ logic in `impl/`, not in the public file.
 Operations are annotated for the compiler / IntelliJ plugins (`@Refine`, `@Interpretable("…")`, `@AccessApiOverload`,
 `@RequiredByIntellijPlugin`, from `annotations/`). Preserve these annotations when editing signatures.
 
+An operation's overloads must agree on non-value columns (column groups, frame columns) — decide the policy once,
+checking the nearest sibling operation (`parseImpl`, for instance, recurses into a selected column group) rather
+than inventing a per-overload behaviour.
+
 ## Column(s) Selection DSL
 
 The receiver of the selector lambdas (`ColumnsSelector`/`ColumnSelector`, defined in `aliases.kt`) is
