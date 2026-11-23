@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -13,9 +14,13 @@ import org.jetbrains.kotlinx.dataframe.api.castTo
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toList
+import org.jetbrains.kotlinx.dataframe.io.readJsonStr
+import org.jetbrains.kotlinx.dataframe.io.toJson
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.jetbrains.kotlinx.dataframe.samples.api.CastSamples.AgeKeySchema.AgeKey
 import org.jetbrains.kotlinx.dataframe.samples.api.CastSamples.PersonSchema.Person
@@ -25,7 +30,10 @@ class CastSamples : DataFrameSampleHelper("cast", "api") {
     interface PersonSchema {
         // SampleStart
         @DataSchema
-        data class Person(val name: String, val age: Int)
+        interface Person {
+            val name: String
+            val age: Int
+        }
         // SampleEnd
     }
 
@@ -33,6 +41,27 @@ class CastSamples : DataFrameSampleHelper("cast", "api") {
         // SampleStart
         @DataSchema
         data class AgeKey(val age: Int)
+        // SampleEnd
+    }
+
+    interface CastToLocalSchema {
+        // SampleStart
+        // parse listOf("b:1:abc", "c:2:bca")
+        // Return type: DataFrame<plugin generated local type>
+        private fun convert(data: List<String>) =
+            data.map { it.split(":") }.toDataFrame {
+                "part1" from { it[0] }
+                "part2" from { it[1].toInt() }
+                "part3" from { it[2] }
+            }
+
+        fun serialize(data: List<String>): String = convert(data).toJson()
+
+        fun deserializeAndUse(json: String): DataColumn<String> {
+            val df = DataFrame.readJsonStr(json).castTo(schemaFrom = ::convert)
+            // Possible to use properties
+            return df.part1
+        }
         // SampleEnd
     }
 
@@ -71,6 +100,28 @@ class CastSamples : DataFrameSampleHelper("cast", "api") {
         df.cast<Person>(verify = false)
             // SampleEnd
             .also { it shouldBeSameInstanceAs df }
+    }
+
+    @Test
+    fun castExtensionProperties() {
+        // SampleStart
+        df.cast<Person>(verify = true)
+            .filter { age > 21 }
+            .name
+            // SampleEnd
+            .also { it.toList() shouldBe listOf("Bob") }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun castExtensionPropertyFailsAtRuntime() {
+        shouldThrow<IllegalStateException> {
+            // SampleStart
+            val people = dataFrameOf("name" to columnOf("Alice")).cast<Person>()
+            // Throws IllegalStateException because there is no age column.
+            people.age
+            // SampleEnd
+        }
     }
 
     @Test
@@ -164,6 +215,13 @@ class CastSamples : DataFrameSampleHelper("cast", "api") {
         df.castTo(schemaFrom = ::createPeopleDf, verify = true)
             // SampleEnd
             .also { it.name.toList() shouldBe listOf("Alice", "Bob") }
+    }
+
+    @Test
+    fun castToLocalSchema() {
+        val example = object : CastToLocalSchema {}
+        val json = example.serialize(listOf("b:1:abc", "c:2:bca"))
+        example.deserializeAndUse(json).toList() shouldBe listOf("b", "c")
     }
 
     @Test
