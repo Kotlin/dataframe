@@ -238,23 +238,6 @@ with the String API, or [`cast`](cast.md) the result to a `@DataSchema` that des
 | `df.pivot { city }.groupBy { name }.count().filter { name == "Alice" }` | `df.pivot { city }.groupBy { name }.count().filter { "name"<String>() == "Alice" }` |
 | `df.groupBy { name }.pivotCounts { city }.sortBy { name }`              | `df.groupBy { name }.pivotCounts { city }.sortBy("name")`                           |
 
-### `ColumnAccessor.nullable()` is deprecated
-
-`ColumnAccessor.nullable()` — the unchecked cast that retypes a `ColumnAccessor<T>` as a
-`ColumnAccessor<T?>` — is deprecated together with the rest of the Column Accessors API and raises `ERROR`
-in 1.0. The supported ways to access columns are described in [Access APIs](apiLevels.md).
-The call never changed or checked any data; it only widened the accessor's static type.
-
-`ColumnAccessor` is covariant in its type parameter, so a `ColumnAccessor<T>` is already accepted everywhere
-a `ColumnAccessor<T?>` is expected, and most call sites can simply drop the call. Where the widened type
-itself is needed, use `castToNullable()` — the same unchecked cast declared on `ColumnReference` and
-`DataColumn`. Its result is typed as `ColumnReference<T?>`, so where an accessor type itself is needed,
-chain `.toColumnAccessor()`:
-
-| 0.15                       | 1.0                              |
-|----------------------------|----------------------------------|
-| `accessor.nullable()`      | `accessor.castToNullable()`      |
-
 ### Removed functions and classes
 
 The following functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
