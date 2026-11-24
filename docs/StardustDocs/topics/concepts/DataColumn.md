@@ -1,5 +1,4 @@
 [//]: # (title: DataColumn)
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
 [`DataColumn`](DataColumn.md) represents a column of values.
 It can store objects of primitive or reference types, 

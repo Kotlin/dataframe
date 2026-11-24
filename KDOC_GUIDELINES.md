@@ -50,6 +50,8 @@ Some parts of public API are not intended for end users but can be used in Compi
 KDF extension libraries. These methods should have a small KDoc as well.
 
 Deprecated methods, properties, classes, and constructors are not required to have KDocs.
+When a deprecated API is mentioned at all, its KDoc or page states the deprecation and the replacement — never
+presents it as a recommended way.
 
 A replacement operation's KDoc does not reference the function it replaces: the deprecation
 message and the migration guide carry the rename story, so nothing in the KDoc has to be removed
@@ -523,6 +525,10 @@ fun concatDataColumns() {
         .saveDfHtmlSample()
 }
 ```
+
+The order of the tags in the KDoc above matters: `@sample` and any text after it go above the first block tag
+(`@param`, `@throws`) — anything below a block tag becomes part of that tag in the rendered KDoc
+(`KODEX_KDOC_PREPROCESSING.md` → Notation explains the mechanism).
 
 Use `@sampleNoComments` instead of `@sample` if the sample code has KDocs that shouldn't be copied.
 Check the result in `generated-sources` after `processKDocsMain` (see [Compiling KDocs](#compiling-kdocs)).

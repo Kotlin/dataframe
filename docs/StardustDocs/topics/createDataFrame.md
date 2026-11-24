@@ -1,5 +1,5 @@
 [//]: # (title: Create DataFrame)
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples-->
 
 This section describes ways to create a [`DataFrame`](DataFrame.md) instance.
 
@@ -8,13 +8,16 @@ This section describes ways to create a [`DataFrame`](DataFrame.md) instance.
 ### emptyDataFrame
 
 Returns a [`DataFrame`](DataFrame.md) with empty columns according to schema `T`.
+For example, with this schema:
+
+```text
+@DataSchema
+class Person(val name: String, val age: Int)
+```
 
 <!---FUN createEmptyDataFrame-->
 
 ```kotlin
-@DataSchema
-class Person(val name: String, val age: Int)
-
 val df = emptyDataFrame<Person>()
 ```
 
@@ -76,6 +79,29 @@ val df = dataFrameOf("name", "age")(
 )
 ```
 
+<inline-frame src="./resources/createDataFrameOf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+The values are distributed to the columns row by row: in the example above,
+the `name` column holds `["Alice", "Bob", "Charlie"]` and the `age` column holds `[15, 20, 100]`.
+The number of values must be divisible by the number of columns,
+otherwise the call throws an `IllegalArgumentException`.
+
+The `DataFrameBuilder` returned by `dataFrameOf` can also fill the columns directly:
+`fill` sets every cell to the same value, and `nulls` creates nullable columns filled with `null`.
+The `randomInt`, `randomDouble` and other `random*` functions fill the columns with random values —
+convenient for tests and demos.
+
+<!---FUN createDataFrameBuilderFill-->
+
+```kotlin
+// Every column: 3 rows filled with 0
+val filled = dataFrameOf("a", "b").fill(3, 0)
+// Every column: 3 rows of null values of type Int?
+val empty = dataFrameOf("a", "b").nulls<Int>(3)
+```
+
 <!---END-->
 
 ### toDataFrame
@@ -85,13 +111,17 @@ val df = dataFrameOf("name", "age")(
 <!---FUN createDataFrameFromMap-->
 
 ```kotlin
-val map = mapOf("name" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(15, 20, 22))
+val map = mapOf(
+    "name" to listOf("Alice", "Bob", "Charlie"),
+    "age" to listOf(15, 20, 22),
+)
 
 // DataFrame with 2 columns
 map.toDataFrame()
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html" width="100%"/>
+<inline-frame src="./resources/createDataFrameFromMap.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 #### `DataFrame` from random data:
@@ -111,7 +141,8 @@ val categories = listOf("Electronics", "Books", "Clothing")
 }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createRandomDataFrame.html" width="100%"/>
+<inline-frame src="./resources/createRandomDataFrame.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 Generate DataFrame with nested ColumnGroup and FrameColumn:
@@ -155,7 +186,8 @@ val categories = listOf("Electronics", "Books", "Clothing")
 }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createNestedRandomDataFrame.html" width="100%"/>
+<inline-frame src="./resources/createNestedRandomDataFrame.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 Use `from` in combination with loops to generate a DataFrame:
@@ -171,7 +203,8 @@ Use `from` in combination with loops to generate a DataFrame:
 }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameWithFill.html" width="100%"/>
+<inline-frame src="./resources/createDataFrameWithFill.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 #### `DataFrame` from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html):
@@ -186,8 +219,7 @@ This also works for arrays: each array is stored in the `value` column as it is.
 
 ```kotlin
 val names = listOf("Alice", "Bob", "Charlie")
-// TODO fix with plugin???
-val df = names.toDataFrame() as DataFrame<ValueProperty<String>>
+val df = names.toDataFrame()
 df.add("length") { value.length }
 ```
 
@@ -210,7 +242,8 @@ val files = listOf(File("data.csv"), File("data1.csv"))
 val df = files.toDataFrame(columnName = "data")
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html" width="100%"/>
+<inline-frame src="./resources/toDataFrameColumn.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 #### [`DataFrame`](DataFrame.md) from `List<List<T>>`:
@@ -230,10 +263,12 @@ val lines = """
     This is the second subtitle.
 """.trimIndent().lines()
 
-lines.chunked(4) { it.take(3) }.toDataFrame(header = listOf("n", "timestamp", "text"))
+lines.chunked(4) { it.take(3) }
+    .toDataFrame(header = listOf("n", "timestamp", "text"))
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameLists.html" width="100%"/>
+<inline-frame src="./resources/toDataFrameLists.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 #### [`DataFrame`](DataFrame.md) from `Iterable<T>`:
@@ -243,12 +278,17 @@ lines.chunked(4) { it.take(3) }.toDataFrame(header = listOf("n", "timestamp", "t
 ```kotlin
 data class Person(val name: String, val age: Int)
 
-val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
+val persons = listOf(
+    Person("Alice", 15),
+    Person("Bob", 20),
+    Person("Charlie", 22),
+)
 
 val df = persons.toDataFrame()
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromObject.html" width="100%"/>
+<inline-frame src="./resources/readDataFrameFromObject.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 Scans object properties using reflection and creates a [ValueColumn](DataColumn.md#valuecolumn) for every property. 
@@ -275,7 +315,8 @@ val students = listOf(
 val df = students.toDataFrame(maxDepth = 1)
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObject.html" width="100%"/>
+<inline-frame src="./resources/readDataFrameFromDeepObject.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 For detailed control over object graph transformations, use the configuration DSL.
@@ -303,7 +344,8 @@ val df = students.toDataFrame {
 }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObjectWithExclude.html" width="100%"/>
+<inline-frame src="./resources/readDataFrameFromDeepObjectWithExclude.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 To do the same for a column inside an existing dataframe, use [`unfold`](unfold.md).
@@ -327,9 +369,11 @@ fun peek(vararg dataframes: AnyFrame): AnyFrame {
 }
 
 val col by columnOf(1, 2, 3)
-peek(dataFrameOf(col), dataFrameOf(col))
+val other = columnOf(4, 5, 6) named "col"
+peek(dataFrameOf(col), dataFrameOf(other))
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.duplicatedColumns.html" width="100%"/>
+<inline-frame src="./resources/duplicatedColumns.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
