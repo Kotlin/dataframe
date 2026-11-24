@@ -44,6 +44,14 @@ private typealias UncheckedCastDocs = Nothing
 private typealias VerifiedCastDocs = Nothing
 
 /**
+ * The examples use the following schema:
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CastSamples.PersonSchema]
+ */
+@ExcludeFromSources
+private typealias CastPersonSchemaDocs = Nothing
+
+/**
  * `df` is a [DataFrame] with columns `name: String` and `age: Int`.
  */
 @ExcludeFromSources
@@ -62,9 +70,9 @@ public fun <T> DataFrame<*>.cast(): DataFrame<T> = this as DataFrame<T>
 private typealias CastSchemaMarkerDocs = Nothing
 
 /**
- * When no schema check is performed, [T\] is not guaranteed to match the runtime schema.
- * Accessing a missing column or a column with a different type through the extension properties of [T\]
- * may fail at runtime.
+ * When no schema check is performed, [T\] is not guaranteed to match the receiver's columns.
+ * Accessing a missing column or using a column with an incompatible type through an extension property of [T\]
+ * may throw an exception.
  */
 @ExcludeFromSources
 private typealias CastRuntimeFailureDocs = Nothing
@@ -78,11 +86,29 @@ private typealias CastRuntimeFailureDocs = Nothing
 private typealias GroupByCastSchemaMarkerDocs = Nothing
 
 /**
+ * When no schema check is performed, [T\] and [G\] are not guaranteed to match the key and group columns.
+ * Accessing a missing key or group column, or using a column with an incompatible type through an extension property,
+ * may throw an exception.
+ */
+@ExcludeFromSources
+private typealias GroupByCastRuntimeFailureDocs = Nothing
+
+/**
+ * The example uses the following schemas for grouping keys and groups, respectively:
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CastSamples.AgeKeySchema]
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CastSamples.PersonSchema]
+ */
+@ExcludeFromSources
+private typealias GroupByCastSampleSchemasDocs = Nothing
+
+/**
  * Returns this [DataFrame] with [T] as its schema type argument.
  *
  * @include [UncheckedCastDocs]
  *
- * Column types, values, and the runtime schema remain unchanged.
+ * Column types and values remain unchanged.
  *
  * @include [CastSchemaMarkerDocs]
  *
@@ -97,7 +123,7 @@ private typealias GroupByCastSchemaMarkerDocs = Nothing
  *
  * ### Examples
  *
- * The schema is declared as `@DataSchema interface Person { val name: String; val age: Int }`.
+ * @include [CastPersonSchemaDocs]
  *
  * @include [CastSampleDataDocs]
  *
@@ -125,7 +151,7 @@ public fun <T> DataFrame<*>.castUnchecked(): DataFrame<T> = this as DataFrame<T>
  *
  * ### Examples
  *
- * The schema is declared as `@DataSchema interface Person { val name: String; val age: Int }`.
+ * @include [CastPersonSchemaDocs]
  *
  * @include [CastSampleDataDocs]
  *
@@ -156,7 +182,7 @@ public inline fun <reified T> DataFrame<*>.cast(verify: Boolean = true): DataFra
  * Returns a [DataFrame] with schema marker [T] inferred from [schemaFrom].
  *
  * Uses the type argument `T` of [schemaFrom] as the target schema marker.
- * The runtime schema and values of [schemaFrom] are not inspected.
+ * The columns and values of [schemaFrom] are not inspected.
  *
  * @include [VerifiedCastDocs]
  *
@@ -172,7 +198,7 @@ public inline fun <reified T> DataFrame<*>.cast(verify: Boolean = true): DataFra
  *
  * ### Examples
  *
- * The schema is declared as `@DataSchema interface Person { val name: String; val age: Int }`.
+ * @include [CastPersonSchemaDocs]
  *
  * @include [CastSampleDataDocs]
  *
@@ -255,7 +281,7 @@ public fun <T> DataRow<*>.cast(): DataRow<T> = this as DataRow<T>
  *
  * ### Examples
  *
- * The schema is declared as `@DataSchema interface Person { val name: String; val age: Int }`.
+ * @include [CastPersonSchemaDocs]
  *
  * @include [CastSampleDataDocs]
  *
@@ -285,7 +311,7 @@ public fun <T> DataRow<*>.castUnchecked(): DataRow<T> = this as DataRow<T>
  *
  * ### Examples
  *
- * The schema is declared as `@DataSchema interface Person { val name: String; val age: Int }`.
+ * @include [CastPersonSchemaDocs]
  *
  * @include [CastSampleDataDocs]
  *
@@ -340,8 +366,8 @@ public fun <T> ValueColumn<*>.cast(): ValueColumn<T> = this as ValueColumn<T>
  *
  * @include [UncheckedCastDocs]
  *
- * The nested dataframes are not checked against [T], even if they have different runtime schemas.
- * Their columns and the frame column's runtime [schema][FrameColumn.schema] remain unchanged.
+ * The nested dataframes are not checked against [T], even if they have different schemas.
+ * Their columns and the frame column's [schema][FrameColumn.schema] remain unchanged.
  *
  * [T] is the schema marker of the dataframes stored in this column: a type, usually an interface or a data class
  * annotated with [`@DataSchema`][DataSchema], whose properties describe their columns.
@@ -352,7 +378,7 @@ public fun <T> ValueColumn<*>.cast(): ValueColumn<T> = this as ValueColumn<T>
  *
  * ### Examples
  *
- * The schema is declared as `@DataSchema interface Person { val name: String; val age: Int }`.
+ * @include [CastPersonSchemaDocs]
  *
  * @include [CastSampleDataDocs]
  *
@@ -403,7 +429,7 @@ public fun <T> ColumnGroup<*>.castUnchecked(): ColumnGroup<T> = this as ColumnGr
  *
  * ### Examples
  *
- * The schema is declared as `@DataSchema interface Person { val name: String; val age: Int }`.
+ * @include [CastPersonSchemaDocs]
  *
  * @include [CastSampleDataDocs]
  *
@@ -498,8 +524,9 @@ public fun <T, G> GroupBy<*, *>.cast(): GroupBy<T, G> = this as GroupBy<T, G>
  *
  * @include [GroupByCastSchemaMarkerDocs]
  *
- * The type arguments are not checked against the runtime schemas. Accessing incompatible keys or group columns
- * through their extension properties may fail at runtime.
+ * The type arguments are not checked against the key and group columns.
+ *
+ * @include [GroupByCastRuntimeFailureDocs]
  *
  * See also [cast][GroupBy.cast] with `verify = true` to check the target schemas.
  *
@@ -522,8 +549,7 @@ public fun <T, G> GroupBy<*, *>.castUnchecked(): GroupBy<T, G> = this as GroupBy
  *
  * @include [GroupByCastSchemaMarkerDocs]
  *
- * When no schema check is performed, accessing keys or group columns that do not match the assigned schema markers
- * through their extension properties may fail at runtime.
+ * @include [GroupByCastRuntimeFailureDocs]
  *
  * See also:
  * - [castUnchecked][GroupBy.castUnchecked] to change the schema type arguments without verification.
@@ -533,8 +559,7 @@ public fun <T, G> GroupBy<*, *>.castUnchecked(): GroupBy<T, G> = this as GroupBy
  *
  * ### Examples
  *
- * The example uses `@DataSchema data class AgeKey(val age: Int)` for the grouping keys and
- * `@DataSchema interface Person { val name: String; val age: Int }` for the groups.
+ * @include [GroupByCastSampleSchemasDocs]
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CastSamples.groupByCast]
  *

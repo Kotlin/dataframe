@@ -23,9 +23,9 @@ and values are not converted.
 
 A schema marker is a type, usually an interface or a data class annotated with [`@DataSchema`](dataSchema.md),
 whose properties describe the columns of a dataframe (see [Data schemas](schemas.md)).
-Use `cast` to assign `T` as the schema type argument and verify the runtime schema by default.
-Use `castUnchecked<T>()` or pass `verify = false` to change the schema type argument without checking the runtime
-schema. Both forms still return the receiver without changing its columns or values. When the
+Use `cast` to assign `T` as the schema type argument and check the dataframe's columns against it by default.
+Use `castUnchecked<T>()` or pass `verify = false` to change the schema type argument without checking the
+dataframe's columns. Both forms still return the receiver without changing its columns or values. When the
 [compiler plugin](Compiler-Plugin.md) is enabled, both operations make the generated
 [extension properties](extensionPropertiesApi.md) for `T` available on the result.
 
@@ -177,7 +177,7 @@ dataFrameOf(
 
 ## `castUnchecked`
 
-Changes the schema type argument of a [`DataFrame`](DataFrame.md) to `T` without checking its runtime schema.
+Changes the schema type argument of a [`DataFrame`](DataFrame.md) to `T` without checking its columns.
 Returns the same dataframe as `DataFrame<T>`: no columns are added, removed, or reordered, and values are not
 converted.
 
@@ -209,11 +209,11 @@ df.castUnchecked<Person>()
 
 <!---END-->
 
-> `castUnchecked` does not ensure that `T` matches the runtime schema. If a column is missing or has a different
-> type, accessing it through the extension properties of `T` may fail at runtime.
+> `castUnchecked` does not ensure that `T` matches the dataframe's columns. Accessing a missing column or using
+> a column with an incompatible type through an extension property of `T` may throw an exception.
 > {style="note"}
 
-Here `Person` declares an `age` column, but the dataframe has none, so accessing `age` fails:
+Here `Person` declares an `age` column, but the dataframe has none, so accessing `age` throws an exception:
 
 <!---FUN castExtensionPropertyFailsAtRuntime-->
 
@@ -240,7 +240,7 @@ df.castTo(schemaFrom: Function<DataFrame<T>>, verify: Boolean = true): DataFrame
 ```
 
 The `DataFrame` overload infers `T` from the type argument of `schemaFrom`.
-It does not copy that dataframe's values or inspect its runtime schema to choose the target schema.
+It does not copy or inspect that dataframe's columns or values to choose the target schema.
 The function overload infers `T` from the function's return type; the function is not invoked
 and can take arguments.
 
@@ -408,8 +408,8 @@ df["age"].asValueColumn().cast<Int>()
 ## `castFrameColumn`
 
 Changes the schema type argument of a `FrameColumn`, returning the same column instance.
-The nested dataframes are not checked against `T`, even if their runtime schemas differ.
-Their columns, values, and the frame column's runtime schema remain unchanged.
+The nested dataframes are not checked against `T`, even if they have different schemas.
+Their columns, values, and schemas remain unchanged.
 
 ```text
 frameCol.castFrameColumn<T>(): FrameColumn<T>
