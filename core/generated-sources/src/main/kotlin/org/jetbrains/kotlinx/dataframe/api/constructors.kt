@@ -33,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.util.DATAFRAME_OF_WITH_VALUES
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.random.Random
 import kotlin.random.nextInt
+import kotlin.random.nextLong
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -77,12 +78,49 @@ public fun <T> ColumnReference<DataRow<*>>.column(path: ColumnPath): ColumnAcces
 public fun <T> ColumnReference<DataRow<*>>.column(property: KProperty<T>): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + property.name)
 
+/**
+ * Creates an expression column — a reference to a column computed from a row by [<code>expression</code>][expression],
+ * with `this` inside [<code>expression</code>][expression] being the current [<code>DataRow</code>][DataRow].
+ * The reference can be stored and reused in operations like `add`.
+ * For the general column-expression mechanism, see [<code>Column Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression].
+ *
+ * For more information: [See `expr` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#expr-column-expression)
+ *
+ * ```kotlin
+ * val isAdult = column<Boolean>("isAdult") { getValue<Int>("age") > 18 }
+ * val withColumn = peopleDf.add { add(isAdult) }
+ * ```
+ *
+ * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
+ * Either [<code>None</code>][org.jetbrains.kotlinx.dataframe.api.Infer.None], [<code>Nulls</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [<code>Type</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [<code>Nulls</code>][Infer.Nulls].
+ * @param [name] Name of the computed column.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] computing the value of the column for each row.
+ */
 public inline fun <reified T> column(
     name: String = "",
     infer: Infer = Infer.Nulls,
     noinline expression: RowExpression<Any?, T>,
 ): ColumnReference<T> = createComputedColumnReference(name, typeOf<T>(), infer, expression)
 
+/**
+ * Creates an expression column — a reference to a column computed from a row by [<code>expression</code>][expression],
+ * with `this` inside [<code>expression</code>][expression] being a [<code>DataRow</code>][DataRow]`<T>` typed by the schema marker of [<code>df</code>][df].
+ * The resulting reference is not tied to [<code>df</code>][df]: it can be used with any [<code>DataFrame</code>][DataFrame].
+ * For the general column-expression mechanism, see [<code>Column Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression].
+ *
+ * For more information: [See `expr` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#expr-column-expression)
+ *
+ * ```kotlin
+ * val isAdult = column(peopleDf, "isAdult") { age > 18 }
+ * val withColumn = peopleDf.add { add(isAdult) }
+ * ```
+ *
+ * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
+ * Either [<code>None</code>][org.jetbrains.kotlinx.dataframe.api.Infer.None], [<code>Nulls</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [<code>Type</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [<code>Nulls</code>][Infer.Nulls].
+ * @param [df] The [<code>DataFrame</code>][DataFrame] whose schema marker types [<code>expression</code>][expression]. It is not used otherwise.
+ * @param [name] Name of the computed column.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] computing the value of the column for each row.
+ */
 @Suppress("UNCHECKED_CAST", "UNUSED_PARAMETER")
 public inline fun <T, reified C> column(
     df: DataFrame<T>,
@@ -361,6 +399,7 @@ public fun <T> ColumnReference<DataRow<*>>.frameColumn(property: KProperty<List<
 @Suppress("DEPRECATION")
 @Deprecated(DEPRECATED_ACCESS_API)
 public class ColumnDelegate<T>(private val parent: ColumnReference<DataRow<*>>? = null) {
+
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.columnName)
@@ -375,6 +414,40 @@ public class ColumnDelegate<T>(private val parent: ColumnReference<DataRow<*>>? 
 
 // region create DataColumn
 
+/**
+ * Creates a [<code>DataColumn</code>][DataColumn] with the given [<code>values</code>][values] and an empty name.
+ *
+ * The column type is inferred from the values, with the reified type argument [<code>T</code>][T] as an upper bound:
+ * `columnOf<Number>(1, 2)` has type `Int`, while `columnOf<Number>(1, 2.5)` has type `Number`.
+ * When the values don't share a reifiable type, pass [<code>T</code>][T] explicitly — e.g. `columnOf<Number>(1, 2.5)`.
+ *
+ * Lists and other collections are stored as cell values: `columnOf(listOf(1, 2))` creates
+ * a value column of type `List<Int>`, not a column group.
+ *
+ * This overload is on par with the more specific ones: passing [<code>DataFrame</code>][DataFrame]s creates a [<code>FrameColumn</code>][FrameColumn],
+ * passing [<code>DataRow</code>][DataRow]s or columns creates a [<code>ColumnGroup</code>][ColumnGroup], anything else a [<code>ValueColumn</code>][ValueColumn].
+ *
+ * See also [<code>`column(values: Iterable<T>)`</code>][column] if you want the values of a list
+ * to be unpacked into a column, and the other [<code>columnOf</code>][columnOf] overloads
+ * creating a [<code>ColumnGroup</code>][ColumnGroup] or a [<code>FrameColumn</code>][FrameColumn] from columns or frames.
+ *
+ * For more information: [See `columnOf` on the documentation website.](https://kotlin.github.io/dataframe/createcolumn.html#columnof)
+ *
+ * ```kotlin
+ * // Create ValueColumn with name 'student' and two elements of type String
+ * val student by columnOf("Alice", "Bob")
+ * ```
+ * ```kotlin
+ * // Mixed values need an explicit type argument
+ * val weights = columnOf<Number>(1, 2.5)
+ * ```
+ * ```kotlin
+ * // Lists are stored as cell values: a ValueColumn of List<Int>, not a ColumnGroup
+ * val numbers by columnOf(listOf(1, 2), listOf(3, 4))
+ * ```
+ *
+ * @param [values] The values of the column.
+ */
 public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
     createColumnGuessingType(
         values = values.asIterable(),
@@ -383,18 +456,42 @@ public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
         allColsMakesColGroup = true,
     ).forceResolve()
 
+/**
+ * Creates a [<code>ColumnGroup</code>][ColumnGroup] with the given [<code>values</code>][values] as its children and an empty name.
+ * Each child column keeps its own name; to name the group itself, use `named`.
+ *
+ * ```kotlin
+ * val firstName by columnOf("Alice", "Bob")
+ * val lastName by columnOf("Cooper", "Marley")
+ *
+ * // Create ColumnGroup with two nested columns
+ * val fullName by columnOf(firstName, lastName)
+ * ```
+ *
+ * @param [values] The columns that become the children of the group.
+ */
 public fun columnOf(vararg values: BaseColumn<*>): DataColumn<DataRow<*>> = columnOf(values.asIterable()).forceResolve()
 
 /**
- * [See `columnOf` on the documentation website.](https://kotlin.github.io/dataframe/createcolumn.html#columnof)
+ * Creates a [<code>ColumnGroup</code>][ColumnGroup] from the given name-to-column [<code>columns</code>][columns] pairs,
+ * with each column renamed to its key and the group itself left with an empty name.
+ * Since the group is built as a [<code>DataFrame</code>][DataFrame], the keys must be unique
+ * and the columns must have equal sizes.
  *
- * Example:
  * ```kotlin
- * val columnGroup = columnOf(
- *   "a" to columnOf("a1", "a2", "a3"),
- *   "b" to columnOf(1, 2, 3),
+ * // A ColumnGroup: each column is renamed to its key
+ * val personal = columnOf(
+ *     "firstName" to columnOf("Alice", "Bob"),
+ *     "lastName" to columnOf("Cooper", "Marley"),
  * )
  * ```
+ *
+ * For more information: [See `columnOf` on the documentation website.](https://kotlin.github.io/dataframe/createcolumn.html#columnof)
+ *
+ * @throws [DuplicateColumnNamesException] if the keys are not unique.
+ * @throws [UnequalColumnSizesException] if the columns have different sizes.
+ *
+ * @param [columns] The name-to-column pairs of the group.
  */
 @Refine
 @Interpretable("ColumnOfPairs")
@@ -405,10 +502,33 @@ public fun columnOf(vararg columns: Pair<String, BaseColumn<*>>): ColumnGroup<*>
         },
     ).asColumnGroup()
 
+/**
+ * Creates a [<code>FrameColumn</code>][FrameColumn] with the given [<code>frames</code>][frames] as its values and an empty name.
+ *
+ * ```kotlin
+ * val df1 = dataFrameOf("name", "age")(
+ *     "Alice", 20,
+ *     "Bob", 25,
+ * )
+ * val df2 = dataFrameOf("name", "temp")(
+ *     "Charlie", 36.6,
+ * )
+ *
+ * // Create FrameColumn with two elements of type DataFrame
+ * val frames by columnOf(df1, df2)
+ * ```
+ *
+ * @param [frames] The dataframes that become the values of the column.
+ */
 @Refine
 @Interpretable("ColumnOfFrames")
 public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable()).forceResolve()
 
+/**
+ * Creates a [<code>ColumnGroup</code>][ColumnGroup] with the given [<code>columns</code>][columns] as its children and an empty name.
+ *
+ * @param [columns] The columns that become the children of the group.
+ */
 public fun columnOf(columns: Iterable<BaseColumn<*>>): DataColumn<DataRow<*>> =
     DataColumn.createColumnGroup(
         name = "",
@@ -417,12 +537,27 @@ public fun columnOf(columns: Iterable<BaseColumn<*>>): DataColumn<DataRow<*>> =
         .asDataColumn()
         .forceResolve()
 
+/**
+ * Creates a [<code>FrameColumn</code>][FrameColumn] with the given [<code>frames</code>][frames] as its values and an empty name.
+ *
+ * @param [frames] The dataframes that become the values of the column.
+ */
 public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> =
     DataColumn.createFrameColumn(
         name = "",
         groups = frames.toList(),
     ).forceResolve()
 
+/**
+ * Creates a [<code>DataColumn</code>][DataColumn] of type [<code>T</code>][T] from [<code>values</code>][values] with an empty name.
+ *
+ * Unlike `columnOf`, the declared type [<code>T</code>][T] is used as is, without inference from the values:
+ * `column(listOf<Number>(1, 2))` has type `Number`, while `columnOf(1, 2)` has type `Int`.
+ *
+ * For more information: [See `columnOf` on the documentation website.](https://kotlin.github.io/dataframe/createcolumn.html#columnof)
+ *
+ * @param [values] The values of the column.
+ */
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
     createColumnGuessingType(
         values = values,
@@ -435,17 +570,19 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
 // region create DataFrame
 
 /**
- * Creates new [<code>DataFrame</code>][DataFrame] with given [<code>columns</code>][columns].
+ * Creates a new [<code>DataFrame</code>][DataFrame] with the given [<code>columns</code>][columns].
  *
- * All named columns must have unique names. For columns with empty names unique column names are generated: "untitled", "untitled1", "untitled2" etc.
+ * All named columns must have unique names. For columns with empty names unique column names
+ * are generated: "untitled", "untitled1", "untitled2" etc.
  *
  * All columns must have equal sizes.
  *
  * For more information: [See `dataFrameOf` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframeof)
  *
- * @throws [DuplicateColumnNamesException] if column names are not unique
- * @throws [UnequalColumnSizesException] if column sizes are not equal
- * @param columns columns for [<code>DataFrame</code>][DataFrame]
+ * @param [columns] Columns for the [<code>DataFrame</code>][DataFrame].
+ *
+ * @throws DuplicateColumnNamesException if column names are not unique
+ * @throws UnequalColumnSizesException if column sizes are not equal
  */
 public fun dataFrameOf(columns: Iterable<BaseColumn<*>>): DataFrame<*> {
     val cols = columns.map { it.unbox() }
@@ -454,18 +591,27 @@ public fun dataFrameOf(columns: Iterable<BaseColumn<*>>): DataFrame<*> {
 }
 
 /**
- * [See `dataFrameOf` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframeof)
+ * Creates a [<code>DataFrame</code>][DataFrame] from the given name-to-column [<code>columns</code>][columns] pairs.
  *
- * Example:
  * ```kotlin
+ * // DataFrame with 2 columns
  * val df = dataFrameOf(
- *     "a" to columnOf(1, 2),
- *     "b" to columnOf(1.0, 2.0),
- *     "group" to columnOf(
- *         "nestedA" to columnOf("42", "abc"),
- *     )
+ *     "name" to columnOf("Alice", "Bob", "Charlie"),
+ *     "age" to columnOf(15, 20, 22),
  * )
  * ```
+ *
+ * All named columns must have unique names. For columns with empty names unique column names
+ * are generated: "untitled", "untitled1", "untitled2" etc.
+ *
+ * All columns must have equal sizes.
+ *
+ * For more information: [See `dataFrameOf` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframeof)
+ *
+ * @param [columns] The name-to-column pairs of the new [<code>DataFrame</code>][DataFrame].
+ *
+ * @throws DuplicateColumnNamesException if column names are not unique
+ * @throws UnequalColumnSizesException if column sizes are not equal
  */
 @Refine
 @JvmName("dataFrameOfColumns")
@@ -473,29 +619,146 @@ public fun dataFrameOf(columns: Iterable<BaseColumn<*>>): DataFrame<*> {
 public fun dataFrameOf(vararg columns: Pair<String, BaseColumn<*>>): DataFrame<*> =
     dataFrameOf(columns.map { (name, col) -> col.rename(name) })
 
+/**
+ * Creates a [<code>DataFrameBuilder</code>][DataFrameBuilder] for a [<code>DataFrame</code>][DataFrame] whose column names are taken from [<code>header</code>][header]
+ * (see [<code>ColumnReference.name</code>][ColumnReference.name]).
+ * Call the builder with the cell values in row-major order — see [<code>DataFrameBuilder</code>][DataFrameBuilder].
+ *
+ * For more information: [See `dataFrameOf` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframeof)
+ *
+ * @param [header] The column references providing the names of the columns.
+ */
+@Deprecated(DEPRECATED_ACCESS_API)
 public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder = DataFrameBuilder(header.map { it.name() })
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] with the given [<code>columns</code>][columns].
+ *
+ * All named columns must have unique names. For columns with empty names unique column names
+ * are generated: "untitled", "untitled1", "untitled2" etc.
+ *
+ * All columns must have equal sizes.
+ *
+ * For more information: [See `dataFrameOf` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframeof)
+ *
+ * @param [columns] The columns of the new [<code>DataFrame</code>][DataFrame].
+ *
+ * @throws DuplicateColumnNamesException if column names are not unique
+ * @throws UnequalColumnSizesException if column sizes are not equal
+ */
 public fun dataFrameOf(vararg columns: BaseColumn<*>): DataFrame<*> = dataFrameOf(columns.asIterable())
 
+/**
+ * Creates a [<code>DataFrameBuilder</code>][DataFrameBuilder] for a [<code>DataFrame</code>][DataFrame] with the given column [<code>header</code>][header].
+ * Call the builder with the cell values in row-major order — see [<code>DataFrameBuilder</code>][DataFrameBuilder].
+ *
+ * ```kotlin
+ * // DataFrame with 2 columns and 3 rows
+ * val df = dataFrameOf("name", "age")(
+ *     "Alice", 15,
+ *     "Bob", 20,
+ *     "Charlie", 100,
+ * )
+ * ```
+ *
+ * For more information: [See `dataFrameOf` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframeof)
+ *
+ * @param [header] The names of the columns.
+ */
 @Interpretable("DataFrameOf0")
 public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(header.toList())
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] with the given column [<code>header</code>][header] where the values of each column
+ * are produced by [<code>fill</code>][fill]: it is called once per column name and returns the values for that column.
+ *
+ * The type of each column is inferred from its values, with the reified type argument as an upper bound:
+ * with `Number` as the type argument, `listOf(1, 2)` produces a column of type `Int`,
+ * and only mixed values such as `listOf(1, 2.5)` produce a column of type `Number`.
+ *
+ * For more information: [See `dataFrameOf` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframeof)
+ *
+ * ```kotlin
+ * // The reified argument is an upper bound: with Number, the columns are inferred as Int
+ * val df = dataFrameOf("a", "b") { listOf<Number>(1, 2) }
+ * ```
+ *
+ * @param [header] The names of the columns.
+ * @param [fill] Produces the values of a column by its name.
+ */
 public inline fun <reified C> dataFrameOf(
     vararg header: String,
     crossinline fill: (String) -> Iterable<C>,
 ): DataFrame<*> = dataFrameOf(header.asIterable()).invoke(fill)
 
+/**
+ * Creates a [<code>DataFrameBuilder</code>][DataFrameBuilder] for a [<code>DataFrame</code>][DataFrame] with the given column [<code>header</code>][header].
+ * Call the builder with the cell values in row-major order — see [<code>DataFrameBuilder</code>][DataFrameBuilder].
+ *
+ * For more information: [See `dataFrameOf` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframeof)
+ *
+ * ```kotlin
+ * val header = listOf("name", "age")
+ * val df = dataFrameOf(header)("Alice", 20, "Bob", 25)
+ * ```
+ *
+ * @param [header] The names of the columns.
+ */
 public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBuilder(header.asList())
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] from the given name-to-values [<code>columns</code>][columns] pairs;
+ * the type of each column is inferred from its values.
+ *
+ * ```kotlin
+ * val df = dataFrameOf(
+ *     "name" to listOf("Alice", "Bob"),
+ *     "age" to listOf(15, 20),
+ * )
+ * ```
+ *
+ * All named columns must have unique names. For columns with empty names unique column names
+ * are generated: "untitled", "untitled1", "untitled2" etc.
+ *
+ * All columns must have equal sizes.
+ *
+ * For more information: [See `dataFrameOf` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframeof)
+ *
+ * @param [columns] The name-to-values pairs of the new [<code>DataFrame</code>][DataFrame].
+ *
+ * @throws DuplicateColumnNamesException if column names are not unique
+ * @throws UnequalColumnSizesException if column sizes are not equal
+ */
 @Refine
 @Interpretable("DataFrameOf3")
 public fun dataFrameOf(vararg columns: Pair<String, List<Any?>>): DataFrame<*> =
     columns.map { it.second.toColumn(it.first, Infer.Type) }.toDataFrame()
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] with the given column names and the cell values in row-major order.
+ */
 @Deprecated(DATAFRAME_OF_WITH_VALUES, ReplaceWith("dataFrameOf(header).withValues(values)"))
 public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): DataFrame<*> =
     dataFrameOf(header).withValues(values)
 
+/**
+ * Creates a [<code>DataFrame</code>][DataFrame] where each column is produced by [<code>fill</code>][fill] from an element of [<code>header</code>][header];
+ * the column name is the string representation of that element.
+ *
+ * The type of each column is inferred from its values, with the reified type argument as an upper bound:
+ * with `Number` as the type argument, `listOf(1, 2)` produces a column of type `Int`,
+ * and only mixed values such as `listOf(1, 2.5)` produce a column of type `Number`.
+ *
+ * For more information: [See `dataFrameOf` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframeof)
+ *
+ * ```kotlin
+ * // The reified argument is an upper bound: with Number, the columns are inferred as Int
+ * val df = dataFrameOf(listOf("a", "b")) { listOf<Number>(1, 2) }
+ * ```
+ *
+ * @param [header] The elements naming the columns.
+ * @param [fill] Produces the values of a column from its header element.
+ */
 public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): DataFrame<*> =
     header.map { value ->
         DataColumn.createByInference(
@@ -505,12 +768,67 @@ public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> I
         )
     }.toDataFrame()
 
+/**
+ * Creates a [<code>DataFrameBuilder</code>][DataFrameBuilder] for a [<code>DataFrame</code>][DataFrame] whose column names are the characters of [<code>header</code>][header].
+ * Call the builder with the cell values in row-major order — see [<code>DataFrameBuilder</code>][DataFrameBuilder].
+ *
+ * For more information: [See `dataFrameOf` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframeof)
+ *
+ * ```kotlin
+ * // The characters become the column names
+ * val df = dataFrameOf('a'..'c')(1, 2, 3, 4, 5, 6)
+ * ```
+ *
+ * @param [header] The characters naming the columns.
+ */
 public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
 
+/**
+ * A builder for a [<code>DataFrame</code>][DataFrame] with the given header of column names.
+ *
+ * Call [<code>invoke</code>][DataFrameBuilder.invoke] with all cell values in row-major order:
+ * the values are distributed to the columns row by row, and the type of each column
+ * is inferred from its values.
+ *
+ * ```kotlin
+ * // DataFrame with 2 columns and 3 rows
+ * val df = dataFrameOf("name", "age")(
+ *     "Alice", 15,
+ *     "Bob", 20,
+ *     "Charlie", 100,
+ * )
+ * ```
+ *
+ * Alternatively, [<code>withColumns</code>][withColumns] or [<code>invoke</code>][DataFrameBuilder.invoke] with a values builder
+ * create the columns one by one, and the [<code>fill</code>][fill], [<code>nulls</code>][nulls] and `random*` functions create
+ * constant or random frames.
+ *
+ * For more information: [See `dataFrameOf` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframeof)
+ */
 public class DataFrameBuilder(private val header: List<String>) {
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] from [<code>columns</code>][columns], renaming them to the header names.
+     *
+     * ```kotlin
+     * // The columns are renamed to the header names
+     * val df = dataFrameOf("name", "age")(columnOf("Alice", "Bob"), columnOf(15, 20))
+     * ```
+     *
+     * @throws [IllegalArgumentException] if the number of [<code>columns</code>][columns] differs from the number of header names.
+     */
     public operator fun invoke(vararg columns: DataColumn<*>): DataFrame<*> = invoke(columns.asIterable())
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] from [<code>columns</code>][columns], renaming them to the header names.
+     *
+     * ```kotlin
+     * // The columns are renamed to the header names
+     * val df = dataFrameOf("name", "age")(columnOf("Alice", "Bob"), columnOf(15, 20))
+     * ```
+     *
+     * @throws [IllegalArgumentException] if the number of [<code>columns</code>][columns] differs from the number of header names.
+     */
     public operator fun invoke(columns: Iterable<DataColumn<*>>): DataFrame<*> {
         val cols = columns.asList()
         require(cols.size == header.size) { "Number of columns differs from number of column names" }
@@ -519,23 +837,63 @@ public class DataFrameBuilder(private val header: List<String>) {
         }.toDataFrame()
     }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] by distributing [<code>values</code>][values] to the columns in row-major order:
+     * the values are filled row by row, and the type of each column is inferred from its values.
+     *
+     * @throws [IllegalArgumentException] if the number of [<code>values</code>][values] is not divisible by the number of
+     * header names — in particular, when the header is empty.
+     */
     @Refine
     @Interpretable("DataFrameBuilderInvoke0")
     public operator fun invoke(vararg values: Any?): DataFrame<*> = withValues(values.asIterable())
 
+    /** Distributes [<code>values</code>][values] to the columns in row-major order. */
     @JvmName("invoke1")
     internal fun withValues(values: Iterable<Any?>): DataFrame<*> =
         (header to values.asList()).withValuesImpl().map { (name, values) ->
             DataColumn.createByInference(name, values)
         }.toDataFrame()
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] from the values of [<code>args</code>][args], distributed to the columns in row-major order.
+     *
+     * @throws [IllegalArgumentException] if the number of values is not divisible by the number of
+     * header names.
+     */
     public operator fun invoke(args: Sequence<Any?>): DataFrame<*> = invoke(*args.toList().toTypedArray())
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] by building each column with [<code>columnBuilder</code>][columnBuilder];
+     * the created column is renamed to its header name.
+     *
+     * ```kotlin
+     * // The lambda receives the column name and builds the whole column
+     * val df = dataFrameOf("a", "bb").withColumns { name -> columnOf(name.length, name.length + 1) }
+     * ```
+     *
+     * @param [columnBuilder] Builds a column by its header name.
+     */
     public fun withColumns(columnBuilder: (String) -> DataColumn<*>): DataFrame<*> =
         header
             .map { columnBuilder(it) named it } // create the columns and make sure to rename them to the given header
             .toDataFrame()
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where the values of each column are produced by [<code>valuesBuilder</code>][valuesBuilder]
+     * for that column's name.
+     *
+     * The type of each column is inferred from its values, with the reified type argument as an upper bound:
+     * with `Number` as the type argument, `listOf(1, 2)` produces a column of type `Int`,
+     * and only mixed values such as `listOf(1, 2.5)` produce a column of type `Number`.
+     *
+     * ```kotlin
+     * // The lambda receives the column name and returns the values of that column
+     * val df = dataFrameOf("a", "bb") { name -> listOf(name.length, name.length * 2) }
+     * ```
+     *
+     * @param [valuesBuilder] Produces the values of a column by its name.
+     */
     public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): DataFrame<*> =
         withColumns { name ->
             DataColumn.createByInference(
@@ -545,6 +903,20 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column has [<code>nrow</code>][nrow] cells equal to [<code>value</code>][value].
+     * The column type is [<code>C</code>][C]; a `null` [<code>value</code>][value] makes the columns nullable.
+     *
+     * ```kotlin
+     * // Every column: 3 rows filled with 0
+     * val filled = dataFrameOf("a", "b").fill(3, 0)
+     * // Every column: 3 rows of null values of type Int?
+     * val empty = dataFrameOf("a", "b").nulls<Int>(3)
+     * ```
+     *
+     * @param [nrow] The number of rows in every column.
+     * @param [value] The value of every cell.
+     */
     @Refine
     @Interpretable("DataFrameBuilderFillValue")
     public inline fun <reified C> fill(nrow: Int, value: C): DataFrame<*> =
@@ -556,6 +928,19 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column is a frame column with [<code>nrow</code>][nrow] copies of [<code>dataFrame</code>][dataFrame].
+     *
+     * ```kotlin
+     * val userDf = dataFrameOf("name")("Alice", "Bob")
+     *
+     * // Every cell holds the whole DataFrame
+     * val df = dataFrameOf("user1", "user2").fill(2, userDf)
+     * ```
+     *
+     * @param [nrow] The number of rows in every column.
+     * @param [dataFrame] The [<code>DataFrame</code>][DataFrame] stored in every cell.
+     */
     public fun fill(nrow: Int, dataFrame: DataFrame<*>): DataFrame<*> =
         withColumns { name ->
             DataColumn.createFrameColumn(
@@ -565,10 +950,34 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column has [<code>nrow</code>][nrow] `null` values of type [<code>C</code>][C]`?`.
+     *
+     * ```kotlin
+     * // Every column: 3 rows filled with 0
+     * val filled = dataFrameOf("a", "b").fill(3, 0)
+     * // Every column: 3 rows of null values of type Int?
+     * val empty = dataFrameOf("a", "b").nulls<Int>(3)
+     * ```
+     *
+     * @param [nrow] The number of rows in every column.
+     */
     @Refine
     @Interpretable("DataFrameBuilderNulls")
     public inline fun <reified C> nulls(nrow: Int): DataFrame<*> = fill<C?>(nrow, null)
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column has [<code>nrow</code>][nrow] values produced by [<code>init</code>][init],
+     * with the row index and the column name.
+     *
+     * ```kotlin
+     * // The lambda receives the row index and the column name
+     * val df = dataFrameOf("a", "b").fillIndexed(3) { index, _ -> index }
+     * ```
+     *
+     * @param [nrow] The number of rows in every column.
+     * @param [init] Produces the value of a cell from its row index and column name.
+     */
     @Refine
     @Interpretable("DataFrameBuilderFillIndexed")
     public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): DataFrame<*> =
@@ -579,6 +988,18 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column has [<code>nrow</code>][nrow] values produced by [<code>init</code>][init];
+     * the column type is inferred from the values.
+     *
+     * ```kotlin
+     * // The lambda receives the row index
+     * val df = dataFrameOf("a", "b").fill(3) { it * it }
+     * ```
+     *
+     * @param [nrow] The number of rows in every column.
+     * @param [init] Produces the value of a cell from its row index.
+     */
     @Refine
     @Interpretable("DataFrameBuilderFill")
     public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): DataFrame<*> =
@@ -598,36 +1019,180 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column has [<code>nrow</code>][nrow] random [<code>Int</code>][Int] values.
+     * Convenient for tests and demos.
+     *
+     * ```kotlin
+     * val ints = dataFrameOf("i").randomInt(3)
+     * val boundedInts = dataFrameOf("bi").randomInt(3, 1..10)
+     * val longs = dataFrameOf("l").randomLong(3)
+     * val boundedLongs = dataFrameOf("bl").randomLong(3, 1L..10L)
+     * val doubles = dataFrameOf("d").randomDouble(3)
+     * val boundedDoubles = dataFrameOf("bd").randomDouble(3, 1.0..10.0)
+     * val floats = dataFrameOf("f").randomFloat(3)
+     * val flags = dataFrameOf("flag").randomBoolean(3)
+     * ```
+     *
+     * @param [nrow] The number of rows in every column.
+     */
     @Refine
     @Interpretable("DataFrameBuilderRandomInt")
     public fun randomInt(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextInt() }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column has [<code>nrow</code>][nrow] random [<code>Int</code>][Int] values within [<code>range</code>][range].
+     * Convenient for tests and demos.
+     *
+     * ```kotlin
+     * val ints = dataFrameOf("i").randomInt(3)
+     * val boundedInts = dataFrameOf("bi").randomInt(3, 1..10)
+     * val longs = dataFrameOf("l").randomLong(3)
+     * val boundedLongs = dataFrameOf("bl").randomLong(3, 1L..10L)
+     * val doubles = dataFrameOf("d").randomDouble(3)
+     * val boundedDoubles = dataFrameOf("bd").randomDouble(3, 1.0..10.0)
+     * val floats = dataFrameOf("f").randomFloat(3)
+     * val flags = dataFrameOf("flag").randomBoolean(3)
+     * ```
+     *
+     * @param [range] The range of the random values (both bounds included).
+     * @throws [IllegalArgumentException] if [<code>nrow</code>][nrow] is positive and [<code>range</code>][range] is empty.
+     */
     @Refine
     @Interpretable("DataFrameBuilderRandomIntRange")
     public fun randomInt(nrow: Int, range: IntRange): DataFrame<*> = fillNotNull(nrow) { Random.nextInt(range) }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column has [<code>nrow</code>][nrow] random [<code>Double</code>][Double] values between `0.0` and `1.0`.
+     * Convenient for tests and demos.
+     *
+     * ```kotlin
+     * val ints = dataFrameOf("i").randomInt(3)
+     * val boundedInts = dataFrameOf("bi").randomInt(3, 1..10)
+     * val longs = dataFrameOf("l").randomLong(3)
+     * val boundedLongs = dataFrameOf("bl").randomLong(3, 1L..10L)
+     * val doubles = dataFrameOf("d").randomDouble(3)
+     * val boundedDoubles = dataFrameOf("bd").randomDouble(3, 1.0..10.0)
+     * val floats = dataFrameOf("f").randomFloat(3)
+     * val flags = dataFrameOf("flag").randomBoolean(3)
+     * ```
+     *
+     * @param [nrow] The number of rows in every column.
+     */
     @Refine
     @Interpretable("DataFrameBuilderRandomDouble")
     public fun randomDouble(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextDouble() }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column has [<code>nrow</code>][nrow] random [<code>Double</code>][Double] values within [<code>range</code>][range].
+     * Convenient for tests and demos.
+     *
+     * ```kotlin
+     * val ints = dataFrameOf("i").randomInt(3)
+     * val boundedInts = dataFrameOf("bi").randomInt(3, 1..10)
+     * val longs = dataFrameOf("l").randomLong(3)
+     * val boundedLongs = dataFrameOf("bl").randomLong(3, 1L..10L)
+     * val doubles = dataFrameOf("d").randomDouble(3)
+     * val boundedDoubles = dataFrameOf("bd").randomDouble(3, 1.0..10.0)
+     * val floats = dataFrameOf("f").randomFloat(3)
+     * val flags = dataFrameOf("flag").randomBoolean(3)
+     * ```
+     *
+     * @param [nrow] The number of rows in every column.
+     * @param [range] The range of the random values: the lower bound is included, the upper bound is not.
+     * @throws [IllegalArgumentException] if [<code>nrow</code>][nrow] is positive and [<code>range</code>][range] is empty or its bounds are equal —
+     * no random value can be produced.
+     */
     @Refine
     @Interpretable("DataFrameBuilderRandomDoubleRange")
     public fun randomDouble(nrow: Int, range: ClosedRange<Double>): DataFrame<*> =
         fillNotNull(nrow) { Random.nextDouble(range.start, range.endInclusive) }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column has [<code>nrow</code>][nrow] random [<code>Float</code>][Float] values between `0.0` and `1.0`.
+     * Convenient for tests and demos.
+     *
+     * ```kotlin
+     * val ints = dataFrameOf("i").randomInt(3)
+     * val boundedInts = dataFrameOf("bi").randomInt(3, 1..10)
+     * val longs = dataFrameOf("l").randomLong(3)
+     * val boundedLongs = dataFrameOf("bl").randomLong(3, 1L..10L)
+     * val doubles = dataFrameOf("d").randomDouble(3)
+     * val boundedDoubles = dataFrameOf("bd").randomDouble(3, 1.0..10.0)
+     * val floats = dataFrameOf("f").randomFloat(3)
+     * val flags = dataFrameOf("flag").randomBoolean(3)
+     * ```
+     *
+     * @param [nrow] The number of rows in every column.
+     */
     @Refine
     @Interpretable("DataFrameBuilderRandomFloat")
     public fun randomFloat(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextFloat() }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column has [<code>nrow</code>][nrow] random [<code>Long</code>][Long] values.
+     * Convenient for tests and demos.
+     *
+     * ```kotlin
+     * val ints = dataFrameOf("i").randomInt(3)
+     * val boundedInts = dataFrameOf("bi").randomInt(3, 1..10)
+     * val longs = dataFrameOf("l").randomLong(3)
+     * val boundedLongs = dataFrameOf("bl").randomLong(3, 1L..10L)
+     * val doubles = dataFrameOf("d").randomDouble(3)
+     * val boundedDoubles = dataFrameOf("bd").randomDouble(3, 1.0..10.0)
+     * val floats = dataFrameOf("f").randomFloat(3)
+     * val flags = dataFrameOf("flag").randomBoolean(3)
+     * ```
+     *
+     * @param [nrow] The number of rows in every column.
+     */
     @Refine
     @Interpretable("DataFrameBuilderRandomLong")
     public fun randomLong(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextLong() }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column has [<code>nrow</code>][nrow] random [<code>Long</code>][Long] values within [<code>range</code>][range].
+     * Convenient for tests and demos.
+     *
+     * ```kotlin
+     * val ints = dataFrameOf("i").randomInt(3)
+     * val boundedInts = dataFrameOf("bi").randomInt(3, 1..10)
+     * val longs = dataFrameOf("l").randomLong(3)
+     * val boundedLongs = dataFrameOf("bl").randomLong(3, 1L..10L)
+     * val doubles = dataFrameOf("d").randomDouble(3)
+     * val boundedDoubles = dataFrameOf("bd").randomDouble(3, 1.0..10.0)
+     * val floats = dataFrameOf("f").randomFloat(3)
+     * val flags = dataFrameOf("flag").randomBoolean(3)
+     * ```
+     *
+     * @param [nrow] The number of rows in every column.
+     * @param [range] The range of the random values (both bounds included).
+     * @throws [IllegalArgumentException] if [<code>nrow</code>][nrow] is positive and [<code>range</code>][range] is empty.
+     */
     @Refine
     @Interpretable("DataFrameBuilderRandomLongRange")
-    public fun randomLong(nrow: Int, range: ClosedRange<Long>): DataFrame<*> =
-        fillNotNull(nrow) { Random.nextLong(range.start, range.endInclusive) }
+    public fun randomLong(nrow: Int, range: ClosedRange<Long>): DataFrame<*> {
+        val inclusiveRange = range.start..range.endInclusive
+        return fillNotNull(nrow) { Random.nextLong(inclusiveRange) }
+    }
 
+    /**
+     * Creates a [<code>DataFrame</code>][DataFrame] where every column has [<code>nrow</code>][nrow] random [<code>Boolean</code>][Boolean] values.
+     * Convenient for tests and demos.
+     *
+     * ```kotlin
+     * val ints = dataFrameOf("i").randomInt(3)
+     * val boundedInts = dataFrameOf("bi").randomInt(3, 1..10)
+     * val longs = dataFrameOf("l").randomLong(3)
+     * val boundedLongs = dataFrameOf("bl").randomLong(3, 1L..10L)
+     * val doubles = dataFrameOf("d").randomDouble(3)
+     * val boundedDoubles = dataFrameOf("bd").randomDouble(3, 1.0..10.0)
+     * val floats = dataFrameOf("f").randomFloat(3)
+     * val flags = dataFrameOf("flag").randomBoolean(3)
+     * ```
+     *
+     * @param [nrow] The number of rows in every column.
+     */
     @Refine
     @Interpretable("DataFrameBuilderRandomBoolean")
     public fun randomBoolean(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextBoolean() }
@@ -639,9 +1204,9 @@ public class DataFrameBuilder(private val header: List<String>) {
  *
  * [See `DynamicDataFrameBuilder` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dynamicdataframebuilder)
  *
- * @property checkDuplicateValues Whether to check for duplicate column (with identical names and values). If `true`,
- * doesn't add a new column if the identical one is already in the builder.
- * when adding new columns. `true` by default.
+ * @property checkDuplicateValues Whether to check for duplicate columns (with identical names and values)
+ * when adding new columns. If `true`, doesn't add a new column if the identical one is already in the builder.
+ * `true` by default.
  */
 public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean = true) {
     private var cols: MutableMap<String, AnyCol> = mutableMapOf()
@@ -734,6 +1299,19 @@ public inline fun <reified T> emptyDataFrame(): DataFrame<T> = DataFrame.emptyOf
 
 // region create ColumnPath
 
+/**
+ * Creates a [<code>ColumnPath</code>][ColumnPath] from the given [<code>columnNames</code>][columnNames], outermost first.
+ * `pathOf()` without arguments returns the empty [<code>ColumnPath</code>][ColumnPath];
+ * [<code>ColumnPath.name</code>][ColumnPath.name] of an empty path throws a [<code>NoSuchElementException</code>][NoSuchElementException].
+ *
+ * For more information: [See `pathOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#pathof)
+ *
+ * ```kotlin
+ * val path = pathOf("personal", "age")
+ * ```
+ *
+ * @param [columnNames] The names of the columns along the path.
+ */
 @Interpretable("PathOf")
 public fun pathOf(vararg columnNames: String): ColumnPath =
     if (columnNames.isEmpty()) ColumnPath.EMPTY else ColumnPath(columnNames.asList())

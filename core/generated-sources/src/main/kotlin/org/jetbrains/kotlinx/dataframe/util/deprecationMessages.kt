@@ -337,6 +337,13 @@ internal const val AS_COLUMN_GROUP_IMPORT = "org.jetbrains.kotlinx.dataframe.api
 internal const val DEPRECATED_ACCESS_API =
     "It's recommended to migrate to the String or Extension Properties Access API https://kotlin.github.io/dataframe/apilevels.html"
 
+internal const val COLUMN_REFERENCE_CAST_TO_NOT_NULLABLE =
+    "This function is an unchecked cast and duplicates `cast()`."
+
+internal const val SET_NULLABLE =
+    "This function doesn't change the column, and the new nullability is not visible in its result type; " +
+        "use `castToNullable()` or `castToNotNullable()` directly."
+
 internal const val DEPRECATED_DATA_ROW_COLUMN_REFERENCE_GET =
     "Accessing a DataRow by ColumnReference (row[col]) is deprecated. Prefer String or extension property access (e.g., row[\"name\"] or row.name). The reverse indexing col[row] and colAccessor.getValue(row) remains supported"
 

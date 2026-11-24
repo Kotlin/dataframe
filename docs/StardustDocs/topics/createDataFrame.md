@@ -60,7 +60,7 @@ val df = dataFrameOf(
 // DataFrame with 2 columns
 val df = dataFrameOf(
     "name" to columnOf("Alice", "Bob", "Charlie"),
-    "age" to columnOf(15, 20, 22)
+    "age" to columnOf(15, 20, 22),
 )
 ```
 
@@ -170,10 +170,19 @@ val categories = listOf("Electronics", "Books", "Clothing")
             val ratings: DataColumn<Int> = expr { Random.nextInt(1..5) }
             val comments = ratings.map {
                 when (it) {
-                    5 -> listOf("Amazing quality!", "Best purchase ever!", "Highly recommend!", "Absolutely perfect!")
+                    5 -> listOf(
+                        "Amazing quality!",
+                        "Best purchase ever!",
+                        "Highly recommend!",
+                        "Absolutely perfect!",
+                    )
+
                     4 -> listOf("Great product!", "Very satisfied", "Good value for money", "Would buy again")
+
                     3 -> listOf("It's okay", "Does the job", "Average quality", "Neither good nor bad")
+
                     2 -> listOf("Could be better", "Disappointed", "Not what I expected", "Poor quality")
+
                     else -> listOf("Terrible!", "Not worth the price", "Complete waste of money", "Do not buy!")
                 }.random()
             }
@@ -253,7 +262,8 @@ This is useful for parsing text files. For example, the `.srt` subtitle format c
 <!---FUN toDataFrameLists-->
 
 ```kotlin
-val lines = """
+val lines =
+    """
     1
     00:00:05,000 --> 00:00:07,500
     This is the first subtitle.
@@ -261,7 +271,7 @@ val lines = """
     2
     00:00:08,000 --> 00:00:10,250
     This is the second subtitle.
-""".trimIndent().lines()
+    """.trimIndent().lines()
 
 lines.chunked(4) { it.take(3) }
     .toDataFrame(header = listOf("n", "timestamp", "text"))
