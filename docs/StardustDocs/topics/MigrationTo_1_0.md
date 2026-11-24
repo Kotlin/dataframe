@@ -218,6 +218,14 @@ Calling `indices()` on a variable typed as `BaseColumn` no longer compiles — e
 a different value. The old overload stays in the jar, hidden from overload resolution, so code compiled
 against earlier versions keeps linking.
 
+### `randomLong` now includes both bounds of the range
+
+[`DataFrameBuilder.randomLong(nrow, range)`](createDataFrame.md#dataframeof) still takes a `ClosedRange<Long>`,
+but now includes both of its bounds, like `randomInt` does:
+`randomLong(3, 1L..2L)` can produce `2`, and a single-value range
+such as `5L..5L` returns `5` instead of throwing.
+`randomDouble(nrow, range)` keeps the standard library's exclusive upper bound,
+so a single-value range still throws there.
 ### `pivot` results no longer keep the original schema type
 
 All terminal operations of [`pivot`](pivot.md) — on `Pivot`, `PivotGroupBy`, `ReducedPivot`, `ReducedPivotGroupBy`,
@@ -298,6 +306,7 @@ The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `df.sortBy { col.desc() }` / `df.sortByDesc { col.desc() }`                                              | `df.sortBy { col.reversed() }` / `df.sortByDesc { col.reversed() }`                                                           | Renamed to better reflect its purpose.                                       |
 | `gb.sortByCount()`                                                                                       | `gb.sortByCountDesc()`                                                                                                         | Renamed to better reflect its purpose.                                       |
 | `df.sumFor { cols into path(..) }`                                                     | `df.sumFor { cols into pathOf(..) }`                                                                        | Removed duplicated functionality. All methods with `ColumnsForAggregateSelector` lambda.                                           |
+| `dataFrameOf(column<String>("name"), column<Int>("age"))` (will remain WARNING)                         | `dataFrameOf("name", "age")`                                                                                                 | Column Accessors API.                                                        |
 | `df.getColumnGroupOrNull(name)`                                                                          | `df.getColumnOrNull(name)?.asColumnGroup()`                                                                                   | Removed a shortcut; it was the only `OrNull` variant of `getColumnGroup`.    |
 
 ## Parsing and Converting Date-Time

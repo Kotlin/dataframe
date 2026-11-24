@@ -161,6 +161,12 @@ with `{}`:
  */
 ```
 
+An `@sample` tag inlines the sample code where the tag sits, and a block tag is fed everything up
+to the next one — so an `@sample` written below `@param`/`@throws` ends up inside that tag's
+description in the rendered KDoc, and so does any plain text below a block tag. Write `@sample`
+tags and trailing prose above the first block tag; below a block tag, only other block tags may
+follow.
+
 Tag processors have access to any number of arguments they need, which are separated by spaces, like:
 
 ```kt
@@ -214,6 +220,10 @@ with its fully qualified path. This is important because we cannot assume that t
 the same imports as the source file. The original name will be left in place as alias, like
 `[reference][path.to.reference]`.
 This is also done for references used as key in `@set` and `@get` / `$` tags.
+
+In a `@throws` tag this alias breaks the exception type, because Dokka expects a plain type name
+after the tag: write exception names in an `@include`d snippet without brackets (or fully
+qualified) instead.
 
 Everything in the included KDoc renders in the host — `@param` lines included. A rendered `@param`
 line can therefore be owned by another file (for example, an `impl/` KDoc that is `@include`d into a
