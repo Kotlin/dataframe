@@ -1,43 +1,43 @@
-# cast / castTo
+# cast / castUnchecked / castTo
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.CastSamples-->
 
 <web-summary>
-Discover the `cast` and `castTo` operations for Kotlin DataFrame.
+Discover the `cast`, `castUnchecked`, and `castTo` operations for Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover the `cast` and `castTo` operations for Kotlin DataFrame.
+Discover the `cast`, `castUnchecked`, and `castTo` operations for Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover the `cast` and `castTo` operations for Kotlin DataFrame.
+Discover the `cast`, `castUnchecked`, and `castTo` operations for Kotlin DataFrame.
 </link-summary>
 
 ## `cast`
 
 Changes the schema type argument of a [`DataFrame`](DataFrame.md) to a schema marker `T`,
-optionally checking its columns against the target schema first.
+checking its columns against the target schema by default.
 Returns the same dataframe as `DataFrame<T>`: no columns are added, removed, or reordered,
 and values are not converted.
 
 A schema marker is a type, usually an interface or a data class annotated with [`@DataSchema`](dataSchema.md),
 whose properties describe the columns of a dataframe (see [Data schemas](schemas.md)).
-Use `cast` to change the formal type of a dataframe, for example a `DataFrame<*>` read from a file,
-to match the expected schema and enable the generated [extension properties](extensionPropertiesApi.md) for it.
+Use `cast` to assign `T` as the schema type argument and verify the runtime schema by default.
+Use `castUnchecked<T>()` or pass `verify = false` to change the schema type argument without checking the runtime
+schema. Both forms still return the receiver without changing its columns or values. When the
+[compiler plugin](Compiler-Plugin.md) is enabled, both operations make the generated
+[extension properties](extensionPropertiesApi.md) for `T` available on the result.
 
 **API reference**: [`cast`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/cast.html)
 
 ```text
 df.cast<T>(verify: Boolean = true): DataFrame<T>
-df.castUnchecked<T>(): DataFrame<T>
 ```
 
-Calling `cast<T>()` without arguments selects the unchecked overload, which performs no checks.
-Passing `verify = false` has the same effect.
-
-To check schema compatibility, explicitly pass `verify = true`. Verification checks column types and nested schemas
-against `T`; column order does not matter.
+`cast<T>()` checks schema compatibility by default. Verification checks column types and nested schemas against `T`.
+Column order does not matter, actual column types may be subtypes of the types declared by `T`, and extra columns
+are allowed.
 If verification fails, an `IllegalArgumentException` is thrown.
 For example, a `String` column containing `"20"` cannot satisfy an `Int` column in the target schema.
 
@@ -54,13 +54,8 @@ See also:
 * `T` — the target schema marker, for example a class or interface annotated with
   [`@DataSchema`](dataSchema.md).
 * `verify: Boolean = true` —
-  when `true`, the function throws an exception if the [`DataFrame`](DataFrame.md) instance doesn't match the given schema:
-  a column of the schema is missing, or a column has a type that is not a subtype of the type declared in the schema.
-  Columns that are not declared in the schema are kept.
-  When `false`, it just changes the formal type without actual data checks.
-
-`castUnchecked<T>()` is the same as `cast<T>(verify = false)`, but without reified type parameter.
-
+  whether to check this [`DataFrame`](DataFrame.md) against `T`. When `true`, an incompatible schema causes an
+  `IllegalArgumentException`. When `false`, no schema check is performed.
 
 ### Examples {id="examples_df"}
 
@@ -90,19 +85,9 @@ interface Person {
 
 <!---END-->
 
-Check the dataframe against this schema:
+Check the dataframe against this schema using the default `verify = true`:
 
 <!---FUN verifiedCast-->
-
-```kotlin
-df.cast<Person>(verify = true)
-```
-
-<!---END-->
-
-The no-argument overload changes only the schema type argument without checks:
-
-<!---FUN uncheckedCast-->
 
 ```kotlin
 df.cast<Person>()
@@ -131,23 +116,6 @@ df.cast<Person>(verify = true)
 ```
 
 <inline-frame src="./resources/castExtensionProperties.html" width="100%" height="500px"></inline-frame>
-
-<!---END-->
-
-> `cast` does not change the data. If `T` does not match the actual schema of the dataframe,
-> for example a column is missing or has a different type,
-> accessing that column through the extension properties of `T` may fail at runtime.
-> {style="note"}
-
-Here `Person` declares an `age` column, but the dataframe has none, so accessing `age` fails:
-
-<!---FUN castExtensionPropertyFailsAtRuntime-->
-
-```kotlin
-val people = dataFrameOf("name" to columnOf("Alice")).cast<Person>()
-// Throws IllegalStateException because there is no age column.
-people.age
-```
 
 <!---END-->
 
@@ -203,6 +171,56 @@ dataFrameOf(
     "name" to columnOf("Alice", "Bob"),
     "age" to columnOf("20", "25"),
 ).convertTo<Person>()
+```
+
+<!---END-->
+
+## `castUnchecked`
+
+Changes the schema type argument of a [`DataFrame`](DataFrame.md) to `T` without checking its runtime schema.
+Returns the same dataframe as `DataFrame<T>`: no columns are added, removed, or reordered, and values are not
+converted.
+
+When the [compiler plugin](Compiler-Plugin.md) is enabled, the generated
+[extension properties](extensionPropertiesApi.md) for `T` become available on the result.
+
+**API reference**: [`castUnchecked`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/cast-unchecked.html)
+
+```text
+df.castUnchecked<T>(): DataFrame<T>
+```
+
+`castUnchecked<T>()` is the same as `cast<T>(verify = false)`, but its type parameter is not
+reified.
+
+### Parameters {id="parameters_unchecked_df"}
+
+* `T` — the schema marker to assign to the dataframe without verification.
+
+### Examples {id="examples_unchecked_df"}
+
+Change only the schema type argument without checks:
+
+<!---FUN uncheckedCast-->
+
+```kotlin
+df.castUnchecked<Person>()
+```
+
+<!---END-->
+
+> `castUnchecked` does not ensure that `T` matches the runtime schema. If a column is missing or has a different
+> type, accessing it through the extension properties of `T` may fail at runtime.
+> {style="note"}
+
+Here `Person` declares an `age` column, but the dataframe has none, so accessing `age` fails:
+
+<!---FUN castExtensionPropertyFailsAtRuntime-->
+
+```kotlin
+val people = dataFrameOf("name" to columnOf("Alice")).castUnchecked<Person>()
+// Throws IllegalStateException because there is no age column.
+people.age
 ```
 
 <!---END-->
@@ -316,25 +334,25 @@ fun deserializeAndUse(json: String): DataColumn<String> {
 
 <!---END-->
 
-## `cast` on `DataRow`
+## `cast` / `castUnchecked` on `DataRow`
 
 Changes the schema type argument of a [`DataRow`](DataRow.md).
 The result keeps the original row index and existing values.
 
 ```text
-row.cast<T>(): DataRow<T>
 row.cast<T>(verify: Boolean = true): DataRow<T>
+row.castUnchecked<T>(): DataRow<T>
 ```
 
-The no-argument overload returns the same row without checking its schema.
-The overload with `verify = true` checks the containing dataframe using the `DataFrame.cast` rules.
-Existing values are not converted in either mode.
+`cast<T>()` checks the containing dataframe using the `DataFrame.cast` rules by default.
+Pass `verify = false` or use `castUnchecked<T>()` to skip verification.
+The row index and existing values are preserved in every mode.
 
 ### Parameters {id="parameters_row"}
 
 * `T` — the target schema marker.
 * `verify: Boolean = true` — whether to check the containing dataframe against `T`.
-  Pass `false` to skip verification. The no-argument overload is always unchecked.
+  An incompatible schema causes an `IllegalArgumentException`. Pass `false` to skip verification.
 
 ### Examples {id="examples_row"}
 
@@ -343,7 +361,7 @@ Check the containing dataframe's schema and return the corresponding typed row:
 <!---FUN rowCast-->
 
 ```kotlin
-df[0].cast<Person>(verify = true)
+df[0].cast<Person>()
 ```
 
 <inline-frame src="./resources/rowCast.html" width="100%" height="500px"></inline-frame>
@@ -412,19 +430,28 @@ columnOf(df).named("people").castFrameColumn<Person>()
 
 <!---END-->
 
-## `cast` on `ColumnGroup`
+## `cast` / `castUnchecked` on `ColumnGroup`
 
-Changes the schema type argument of a `ColumnGroup`, returning the same column group instance.
-Its nested columns, their runtime types, and their structure are preserved without verification.
+Changes the schema type argument of a [`ColumnGroup`](DataColumn.md#columngroup), returning the same column group
+instance. Its nested columns, their runtime types, and their structure are preserved.
 
 ```text
-colGroup.cast<T>(): ColumnGroup<T>
+colGroup.cast<T>(verify: Boolean = true): ColumnGroup<T>
+colGroup.castUnchecked<T>(): ColumnGroup<T>
 ```
 
-`T` is the schema marker to use at compile time for the group. There is no `verify` parameter, and the operation
-does not check whether `T` matches the group's actual nested schema.
+`cast<T>()` checks the nested columns against `T` by default, using the `DataFrame.cast` compatibility rules.
+An incompatible schema causes an `IllegalArgumentException`. Pass `verify = false` or use `castUnchecked<T>()`
+to skip verification. Neither form converts values or changes the nested columns.
+
+### Parameters {id="parameters_columngroup"}
+
+* `T` — the target schema marker for the nested columns.
+* `verify: Boolean = true` — whether to check the nested columns against `T`.
 
 ### Examples {id="examples_columngroup"}
+
+Check the nested columns against the `Person` schema:
 
 <!---FUN columnGroupCast-->
 
@@ -452,18 +479,26 @@ The type argument is the value type assigned at compile time to the referenced o
 For resolvers that return several columns, it is their common value type. None of these overloads has a `verify`
 parameter, and they do not check whether the specified type matches the actual columns. Runtime types are not changed.
 
-## `cast` on `GroupBy`
+## `cast` / `castUnchecked` on `GroupBy`
 
 Changes the schema type arguments of a [`GroupBy`](groupBy.md), returning the same grouping object.
-The key columns and groups are not checked or converted.
+The key columns, groups, and values are not modified or converted.
 
 ```text
-groupBy.cast<T, G>(): GroupBy<T, G>
+groupBy.cast<T, G>(verify: Boolean = true): GroupBy<T, G>
+groupBy.castUnchecked<T, G>(): GroupBy<T, G>
 ```
 
-`T` is the schema marker for the keys, and `G` is the schema marker for the grouped rows.
-There is no `verify` parameter, and the operation does not check whether these markers match the actual key and
-group schemas.
+`cast<T, G>()` checks the key columns against `T` and every group against `G` by default, using the `DataFrame.cast`
+compatibility rules.
+An incompatible key or group schema causes an `IllegalArgumentException`.
+Pass `verify = false` or use `castUnchecked<T, G>()` to skip verification.
+
+### Parameters {id="parameters_groupby"}
+
+* `T` — the target schema marker for the grouping keys only.
+* `G` — the target schema marker for every group.
+* `verify: Boolean = true` — whether to check the keys against `T` and every group against `G`.
 
 ### Examples {id="examples_groupby"}
 
