@@ -21,7 +21,7 @@ class SchemaTests {
     @Test
     fun `schema is read from the columns, not from the type argument`() {
         // the type argument declares `b` and `c`, while the columns are `name` and `age`
-        val df = dataFrameOf("name", "age")("Alice", 15).cast<Nested>()
+        val df = dataFrameOf("name", "age")("Alice", 15).castUnchecked<Nested>()
         df.schema().toString() shouldBe
             """
             |name: String
@@ -125,7 +125,7 @@ class SchemaTests {
 
     @Test
     fun `compile-time and runtime schema differ when the type does not fit the columns`() {
-        val df = dataFrameOf("name")("Alice").cast<Person>()
+        val df = dataFrameOf("name")("Alice").castUnchecked<Person>()
         df.schema().columns.keys shouldBe setOf("name")
         df.compileTimeSchema().columns.keys shouldBe setOf("age", "name")
     }
@@ -133,7 +133,7 @@ class SchemaTests {
     @Test
     fun `a column the runtime schema does not have comes first when ordered`() {
         // `age` has no counterpart among the columns, so it has no position to be sorted into
-        val df = dataFrameOf("name")("Alice").cast<Person>()
+        val df = dataFrameOf("name")("Alice").castUnchecked<Person>()
         df.compileTimeSchema().columns.keys.toList() shouldBe listOf("age", "name")
     }
 

@@ -4,6 +4,8 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.owner
 
@@ -11,6 +13,11 @@ import org.jetbrains.kotlinx.dataframe.impl.owner
  * Path to a [<code>column</code>][DataColumn] in [<code>DataFrame</code>][DataFrame].
  *
  * Stores a list of [<code>column names</code>][DataColumn.name] that are used to retrieve columns through a chain of [<code>column groups</code>][ColumnGroup].
+ *
+ * A path may refer to an existing column or describe a destination that does not exist yet.
+ * In operations such as [<code>move into</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.into] and
+ * [<code>insert under</code>][org.jetbrains.kotlinx.dataframe.api.InsertClause.under], missing parts of the destination path
+ * are created automatically when the operation is performed.
  */
 public data class ColumnPath(val path: List<String>) :
     List<String> by path,

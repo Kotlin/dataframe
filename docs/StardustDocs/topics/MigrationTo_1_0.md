@@ -226,6 +226,36 @@ but now includes both of its bounds, like `randomInt` does:
 such as `5L..5L` returns `5` instead of throwing.
 `randomDouble(nrow, range)` keeps the standard library's exclusive upper bound,
 so a single-value range still throws there.
+### `pivot` results no longer keep the original schema type
+
+All terminal operations of [`pivot`](pivot.md) — on `Pivot`, `PivotGroupBy`, `ReducedPivot`, `ReducedPivotGroupBy`,
+and the `pivotCounts`/`pivotMatches` shortcuts — now return `DataFrame<*>` or `DataRow<*>` instead of
+`DataFrame<T>`/`DataRow<T>`, because the previous type was incorrect.
+
+For `Pivot` and `ReducedPivot`, the result has none of the original columns, only the pivoted ones, so `T`
+didn't describe it at all. `PivotGroupBy`, `ReducedPivotGroupBy`, and the `pivotCounts`/`pivotMatches`
+shortcuts keep the grouping key columns, so `T` was partially valid: the extension properties of the keys worked,
+but the extension properties of all other columns of `T` compiled and then failed at runtime. A partially correct
+type is still incorrect, so these operations return `DataFrame<*>` too.
+
+As a result, extension properties of the original schema no longer resolve on pivot results. Access columns
+with the String API, or [`cast`](cast.md) the result to a `@DataSchema` that describes it.
+
+| 0.15                                                                    | 1.0                                                                                 |
+|-------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| `df.pivot { city }.groupBy { name }.count().filter { name == "Alice" }` | `df.pivot { city }.groupBy { name }.count().filter { "name"<String>() == "Alice" }` |
+| `df.groupBy { name }.pivotCounts { city }.sortBy { name }`              | `df.groupBy { name }.pivotCounts { city }.sortBy("name")`                           |
+
+### `cast<T>()` verifies the schema by default
+
+`cast<T>()` on a `DataFrame`, `DataRow` or `ColumnGroup` now checks the data against `T`,
+and `cast<Keys, Groups>()` on a `GroupBy` checks the key columns against `Keys` and every group against `Groups`.
+If the schema was only partially correct, the code now throws an exception.
+Migrate such calls to `castUnchecked()` or `cast(verify = false)`, or fix the schema itself.
+
+`Keys` of a `GroupBy` describes only the key columns. So `groupBy.cast<FullSchema, FullSchema>()`,
+where `FullSchema` is the schema of the original `DataFrame`, now throws unless every column is a key:
+replace it with `groupBy.castUnchecked<FullSchema, FullSchema>()`.
 
 ### Removed functions and classes
 
@@ -270,13 +300,14 @@ The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `df.add(columns)` / `df.add(dataframes)`                                                                 | `df.addAll(columns)` / `df.addAll(dataframes)`                                                                                | Renamed to improve completion.                                               |
 | `row.isEmpty()` / `row.isNotEmpty()`                                                                     | `row.values().all { it == null }` / `row.values().any { it != null }`                                                         | Removed a shortcut to clarify the behaviour;                                 |
 | `row.getRow(index)` /  `row.getRowOrNull(index)` / `row.getRows(indices)`                                | `row.df().getRow(index)` /  `row.df().getRowOrNull(index)` / `row.df().getRows(indices)`                                      | Removed a shortcut to clarify the behaviour;                                 |
-| `df.copy()`                                                                                              | `df.columns().toDataFrame().cast()`                                                                                           | Removed a shortcut to clarify the behaviour;                                 |
+| `df.copy()`                                                                                              | `df.columns().toDataFrame().castUnchecked()`                                                                                  | Removed a shortcut to clarify the behaviour;                                 |
 | `KeyValueProperty<T>`                                                                                    | `NameValueProperty<T>`                                                                                                        | Removed duplicated functionality.                                            |
 | `rename { columns }.into(..)` (will remain WARNING)                                                      | `rename { columns }.to(..)`                                                                                                   | Renamed to better reflect the English sentence "rename this column to that". |
 | `df.sortBy { col.desc() }` / `df.sortByDesc { col.desc() }`                                              | `df.sortBy { col.reversed() }` / `df.sortByDesc { col.reversed() }`                                                           | Renamed to better reflect its purpose.                                       |
 | `gb.sortByCount()`                                                                                       | `gb.sortByCountDesc()`                                                                                                         | Renamed to better reflect its purpose.                                       |
 | `df.sumFor { cols into path(..) }`                                                     | `df.sumFor { cols into pathOf(..) }`                                                                        | Removed duplicated functionality. All methods with `ColumnsForAggregateSelector` lambda.                                           |
 | `dataFrameOf(column<String>("name"), column<Int>("age"))` (will remain WARNING)                         | `dataFrameOf("name", "age")`                                                                                                 | Column Accessors API.                                                        |
+| `df.getColumnGroupOrNull(name)`                                                                          | `df.getColumnOrNull(name)?.asColumnGroup()`                                                                                   | Removed a shortcut; it was the only `OrNull` variant of `getColumnGroup`.    |
 
 ## Parsing and Converting Date-Time
 

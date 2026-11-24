@@ -67,7 +67,7 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.NullabilityException
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
 import org.jetbrains.kotlinx.dataframe.api.applyNullability
-import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
@@ -102,7 +102,7 @@ import java.time.LocalTime as JavaLocalTime
 internal fun <T> Iterable<DataFrame<T>>.concatKeepingSchema(): DataFrame<T> {
     val dataFrames = asList()
     when (dataFrames.size) {
-        0 -> return DataFrame.empty().cast()
+        0 -> return DataFrame.empty().castUnchecked()
         1 -> return dataFrames[0]
     }
 

@@ -638,6 +638,8 @@ public fun <T> DataFrame<T>.reorderColumnsByName(atAnyDepth: Boolean = true, des
  *
  * @param [inFrameColumns] If `true`, the columns inside frame columns are reordered too.
  */
+@Refine
+@Interpretable("ReorderColumnsByNameIncludingFrames")
 public fun <T> DataFrame<T>.reorderColumnsByName(
     atAnyDepth: Boolean = true,
     desc: Boolean = false,

@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.samples.schemas
 
 import io.kotest.assertions.throwables.shouldThrow
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.format.DateTimeFormat
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.asValueColumn
@@ -17,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.Ignore
 import org.junit.Test
-import java.sql.Connection
 import kotlin.io.path.writeText
 import kotlin.reflect.typeOf
 
@@ -45,7 +43,7 @@ class DataSchemasTroubleshooting {
     fun extensionGeneratedWithAnIncompatibleSchema() {
         shouldThrow<IllegalStateException> {
             // SampleStart
-            val df = DataFrame.readCsv(simpleCsvFile).cast<Schema>()
+            val df = DataFrame.readCsv(simpleCsvFile).cast<Schema>(verify = false)
 
             // Compiles correctly but fails on runtime
             df.filter { age > "20" }

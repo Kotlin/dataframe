@@ -105,7 +105,7 @@ mapped — see [](Parquet.md#timestamps-and-time-zones).
 
 | Kotlin type | Arrow type |
 |-------------|------------|
-| `Nothing?` | `Null` |
+| `Nothing` / `Nothing?` — an empty column, or a column of nulls | `Null` |
 | `String` | `Utf8` |
 | `Boolean` | `Bool` |
 | `Byte` / `Short` / `Int` / `Long` | `Int(8 / 16 / 32 / 64, signed)` |
@@ -119,6 +119,11 @@ mapped — see [](Parquet.md#timestamps-and-time-zones).
 Any other type is written as `Utf8` (its `toString()`), reported through the `ConvertingMismatch` subscriber.
 When you supply an explicit target `Schema`, `Timestamp` fields are also accepted in every unit, with or without
 a time zone, and the column is converted accordingly.
+
+> A `Null` field is always nullable — an Arrow `NullVector` has no validity bitmap, so a non-nullable one is not
+> representable. An empty `Nothing` column therefore reads back as `Nothing?` with `NullabilityOptions.Checking`;
+> with the default `Infer` it keeps the `Nothing` type.
+> {style="note"}
 
 > Writing has **no** `List` mapping, so a [`FrameColumn`](DataColumn.md#framecolumn) cannot be written: a
 > top-level one degrades to `Utf8` (the nested frame's `toString()`, reported as

@@ -13,6 +13,9 @@ import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDslDocs
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -329,6 +332,7 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
     /**
      * @include [ThenDocs]
      */
+    @Interpretable("PivotThenColumnsResolver")
     public infix fun <C> ColumnsResolver<C>.then(other: ColumnsResolver<C>): ColumnSet<C> =
         PivotChainColumnSet(this, other)
 
@@ -434,6 +438,7 @@ private typealias CommonPivotDocs = Nothing
  * (or as [column groups][ColumnGroup] for multiple key columns),
  * with their corresponding groups of rows represented as [DataFrame]s.
  */
+@Interpretable("DataFramePivot")
 public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumnsSelector<T, *>): Pivot<T> =
     PivotImpl(this, columns, inward)
 
@@ -462,6 +467,7 @@ public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumns
  * (or as [column groups][ColumnGroup] for multiple key columns),
  * with their corresponding groups of rows represented as [DataFrame]s.
  */
+@StringApiInterpretable(interpreter = "DataFramePivot", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.pivot(vararg columns: String, inward: Boolean? = null): Pivot<T> =
     pivot(inward) { columns.toColumnSet() }
 
@@ -538,7 +544,9 @@ internal typealias DataFramePivotMatchesCommonDocs = Nothing
  * @return A new [DataFrame] representing a [Boolean] presence matrix — with grouping key columns as rows,
  *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
  */
-public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: PivotColumnsSelector<T, *>): DataFrame<T> =
+@Refine
+@Interpretable("DataFramePivotMatches")
+public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: PivotColumnsSelector<T, *>): DataFrame<*> =
     pivot(inward, columns).groupByOther().matches()
 
 /**
@@ -558,17 +566,19 @@ public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: PivotC
  * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
  *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
  */
-public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<T> =
+@Refine
+@StringApiInterpretable(interpreter = "DataFramePivotMatches", stringArgument = "columns", targetArgument = "columns")
+public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<*> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivotMatches(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotMatches(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<*> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<*> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 // endregion
@@ -631,7 +641,9 @@ internal typealias DataFramePivotCountsCommonDocs = Nothing
  * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
  *         pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
  */
-public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotColumnsSelector<T, *>): DataFrame<T> =
+@Refine
+@Interpretable("DataFramePivotCounts")
+public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotColumnsSelector<T, *>): DataFrame<*> =
     pivot(inward, columns).groupByOther().count()
 
 /**
@@ -651,17 +663,19 @@ public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotCo
  * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
  *         pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
  */
-public fun <T> DataFrame<T>.pivotCounts(vararg columns: String, inward: Boolean = true): DataFrame<T> =
+@Refine
+@StringApiInterpretable(interpreter = "DataFramePivotCounts", stringArgument = "columns", targetArgument = "columns")
+public fun <T> DataFrame<T>.pivotCounts(vararg columns: String, inward: Boolean = true): DataFrame<*> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivotCounts(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotCounts(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<*> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<*> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 // endregion
@@ -698,6 +712,7 @@ private typealias CommonPivotForGroupByDocs = Nothing
  * @return A new [PivotGroupBy] that preserves the original [groupBy] key columns
  * and pivots the provided columns.
  */
+@Interpretable("GroupByPivot")
 public fun <G> GroupBy<*, G>.pivot(inward: Boolean = true, columns: PivotColumnsSelector<G, *>): PivotGroupBy<G> =
     PivotGroupByImpl(this, columns, inward)
 
@@ -714,6 +729,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: ColumnReference<*>, inward: B
  * @return A new [PivotGroupBy] that preserves the original [groupBy] key columns
  * and pivots the provided columns.
  */
+@StringApiInterpretable(interpreter = "GroupByPivot", stringArgument = "columns", targetArgument = "columns")
 public fun <G> GroupBy<*, G>.pivot(vararg columns: String, inward: Boolean = true): PivotGroupBy<G> =
     pivot(inward) { columns.toColumnSet() }
 
@@ -769,7 +785,9 @@ internal typealias GroupByPivotMatchesCommonDocs = Nothing
  * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
  *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
  */
-public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: PivotColumnsSelector<G, *>): DataFrame<G> =
+@Refine
+@Interpretable("GroupByPivotMatches")
+public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: PivotColumnsSelector<G, *>): DataFrame<*> =
     pivot(inward, columns).matches()
 
 /**
@@ -788,17 +806,19 @@ public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: Pivot
  * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
  *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
  */
-public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<G> =
+@Refine
+@StringApiInterpretable(interpreter = "GroupByPivotMatches", stringArgument = "columns", targetArgument = "columns")
+public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<*> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<*> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<*> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 // endregion
@@ -846,7 +866,9 @@ internal typealias GroupByPivotCountsCommonDocs = Nothing
  * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
  *         pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
  */
-public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotColumnsSelector<G, *>): DataFrame<G> =
+@Refine
+@Interpretable("GroupByPivotCounts")
+public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotColumnsSelector<G, *>): DataFrame<*> =
     pivot(inward, columns).count()
 
 /**
@@ -865,17 +887,19 @@ public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotC
  * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
  *         pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
  */
-public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: String, inward: Boolean = true): DataFrame<G> =
+@Refine
+@StringApiInterpretable(interpreter = "GroupByPivotCounts", stringArgument = "columns", targetArgument = "columns")
+public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: String, inward: Boolean = true): DataFrame<*> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<*> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<*> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 // endregion
@@ -1049,7 +1073,7 @@ internal typealias AggregateGroupedDslPivotMatchesDocs = Nothing
 public fun <T> AggregateGroupedDsl<T>.pivotMatches(
     inward: Boolean = true,
     columns: PivotColumnsSelector<T, *>,
-): DataFrame<T> = pivot(inward, columns).matches()
+): DataFrame<*> = pivot(inward, columns).matches()
 
 /**
  * @include [AggregateGroupedDslPivotMatchesDocs]
@@ -1070,7 +1094,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(
  * pivot key values as columns, and `true`/`false` cells indicating existing combinations.
  * This [DataFrame] is added to the [aggregate][Grouped.aggregate] result.
  */
-public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<T> =
+public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<*> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -1078,11 +1102,11 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: String, inwar
 public fun <T> AggregateGroupedDsl<T>.pivotMatches(
     vararg columns: ColumnReference<*>,
     inward: Boolean = true,
-): DataFrame<T> = pivotMatches(inward) { columns.toColumnSet() }
+): DataFrame<*> = pivotMatches(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> =
+public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<*> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 // endregion
@@ -1135,7 +1159,7 @@ internal typealias AggregateGroupedDslPivotCountsDocs = Nothing
 public fun <T> AggregateGroupedDsl<T>.pivotCounts(
     inward: Boolean = true,
     columns: PivotColumnsSelector<T, *>,
-): DataFrame<T> = pivot(inward, columns).count()
+): DataFrame<*> = pivot(inward, columns).count()
 
 /**
  * @include [AggregateGroupedDslPivotCountsDocs]
@@ -1156,7 +1180,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotCounts(
  * pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
  * This [DataFrame] is added to the [aggregate][Grouped.aggregate] result.
  */
-public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: String, inward: Boolean = true): DataFrame<T> =
+public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: String, inward: Boolean = true): DataFrame<*> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -1164,11 +1188,11 @@ public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: String, inward
 public fun <T> AggregateGroupedDsl<T>.pivotCounts(
     vararg columns: ColumnReference<*>,
     inward: Boolean = true,
-): DataFrame<T> = pivotCounts(inward) { columns.toColumnSet() }
+): DataFrame<*> = pivotCounts(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> =
+public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<*> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 // endregion
@@ -1237,7 +1261,7 @@ internal fun <T> Pivot<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>): 
     ReducedPivot(this, reducer)
 
 @PublishedApi
-internal inline fun <T> Pivot<T>.delegate(crossinline body: PivotGroupBy<T>.() -> DataFrame<T>): DataRow<T> =
+internal inline fun <T> Pivot<T>.delegate(crossinline body: PivotGroupBy<T>.() -> DataFrame<*>): DataRow<*> =
     body(groupBy { none() })[0]
 
 /**
@@ -1325,8 +1349,11 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      * @param body The aggregation logic defined using [AggregateDsl].
      * @return A new [DataFrame] with the results of the aggregation applied to each group.
      */
-    public fun <R> aggregate(separate: Boolean = false, body: AggregateBody<T, R>): DataFrame<T>
+    @Refine
+    @Interpretable("PivotGroupByAggregate")
+    public fun <R> aggregate(separate: Boolean = false, body: AggregateBody<T, R>): DataFrame<*>
 
+    @Interpretable("PivotGroupByDefault")
     public fun default(value: Any?): PivotGroupBy<T>
 }
 
