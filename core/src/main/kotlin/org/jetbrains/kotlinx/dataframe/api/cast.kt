@@ -32,13 +32,13 @@ import kotlin.reflect.typeOf
 private typealias UncheckedCastDocs = Nothing
 
 /**
- * With `verify = true`, checks column types and nested schemas against the schema declared by `T`.
- * Column order is ignored.
- * A column type mismatch or a missing required column causes verification to fail.
+ * With [verify\] = `true` (the default), checks column types and nested schemas against the schema declared by [T\].
+ * Column order is ignored, actual column types may be subtypes of the declared types, and extra columns are allowed.
+ * An incompatible schema causes verification to fail.
  *
- * With `verify = false`, no schema check is performed.
- * In both modes, returns the same [DataFrame] with only its schema type argument changed:
- * no columns are added, removed, or reordered, and values are not converted.
+ * With [verify\] = `false`, no schema check is performed.
+ * In both modes, returns the receiver unchanged except for its schema type argument:
+ * no columns are added, removed, or reordered, and no values are converted.
  */
 @ExcludeFromSources
 private typealias VerifiedCastDocs = Nothing
@@ -53,20 +53,29 @@ private typealias CastSampleDataDocs = Nothing
 public fun <T> DataFrame<*>.cast(): DataFrame<T> = this as DataFrame<T>
 
 /**
- * [T] is a schema marker: a type, usually an interface or a data class annotated with [`@DataSchema`][DataSchema],
+ * [T\] is a schema marker: a type, usually an interface or a data class annotated with [`@DataSchema`][DataSchema],
  * whose properties describe the columns.
- * Changing the schema type argument to [T] makes the [extension properties][AccessApis.ExtensionPropertiesApi]
- * generated for [T] available on the result, so its columns can be accessed in a type-safe way.
+ * Changing the schema type argument to [T\] makes the [extension properties][AccessApis.ExtensionPropertiesApi]
+ * generated for [T\] available on the result, so its columns can be accessed in a type-safe way.
  */
 @ExcludeFromSources
 private typealias CastSchemaMarkerDocs = Nothing
 
 /**
- * `cast` does not change the data. If [T] does not match the actual schema, for example a column is missing
- * or has a different type, accessing that column through the extension properties of [T] may fail at runtime.
+ * When no schema check is performed, [T\] is not guaranteed to match the runtime schema.
+ * Accessing a missing column or a column with a different type through the extension properties of [T\]
+ * may fail at runtime.
  */
 @ExcludeFromSources
 private typealias CastRuntimeFailureDocs = Nothing
+
+/**
+ * [T\] and [G\] are schema markers for the grouping keys and groups, respectively.
+ * They make the [extension properties][AccessApis.ExtensionPropertiesApi] generated for these schemas available
+ * for the grouping keys and groups.
+ */
+@ExcludeFromSources
+private typealias GroupByCastSchemaMarkerDocs = Nothing
 
 /**
  * Returns this [DataFrame] with [T] as its schema type argument.
@@ -100,7 +109,7 @@ private typealias CastRuntimeFailureDocs = Nothing
 public fun <T> DataFrame<*>.castUnchecked(): DataFrame<T> = this as DataFrame<T>
 
 /**
- * Returns a [DataFrame] with schema marker [T], optionally verifying its columns against that schema.
+ * Returns a [DataFrame] with schema marker [T], verifying its columns against that schema by default.
  *
  * @include [VerifiedCastDocs]
  *
@@ -129,7 +138,7 @@ public fun <T> DataFrame<*>.castUnchecked(): DataFrame<T> = this as DataFrame<T>
  * @param [T] The target schema marker type.
  * @param [verify] Whether to check the columns against [T]. Defaults to `true`.
  * @return This [DataFrame] typed as [DataFrame]`<T>`.
- * @throws [IllegalArgumentException] if verification fails because the dataframe's schema is incompatible with [T].
+ * @throws [IllegalArgumentException] if verification finds the dataframe's schema incompatible with [T].
  */
 @Check
 public inline fun <reified T> DataFrame<*>.cast(verify: Boolean = true): DataFrame<T> {
@@ -173,7 +182,7 @@ public inline fun <reified T> DataFrame<*>.cast(verify: Boolean = true): DataFra
  * @param [schemaFrom] A typed [DataFrame] that supplies [T].
  * @param [verify] Whether to check this [DataFrame] against [T]. Defaults to `true`.
  * @return This [DataFrame] typed as [DataFrame]`<T>`.
- * @throws [IllegalArgumentException] if verification fails because the dataframe's schema is incompatible with [T].
+ * @throws [IllegalArgumentException] if verification finds this dataframe's schema incompatible with [T].
  */
 public inline fun <reified T> DataFrame<*>.castTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
@@ -219,7 +228,7 @@ public inline fun <reified T> DataFrame<*>.castTo(
  * @param [schemaFrom] A function whose return type supplies [T].
  * @param [verify] Whether to check this [DataFrame] against [T]. Defaults to `true`.
  * @return This [DataFrame] typed as [DataFrame]`<T>`.
- * @throws [IllegalArgumentException] if verification fails because the dataframe's schema is incompatible with [T].
+ * @throws [IllegalArgumentException] if verification finds this dataframe's schema incompatible with [T].
  */
 public inline fun <reified T> DataFrame<*>.castTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: Function<DataFrame<T>>,
@@ -258,9 +267,9 @@ public fun <T> DataRow<*>.cast(): DataRow<T> = this as DataRow<T>
 public fun <T> DataRow<*>.castUnchecked(): DataRow<T> = this as DataRow<T>
 
 /**
- * Returns a [DataRow] with schema marker [T], optionally verifying its containing dataframe's schema.
+ * Returns a [DataRow] with schema marker [T], verifying its containing dataframe's schema by default.
  *
- * With `verify = true`, checks the schema of the containing [DataFrame] as described by [DataFrame.cast].
+ * With `verify = true` (the default), checks the schema of the containing [DataFrame] as described by [DataFrame.cast].
  * With `verify = false`, no schema check is performed.
  * The row index is preserved, and existing values are not converted in either mode.
  *
@@ -285,8 +294,7 @@ public fun <T> DataRow<*>.castUnchecked(): DataRow<T> = this as DataRow<T>
  * @param [T] The target schema marker type.
  * @param [verify] Whether to check the containing [DataFrame] against [T]. Defaults to `true`.
  * @return A [DataRow]`<T>` at the same row index.
- * @throws [IllegalArgumentException] if verification fails because the containing dataframe's schema
- * is incompatible with [T].
+ * @throws [IllegalArgumentException] if verification fails under the schema compatibility rules of [DataFrame.cast].
  */
 public inline fun <reified T> DataRow<*>.cast(verify: Boolean = true): DataRow<T> = df().cast<T>(verify)[index()]
 
@@ -367,6 +375,30 @@ public fun <T> ColumnGroup<*>.cast(): ColumnGroup<T> = this as ColumnGroup<T>
  *
  * @include [CastSchemaMarkerDocs]
  *
+ * @include [CastRuntimeFailureDocs]
+ *
+ * See also [cast][ColumnGroup.cast] with `verify = true` to check the target schema.
+ *
+ * For more information: {@include [DocumentationUrls.Cast]}
+ *
+ * @param [T] The schema marker to use at compile time for this group.
+ * @return This [ColumnGroup] typed as [ColumnGroup]`<T>`.
+ */
+public fun <T> ColumnGroup<*>.castUnchecked(): ColumnGroup<T> = this as ColumnGroup<T>
+
+/**
+ * Returns this group as a [ColumnGroup]`<T>`, verifying its nested columns against [T] by default.
+ *
+ * @include [VerifiedCastDocs]
+ *
+ * @include [CastSchemaMarkerDocs]
+ *
+ * @include [CastRuntimeFailureDocs]
+ *
+ * See also:
+ * - [castUnchecked][ColumnGroup.castUnchecked] to change the schema type argument without verification.
+ * - [convertTo][DataFrame.convertTo] to convert values.
+ *
  * For more information: {@include [DocumentationUrls.Cast]}
  *
  * ### Examples
@@ -377,11 +409,11 @@ public fun <T> ColumnGroup<*>.cast(): ColumnGroup<T> = this as ColumnGroup<T>
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CastSamples.columnGroupCast]
  *
- * @param [T] The schema marker to use at compile time for this group.
+ * @param [T] The target schema marker type.
+ * @param [verify] Whether to check the nested columns against [T]. Defaults to `true`.
  * @return This [ColumnGroup] typed as [ColumnGroup]`<T>`.
+ * @throws [IllegalArgumentException] if verification finds this group's schema incompatible with [T].
  */
-public fun <T> ColumnGroup<*>.castUnchecked(): ColumnGroup<T> = this as ColumnGroup<T>
-
 public inline fun <reified T> ColumnGroup<*>.cast(verify: Boolean = true): ColumnGroup<T> {
     if (verify) {
         convertToImpl(typeOf<T>(), allowConversion = false, ExcessiveColumns.Keep)
@@ -464,9 +496,40 @@ public fun <T, G> GroupBy<*, *>.cast(): GroupBy<T, G> = this as GroupBy<T, G>
  *
  * @include [UncheckedCastDocs]
  *
- * [T] and [G] are schema markers to use at compile time; they make the
- * [extension properties][AccessApis.ExtensionPropertiesApi] generated for them available
- * for the grouping keys and the groups.
+ * @include [GroupByCastSchemaMarkerDocs]
+ *
+ * The type arguments are not checked against the runtime schemas. Accessing incompatible keys or group columns
+ * through their extension properties may fail at runtime.
+ *
+ * See also [cast][GroupBy.cast] with `verify = true` to check the target schemas.
+ *
+ * For more information: {@include [DocumentationUrls.Cast]}
+ *
+ * @param [T] The schema marker to use at compile time for the grouping keys.
+ * @param [G] The schema marker to use at compile time for the groups.
+ * @return This [GroupBy] typed as [GroupBy]`<T, G>`.
+ */
+public fun <T, G> GroupBy<*, *>.castUnchecked(): GroupBy<T, G> = this as GroupBy<T, G>
+
+/**
+ * Returns this [GroupBy] as a [GroupBy]`<T, G>`, verifying its key and group schemas by default.
+ *
+ * With `verify = true` (the default), checks the key columns against [T] and every group against [G], using the
+ * schema compatibility rules of [DataFrame.cast].
+ *
+ * With `verify = false`, no schema check is performed. In both modes, returns this [GroupBy] unchanged except for
+ * its type arguments: keys, groups, and values are not modified or converted.
+ *
+ * @include [GroupByCastSchemaMarkerDocs]
+ *
+ * When no schema check is performed, accessing keys or group columns that do not match the assigned schema markers
+ * through their extension properties may fail at runtime.
+ *
+ * See also:
+ * - [castUnchecked][GroupBy.castUnchecked] to change the schema type arguments without verification.
+ * - [cast][DataFrame.cast] to cast a dataframe.
+ *
+ * For more information: {@include [DocumentationUrls.Cast]}
  *
  * ### Examples
  *
@@ -475,12 +538,13 @@ public fun <T, G> GroupBy<*, *>.cast(): GroupBy<T, G> = this as GroupBy<T, G>
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CastSamples.groupByCast]
  *
- * @param [T] The schema marker to use at compile time for the grouping keys.
- * @param [G] The schema marker to use at compile time for the groups.
+ * @param [T] The target schema marker for the grouping keys.
+ * @param [G] The target schema marker for the groups.
+ * @param [verify] Whether to check the keys against [T] and every group against [G]. Defaults to `true`.
  * @return This [GroupBy] typed as [GroupBy]`<T, G>`.
+ * @throws [IllegalArgumentException] if the key schema or any group schema fails verification under the schema
+ * compatibility rules of [DataFrame.cast].
  */
-public fun <T, G> GroupBy<*, *>.castUnchecked(): GroupBy<T, G> = this as GroupBy<T, G>
-
 public inline fun <reified T, reified G> GroupBy<*, *>.cast(verify: Boolean = true): GroupBy<T, G> {
     if (verify) {
         verifyGroupBySchemaImpl(typeOf<T>(), typeOf<G>())
