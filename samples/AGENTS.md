@@ -140,7 +140,10 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   needs `import org.jetbrains.kotlinx.dataframe.api.preserve` — there are no wildcard imports here.
 - Shown sample code is page content: when its faithful shape violates ktlint, suppress at file level
   (`@file:Suppress("ktlint")`, as `Generate.kt` and `TestBase.kt` do) rather than letting `ktlintFormat` rewrite
-  what the page displays.
+  what the page displays. Suppress only what that shape needs: when one sample's layout breaks one rule (a row of
+  `dataFrameOf(…)(…)` values per line), put `@Suppress("ktlint:standard:<rule>")` on that test function instead.
+  Never carry a file-level suppression over into a new file from the file it replaces — it switches the whole
+  file off, and line length and wrapping then go unchecked.
 - **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without
   deprecation warnings.
 - Conversion shortcuts with `@Refine` (e.g. `toLocalDate(format)`, `toJavaLocalDate(formatter)`) change the

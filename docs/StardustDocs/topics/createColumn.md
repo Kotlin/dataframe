@@ -63,8 +63,7 @@ val frames by columnOf(df1, df2)
 
 <!---END-->
 
-When the elements mix different numeric types, pass the column type explicitly —
-without an explicit type argument such a call does not compile:
+When the elements mix different numeric types, pass the column type explicitly:
 
 <!---FUN createColumnOfMixedValues-->
 

@@ -12,11 +12,15 @@ internal interface ConstructorsDocs {
      * All columns must have equal sizes.
      *
      * For more information: {@include [DocumentationUrls.DataFrameOf]}
-     *
+     */
+    typealias DataFrameOfContractSnippet = Nothing
+
+    /**
+     * {@comment Include it last: anything below a block tag becomes part of that tag.}
      * @throws DuplicateColumnNamesException if column names are not unique
      * @throws UnequalColumnSizesException if column sizes are not equal
      */
-    typealias DataFrameOfContractSnippet = Nothing
+    typealias DataFrameOfThrowsSnippet = Nothing
 
     /**
      * The type of each column is inferred from its values, with the reified type argument as an upper bound:

@@ -414,8 +414,7 @@ public class ColumnDelegate<T>(private val parent: ColumnReference<DataRow<*>>? 
  *
  * The column type is inferred from the values, with the reified type argument [T] as an upper bound:
  * `columnOf<Number>(1, 2)` has type `Int`, while `columnOf<Number>(1, 2.5)` has type `Number`.
- * When the values don't share a reifiable type, pass [T] explicitly — e.g. `columnOf<Number>(1, 2.5)`;
- * without it, such a call does not compile.
+ * When the values don't share a reifiable type, pass [T] explicitly — e.g. `columnOf<Number>(1, 2.5)`.
  *
  * Lists and other collections are stored as cell values: `columnOf(listOf(1, 2))` creates
  * a value column of type `List<Int>`, not a column group.
@@ -539,6 +538,7 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
  * @include [ConstructorsDocs.DataFrameOfContractSnippet]
  *
  * @param [columns] Columns for the [DataFrame].
+ * @include [ConstructorsDocs.DataFrameOfThrowsSnippet]
  */
 public fun dataFrameOf(columns: Iterable<BaseColumn<*>>): DataFrame<*> {
     val cols = columns.map { it.unbox() }
@@ -554,6 +554,7 @@ public fun dataFrameOf(columns: Iterable<BaseColumn<*>>): DataFrame<*> {
  * @include [ConstructorsDocs.DataFrameOfContractSnippet]
  *
  * @param [columns] The name-to-column pairs of the new [DataFrame].
+ * @include [ConstructorsDocs.DataFrameOfThrowsSnippet]
  */
 @Refine
 @JvmName("dataFrameOfColumns")
@@ -579,6 +580,7 @@ public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder = Da
  * @include [ConstructorsDocs.DataFrameOfContractSnippet]
  *
  * @param [columns] The columns of the new [DataFrame].
+ * @include [ConstructorsDocs.DataFrameOfThrowsSnippet]
  */
 public fun dataFrameOf(vararg columns: BaseColumn<*>): DataFrame<*> = dataFrameOf(columns.asIterable())
 
@@ -629,11 +631,12 @@ public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBu
  * Creates a [DataFrame] from the given name-to-values [columns] pairs;
  * the type of each column is inferred from its values.
  *
- * @include [ConstructorsDocs.DataFrameOfContractSnippet]
- *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameFromPairsOfLists]
  *
+ * @include [ConstructorsDocs.DataFrameOfContractSnippet]
+ *
  * @param [columns] The name-to-values pairs of the new [DataFrame].
+ * @include [ConstructorsDocs.DataFrameOfThrowsSnippet]
  */
 @Refine
 @Interpretable("DataFrameOf3")
@@ -894,7 +897,7 @@ public class DataFrameBuilder(private val header: List<String>) {
      * @sample [org.jetbrains.kotlinx.dataframe.samples.api.CreateDataFrameSamples.createDataFrameRandomBuilders]
      *
      * @param [range] The range of the random values (both bounds included).
-     * @throws [IllegalArgumentException] if [range] is empty.
+     * @throws [IllegalArgumentException] if [nrow] is positive and [range] is empty.
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomIntRange")
@@ -920,7 +923,8 @@ public class DataFrameBuilder(private val header: List<String>) {
      *
      * @param [nrow] The number of rows in every column.
      * @param [range] The range of the random values: the lower bound is included, the upper bound is not.
-     * @throws [IllegalArgumentException] if [range] is empty or its bounds are equal — no random value can be produced.
+     * @throws [IllegalArgumentException] if [nrow] is positive and [range] is empty or its bounds are equal —
+     * no random value can be produced.
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomDoubleRange")
@@ -959,11 +963,14 @@ public class DataFrameBuilder(private val header: List<String>) {
      *
      * @param [nrow] The number of rows in every column.
      * @param [range] The range of the random values (both bounds included).
-     * @throws [IllegalArgumentException] if [range] is empty.
+     * @throws [IllegalArgumentException] if [nrow] is positive and [range] is empty.
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomLongRange")
-    public fun randomLong(nrow: Int, range: LongRange): DataFrame<*> = fillNotNull(nrow) { Random.nextLong(range) }
+    public fun randomLong(nrow: Int, range: ClosedRange<Long>): DataFrame<*> {
+        val inclusiveRange = range.start..range.endInclusive
+        return fillNotNull(nrow) { Random.nextLong(inclusiveRange) }
+    }
 
     /**
      * Creates a [DataFrame] where every column has [nrow] random [Boolean] values.

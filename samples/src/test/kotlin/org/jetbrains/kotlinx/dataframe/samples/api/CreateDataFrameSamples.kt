@@ -1,11 +1,10 @@
-@file:Suppress("ktlint")
-
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.DynamicDataFrameBuilder
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.columnNames
@@ -25,18 +24,21 @@ import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
 import java.io.File
 import kotlin.random.nextInt
-import kotlin.random.Random as KotlinRandom
 import kotlin.reflect.typeOf
+import kotlin.random.Random as KotlinRandom
 
 class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
+
+    @DataSchema
+    class Person(val name: String, val age: Int)
 
     @Test
     fun createEmptyDataFrame() {
         // SampleStart
-        class Person(val name: String, val age: Int)
-
         val df = emptyDataFrame<Person>()
         // SampleEnd
+        // @DataSchema gives the typed accessors
+        df.name.size() shouldBe 0
         df.columnsCount() shouldBe 2
         df.rowsCount() shouldBe 0
     }
@@ -72,12 +74,13 @@ class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
         // DataFrame with 2 columns
         val df = dataFrameOf(
             "name" to columnOf("Alice", "Bob", "Charlie"),
-            "age" to columnOf(15, 20, 22)
+            "age" to columnOf(15, 20, 22),
         )
         // SampleEnd
     }
 
     @Test
+    @Suppress("ktlint:standard:argument-list-wrapping") // one row of values per line
     fun createDataFrameOf() {
         // SampleStart
         // DataFrame with 2 columns and 3 rows
@@ -119,8 +122,9 @@ class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
     @Test
     fun createRandomDataFrame() {
         // stable random + clean examples
-        @Suppress("LocalVariableName")
+        @Suppress("LocalVariableName", "ktlint:standard:property-naming")
         val Random = KotlinRandom(42)
+
         fun <T> List<T>.random() = this.random(Random)
         // SampleStart
         val categories = listOf("Electronics", "Books", "Clothing")
@@ -138,8 +142,9 @@ class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
     @Test
     fun createNestedRandomDataFrame() {
         // stable random + clean examples
-        @Suppress("LocalVariableName")
+        @Suppress("LocalVariableName", "ktlint:standard:property-naming")
         val Random = KotlinRandom(42)
+
         fun <T> List<T>.random() = this.random(Random)
         // SampleStart
         val categories = listOf("Electronics", "Books", "Clothing")
@@ -162,10 +167,19 @@ class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
                     val ratings: DataColumn<Int> = expr { Random.nextInt(1..5) }
                     val comments = ratings.map {
                         when (it) {
-                            5 -> listOf("Amazing quality!", "Best purchase ever!", "Highly recommend!", "Absolutely perfect!")
+                            5 -> listOf(
+                                "Amazing quality!",
+                                "Best purchase ever!",
+                                "Highly recommend!",
+                                "Absolutely perfect!",
+                            )
+
                             4 -> listOf("Great product!", "Very satisfied", "Good value for money", "Would buy again")
+
                             3 -> listOf("It's okay", "Does the job", "Average quality", "Neither good nor bad")
+
                             2 -> listOf("Could be better", "Disappointed", "Not what I expected", "Poor quality")
+
                             else -> listOf("Terrible!", "Not worth the price", "Complete waste of money", "Do not buy!")
                         }.random()
                     }
@@ -215,7 +229,8 @@ class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
     @Test
     fun toDataFrameLists() {
         // SampleStart
-        val lines = """
+        val lines =
+            """
             1
             00:00:05,000 --> 00:00:07,500
             This is the first subtitle.
@@ -223,7 +238,7 @@ class CreateDataFrameSamples : DataFrameSampleHelper("createDataFrame", "api") {
             2
             00:00:08,000 --> 00:00:10,250
             This is the second subtitle.
-        """.trimIndent().lines()
+            """.trimIndent().lines()
 
         lines.chunked(4) { it.take(3) }
             .toDataFrame(header = listOf("n", "timestamp", "text"))

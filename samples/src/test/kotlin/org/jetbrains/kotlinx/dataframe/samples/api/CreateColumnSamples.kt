@@ -1,5 +1,3 @@
-@file:Suppress("ktlint")
-
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.assertions.throwables.shouldThrow
@@ -51,6 +49,7 @@ class CreateColumnSamples : DataFrameSampleHelper("createColumn", "api") {
     }
 
     @Test
+    @Suppress("ktlint:standard:argument-list-wrapping") // one row of values per line
     fun createFrameColumn() {
         // SampleStart
         val df1 = dataFrameOf("name", "age")(

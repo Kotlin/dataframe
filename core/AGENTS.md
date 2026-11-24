@@ -111,7 +111,10 @@ KDoc** (KoDEx resolves all `{@include …}`/`@set`/`@get` there).
   actual Kotlin Notebook integration lives in `:dataframe-jupyter`.
 - `io/` — read/write helpers and the **deprecated** in-core csv/tsv/html integrations (`csv.kt`, `tsv.kt`,
   `html.kt`, `guess.kt`, `Compression.kt`); prefer the dedicated `dataframe-csv`/`dataframe-json` modules.
-- `documentation/` — see below. `exceptions/` — custom exceptions. `util/` — deprecation-message constants.
+- `documentation/` — see below. `exceptions/` — custom exceptions. `util/` — deprecation-message constants;
+  the `// region` of a constant in `deprecationMessages.kt` decides its migration-guide table (`WARNING in
+  1.0, ERROR in 1.1` → the "`WARNING` in 1.0 and `ERROR` in 1.1" table; `keep across releases` → the same
+  table, marked "(will remain WARNING)").
 
 ## KoDEx documentation-only pattern (core specifics)
 

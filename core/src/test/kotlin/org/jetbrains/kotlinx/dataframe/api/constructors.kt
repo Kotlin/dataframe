@@ -732,6 +732,19 @@ class ConstructorsTests {
     }
 
     @Test
+    fun `builder randomLong takes any ClosedRange of Long and includes both bounds`() {
+        // not a LongRange, so the call must resolve to the ClosedRange<Long> parameter
+        val range = object : ClosedRange<Long> {
+            override val start = 7L
+            override val endInclusive = 7L
+        }
+
+        val df = dataFrameOf("x").randomLong(3, range)
+
+        df["x"].values shouldBe listOf(7L, 7L, 7L)
+    }
+
+    @Test
     fun `builder randomLong on empty range throws`() {
         shouldThrow<IllegalArgumentException> {
             dataFrameOf("x").randomLong(3, LongRange.EMPTY)
@@ -743,6 +756,19 @@ class ConstructorsTests {
         shouldThrow<IllegalArgumentException> {
             dataFrameOf("x").randomDouble(3, 1.0..1.0)
         }
+    }
+
+    @Test
+    @Suppress("EmptyRange")
+    fun `builder random functions with zero rows do not throw on an empty range`() {
+        // no value is drawn, so the range is never checked
+        val ints = dataFrameOf("x").randomInt(0, 5..1)
+        val longs = dataFrameOf("x").randomLong(0, 5L..1L)
+        val doubles = dataFrameOf("x").randomDouble(0, 1.0..1.0)
+
+        ints.rowsCount() shouldBe 0
+        longs.rowsCount() shouldBe 0
+        doubles.rowsCount() shouldBe 0
     }
 
     @Test

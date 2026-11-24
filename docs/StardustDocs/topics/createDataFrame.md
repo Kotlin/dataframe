@@ -8,12 +8,16 @@ This section describes ways to create a [`DataFrame`](DataFrame.md) instance.
 ### emptyDataFrame
 
 Returns a [`DataFrame`](DataFrame.md) with empty columns according to schema `T`.
+For example, with this schema:
+
+```text
+@DataSchema
+class Person(val name: String, val age: Int)
+```
 
 <!---FUN createEmptyDataFrame-->
 
 ```kotlin
-class Person(val name: String, val age: Int)
-
 val df = emptyDataFrame<Person>()
 ```
 
