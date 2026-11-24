@@ -31,6 +31,12 @@ import kotlin.reflect.KProperty
  * or [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi].
  * See {@include [org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink]}.
  *
+ * Every [DataRow] belongs to a [DataFrame] — the one returned by [df] — and holds no data of its own:
+ * its cell values are read from the columns of that [DataFrame] at the row's [index].
+ * In this sense, a [DataRow] is similar to a `Map` from columns to values;
+ * however, since [DataFrame] is a column-first structure, creating a large number of [DataRow]s is best avoided —
+ * unlike a plain `Map`, every row carries its whole [DataFrame] around.
+ *
  * For more information: {@include [DocumentationUrls.DataRow]}
  *
  * @param [T] dataframe schema marker. See [DataFrame] type parameter for details.
@@ -39,7 +45,7 @@ import kotlin.reflect.KProperty
 public interface DataRow<out T> {
 
     /**
-     * Returns the index of this row in the [DataFrame] it belongs to. Row indices start from `0`.
+     * Returns the index of this row in the [DataFrame] returned by [df]. Row indices start from `0`.
      *
      * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
      *
@@ -64,7 +70,8 @@ public interface DataRow<out T> {
      * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
      *
      * @param [columnIndex] The zero-based index of the column in the [DataFrame] this row belongs to.
-     * @return The value of the cell in the given column, or `null` if the cell is empty.
+     * @return The value of the cell in the given column.
+     * @throws IllegalArgumentException if [columnIndex] is out of bounds.
      */
     public operator fun get(columnIndex: Int): Any?
 
@@ -116,6 +123,7 @@ public interface DataRow<out T> {
      * @param first The name of the first column to include.
      * @param other The names of additional columns to include.
      * @return A subset of this row containing only the selected columns as a new [DataRow].
+     * @throws IllegalStateException if there is no column named [first] or any of [other].
      */
     public operator fun get(first: String, vararg other: String): DataRow<T> = owner.get(first, *other)[index]
 
@@ -125,12 +133,15 @@ public interface DataRow<out T> {
      * [path] may address a column nested inside [column groups][getColumnGroup],
      * e.g. the path `("info", "age")` addresses the `age` subcolumn of the `info` column group.
      *
+     * If there is no such column, an exception is thrown; use [getOrNull] to retrieve `null` instead.
+     *
      * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
      *
      * See [pathOf][org.jetbrains.kotlinx.dataframe.api.pathOf].
      *
      * @param [path] The [ColumnPath] of the column.
-     * @return The value of the cell in the column at [path], or `null` if the cell is empty.
+     * @return The value of the cell in the column at [path].
+     * @throws IllegalArgumentException if there is no column at [path].
      */
     public operator fun get(path: ColumnPath): Any? = owner.get(path)[index]
 
@@ -142,7 +153,8 @@ public interface DataRow<out T> {
      * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
      *
      * @param [name] The name of the column.
-     * @return The value of the cell in the given column, or `null` if the cell is empty.
+     * @return The value of the cell in the given column.
+     * @throws IllegalArgumentException if there is no column named [name].
      */
     @RequiredByIntellijPlugin
     public operator fun get(name: String): Any?
@@ -150,13 +162,16 @@ public interface DataRow<out T> {
     /**
      * Returns the value of the cell in the [column group][ColumnKind.Group] named [columnName], as a [DataRow].
      *
-     * If the given column is not a column group, an exception is thrown.
+     * If there is no such column, or the cell value is not a [DataRow], an exception is thrown.
+     * To retrieve `null` instead, you can cast the [getOrNull] result: `getOrNull(columnName) as AnyRow?`.
      *
      * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
      *
      * @param [columnName] The name of the column group.
      * @return The cell value cast to [AnyRow].
-     * @throws IllegalArgumentException if the column is not a column group.
+     * @throws IllegalArgumentException if there is no column named [columnName].
+     * @throws IllegalStateException if the cell value is `null` and the column is not a column group.
+     * @throws ClassCastException if the cell value is not a [DataRow].
      */
     public fun getColumnGroup(columnName: String): AnyRow {
         val value = get(columnName)
@@ -172,13 +187,16 @@ public interface DataRow<out T> {
     /**
      * Returns the value of the cell in the [frame column][ColumnKind.Frame] named [columnName], as a [DataFrame].
      *
-     * If the given column is not a frame column, an exception is thrown.
+     * If there is no such column, or the cell value is not a [DataFrame], an exception is thrown.
+     * To retrieve `null` instead, you can cast the [getOrNull] result: `getOrNull(columnName) as AnyFrame?`.
      *
      * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
      *
      * @param [columnName] The name of the frame column.
      * @return The cell value cast to [AnyFrame].
-     * @throws IllegalArgumentException if the column is not a frame column.
+     * @throws IllegalArgumentException if there is no column named [columnName].
+     * @throws IllegalStateException if the cell value is `null` and the column is not a frame column.
+     * @throws ClassCastException if the cell value is not a [DataFrame].
      */
     public fun getFrameColumn(columnName: String): AnyFrame {
         val value = get(columnName)
@@ -198,7 +216,7 @@ public interface DataRow<out T> {
      * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
      *
      * @param [name] The name of the column.
-     * @return The value of the cell in the given column; `null` if the cell is empty or there is no such column.
+     * @return The value of the cell in the given column; `null` if there is no such column.
      */
     public fun getOrNull(name: String): Any?
 
@@ -220,6 +238,9 @@ public interface DataRow<out T> {
     /**
      * Creates a [ColumnPath] that starts with this [String] followed by the [path] segments.
      *
+     * This is a shorthand for [pathOf][org.jetbrains.kotlinx.dataframe.api.pathOf]:
+     * `"info"["age"]` is the same as `pathOf("info", "age")`.
+     *
      * Use it in [row expressions][ExpressionsGivenRow]
      * (along with [invoke][ColumnPath.invoke])
      * to provide values in nested columns:
@@ -240,6 +261,9 @@ public interface DataRow<out T> {
     /**
      * Returns the value of the cell in the column named by this [String], cast to [R].
      *
+     * This is a shortcut for [get][DataRow.get] with this [String] as the column name,
+     * with the returned value cast to [R].
+     *
      * Use it in [row expressions][ExpressionsGivenRow] to provide values in top-level columns:
      *
      * `df.filter { "age"<Int>() >= 18 }`.
@@ -253,6 +277,9 @@ public interface DataRow<out T> {
 
     /**
      * Returns the value of the cell in the column addressed by this [ColumnPath], cast to [R].
+     *
+     * This is a shortcut for [get][DataRow.get] with this [ColumnPath] as the column path,
+     * with the returned value cast to [R].
      *
      * Use it in [row expressions][ExpressionsGivenRow] to provide values in nested columns:
      * `df.filter { "info"["age"]<Int>() >= 18 }`.
@@ -287,81 +314,107 @@ public interface DataRow<out T> {
     // region deprecated operators on ColumnReference
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun <R : Comparable<R>> ColumnReference<R>.compareTo(other: R): Int = get(this).compareTo(other)
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Int>.plus(a: Int): Int = get(this) + a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Long>.plus(a: Long): Long = get(this) + a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Double>.plus(a: Double): Double = get(this) + a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<String>.plus(a: String): String = get(this) + a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun Int.plus(col: ColumnReference<Int>): Int = this + get(col)
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun Long.plus(col: ColumnReference<Long>): Long = this + get(col)
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun Double.plus(col: ColumnReference<Double>): Double = this + get(col)
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Int>.minus(a: Int): Int = get(this) - a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Long>.minus(a: Long): Long = get(this) - a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Double>.minus(a: Double): Double = get(this) - a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun Int.minus(col: ColumnReference<Int>): Int = this - get(col)
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun Long.minus(col: ColumnReference<Long>): Long = this - get(col)
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun Double.minus(col: ColumnReference<Double>): Double = this - get(col)
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Int>.times(a: Int): Int = get(this) * a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Long>.times(a: Long): Long = get(this) * a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Double>.times(a: Double): Double = get(this) * a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Double>.times(a: Int): Double = get(this) * a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Long>.times(a: Int): Long = get(this) * a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Double>.times(a: Long): Double = get(this) * a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Int>.div(a: Int): Int = get(this) / a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Long>.div(a: Long): Long = get(this) / a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Double>.div(a: Double): Double = get(this) / a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Double>.div(a: Int): Double = get(this) / a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Long>.div(a: Int): Long = get(this) / a
 
     @Deprecated(DEPRECATED_ACCESS_API, level = DeprecationLevel.ERROR)
+    @AccessApiOverload
     public operator fun ColumnReference<Double>.div(a: Long): Double = get(this) / a
 
     // endregion

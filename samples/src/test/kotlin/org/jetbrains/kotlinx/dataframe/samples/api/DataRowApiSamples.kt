@@ -67,11 +67,15 @@ class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
         val fullName = row.get { name.firstName + " " + name.lastName }
         val isAdult = row.get { age >= 18 }
 
+        // The same via the `[]` operator
+        val isAdultOperator = row[{ age >= 18 }]
+
         // The same via the String API
         val isAdultString = row.get { "age"<Int>() >= 18 }
         // SampleEnd
         fullName shouldBe "Alice Cooper"
         isAdult shouldBe false
+        isAdultOperator shouldBe false
         isAdultString shouldBe false
     }
 
