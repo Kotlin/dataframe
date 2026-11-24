@@ -60,7 +60,7 @@ internal interface AccessApis {
      *
      * These properties are generated based on the
      * [dataframe schema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] by the
-     * @include [DocumentationUrls.CompilerPluginLink],
+     * {@include [DocumentationUrls.CompilerPluginLink]},
      * with their names and types inferred from the names and types of the corresponding columns.
      * This also works for hierarchical [DataFrame] structures
      * (i.e., [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
