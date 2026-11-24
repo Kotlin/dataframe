@@ -61,7 +61,7 @@ class SingleColumnAggregateTests {
         val empty = DataColumn.createValueColumn("a", emptyList<Nothing>(), nothingType(false))
         dataFrameOf(empty).minOrNull { "a"<Nothing>() }.shouldBeNull()
         val nulls = DataColumn.createValueColumn("a", listOf(null, null), nothingType(true))
-        dataFrameOf(nulls).maxOrNull { "a"<Nothing?>() }.shouldBeNull()
+        dataFrameOf(nulls).maxOrNull { "a"<Int?>() }.shouldBeNull()
 
         // skipNaN variants
         val doubles = dataFrameOf("a" to columnOf(1.0, Double.NaN, 3.0))
