@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 
 @DataSchema
 interface Person {
@@ -35,6 +34,6 @@ open class BaseTest {
 
     val name by column<String>()
     val age = column<Int>() named "age"
-    val city = Person::city.toColumnAccessor()
+    val city by column<String?>()
     val weight by column<Int?>()
 }
