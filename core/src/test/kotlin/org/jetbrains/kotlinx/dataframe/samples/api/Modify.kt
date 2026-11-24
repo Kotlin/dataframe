@@ -3,7 +3,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -12,35 +11,23 @@ import org.jetbrains.kotlinx.dataframe.api.addAll
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asFrame
 import org.jetbrains.kotlinx.dataframe.api.at
-import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.castTo
 import org.jetbrains.kotlinx.dataframe.api.colsOf
-import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
-import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.group
-import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.intoList
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
-import org.jetbrains.kotlinx.dataframe.api.mapToColumn
-import org.jetbrains.kotlinx.dataframe.api.mapToFrame
 import org.jetbrains.kotlinx.dataframe.api.mapValues
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
-import org.jetbrains.kotlinx.dataframe.api.merge
-import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
@@ -71,8 +58,6 @@ import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
-import org.jetbrains.kotlinx.dataframe.io.readJson
-import org.junit.Ignore
 import org.junit.Test
 
 @Suppress("ktlint:standard:chain-method-continuation", "ktlint:standard:argument-list-wrapping")
@@ -604,35 +589,6 @@ class Modify : TestBase() {
 
         df.move { response.data }.toTop().alsoDebug()
         df.rename { response.data }.to("description").alsoDebug()
-    }
-
-    @DataSchema
-    interface ImplicitSchema {
-        val perf: Double
-    }
-
-    @Test
-    @Ignore
-    @Suppress("UNUSED_VARIABLE")
-    fun castToGenerateSchema() {
-        // SampleStart
-        val sample = DataFrame.readJson("sample.json")
-        // SampleEnd
-    }
-
-    @Test
-    @Suppress("KotlinConstantConditions")
-    fun castTo() {
-        val sample = dataFrameOf("perf")(10.0, 20.0, 12.0).cast<ImplicitSchema>()
-        val files = listOf<String>() // not intended to run
-        // SampleStart
-        for (file in files) {
-            // df here is expected to have the same structure as sample
-            val df = DataFrame.readJson(file).castTo(sample)
-            val count = df.count { perf > 10.0 }
-            println("$file: $count")
-        }
-        // SampleEnd
     }
 
     @Test
