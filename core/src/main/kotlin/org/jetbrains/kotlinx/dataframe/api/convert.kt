@@ -323,6 +323,9 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
  *
  * ## Note
  * @include [ExpressionsGivenRow.AddDataRowNote]
+ *
+ * For example, use `prev()?.newValue()` to access the value already converted in the same column for the preceding row.
+ *
  * ## See Also
  * - {@include [SeeAlsoConvertPerRowCol]}
  *
@@ -501,6 +504,9 @@ private typealias SeeAlsoConvertAsColumn = Nothing
  *
  * ## Note
  * @include [ExpressionsGivenRow.AddDataRowNote]
+ *
+ * For example, use `prev()?.newValue()` to access the value already converted in the same column for the preceding row.
+ *
  * ## See Also
  * - {@include [SeeAlsoConvertPerRowCol]}
  * - {@include [SeeAlsoConvertAsColumn]}
