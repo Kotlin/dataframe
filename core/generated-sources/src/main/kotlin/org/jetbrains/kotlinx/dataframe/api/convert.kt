@@ -211,7 +211,7 @@ internal interface ConvertDocs {
      * **[<code>`convert`</code>][DataFrame.convert]**`  { columnsSelector: `[<code>`ColumnsSelector`</code>][ColumnsSelector]`  }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * __`.`__[<code>**`with`**</code>][Convert.with]`(infer: `[<code>`Infer`</code>][Infer]`, rowExpression: `[<code>`RowValueExpression`</code>][RowValueExpression]`)`
+     * __`.`__[<code>**`with`**</code>][Convert.with]`(infer: `[<code>`Infer`</code>][Infer]`, rowConverter: `[<code>`AddDataRow`</code>][AddDataRow]`<T>.(C) -> R)`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[<code>**`notNull`**</code>][Convert.notNull]`  { rowExpression: `[<code>`RowValueExpression`</code>][RowValueExpression]`  }`
@@ -449,10 +449,6 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
 /**
  * Converts specified columns
  * using row converter [<code>expression</code>][expression] within the [<code>DataFrame</code>][DataFrame].
- * Provide a new value for every selected cell given its row and its previous value using a
- * [<code>row value expression</code>][org.jetbrains.kotlinx.dataframe.RowValueExpression].
- *
- * For more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
  * [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
  *
  * ## Note
@@ -462,6 +458,9 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
  * This is an extension to [<code>RowValueExpression</code>][org.jetbrains.kotlinx.dataframe.RowValueExpression] and
  * [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
  * the modified/generated value of the preceding row ([<code>AddDataRow.newValue</code>][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]).
+ *
+ * For example, use `prev()?.newValue()` to access the value already converted in the same column for the preceding row.
+ *
  * ## See Also
  * - [<code>Convert per row col</code>][org.jetbrains.kotlinx.dataframe.api.Convert.perRowCol] to provide a new value for every selected cell giving its column.
  *
@@ -470,7 +469,8 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
  * // Convert values in selected column to a trimmed `String`.
  * df.convert("valueA", "valueB") { it.toString().trim() }
  * ```
- * @param [expression] The [<code>Row Value Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample] to update the rows with.
+ * @param [expression] The expression that provides a new value for every selected cell given its row and original value.
+ * It uses [<code>AddDataRow</code>][AddDataRow] as its receiver, which provides access to the new value in the preceding row.
  * @return A new [<code>DataFrame</code>][DataFrame] with the converted values.
  */
 @Refine
@@ -479,7 +479,7 @@ public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
     vararg cols: String,
     infer: Infer = Infer.Nulls,
-    noinline expression: RowValueExpression<T, Any?, R>,
+    noinline expression: AddDataRow<T>.(Any?) -> R,
 ): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
 @Refine
@@ -629,11 +629,8 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
     df.replace(columns).with { columnConverter(df, it) }
 
 /**
- * Converts values in columns previously selected by [<code>convert</code>][convert] using the specified [<code>rowConverter</code>][rowConverter],
- * a [<code>row value expression</code>][RowValueExpression] applied to each row in the [<code>DataFrame</code>][DataFrame].
- *
- * A [<code>row value expression</code>][RowValueExpression] allows you to provide a new value for every selected cell
- * given its row (as a receiver) and its previous value (as a lambda argument).
+ * Converts values in columns previously selected by [<code>convert</code>][convert] using the specified [<code>rowConverter</code>][rowConverter]
+ * applied to each row in the [<code>DataFrame</code>][DataFrame].
  *
  * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
  *
@@ -644,6 +641,9 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
  * This is an extension to [<code>RowValueExpression</code>][org.jetbrains.kotlinx.dataframe.RowValueExpression] and
  * [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
  * the modified/generated value of the preceding row ([<code>AddDataRow.newValue</code>][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]).
+ *
+ * For example, use `prev()?.newValue()` to access the value already converted in the same column for the preceding row.
+ *
  * ## See Also
  * - [<code>Convert per row col</code>][org.jetbrains.kotlinx.dataframe.api.Convert.perRowCol] to provide a new value for every selected cell giving its column.
  * - [<code>Convert as column</code>][org.jetbrains.kotlinx.dataframe.api.Convert.asColumn] to convert using a column converter
@@ -658,14 +658,15 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
  *
  * @param infer [<code>Infer</code>][Infer] strategy that defines how the [<code>type</code>][DataColumn.type] of the resulting column should be determined.
  * Defaults to [<code>Infer.Nulls</code>][Infer.Nulls].
- * @param [rowConverter] The [<code>RowValueExpression</code>][RowValueExpression] to provide a new value for every selected cell giving its row and previous value.
+ * @param [rowConverter] The expression that provides a new value for every selected cell given its row and original value.
+ * It uses [<code>AddDataRow</code>][AddDataRow] as its receiver, which provides access to the new value in the preceding row.
  * @return A new [<code>DataFrame</code>][DataFrame] with the converted values.
  */
 @Refine
 @Interpretable("With0")
 public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
-    noinline rowConverter: RowValueExpression<T, C, R>,
+    noinline rowConverter: AddDataRow<T>.(C) -> R,
 ): DataFrame<T> = withRowCellImpl(typeOf<R>(), infer, rowConverter)
 
 /**
