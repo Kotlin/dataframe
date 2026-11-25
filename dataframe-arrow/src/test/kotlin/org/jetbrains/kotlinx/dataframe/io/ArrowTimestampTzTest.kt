@@ -25,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.withDefaultTimeZone
 import org.junit.Test
 import java.net.URL
 import kotlin.io.path.toPath
@@ -48,17 +49,6 @@ internal class ArrowTimestampTzTest {
 
     private fun testResource(resourcePath: String): URL =
         ArrowTimestampTzTest::class.java.classLoader.getResource(resourcePath)!!
-
-    /** Runs [block] with the JVM default time zone set to [zoneId], restoring the previous one afterwards. */
-    private fun <R> withDefaultTimeZone(zoneId: String, block: () -> R): R {
-        val previous = java.util.TimeZone.getDefault()
-        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone(zoneId))
-        try {
-            return block()
-        } finally {
-            java.util.TimeZone.setDefault(previous)
-        }
-    }
 
     // region crafted Arrow files: the unit x zone matrix Parquet cannot express
 

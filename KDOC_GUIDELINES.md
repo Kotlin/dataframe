@@ -486,7 +486,10 @@ and [`samples/AGENTS.md`](samples/AGENTS.md)):
 * Reusing the website samples in KDocs is preferred, but not required: if they don't fit a KDoc,
   write a separate sample for it in the same class.
 * Mark the shown code with `// SampleStart` and `// SampleEnd`. Put assertions (`shouldBe`, …) and
-  `.saveDfHtmlSample()` after `// SampleEnd`, so the KDoc shows only the call.
+  `.saveDfHtmlSample()` (website samples only) after `// SampleEnd`, so the KDoc shows only the call.
+* A sample used only through `@sample` — not shown on a website page — needs no `<!---FUN-->` mark and no
+  `.saveDfHtmlSample()`: korro does not scan it and it writes no files; only the website samples carry the
+  marks and the iframe output.
 * The test must not be ignored and must pass: `./gradlew :samples:test`.
 * Reference the sample by its fully qualified name, like
   `@sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatDataColumns]`.

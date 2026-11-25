@@ -116,6 +116,7 @@
 <resource src="convertColumnToDouble.html"></resource>
 <resource src="convertDf.html"></resource>
 <resource src="convertFromDateTimeComponents.html"></resource>
+<resource src="convertInstantToLocalDate.html"></resource>
 <resource src="convertNotNull.html"></resource>
 <resource src="convertPerRowCol.html"></resource>
 <resource src="convertStringTo.html"></resource>
@@ -140,6 +141,7 @@
 <resource src="convertToYearMonth.html"></resource>
 <resource src="datesDfInput.html"></resource>
 <resource src="durationsDfInput.html"></resource>
+<resource src="instantsDfInput.html"></resource>
 <resource src="mediaDfInput.html"></resource>
 <resource src="stringDfInput.html"></resource>
 <resource src="timestampsDfInput.html"></resource>
