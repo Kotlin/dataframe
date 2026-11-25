@@ -142,4 +142,30 @@ class GetTests {
         row["a", "b"].values() shouldBe listOf(1, 2)
         shouldThrow<IllegalStateException> { row["a", "missing"] }
     }
+
+    @Test
+    fun `getColumnGroupOrNull and getFrameColumnOrNull from row`() {
+        val df = dataFrameOf(
+            dataFrameOf("a", "b")(1, 2).asColumnGroup("x"),
+            columnOf(dataFrameOf("a")(1)).named("f"),
+        )
+        val row = df[0]
+
+        row.getColumnGroupOrNull("x")!!["a"] shouldBe 1
+        row.getFrameColumnOrNull("f")!![0]["a"] shouldBe 1
+
+        // no such column
+        row.getColumnGroupOrNull("missing") shouldBe null
+        row.getFrameColumnOrNull("missing") shouldBe null
+
+        // non-null cell value of a wrong kind
+        val valueRow = dataFrameOf("a")(3)[0]
+        valueRow.getColumnGroupOrNull("a") shouldBe null
+        valueRow.getFrameColumnOrNull("a") shouldBe null
+
+        // null cell value of a wrong kind
+        val nullRow = dataFrameOf("a")(null)[0]
+        nullRow.getColumnGroupOrNull("a") shouldBe null
+        nullRow.getFrameColumnOrNull("a") shouldBe null
+    }
 }

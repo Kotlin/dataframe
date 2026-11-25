@@ -135,8 +135,11 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/DataRow {
 	public abstract fun get (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Object;
 	public fun get (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public fun getColumnGroup (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public fun getColumnGroupOrNull (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public fun getFrameColumn (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun getFrameColumnOrNull (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public abstract fun getOrNull (Ljava/lang/String;)Ljava/lang/Object;
+	public fun getOrNull (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Ljava/lang/Object;
 	public abstract fun getValueOrNull (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Object;
 	public abstract fun index ()I
 	public fun invoke (Ljava/lang/String;)Ljava/lang/Object;

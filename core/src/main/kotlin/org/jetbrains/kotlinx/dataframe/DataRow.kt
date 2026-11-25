@@ -163,7 +163,7 @@ public interface DataRow<out T> {
      * Returns the value of the cell in the [column group][ColumnKind.Group] named [columnName], as a [DataRow].
      *
      * If there is no such column, or the cell value is not a [DataRow], an exception is thrown.
-     * To retrieve `null` instead, you can cast the [getOrNull] result: `getOrNull(columnName) as AnyRow?`.
+     * To retrieve `null` instead, use [getColumnGroupOrNull].
      *
      * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
      *
@@ -185,10 +185,22 @@ public interface DataRow<out T> {
     }
 
     /**
+     * Returns the value of the cell in the [column group][ColumnKind.Group] named [columnName], as a [DataRow],
+     * or `null` if the [DataFrame] this row belongs to has no column named [columnName],
+     * or the cell value is not a [DataRow].
+     *
+     * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
+     *
+     * @param [columnName] The name of the column group.
+     * @return The cell value cast to [AnyRow]; `null` if there is no such column or the cell value is not a [DataRow].
+     */
+    public fun getColumnGroupOrNull(columnName: String): AnyRow? = getOrNull(columnName) as? AnyRow
+
+    /**
      * Returns the value of the cell in the [frame column][ColumnKind.Frame] named [columnName], as a [DataFrame].
      *
      * If there is no such column, or the cell value is not a [DataFrame], an exception is thrown.
-     * To retrieve `null` instead, you can cast the [getOrNull] result: `getOrNull(columnName) as AnyFrame?`.
+     * To retrieve `null` instead, use [getFrameColumnOrNull].
      *
      * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
      *
@@ -210,6 +222,18 @@ public interface DataRow<out T> {
     }
 
     /**
+     * Returns the value of the cell in the [frame column][ColumnKind.Frame] named [columnName], as a [DataFrame],
+     * or `null` if the [DataFrame] this row belongs to has no column named [columnName],
+     * or the cell value is not a [DataFrame].
+     *
+     * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
+     *
+     * @param [columnName] The name of the frame column.
+     * @return The cell value cast to [AnyFrame]; `null` if there is no such column or the cell value is not a [DataFrame].
+     */
+    public fun getFrameColumnOrNull(columnName: String): AnyFrame? = getOrNull(columnName) as? AnyFrame
+
+    /**
      * Returns the value of the cell in the column named [name],
      * or `null` if the [DataFrame] this row belongs to has no column with such name.
      *
@@ -219,6 +243,22 @@ public interface DataRow<out T> {
      * @return The value of the cell in the given column; `null` if there is no such column.
      */
     public fun getOrNull(name: String): Any?
+
+    /**
+     * Returns the value of the cell in the column addressed by the given [path],
+     * or `null` if the [DataFrame] this row belongs to has no column at [path].
+     *
+     * [path] may address a column nested inside [column groups][getColumnGroup],
+     * e.g. the path `("info", "age")` addresses the `age` subcolumn of the `info` column group.
+     *
+     * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
+     *
+     * See [pathOf][org.jetbrains.kotlinx.dataframe.api.pathOf].
+     *
+     * @param [path] The [ColumnPath] of the column.
+     * @return The value of the cell in the column at [path]; `null` if there is no such column.
+     */
+    public fun getOrNull(path: ColumnPath): Any? = owner.getColumnOrNull(path)?.get(index)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
