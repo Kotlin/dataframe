@@ -102,4 +102,70 @@ class GetTests {
         }
         throwable.message shouldContain "Cannot cast null value of a ValueColumn to"
     }
+
+    @Test
+    fun `getOrNull with path from row`() {
+        val df = dataFrameOf(
+            dataFrameOf("a", "b")(1, 2).asColumnGroup("x"),
+        )
+        val row = df[0]
+
+        row.getOrNull(pathOf("x", "a")) shouldBe 1
+        row.getOrNull(pathOf("x", "b")) shouldBe 2
+        row.getOrNull(pathOf("x", "c")) shouldBe null
+        row.getOrNull(pathOf("y")) shouldBe null
+        row.getOrNull(pathOf("y", "a")) shouldBe null
+    }
+
+    @Test
+    fun `exceptions from getColumnGroup and getFrameColumn`() {
+        val row = dataFrameOf("a")(3)[0]
+
+        // no such column
+        shouldThrow<IllegalArgumentException> { row.getColumnGroup("missing") }
+        shouldThrow<IllegalArgumentException> { row.getFrameColumn("missing") }
+
+        // non-null cell value of a wrong kind
+        shouldThrow<ClassCastException> { row.getColumnGroup("a") }
+        shouldThrow<ClassCastException> { row.getFrameColumn("a") }
+
+        // null cell value of a wrong kind
+        val nullRow = dataFrameOf("a")(null)[0]
+        shouldThrow<IllegalStateException> { nullRow.getColumnGroup("a") }
+        shouldThrow<IllegalStateException> { nullRow.getFrameColumn("a") }
+    }
+
+    @Test
+    fun `get several columns from row throws when column is missing`() {
+        val row = dataFrameOf("a", "b")(1, 2)[0]
+
+        row["a", "b"].values() shouldBe listOf(1, 2)
+        shouldThrow<IllegalStateException> { row["a", "missing"] }
+    }
+
+    @Test
+    fun `getColumnGroupOrNull and getFrameColumnOrNull from row`() {
+        val df = dataFrameOf(
+            dataFrameOf("a", "b")(1, 2).asColumnGroup("x"),
+            columnOf(dataFrameOf("a")(1)).named("f"),
+        )
+        val row = df[0]
+
+        row.getColumnGroupOrNull("x")!!["a"] shouldBe 1
+        row.getFrameColumnOrNull("f")!![0]["a"] shouldBe 1
+
+        // no such column
+        row.getColumnGroupOrNull("missing") shouldBe null
+        row.getFrameColumnOrNull("missing") shouldBe null
+
+        // non-null cell value of a wrong kind
+        val valueRow = dataFrameOf("a")(3)[0]
+        valueRow.getColumnGroupOrNull("a") shouldBe null
+        valueRow.getFrameColumnOrNull("a") shouldBe null
+
+        // null cell value of a wrong kind
+        val nullRow = dataFrameOf("a")(null)[0]
+        nullRow.getColumnGroupOrNull("a") shouldBe null
+        nullRow.getFrameColumnOrNull("a") shouldBe null
+    }
 }

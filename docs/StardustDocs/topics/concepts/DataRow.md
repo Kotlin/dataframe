@@ -36,9 +36,24 @@ and invalid indices will be skipped;
 * `getValueOrNull<T>(columnName)` — cell value of type `T?` by this row 
 and the given `columnName` or `null` if there's no such column;
 * `get(column): T` — cell value by this row and the given `column`;
+* `get(columnIndex): Any?` — cell value by this row and the given zero-based column index;
+* `get(columnName): Any?` — cell value by this row and the given column name;
+* `get(path): Any?` — cell value by this row and the given column path;
+* `get(columnName, ...otherColumnNames): DataRow` — [`DataRow`](DataRow.md) containing only the cells
+of this row in the given columns;
+* `getOrNull(columnName): Any?` — cell value by this row and the given column name, or `null` if there's no such column;
+* `getOrNull(path): Any?` — cell value by this row and the given column path, or `null` if there's no such column;
+* `getColumnGroup(columnName): DataRow` — cell value in the column group named `columnName`, as a [`DataRow`](DataRow.md);
+* `getColumnGroupOrNull(columnName): DataRow?` — same as `getColumnGroup`, or `null` if there's no such column
+or the cell value is not a [`DataRow`](DataRow.md);
+* `getFrameColumn(columnName): DataFrame` — cell value in the frame column named `columnName`, as a [`DataFrame`](DataFrame.md);
+* `getFrameColumnOrNull(columnName): DataFrame?` — same as `getFrameColumn`, or `null` if there's no such column
+or the cell value is not a [`DataFrame`](DataFrame.md);
 * `String.invoke<T>(): T` — cell value of type `T` by this row and the given `this` column name;
 * `ColumnPath.invoke<T>(): T` — cell value of type `T` by this row and the given `this` column path;
 * `ColumnReference.invoke(): T` — cell value of type `T` by this row and the given `this` column;
+* `forwardIterable(): Iterable<DataRow>` — iterable of this row and all rows after it in the [`DataFrame`](DataFrame.md);
+* `backwardIterable(): Iterable<DataRow>` — iterable of this row and all rows before it in the [`DataFrame`](DataFrame.md);
 * `df()` — [`DataFrame`](DataFrame.md) that the current row belongs to.
 
 </snippet>
