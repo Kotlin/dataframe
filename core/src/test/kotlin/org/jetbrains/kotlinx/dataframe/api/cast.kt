@@ -3,10 +3,13 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.junit.Test
 
 class CastTests {
@@ -14,22 +17,129 @@ class CastTests {
     @DataSchema
     data class Data(val a: Int, val b: String)
 
+    // region DataFrame
+
     @Test
-    fun safeUnsafeCast() {
-        val df = dataFrameOf("a", "b", "c")(1, "s", 2)
-        df.cast<Data>(verify = true) shouldBe df
+    fun `unchecked dataframe casts only change the schema type argument`() {
+        val df = dataFrameOf(
+            "a" to columnOf("not an integer"),
+            "b" to columnOf(42),
+        )
+
+        val castedWithFlag: DataFrame<Data> = df.cast(verify = false)
+        val castedUnchecked: DataFrame<Data> = df.castUnchecked()
+
+        castedWithFlag shouldBeSameInstanceAs df
+        castedUnchecked shouldBeSameInstanceAs df
+    }
+
+    @Test
+    fun `verified dataframe cast returns the same dataframe and keeps excessive columns`() {
+        val df = dataFrameOf(
+            "a" to columnOf(1, 2),
+            "b" to columnOf("one", "two"),
+            "extra" to columnOf(true, false),
+        )
+        val casted: DataFrame<Data> = df.cast(verify = true)
+
+        casted shouldBeSameInstanceAs df
+    }
+
+    @Test
+    fun `verified cast rejects incompatible column without converting values`() {
+        val df = dataFrameOf(
+            "a" to columnOf("1"),
+            "b" to columnOf("one"),
+        )
+
+        df.convertTo<Data>()["a"][0] shouldBe 1
+        shouldThrow<IllegalArgumentException> {
+            df.cast<Data>(verify = true)
+        }
+    }
+
+    @Test
+    fun `verified cast rejects missing required column`() {
+        val df = dataFrameOf(
+            "a" to columnOf(1),
+        )
 
         shouldThrow<IllegalArgumentException> {
-            df.convert("a").toDouble().cast<Data>(verify = true)
+            df.cast<Data>(verify = true)
         }
-        val converted = df.convert("a").toDouble()
-        converted.cast<Data>(verify = false) shouldBe converted
-        converted.castUnchecked<Data>() shouldBe converted
+    }
+
+    @Test
+    fun `castTo infers schema from dataframe`() {
+        val schemaSource = dataFrameOf(
+            "a" to columnOf(0),
+            "b" to columnOf("schema"),
+        ).cast<Data>(verify = true)
+        val df = dataFrameOf(
+            "a" to columnOf(1, 2),
+            "b" to columnOf("one", "two"),
+        )
+
+        val casted: DataFrame<Data> = df.castTo(schemaFrom = schemaSource, verify = true)
+
+        casted shouldBeSameInstanceAs df
+    }
+
+    @Test
+    fun `unchecked castTo only changes the schema type argument`() {
+        val schemaSource = dataFrameOf(
+            "a" to columnOf(0),
+            "b" to columnOf("schema"),
+        ).cast<Data>(verify = true)
+        val df = dataFrameOf(
+            "a" to columnOf("not an integer"),
+            "b" to columnOf(42),
+        )
+
+        val casted: DataFrame<Data> = df.castTo(schemaFrom = schemaSource, verify = false)
+
+        casted shouldBeSameInstanceAs df
+    }
+
+    private fun dataFactory(
+        @Suppress("UNUSED_PARAMETER") seed: Int,
+    ): DataFrame<Data> = error("castTo must use only the function's return type")
+
+    @Test
+    fun `castTo infers schema from function return type without invoking function`() {
+        val df = dataFrameOf(
+            "a" to columnOf(1),
+            "b" to columnOf("one"),
+        )
+
+        val casted: DataFrame<Data> = df.castTo(schemaFrom = ::dataFactory, verify = true)
+
+        casted shouldBeSameInstanceAs df
+    }
+
+    @Test
+    fun `verified castTo rejects incompatible schema`() {
+        val schemaSource = dataFrameOf(
+            "a" to columnOf(0),
+            "b" to columnOf("schema"),
+        ).cast<Data>(verify = true)
+        val df = dataFrameOf(
+            "a" to columnOf("not an integer"),
+            "b" to columnOf("value"),
+        )
+
+        shouldThrow<IllegalArgumentException> {
+            df.castTo(schemaFrom = schemaSource, verify = true)
+        }
     }
 
     @Test
     fun `cast without arguments verifies schema`() {
-        val df = dataFrameOf("a", "b", "c")(1, "s", 2)
+        val df = dataFrameOf(
+            "a" to columnOf(1),
+            "b" to columnOf("s"),
+            "c" to columnOf(2),
+        )
         val casted: DataFrame<Data> = df.cast()
         casted shouldBe df
         df.cast<Data>() shouldBe df
@@ -47,21 +157,18 @@ class CastTests {
 
     @Test
     fun `cast accepts columns whose type is a subtype of the schema type`() {
-        val df = dataFrameOf("a", "b")(1, "s")
+        val df = dataFrameOf(
+            "a" to columnOf(1),
+            "b" to columnOf("s"),
+        )
         df.cast<NullableData>() shouldBe df
 
         shouldThrow<IllegalArgumentException> {
-            dataFrameOf("a", "b")("s", 1).cast<NullableData>()
+            dataFrameOf(
+                "a" to columnOf("s"),
+                "b" to columnOf(1),
+            ).cast<NullableData>()
         }
-    }
-
-    @Test
-    fun `castUnchecked does not verify schema`() {
-        val df = dataFrameOf("a", "b")("s", 1)
-        val casted: DataFrame<Data> = df.castUnchecked()
-        casted shouldBeSameInstanceAs df
-        df.castUnchecked<Data>() shouldBeSameInstanceAs df
-        df[0].castUnchecked<Data>() shouldBe df[0]
     }
 
     @Test
@@ -83,16 +190,35 @@ class CastTests {
     data class Schema(val score: Float, val rawData: String)
 
     @Test
+    fun `verified cast rejects incompatible nested column group`() {
+        val df = dataFrameOf(
+            "test" to columnOf(
+                "rawData" to columnOf("string"),
+            ),
+        )
+
+        shouldThrow<IllegalArgumentException> {
+            df.cast<Container>(verify = true)
+        }
+    }
+
+    @Test
     fun `cast should disregard column order`() {
         // https://github.com/Kotlin/dataframe/issues/1644
         // it ensures that variable in notebooks can be `castTo` to its own marker type
-        dataFrameOf(
+        val df = dataFrameOf(
             "test" to columnOf(
                 "rawData" to columnOf("string"),
                 "score" to columnOf(1f),
             ),
-        ).cast<Container>(verify = true)
+        )
+
+        df.cast<Container>(verify = true) shouldBeSameInstanceAs df
     }
+
+    // endregion
+
+    // region DataRow
 
     @Test
     fun `verified row cast with dataframe matching target schema`() {
@@ -121,6 +247,32 @@ class CastTests {
         castedWithFlag shouldBe row
         castedWithFlag.index() shouldBe 1
     }
+
+    // endregion
+
+    // region DataColumn
+
+    @Test
+    fun `column casts preserve column instances`() {
+        val dataColumn: DataColumn<*> = columnOf(1, 2)
+        val valueColumn: ValueColumn<*> = dataColumn.asValueColumn()
+        val frameColumn: FrameColumn<*> = columnOf(
+            dataFrameOf(
+                "a" to columnOf(1),
+                "b" to columnOf("one"),
+            ),
+        )
+
+        val castedDataColumn: DataColumn<Number> = dataColumn.cast()
+        val castedValueColumn: ValueColumn<Number> = valueColumn.cast()
+        val castedFrameColumn: FrameColumn<Data> = frameColumn.castFrameColumn()
+
+        castedDataColumn shouldBeSameInstanceAs dataColumn
+        castedValueColumn shouldBeSameInstanceAs valueColumn
+        castedFrameColumn shouldBeSameInstanceAs frameColumn
+    }
+
+    // endregion
 
     @DataSchema
     data class Key(val a: Int)

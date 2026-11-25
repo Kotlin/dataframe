@@ -129,6 +129,7 @@ korro {
                 include("createColumn.md")
                 include("createDataFrame.md")
                 include("concat.md")
+                include("cast.md")
                 include("concatDf.md")
                 include("groupBy.md")
                 include("inferType.md")
