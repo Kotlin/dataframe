@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -33,7 +34,7 @@ internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int): DataFrame<T> {
     return columns()
         .map { it.duplicateValuesImpl(n) }
         .toDataFrame()
-        .cast()
+        .castUnchecked()
 }
 
 internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int): DataColumn<T> =
@@ -89,7 +90,7 @@ internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int, indicesSorted: Iterable<
     return columns()
         .map { it.duplicateValuesImpl(n, indicesSorted) }
         .toDataFrame()
-        .cast()
+        .castUnchecked()
 }
 
 internal fun <T> DataRow<T>.duplicateImpl(n: Int): DataFrame<T> {
@@ -111,5 +112,5 @@ internal fun <T> DataRow<T>.duplicateImpl(n: Int): DataFrame<T> {
                 }
             }
         }
-    }.toDataFrame().cast()
+    }.toDataFrame().castUnchecked()
 }

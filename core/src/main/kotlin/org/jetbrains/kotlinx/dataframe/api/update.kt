@@ -57,7 +57,7 @@ public class Update<T, C>(
     // region KDoc declarations
 
     /*
-     * This argument providing the (clickable) name of the update-like function.
+     * This argument provides the (clickable) name of the update-like function.
      * Note: If clickable, make sure to [alias][your type].
      */
     @Suppress("ClassName")
@@ -332,6 +332,8 @@ private typealias SeeAlsoUpdateWith = Nothing
  *
  * @param [expression] The {@include [ExpressionsGivenDataFrame.DataFrameExpressionLink]} to replace the selected column group with.
  */
+@Refine
+@Interpretable("UpdateAsFrame")
 public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
     asFrameImpl(expression)
 

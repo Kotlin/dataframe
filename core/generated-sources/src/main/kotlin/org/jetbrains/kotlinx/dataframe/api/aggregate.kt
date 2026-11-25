@@ -60,9 +60,9 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  * ```
  *
  * @param body The aggregation logic defined using [<code>AggregateDsl</code>][AggregateDsl].
- * @return A new [<code>DataFrame</code>][DataFrame] with the results of the aggregation applied to each group.
+ * @return A new [<code>DataRow</code>][DataRow] with the results of the aggregation applied to each group.
  */
-public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<AggregateDsl<T>, R>): DataRow<T> =
+public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<AggregateDsl<T>, R>): DataRow<*> =
     delegate {
         aggregate(separate, body)
     }
@@ -151,4 +151,6 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
 @Refine
 @Interpretable("Aggregate")
 public fun <T, R> Grouped<T>.aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T> =
-    aggregateGroupBy((this as GroupBy<*, *>).toDataFrame(), { groups.cast() }, removeColumns = true, body).cast<T>()
+    aggregateGroupBy((this as GroupBy<*, *>).toDataFrame(), {
+        groups.cast()
+    }, removeColumns = true, body).castUnchecked<T>()

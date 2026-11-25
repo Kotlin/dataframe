@@ -78,11 +78,13 @@ public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n
 /**
  * Returns a [DataFrame] containing the first [n] rows.
  *
- * If [n] is greater than or equal to the number of rows, the whole [DataFrame] is returned.
+ * @include [SelectingRows.SlicedColumnTypesSnippet]
+ * {@set [SelectingRows.WHICH_ROWS] first}
  *
  * For more information: {@include [DocumentationUrls.TakeFirst]}
  *
  * See also:
+ * - [head][DataFrame.head] — the same operation, with five rows by default.
  * - [takeLast][DataFrame.takeLast] — takes the last [n] rows instead.
  * - [takeWhile][DataFrame.takeWhile] — takes the first rows while the predicate holds.
  * - [drop][DataFrame.drop]`(n: Int)` — drops the first [n] rows.
@@ -101,11 +103,13 @@ public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
 /**
  * Returns a [DataFrame] containing the last [n] rows.
  *
- * If [n] is greater than or equal to the number of rows, the whole [DataFrame] is returned.
+ * @include [SelectingRows.SlicedColumnTypesSnippet]
+ * {@set [SelectingRows.WHICH_ROWS] last}
  *
  * For more information: {@include [DocumentationUrls.TakeLast]}
  *
  * See also:
+ * - [tail][DataFrame.tail] — the same operation, with five rows by default.
  * - [take][DataFrame.take] — takes the first [n] rows instead.
  * - [takeWhile][DataFrame.takeWhile] — takes the first rows while the predicate holds.
  * - [dropLast][DataFrame.dropLast] — drops the last [n] rows.

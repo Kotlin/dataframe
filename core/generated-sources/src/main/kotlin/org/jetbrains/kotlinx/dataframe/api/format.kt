@@ -1329,6 +1329,9 @@ public class FormattedFrame<T>(
             cellFormatter = formatter as RowColFormatter<*, *>?,
             headerFormatter = headerFormatter,
         )
+
+    override fun toString(): String =
+        "FormattedFrame(df=DataFrame [${df.size}], hasFormatter=${formatter != null}, hasHeaderFormatter=${headerFormatter != null})"
 }
 
 /**

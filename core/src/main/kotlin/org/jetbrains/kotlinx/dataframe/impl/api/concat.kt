@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
@@ -84,7 +85,7 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
 
 internal fun <T> concatImpl(dataFrames: List<DataFrame<T>>): DataFrame<T> {
     when (dataFrames.size) {
-        0 -> return DataFrame.empty().cast()
+        0 -> return DataFrame.empty().castUnchecked()
         1 -> return dataFrames[0]
     }
 
@@ -97,11 +98,11 @@ internal fun <T> concatImpl(dataFrames: List<DataFrame<T>>): DataFrame<T> {
         concatImpl(name, dataFrames.map { it.getColumnOrNull(name) }, sizes)
     }
     return if (columns.isEmpty()) {
-        // make sure the number of rows translate correctly if there are no columns
+        // make sure the number of rows translates correctly if there are no columns
         DataFrame.empty(nrow = sizes.sum())
     } else {
         dataFrameOf(columns)
-    }.cast()
+    }.castUnchecked()
 }
 
 private inline fun <T, R : Any> Iterable<T>.firstNotNullResult(transform: (T) -> R?): R? {

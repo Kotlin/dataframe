@@ -508,6 +508,8 @@ public inline fun <T, C, R : C?> Update<T, C>.with(crossinline expression: Updat
  *
  * @param [expression] The [<code>DataFrame Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression] to replace the selected column group with.
  */
+@Refine
+@Interpretable("UpdateAsFrame")
 public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
     asFrameImpl(expression)
 

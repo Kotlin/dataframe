@@ -355,15 +355,15 @@ class DelimCsvTsvTests {
     fun `check integrity of example data`() {
         shouldThrow<IllegalStateException> {
             // cannot read file with blank line at the start
-            DataFrame.readCsv("../data/jetbrains repositories.csv")
+            DataFrame.readCsv(csvWithLeadingBlankLine)
         }
         shouldThrow<IllegalStateException> {
             // ignoreEmptyLines only ignores intermediate empty lines
-            DataFrame.readCsv("../data/jetbrains repositories.csv", ignoreEmptyLines = true)
+            DataFrame.readCsv(csvWithLeadingBlankLine, ignoreEmptyLines = true)
         }
 
         val df = DataFrame.readCsv(
-            "../data/jetbrains repositories.csv",
+            csvWithLeadingBlankLine,
             skipLines = 1, // we need to skip the empty lines manually
         )
         df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
@@ -882,6 +882,7 @@ class DelimCsvTsvTests {
     companion object {
         private val irisDataset = testCsv("irisDataset")
         private val simpleCsv = testCsv("testCSV")
+        private val csvWithLeadingBlankLine = testResource("jetbrains repositories.csv")
         private val simpleCsvUtf16le = testCsv("testCSV-utf-16-le-bom")
         private val simpleCsvUtf16leGz = testResource("testCSV-utf16le-bom.csv.gz")
         private val simpleCsvUtf16leZip = testResource("testCSV-utf-16-le-bom.zip")

@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.kind
+import java.util.Collections
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
@@ -56,7 +57,8 @@ internal abstract class DataColumnImpl<T>(
     override fun name() = name
 
     @RequiredByIntellijPlugin
-    override fun values() = values
+    // a read-only view: a downcast to MutableList can no longer mutate the column storage
+    override fun values(): List<T> = Collections.unmodifiableList(values)
 
     @RequiredByIntellijPlugin
     override fun type() = type
@@ -80,7 +82,10 @@ internal abstract class DataColumnImpl<T>(
 
     override fun hashCode() = hashCode
 
-    override operator fun get(range: IntRange) = createWithValues(values.subList(range.first, range.last + 1))
+    override operator fun get(range: IntRange) =
+        createWithValues(
+            if (range.isEmpty()) emptyList() else values.subList(range.first, range.last + 1),
+        )
 
     protected abstract fun createWithValues(values: List<T>, hasNulls: Boolean? = null): DataColumn<T>
 }

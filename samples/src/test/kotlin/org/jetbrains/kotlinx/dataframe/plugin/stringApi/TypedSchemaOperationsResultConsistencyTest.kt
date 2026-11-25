@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.plugin.stringApi
 
+import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.byName
 import org.jetbrains.kotlinx.dataframe.api.convert

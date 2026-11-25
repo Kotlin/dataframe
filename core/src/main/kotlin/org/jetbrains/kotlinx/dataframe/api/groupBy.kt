@@ -84,10 +84,10 @@ internal interface GroupByDocs {
      * `\[ `__`.`__[**`sortByGroupDesc`**][GroupBy.sortByGroupDesc]**`() `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByCount`**][GroupBy.sortByCount]**`() `**`]`
+     * `\[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
+     * `\[ `__`.`__[**`sortByCountDesc`**][GroupBy.sortByCountDesc]**`() `**`]`
      *
      * {@include [Indent]}
      * `\[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]` \[ `**`{ `**`columns: `[`SortColumnsSelector`][SortColumnsSelector]**` }`**` \] ]`
@@ -253,8 +253,9 @@ internal interface GroupByDocs {
      * A [GroupBy] can be transformed into a new [GroupBy] using one of the following methods:
      * * [sortByGroup][GroupBy.sortByGroup] / [sortByGroupDesc][GroupBy.sortByGroupDesc] — sorts the **order
      *   of groups** (and their corresponding keys) by values computed with a [DataFrameExpression] applied to each group;
-     * * [sortByCount][GroupBy.sortByCount] / [sortByCountAsc][GroupBy.sortByCountAsc] — sorts the **order
-     *   of groups** (and their corresponding keys) by the number of rows they contain;
+     * * [sortByCountAsc][GroupBy.sortByCountAsc] / [sortByCountDesc][GroupBy.sortByCountDesc] — sorts the **order
+     *   of groups** (and their corresponding keys) by the number of rows they contain; [sortByCountAsc] — in ascending order,
+     *   [sortByCountDesc] — in descending order;
      * * [sortByKey][GroupBy.sortByKey] / [sortByKeyDesc][GroupBy.sortByKeyDesc] — sorts the **order
      *   of groups** (and their corresponding keys) by the grouping key values;
      * * [sortBy][GroupBy.sortBy] / [sortByDesc][GroupBy.sortByDesc] — sorts the **order of rows within each group**
@@ -505,6 +506,7 @@ private typealias CommonGroupByForPivotDocs = Nothing
  * @return A new [PivotGroupBy] that preserves the original [pivot] key columns
  * and uses the provided columns as [groupBy] keys.
  */
+@Interpretable("PivotGroupBy")
 public fun <T> Pivot<T>.groupBy(moveToTop: Boolean = true, columns: ColumnsSelector<T, *>): PivotGroupBy<T> =
     (this as PivotImpl<T>).toGroupedPivot(moveToTop, columns)
 
@@ -526,6 +528,7 @@ public fun <T> Pivot<T>.groupBy(vararg columns: ColumnReference<*>): PivotGroupB
  * @return A new [PivotGroupBy] that preserves the original [pivot] key columns
  * and uses the provided columns as [groupBy] keys.
  */
+@StringApiInterpretable(interpreter = "PivotGroupBy", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Pivot<T>.groupBy(vararg columns: String): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -542,6 +545,7 @@ public fun <T> Pivot<T>.groupBy(vararg columns: KProperty<*>): PivotGroupBy<T> =
  * @return A new [PivotGroupBy] that preserves the original [pivot] key columns
  * and uses the remaining columns as [groupBy] keys.
  */
+@Interpretable("PivotGroupByOther")
 public fun <T> Pivot<T>.groupByOther(): PivotGroupBy<T> {
     val impl = this as PivotImpl<T>
     val pivotColumns = df.getPivotColumnPaths(columns).toColumnSet()

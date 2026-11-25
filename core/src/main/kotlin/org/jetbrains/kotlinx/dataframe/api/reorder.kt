@@ -488,6 +488,8 @@ public fun <T> DataFrame<T>.reorderColumnsByName(atAnyDepth: Boolean = true, des
  * {@set [ReorderColumnsByNameDocs.FRAME_COLUMNS] {@include [ReorderColumnsInFrameColumnsSnippet]}}
  * @include [ReorderColumnsInFrameColumnsParamSnippet]
  */
+@Refine
+@Interpretable("ReorderColumnsByNameIncludingFrames")
 public fun <T> DataFrame<T>.reorderColumnsByName(
     atAnyDepth: Boolean = true,
     desc: Boolean = false,

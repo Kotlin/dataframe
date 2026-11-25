@@ -77,7 +77,8 @@ public final class org/jetbrains/kotlinx/dataframe/DataColumnKt {
 	public static final fun getType (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lkotlin/reflect/KType;
 	public static final fun getTypeClass (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lkotlin/reflect/KClass;
 	public static final fun getValues (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Iterable;
-	public static final fun indices (Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;)Lkotlin/ranges/IntRange;
+	public static final fun indices (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lkotlin/ranges/IntRange;
+	public static final synthetic fun indices (Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;)Lkotlin/ranges/IntRange;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/DataFrame : org/jetbrains/kotlinx/dataframe/ColumnsContainer, org/jetbrains/kotlinx/dataframe/aggregation/Aggregatable {
@@ -645,11 +646,11 @@ public final class org/jetbrains/kotlinx/dataframe/api/BetweenKt {
 
 public final class org/jetbrains/kotlinx/dataframe/api/CastKt {
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
+	public static final synthetic fun cast (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun cast (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final synthetic fun cast (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;
-	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
+	public static final synthetic fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnWithPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnWithPath;
@@ -657,6 +658,10 @@ public final class org/jetbrains/kotlinx/dataframe/api/CastKt {
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
 	public static final fun castFrameColumn (Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
+	public static final fun castUnchecked (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun castUnchecked (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun castUnchecked (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
+	public static final fun castUnchecked (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/CellAttributes {
@@ -1881,7 +1886,9 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataFrameGetKt {
 	public static final fun getColumns (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/util/List;
 	public static final fun getColumns (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Ljava/util/List;
 	public static final fun getColumnsWithPaths (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/util/List;
+	public static final fun getFrameColumn (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;I)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
 	public static final fun getFrameColumn (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
+	public static final fun getFrameColumn (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
 	public static final fun getFrameColumn (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
 	public static final fun getOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;I)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun getRows (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -2252,6 +2259,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/FormattedFrame {
 	public static synthetic fun toHtml$default (Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;Lorg/jetbrains/kotlinx/dataframe/jupyter/CellRenderer;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/DataFrameHtmlData;
 	public final fun toStandaloneHtml (Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;Lorg/jetbrains/kotlinx/dataframe/jupyter/CellRenderer;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/io/DataFrameHtmlData;
 	public static synthetic fun toStandaloneHtml$default (Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;Lorg/jetbrains/kotlinx/dataframe/jupyter/CellRenderer;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/DataFrameHtmlData;
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/FormattingDsl {
@@ -4083,6 +4091,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/SortKt {
 	public static final fun sortBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
 	public static final fun sortByCount (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
 	public static final fun sortByCountAsc (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
+	public static final fun sortByCountDesc (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
 	public static final fun sortByDesc (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun sortByDesc (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun sortByDesc (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -5407,8 +5416,9 @@ public final class org/jetbrains/kotlinx/dataframe/exceptions/CellConversionExce
 	public final fun getRow ()Ljava/lang/Integer;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/exceptions/ColumnNotFoundException : java/lang/RuntimeException, org/jetbrains/kotlinx/dataframe/exceptions/DataFrameError {
+public final class org/jetbrains/kotlinx/dataframe/exceptions/ColumnNotFoundException : java/lang/IllegalStateException, org/jetbrains/kotlinx/dataframe/exceptions/DataFrameError {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public final fun getColumnName ()Ljava/lang/String;
 	public fun getMessage ()Ljava/lang/String;
 }
@@ -5711,6 +5721,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/receivers/AggregateInternalDslKt {
 	public static final fun internal (Lorg/jetbrains/kotlinx/dataframe/aggregation/AggregateDsl;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/receivers/AggregateInternalDsl;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/impl/api/CastKt {
+	public static final fun verifyGroupBySchemaImpl (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lkotlin/reflect/KType;Lkotlin/reflect/KType;)V
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/api/ConstructorsKt {
@@ -6078,22 +6092,24 @@ public final class org/jetbrains/kotlinx/dataframe/io/DisplayConfiguration {
 	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/functions/Function3;Ljava/lang/String;ZZZZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZZZZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZZZZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/Integer;
 	public final fun component10 ()Z
 	public final fun component11 ()Z
 	public final fun component2 ()Ljava/lang/Integer;
-	public final fun component3 ()I
+	public final fun component3 ()Ljava/lang/Integer;
 	public final fun component4 ()Lkotlin/jvm/functions/Function3;
 	public final fun component5 ()Lkotlin/jvm/functions/Function2;
 	public final fun component6-3Sl7FsM ()Ljava/lang/String;
 	public final fun component7 ()Z
 	public final fun component9 ()Z
-	public final fun copy-bMNacXk (Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZZZZZ)Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;
-	public static synthetic fun copy-bMNacXk$default (Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZZZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;
+	public final fun copy-bMNacXk (Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZZZZZ)Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;
+	public static synthetic fun copy-bMNacXk$default (Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZZZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;
 	public final synthetic fun copy-rqXL5tM (Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/functions/Function3;Ljava/lang/String;ZZZZZ)Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;
 	public static synthetic fun copy-rqXL5tM$default (Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/functions/Function3;Ljava/lang/String;ZZZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getCellContentLimit ()I
+	public final fun getCellContentLimit ()Ljava/lang/Integer;
 	public final fun getCellFormatter ()Lkotlin/jvm/functions/Function3;
 	public final fun getDecimalFormat-3Sl7FsM ()Ljava/lang/String;
 	public final fun getDownsizeBufferedImage ()Z
@@ -6105,7 +6121,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/DisplayConfiguration {
 	public final fun getUseDarkColorScheme ()Z
 	public fun hashCode ()I
 	public final fun invoke (Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;
-	public final fun setCellContentLimit (I)V
+	public final fun setCellContentLimit (Ljava/lang/Integer;)V
 	public final fun setCellFormatter (Lkotlin/jvm/functions/Function3;)V
 	public final fun setDecimalFormat-h5o3lmc (Ljava/lang/String;)V
 	public final fun setDownsizeBufferedImage (Z)V

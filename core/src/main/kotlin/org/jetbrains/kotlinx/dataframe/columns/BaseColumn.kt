@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
-import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
@@ -81,10 +80,16 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 
     // region values
 
+    /**
+     * Returns this column's values as a read-only view — changing it is not supported and doesn't affect this column.
+     */
     public fun values(): Iterable<T>
 
+    /**
+     * Returns this column's values copied into a new [List] — changing it doesn't affect this column.
+     */
     @RequiredByIntellijPlugin
-    public fun toList(): List<T> = values().asList()
+    public fun toList(): List<T> = values().toMutableList()
 
     public fun toSet(): Set<T>
 

@@ -6,15 +6,20 @@ Changes the type argument of the [`DataFrame`](DataFrame.md) instance without ch
 **API reference**: [`cast`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/cast.html)
 
 ```kotlin
-cast<T>(verify = false)
+cast<T>(verify = true)
+castUnchecked<T>()
 ```
 
-Related operations: [](adjustSchema.md)
+Related operations: [](adjustSchema.md), [](require.md)
 
 **Parameters:**
-* `verify: Boolean = false` —
-  when `true`, the function throws an exception if the [`DataFrame`](DataFrame.md) instance doesn't match the given schema. 
-Otherwise, it just changes the formal type without actual data checks.
+* `verify: Boolean = true` —
+  when `true`, the function throws an exception if the [`DataFrame`](DataFrame.md) instance doesn't match the given schema:
+  a column of the schema is missing, or a column has a type that is not a subtype of the type declared in the schema.
+  Columns that are not declared in the schema are kept.
+  When `false`, it just changes the formal type without actual data checks.
+
+`castUnchecked<T>()` is the same as `cast<T>(verify = false)`, but without reified type parameter.
 
 Use this operation to change the formal type of a [`DataFrame`](DataFrame.md) instance
 to match the expected schema and enable generated [extension properties](extensionPropertiesApi.md) for it.
@@ -30,7 +35,6 @@ df.cast<Person>()
 ```
 
 To convert [`DataFrame`](DataFrame.md) columns to match given schema, use [`convertTo`](convertTo.md) operation.
-
 **Reusing implicitly generated schema**
 
 ```kotlin

@@ -127,7 +127,7 @@ class PivotTests {
                 res.rows().mapNotNull {
                     val value = it[columnName] as Boolean
                     if (value) {
-                        (it.name to columnName)
+                        (it[name] to columnName)
                     } else {
                         null
                     }
@@ -214,7 +214,7 @@ class PivotTests {
     @Test
     fun `pivot with index transform`() {
         val pivoted = typed.pivot { key }.groupBy { name.map { "_$it" } }.with { value }
-        pivoted.name shouldBe typed.name.distinct().map { "_$it" }
+        pivoted[name] shouldBe typed.name.distinct().map { "_$it" }
     }
 
     @Test

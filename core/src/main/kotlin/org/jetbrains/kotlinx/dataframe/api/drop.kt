@@ -161,6 +161,7 @@ public inline fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> =
  *
  * Rows are dropped for as long as the [predicate] holds; the operation stops at the first row that
  * does not satisfy it, and no later row is dropped even if it satisfies the [predicate].
+ * If the [predicate] holds for every row, the result has no rows.
  *
  * @include [SelectingRows.RowFilterSnippet]
  *
@@ -178,7 +179,7 @@ public inline fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> =
  * @return A [DataFrame] containing all rows except the first ones that satisfy the [predicate].
  */
 public inline fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
-    firstOrNull { !predicate(it, it) }?.let { drop(it.index()) } ?: this
+    firstOrNull { !predicate(it, it) }?.let { drop(it.index()) } ?: take(0)
 
 // endregion
 

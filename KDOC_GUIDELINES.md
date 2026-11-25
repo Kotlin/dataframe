@@ -50,6 +50,12 @@ Some parts of public API are not intended for end users but can be used in Compi
 KDF extension libraries. These methods should have a small KDoc as well.
 
 Deprecated methods, properties, classes, and constructors are not required to have KDocs.
+When a deprecated API is mentioned at all, its KDoc or page states the deprecation and the replacement — never
+presents it as a recommended way.
+
+A replacement operation's KDoc does not reference the function it replaces: the deprecation
+message and the migration guide carry the rename story, so nothing in the KDoc has to be removed
+when the deprecated function is deleted.
 
 For the internal API, please add at least a small note.
 
@@ -119,7 +125,11 @@ lines included. Unescaped, the reference is resolved where it is written (`[colu
 becomes a link to the `…dataframe.columns` *package*). Escaped, KoDEx leaves it in place and it
 resolves after processing, once the snippet sits in a function that has that parameter.
 
-Also, you can use 
+An included snippet must stay true in every function it is included into: re-read it against each
+host's signature, not only where it was written. A wording that names one host's behaviour — printing,
+mutating, returning — is false on a host that does something else with the same parameters.
+
+Also, you can use
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
 along with `@include` to change variable values in common parts. This is especially useful for 
 writing examples of methods with similar usage but with different names.
@@ -229,6 +239,11 @@ and include things like:
    topic to be linked to from each DSL grammar by the link typealias
 - [various snippets and topics](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/snippets.kt)
   with common mechanisms description.
+- [Shared enum parameter snippets](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/typeConversions.kt)
+  — an enum with non-obvious member semantics can carry a reusable `@param` snippet:
+  `Infer.ParamDoc` documents the `infer` parameter. Include it —
+  `@include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].` — instead of writing the parameter
+  semantics by hand.
 - And many others; Check the folder to see if there are more and feel free to add them if needed :)
 
 #### URLs
@@ -239,6 +254,11 @@ When linking to external URLs, it's recommended to use
 
 It's a central place where we can store URLs that can be used in multiple places in the library. Plus, it makes
 it easier to update the documentation whenever (a part of) a URL changes.
+
+A KDoc that uses `{@include [DocumentationUrls.X]}` needs
+`import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls` in the same file
+(as `count.kt` does): without it KoDEx fails with `Reference not found` at `processKDocsMain` time,
+and the import is doc-only — it is stripped from the processed sources, so nothing flags it earlier.
 
 For [Kotlin DataFrame GitHub issues and PRs](https://github.com/Kotlin/dataframe/issues),
 you can just write its number like `#1234` in the KDoc.
@@ -381,6 +401,13 @@ Example from `DataFrame.first` KDoc:
 add a note about it. 
 * If you think a user can confuse the operation with another one,
 write it down exactly like that.
+* A link can't point at one overload of a function. To refer to another overload,
+describe it in words — by its receiver or parameter types — instead of linking to it.
+* `[link]` references resolve by the normal Kotlin rules — against the imports and the package of the
+file the KDoc lives in. A link like `[DataFrame]` from another package needs the import even when the
+name appears in the KDoc only; such imports are load-bearing, keep them.
+* When a `See also` entry names an operation pair such as `x` and `xDesc`, list the ascending
+variant first — the pair reads "ascending and descending", like its neighbouring entries.
 
 For example, from `group` KDoc:
 
@@ -499,6 +526,10 @@ fun concatDataColumns() {
 }
 ```
 
+The order of the tags in the KDoc above matters: `@sample` and any text after it go above the first block tag
+(`@param`, `@throws`) — anything below a block tag becomes part of that tag in the rendered KDoc
+(`KODEX_KDOC_PREPROCESSING.md` → Notation explains the mechanism).
+
 Use `@sampleNoComments` instead of `@sample` if the sample code has KDocs that shouldn't be copied.
 Check the result in `generated-sources` after `processKDocsMain` (see [Compiling KDocs](#compiling-kdocs)).
 
@@ -518,7 +549,10 @@ Only if the task explicitly asks for before/after tables, read
 #### Parameters and return section
 
 Describe parameters and return of the method using `@param` and `@return` tags. 
-Remember type parameters.
+Remember type parameters. Keep the `@param` tags in the order of the signature.
+
+Document the exceptions the method throws with `@throws`, including those thrown by the function it
+delegates to.
 
 Wrap parameter names into `[]` for better readability.
 This is not only cosmetic: an unbracketed type parameter (`@param T ...`) makes KoDEx emit a broken
@@ -652,6 +686,12 @@ The grammars are also almost always decorated with highlighted code snippets all
 
 No other symbols of [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) are used.
 
+If several steps are mutually exclusive — for example, overloads that lead to the same next step — list them
+as alternatives inside **one** optional group: '`[ `**`a`**` | `**`b`**` | `**`c`**` ]`'. Do not model them as
+several separate '`[ ... ]`' groups: each reads as an independent step, so the grammar would permit chains
+the receiver types do not allow — the receiver after a step is that step's result type, and every chain a
+grammar permits must compile.
+
 Note that the grammar is not always 100% accurate to keep the readability acceptable.
 Always use your common sense reading it, and if you're unsure, try out the function yourself or check
 the source code :).
@@ -739,6 +779,12 @@ But keep these things in mind:
 - KoDEx reads `$` even inside a ` ``` ` block, so a Kotlin string template in an example is silently eaten:
   `"${i + 1}. $name"` came out of `processKDocsMain` as `"+ 1. "`. Escape every `$` you mean literally as
   `\$` — the escape character is removed in the last processing wave, so the generated KDoc shows `$` again.
+- A `@set` value that is a markdown link (`[Float][Float]`) does not render as a link when `{@get}`
+  substitutes it inside a code span — it comes out as literal `[Float][Float]Array`. When composing a
+  name from `{@get [TYPE]}` plus literal characters inside backticks, pass plain values (`Float`), not links.
+- A trailing `?` composed from `{@get [TYPE]}` plus literal characters goes **after** the closing backtick:
+  `[Comparable]`<`[T]`>`?` renders `Comparable<T>?`, while putting it inside — `` `<`[T]`?`>` `` — renders
+  `Comparable<T?>`. The notation is silent — check the expanded output.
 - Use `&nbsp;` (or `{@include [Indent]}`) to add non-breaking-space-based indents in your code samples.
 - Never put `!` directly in front of a `[]` reference, like `if ![skipNaN]`. KoDEx turns the reference into
   `![<code>skipNaN</code>][skipNaN]`, which Markdown reads as an image without a URL, crashing Dokka with a

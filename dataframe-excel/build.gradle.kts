@@ -17,6 +17,11 @@ group = "org.jetbrains.kotlinx"
 dependencies {
     api(projects.core)
     api(libs.poi)
+    constraints {
+        api(libs.log4j.api) {
+            because("log4j-api < 2.25.5 is flagged by CVE scanners (MapMessage JSON); transitive via poi")
+        }
+    }
 
     // for writing DataFrame/DataRow -> JSON in Excel cells
     // can safely be excluded when writing only flat dataframes

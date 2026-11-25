@@ -230,7 +230,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs]
      * {@set [CommonColGroupDocs.ARG] "columnGroupName"}
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
-     * @param [name\] The name of the value column.
+     * @param [name\] The name of the column group.
      */
     @ExcludeFromSources
     private typealias ColGroupNameDocs = Nothing
@@ -335,7 +335,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs]
      * {@set [CommonColGroupDocs.ARG] "pathTo"["columnGroupName"\] }
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
-     * @param [path\] The path to the value column.
+     * @param [path\] The path to the column group.
      */
     @ExcludeFromSources
     private typealias ColGroupPathDocs = Nothing
@@ -441,7 +441,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs]
      * {@set [CommonColGroupDocs.ARG] Type::columnGroupA}
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.SingleExample]}}
-     * @param [property\] The [KProperty] reference to the value column.
+     * @param [property\] The [KProperty] reference to the column group.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     @ExcludeFromSources
@@ -563,7 +563,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs]
      * {@set [CommonColGroupDocs.ARG] 0}
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
-     * @param [index\] The index of the value column.
+     * @param [index\] The index of the column group.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
     @ExcludeFromSources

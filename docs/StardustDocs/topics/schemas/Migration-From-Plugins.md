@@ -2,7 +2,7 @@
 
 Gradle and KSP plugins were useful tools in earlier versions of Kotlin DataFrame.  
 However, they are now **deprecated**.
-Their latest release is 1.0.0-Beta4 and will not have future releases.
+Their latest release is 1.0.0-Beta4; there will be no future releases.
 This page provides migration guidance.
 
 Our plans for the next iteration of schema generation from source feature can be found in 

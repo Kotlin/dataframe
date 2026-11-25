@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.InsertException
 import org.jetbrains.kotlinx.dataframe.api.NotAColumnGroupInsertException
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.before
-import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ReferenceData
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getAncestor
 import org.jetbrains.kotlinx.dataframe.impl.columns.withDf
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
-import kotlin.jvm.Throws
 
 internal data class ColumnToInsert(
     val insertionPath: ColumnPath,
@@ -48,7 +47,7 @@ internal fun <T> insertImpl(
     treeNode: ReadonlyTreeNode<ReferenceData>?,
     depth: Int,
 ): DataFrame<T> {
-    if (columns.isEmpty()) return df ?: DataFrame.empty().cast()
+    if (columns.isEmpty()) return df ?: DataFrame.empty().castUnchecked()
 
     val childDepth = depth + 1
 
@@ -164,7 +163,7 @@ internal fun <T> insertImpl(
         }
     }
 
-    return newColumns.toDataFrame().cast()
+    return newColumns.toDataFrame().castUnchecked()
 }
 
 internal fun <T> InsertClause<T>.afterImpl(columnPath: ColumnPath): DataFrame<T> {

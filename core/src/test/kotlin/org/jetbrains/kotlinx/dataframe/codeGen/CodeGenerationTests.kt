@@ -18,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.pathOf
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toCodeString
 import org.jetbrains.kotlinx.dataframe.api.under
@@ -305,7 +304,7 @@ class CodeGenerationTests : BaseTest() {
             
             """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
-        val expectedConverter = "it.cast<$typeName>()"
+        val expectedConverter = "it.castUnchecked<$typeName>()"
 
         assertEquals(expectedDeclaration, generated.declarations)
         assertEquals(expectedConverter, generated.typeCastGenerator("it"))
@@ -336,7 +335,7 @@ class CodeGenerationTests : BaseTest() {
             
             """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
-        val expectedConverter = "it.cast<$typeName>()"
+        val expectedConverter = "it.castUnchecked<$typeName>()"
 
         assertEquals(expectedDeclaration, generated.declarations)
         assertEquals(expectedConverter, generated.typeCastGenerator("it"))
@@ -381,7 +380,7 @@ class CodeGenerationTests : BaseTest() {
             val $dfRowName<$type2>.weight: $intName? @JvmName("${type2}_weight") get() = this["weight"] as $intName?
             """.trimIndent()
 
-        val expectedConverter = "it.cast<$type2>()"
+        val expectedConverter = "it.castUnchecked<$type2>()"
 
         assertEquals(declaration1 + "\n" + declaration2, generated.declarations)
         generated.typeCastGenerator("it") shouldBe expectedConverter

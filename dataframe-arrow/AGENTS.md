@@ -101,7 +101,10 @@ Three more writer invariants, with a test each:
   *not* writable: a top-level one degrades to `Utf8`, a nested one fails on allocation.
 
 The Arrow ↔ Kotlin type mapping is published as a table in `docs/StardustDocs/topics/dataSources/ApacheArrow.md`
-and pinned by `ArrowTypeMappingTest`; change the code, the test and the table in the same commit. The read and
+and pinned by `ArrowTypeMappingTest`; change the code, the test and the table in the same commit. A new write
+row lands in both the `writeCases` list **and** the `roundTripped` agreement map of
+`the documented mappings round-trip` — nothing enforces the second, and a row missing from it is pinned
+one-sided. The read and
 write tables are **not** symmetric — reading builds lists and frame columns, writing has no list mapping at all.
 
 **Legacy/deprecated:** `arrowReading.kt` also defines `ArrowFeather`, an implementation of the old
@@ -114,3 +117,24 @@ write tables are **not** symmetric — reading builds lists and frame columns, w
 - Tests live under `src/test/kotlin/.../io/`; fixtures in `src/test/resources/`. `duckdb-jdbc` and `arrow-c-data` are
   test-only deps (DuckDB is used to produce Parquet/Arrow test data).
 - Run just this module: `./gradlew dataframe-arrow:test` (add `-Pkotlin.dataframe.debug=true` to match CI checks).
+- **Never walk a whole batch-sized vector per row when reading.** `readField` runs once per Arrow batch (Parquet
+  default batch: 32K rows) for a top-level column, but once per list row for any vector nested inside a list
+  element, and a full-vector walk — e.g. `StructVector.getNullCount()`, which scans the entire validity buffer
+  via `BitVectorHelper.getNullCount` — must not happen per list row: batch-sized work × rows turns a linear
+  read into a quadratic one. `ArrowListStructScanTest` guards this deterministically: a hand-built
+  `VectorSchemaRoot` fed through a custom `ArrowReader` (the same `readArrowImpl` path all readers take) with
+  `getNullCount`-counting vectors pins "at most one full validity-buffer scan per batch" — for the list element
+  and for a struct or list nested inside it — no timing involved.
+- To *measure* reading performance, use `ArrowReadingPerfBenchmarkTest`: a manual `@Ignore`d benchmark over
+  in-memory Arrow IPC datasets (the shared conversion, so no Arrow-dataset JNI is needed). Label each run with the
+  `ARROW_PERF_VARIANT` env var; per-dataset medians **and fingerprints** (row/sum/null counts) are appended to
+  `arrow-reading-perf.txt` in the system temp dir (`java.io.tmpdir`) — identical fingerprints across variants mean a
+  pure perf change, differing ones mean the reads are not comparable. Timing is machine-dependent, so it stays out
+  of CI.
+- When a test hand-builds Arrow vectors instead of `VectorSchemaRoot.create`, construct struct vectors via the
+  `(name, FieldType)` constructor + `initializeChildrenFromFields`: the `(Field, …)` constructor eagerly allocates
+  writer-owned child buffers that `close()` never releases, and the root allocator reports the leak at the end of
+  the test. A vector injected anywhere is closed by nobody but the test itself: as a list's data vector (a
+  subclass overriding `getDataVector`) or as a struct element's child (a subclass overriding the one-arg
+  `getChild(String)`, declared on `AbstractContainerVector` — two supertypes above `StructVector`).
+  `ArrowListStructScanTest`'s KDoc shows the working shapes.

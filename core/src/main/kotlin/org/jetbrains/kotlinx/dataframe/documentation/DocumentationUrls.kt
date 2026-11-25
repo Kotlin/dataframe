@@ -34,6 +34,9 @@ public interface DocumentationUrls {
     /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
     public typealias CompilerPlugin = Nothing
 
+    /** [Kotlin DataFrame Compiler Plugin]({@include [Url]}/compiler-plugin.html) */
+    public typealias CompilerPluginLink = Nothing
+
     /** [See Packaging into a fat JAR on the documentation website.]({@include [Url]}/packaging.html) */
     public typealias Packaging = Nothing
 
@@ -156,6 +159,9 @@ public interface DocumentationUrls {
     /** [See `convertTo` on the documentation website.]({@include [Url]}/convertto.html) */
     public typealias ConvertTo = Nothing
 
+    /** [See `inferType` on the documentation website.]({@include [Url]}/infertype.html) */
+    public typealias InferType = Nothing
+
     /** [See `toList` on the documentation website.]({@include [Url]}/tolist.html) */
     public typealias ToList = Nothing
 
@@ -189,6 +195,12 @@ public interface DocumentationUrls {
         /** [See `map` on a `GroupBy` on the documentation website.]({@include [Url]}/map.html#map-on-groupby) */
         public typealias OnGroupBy = Nothing
     }
+
+    /** [See `append` on the documentation website.]({@include [Url]}/append.html) */
+    public typealias Append = Nothing
+
+    /** [See `appendNulls` on the documentation website.]({@include [Url]}/appendnulls.html) */
+    public typealias AppendNulls = Nothing
 
     /** [See `all` on the documentation website.]({@include [Url]}/all.html) */
     public typealias All = Nothing
@@ -274,6 +286,12 @@ public interface DocumentationUrls {
     /** [See `columnOf` on the documentation website.]({@include [Url]}/createcolumn.html#columnof) */
     public typealias ColumnOf = Nothing
 
+    /** [See `toColumn` on the documentation website.]({@include [Url]}/createcolumn.html#tocolumn) */
+    public typealias ToColumn = Nothing
+
+    /** [See `toColumnOf` on the documentation website.]({@include [Url]}/createcolumn.html#tocolumnof) */
+    public typealias ToColumnOf = Nothing
+
     /** [See `dataFrameOf` on the documentation website.]({@include [Url]}/createdataframe.html#dataframeof) */
     public typealias DataFrameOf = Nothing
 
@@ -282,6 +300,9 @@ public interface DocumentationUrls {
 
     /** [See `emptyDataFrame` on the documentation website.]({@include [Url]}/createdataframe.html#emptydataframe) */
     public typealias EmptyDataFrame = Nothing
+
+    /** [See `pathOf` on the documentation website.]({@include [Url]}/columnselectors.html#pathof) */
+    public typealias PathOf = Nothing
 
     /** [See `gather` on the documentation website.]({@include [Url]}/gather.html) */
     public typealias Gather = Nothing
@@ -310,6 +331,9 @@ public interface DocumentationUrls {
     /** [See `valueCounts` on the documentation website.]({@include [Url]}/valuecounts.html) */
     public typealias ValueCounts = Nothing
 
+    /** [See `values` on the documentation website.]({@include [Url]}/values.html) */
+    public typealias Values = Nothing
+
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
     public typealias Explode = Nothing
 
@@ -333,6 +357,9 @@ public interface DocumentationUrls {
 
     /** [See `rename` on the documentation website.]({@include [Url]}/rename.html) */
     public typealias Rename = Nothing
+
+    /** [See `replace` on the documentation website.]({@include [Url]}/replace.html) */
+    public typealias Replace = Nothing
 
     /** [See `groupBy` on the documentation website.]({@include [Url]}/groupby.html) */
     public typealias GroupBy = Nothing
@@ -560,11 +587,17 @@ public interface DocumentationUrls {
     /** [See `requireColumn` on the documentation website.]({@include [Url]}/require.html) */
     public typealias Require = Nothing
 
+    /** [See `head` on the documentation website.]({@include [Url]}/head.html) */
+    public typealias Head = Nothing
+
     /** [See `tail` on the documentation website.]({@include [Url]}/tail.html) */
     public typealias Tail = Nothing
 
     /** [See `split` on the documentation website.]({@include [Url]}/split.html) */
     public typealias Split = Nothing
+
+    /** [See `merge` on the documentation website.]({@include [Url]}/merge.html) */
+    public typealias Merge = Nothing
 
     /** [See (Cols) Without Nulls on the documentation website.]({@include [Url]}/columnselectors.html#cols-without-nulls) */
     public typealias WithoutNulls = Nothing
@@ -592,6 +625,9 @@ public interface DocumentationUrls {
 
     /** [See DataFrame from Iterable<T> on the documentation website.]({@include [Url]}/createdataframe.html#dataframe-from-iterable-t) */
     public typealias CreateDataFrameFromIterable = Nothing
+
+    /** [See DataFrame from Map<String, List<*>> on the documentation website.]({@include [Url]}/createdataframe.html#dataframe-from-map-string-list) */
+    public typealias CreateDataFrameFromMap = Nothing
 
     /** [See Global Parser Options on the documentation website.]({@include [Url]}/parse.html#global-parser-options) */
     public typealias GlobalParserOptions = Nothing
@@ -625,6 +661,38 @@ public interface DocumentationUrls {
 
     /** [See `indices` on the documentation website.]({@include [Url]}/indexing.html#row-indices) */
     public typealias Indices = Nothing
+
+    /** [See `getColumn` on the documentation website.]({@include [Url]}/getcolumn.html) */
+    public interface GetColumn {
+
+        /** [See `getColumnGroup` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumngroup) */
+        public typealias GetColumnGroup = Nothing
+
+        /** [See `getColumns` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumns) */
+        public typealias GetColumns = Nothing
+
+        /** [See `getFrameColumn` on the documentation website.]({@include [Url]}/getcolumn.html#getframecolumn) */
+        public typealias GetFrameColumn = Nothing
+
+        /** [See `getColumnIndex` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumnindex) */
+        public typealias GetColumnIndex = Nothing
+
+        /** [See `getColumnPath` and `getColumnPaths` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumnpath-and-getcolumnpaths) */
+        public typealias GetColumnPaths = Nothing
+
+        /** [See `getColumnWithPath` and `getColumnsWithPaths` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumnwithpath-and-getcolumnswithpaths) */
+        public typealias GetColumnsWithPaths = Nothing
+    }
+
+    /** [See "Get rows" on the documentation website.]({@include [Url]}/getrow.html) */
+    public typealias GetRow = Nothing
+
+    /** [See `rows` on the documentation website.]({@include [Url]}/rows.html) */
+    public interface Rows {
+
+        /** [See `rowsReversed` on the documentation website.]({@include [Url]}/rows.html#rowsreversed) */
+        public typealias RowsReversed = Nothing
+    }
 
     /** [See `JsonPath` on the documentation website.]({@include [Url]}/read.html#specify-key-value-paths) */
     public typealias JsonPath = Nothing

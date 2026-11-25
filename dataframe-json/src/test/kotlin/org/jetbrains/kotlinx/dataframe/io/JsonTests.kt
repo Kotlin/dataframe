@@ -1350,7 +1350,7 @@ class JsonTests {
 
         // is read as value column
         val contributors = row["contributors"]!!.jsonPrimitive.content
-        contributors shouldStartWith FormattedFrame::class.qualifiedName!!
+        contributors shouldStartWith FormattedFrame::class.simpleName!!
     }
 
     @Test

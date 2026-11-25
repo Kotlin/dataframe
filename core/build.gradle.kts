@@ -59,6 +59,11 @@ dependencies {
     kotlinCompilerPluginClasspathSamples(projects.plugins.expressionsConverter)
 
     api(libs.commonsCsv)
+    constraints {
+        api(libs.commonsCodec) {
+            because("commons-codec < 1.23.0 is flagged by CVE scanners (Blake3 docs); transitive via commons-csv")
+        }
+    }
 
     implementation(libs.commonsIo)
     implementation(libs.fastDoubleParser)

@@ -85,7 +85,7 @@ internal inline fun <T, reified C : Any?, reified R : Any?> Aggregator<*, R>.agg
 internal inline fun <T, reified C : Any?, reified R : Any?> Aggregator<*, R>.aggregateOf(
     data: PivotGroupBy<T>,
     crossinline expression: RowExpression<T, C>,
-): DataFrame<T> = data.aggregateOf(expression, this as Aggregator<C, R>)
+): DataFrame<*> = data.aggregateOf(expression, this as Aggregator<C, R>)
 
 /**
  * @param C is used to infer whether there are nulls in the values fed to the aggregator!
@@ -121,7 +121,7 @@ internal inline fun <T, reified C : Any?, reified R : Any?> Grouped<T>.aggregate
 internal inline fun <T, reified C : Any?, R : Any?> PivotGroupBy<T>.aggregateOf(
     crossinline expression: RowExpression<T, C>,
     aggregator: Aggregator<C & Any, R>,
-): DataFrame<T> =
+): DataFrame<*> =
     aggregate {
         internal().yield(emptyPath(), aggregator.aggregateOf(this, expression))
     }

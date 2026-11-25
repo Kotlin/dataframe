@@ -1,10 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
-import org.jetbrains.kotlinx.dataframe.exceptions.ColumnNotFoundException
 import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
@@ -177,7 +175,7 @@ public class ConvertType<T>(
  * @param [T] class that defines target schema for conversion.
  * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [<code>DataFrame</code>][DataFrame].
  * @param [body] optional dsl to define custom type converters.
- * @throws [ColumnNotFoundException] if [<code>DataFrame</code>][DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [IllegalArgumentException] if [<code>DataFrame</code>][DataFrame] doesn't contain columns that are required by destination schema.
  * @throws [ExcessiveColumnsException] if [<code>DataFrame</code>][DataFrame] contains columns that are not required by destination schema and [<code>excessiveColumnsBehavior</code>][excessiveColumnsBehavior] is set to [<code>ExcessiveColumns.Fail</code>][ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.
@@ -186,7 +184,7 @@ public class ConvertType<T>(
 public inline fun <reified T : Any> DataFrame<*>.convertTo(
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
-): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
+): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).castUnchecked()
 
 /**
  * Converts values in [<code>DataFrame</code>][DataFrame] to match given column schema [<code>T</code>][T].
@@ -215,7 +213,7 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
  * @param [schemaFrom] dataframe which type [<code>T</code>][T] will be used.
  * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [<code>DataFrame</code>][DataFrame].
  * @param [body] optional dsl to define custom type converters.
- * @throws [ColumnNotFoundException] if [<code>DataFrame</code>][DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [IllegalArgumentException] if [<code>DataFrame</code>][DataFrame] doesn't contain columns that are required by destination schema.
  * @throws [ExcessiveColumnsException] if [<code>DataFrame</code>][DataFrame] contains columns that are not required by destination schema and [<code>excessiveColumnsBehavior</code>][excessiveColumnsBehavior] is set to [<code>ExcessiveColumns.Fail</code>][ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.
@@ -225,7 +223,7 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
-): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
+): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).castUnchecked()
 
 /**
  * Converts values in [<code>DataFrame</code>][DataFrame] to match given column schema [<code>schemaType</code>][schemaType].
@@ -253,7 +251,7 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
  * @param [schemaType] defines target schema for conversion.
  * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [<code>DataFrame</code>][DataFrame].
  * @param [body] optional dsl to define custom type converters.
- * @throws [ColumnNotFoundException] if [<code>DataFrame</code>][DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [IllegalArgumentException] if [<code>DataFrame</code>][DataFrame] doesn't contain columns that are required by destination schema.
  * @throws [ExcessiveColumnsException] if [<code>DataFrame</code>][DataFrame] contains columns that are not required by destination schema and [<code>excessiveColumnsBehavior</code>][excessiveColumnsBehavior] is set to [<code>ExcessiveColumns.Fail</code>][ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.

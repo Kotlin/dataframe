@@ -74,11 +74,22 @@ public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n
 /**
  * Returns a [<code>DataFrame</code>][DataFrame] containing the first [<code>n</code>][n] rows.
  *
- * If [<code>n</code>][n] is greater than or equal to the number of rows, the whole [<code>DataFrame</code>][DataFrame] is returned.
+ *
+ *
+ * If the number of rows to take is greater than or equal to the number of rows, the whole [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]
+ * is returned as it is.
+ * Otherwise, each column keeps its runtime type except for nullability: a nullable column
+ * whose `first` values contain no `null` becomes non-nullable at runtime;
+ * the compile-time type is not affected.
+ *
+ * When the number of rows to take is `0`, the result has no rows but keeps all columns:
+ * a column group keeps its nested columns, and a frame column keeps its schema.
+ *
  *
  * For more information: [See `take` on the documentation website.](https://kotlin.github.io/dataframe/slicerows.html#take)
  *
  * See also:
+ * - [<code>head</code>][DataFrame.head] — the same operation, with five rows by default.
  * - [<code>takeLast</code>][DataFrame.takeLast] — takes the last [<code>n</code>][n] rows instead.
  * - [<code>takeWhile</code>][DataFrame.takeWhile] — takes the first rows while the predicate holds.
  * - [<code>drop</code>][DataFrame.drop]`(n: Int)` — drops the first [<code>n</code>][n] rows.
@@ -97,11 +108,22 @@ public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
 /**
  * Returns a [<code>DataFrame</code>][DataFrame] containing the last [<code>n</code>][n] rows.
  *
- * If [<code>n</code>][n] is greater than or equal to the number of rows, the whole [<code>DataFrame</code>][DataFrame] is returned.
+ *
+ *
+ * If the number of rows to take is greater than or equal to the number of rows, the whole [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]
+ * is returned as it is.
+ * Otherwise, each column keeps its runtime type except for nullability: a nullable column
+ * whose `last` values contain no `null` becomes non-nullable at runtime;
+ * the compile-time type is not affected.
+ *
+ * When the number of rows to take is `0`, the result has no rows but keeps all columns:
+ * a column group keeps its nested columns, and a frame column keeps its schema.
+ *
  *
  * For more information: [See `takeLast` on the documentation website.](https://kotlin.github.io/dataframe/slicerows.html#takelast)
  *
  * See also:
+ * - [<code>tail</code>][DataFrame.tail] — the same operation, with five rows by default.
  * - [<code>take</code>][DataFrame.take] — takes the first [<code>n</code>][n] rows instead.
  * - [<code>takeWhile</code>][DataFrame.takeWhile] — takes the first rows while the predicate holds.
  * - [<code>dropLast</code>][DataFrame.dropLast] — drops the last [<code>n</code>][n] rows.
