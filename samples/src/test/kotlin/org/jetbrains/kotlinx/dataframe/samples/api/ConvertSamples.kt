@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.YearMonth
@@ -31,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrames
 import org.jetbrains.kotlinx.dataframe.api.toDateTimeComponents
 import org.jetbrains.kotlinx.dataframe.api.toDuration
@@ -41,6 +43,7 @@ import org.jetbrains.kotlinx.dataframe.api.toJavaDuration
 import org.jetbrains.kotlinx.dataframe.api.toJavaLocalDate
 import org.jetbrains.kotlinx.dataframe.api.toLocalDate
 import org.jetbrains.kotlinx.dataframe.api.toLocalDateTime
+import org.jetbrains.kotlinx.dataframe.api.toLocalTime
 import org.jetbrains.kotlinx.dataframe.api.toStdlibInstant
 import org.jetbrains.kotlinx.dataframe.api.toUtcOffset
 import org.jetbrains.kotlinx.dataframe.api.toYearMonth
@@ -96,6 +99,15 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
         "dateTime" to columnOf("2025-11-22 11:30", "2025-12-05 09:15"),
         "millis" to columnOf(0L, 86400000L),
     ).cast<Dates>()
+
+    @DataSchema
+    interface Instants {
+        val instant: Instant
+    }
+
+    val instantsDf = dataFrameOf("instant")(
+        columnOf(Instant.parse("2024-01-01T23:30:00Z"), Instant.parse("2024-06-15T08:45:00Z")),
+    ).cast<Instants>()
 
     @DataSchema
     interface Parsed {
@@ -424,6 +436,95 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
             // SampleEnd
             .also { it.millis.toList() shouldBe listOf(LocalDate(1970, 1, 1), LocalDate(1970, 1, 2)) }
             .saveDfHtmlSample()
+    }
+
+    @Test
+    fun instantsDfInput() {
+        // SampleStart
+        instantsDf
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun convertInstantToLocalDate_properties() {
+        // SampleStart
+        // kotlin.time.Instant -> kotlinx.datetime.LocalDate in the given time zone
+        instantsDf.convert { instant }.toLocalDate(TimeZone.of("Europe/Berlin"))
+            // SampleEnd
+            .also { it.instant.toList() shouldBe listOf(LocalDate(2024, 1, 2), LocalDate(2024, 6, 15)) }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun convertInstantToLocalDate_strings() {
+        // SampleStart
+        // a column selected by name converts in the given time zone too
+        instantsDf.convert("instant").toLocalDate(TimeZone.of("Europe/Berlin"))
+            // SampleEnd
+            .also { it["instant"].values().toList() shouldBe listOf(LocalDate(2024, 1, 2), LocalDate(2024, 6, 15)) }
+    }
+
+    @Test
+    fun convertInstantToLocalTimeWithZone() {
+        // SampleStart
+        // kotlin.time.Instant -> kotlinx.datetime.LocalTime in the given time zone
+        instantsDf.convert { instant }.toLocalTime(TimeZone.UTC)
+            // SampleEnd
+            .also { it.instant.toList() shouldBe listOf(LocalTime(23, 30), LocalTime(8, 45)) }
+    }
+
+    @Test
+    fun convertDeprecatedInstantToLocalDateWithZone() {
+        // SampleStart
+        val ts by columnOf(
+            kotlinx.datetime.Instant.parse("2024-01-01T23:30:00Z"),
+            kotlinx.datetime.Instant.parse("2024-06-15T08:45:00Z"),
+        )
+        // kotlinx.datetime.Instant -> kotlinx.datetime.LocalDate in the given time zone
+        ts.toDataFrame().convert { ts }.toLocalDate(TimeZone.UTC)
+            // SampleEnd
+            .also { it["ts"].values().toList() shouldBe listOf(LocalDate(2024, 1, 1), LocalDate(2024, 6, 15)) }
+    }
+
+    @Test
+    fun convertDeprecatedInstantToLocalTimeWithZone() {
+        // SampleStart
+        val ts by columnOf(
+            kotlinx.datetime.Instant.parse("2024-01-01T23:30:00Z"),
+            kotlinx.datetime.Instant.parse("2024-06-15T08:45:00Z"),
+        )
+        // kotlinx.datetime.Instant -> kotlinx.datetime.LocalTime in the given time zone
+        ts.toDataFrame().convert { ts }.toLocalTime(TimeZone.UTC)
+            // SampleEnd
+            .also { it["ts"].values().toList() shouldBe listOf(LocalTime(23, 30), LocalTime(8, 45)) }
+    }
+
+    @Test
+    fun convertNameSelectedToLocalDateWithZone() {
+        // SampleStart
+        val df = dataFrameOf("timestamp")(1_704_151_800_000L) // 2024-01-01T23:30:00Z
+        df.convert("timestamp").toLocalDate(TimeZone.UTC)
+            // SampleEnd
+            .also { it["timestamp"][0] shouldBe LocalDate(2024, 1, 1) }
+    }
+
+    @Test
+    fun convertNameSelectedToLocalTimeWithZone() {
+        // SampleStart
+        val df = dataFrameOf("timestamp")(1_704_151_800_000L) // 2024-01-01T23:30:00Z
+        df.convert("timestamp").toLocalTime(TimeZone.UTC)
+            // SampleEnd
+            .also { it["timestamp"][0] shouldBe LocalTime(23, 30) }
+    }
+
+    @Test
+    fun convertNameSelectedToLocalDateTimeWithZone() {
+        // SampleStart
+        val df = dataFrameOf("timestamp")(1_704_151_800_000L) // 2024-01-01T23:30:00Z
+        df.convert("timestamp").toLocalDateTime(TimeZone.UTC)
+            // SampleEnd
+            .also { it["timestamp"][0] shouldBe LocalDateTime(2024, 1, 1, 23, 30) }
     }
 
     @Test
