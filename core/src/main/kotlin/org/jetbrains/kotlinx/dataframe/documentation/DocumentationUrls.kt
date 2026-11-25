@@ -34,6 +34,9 @@ public interface DocumentationUrls {
     /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
     public typealias CompilerPlugin = Nothing
 
+    /** [Kotlin DataFrame Compiler Plugin]({@include [Url]}/compiler-plugin.html) */
+    public typealias CompilerPluginLink = Nothing
+
     /** [See Packaging into a fat JAR on the documentation website.]({@include [Url]}/packaging.html) */
     public typealias Packaging = Nothing
 
