@@ -10,31 +10,34 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 // region Pivot
 
 /**
- * Aggregates this [Pivot] by keeping each pivot group as a [DataFrame].
+ * Aggregates this [Pivot] by keeping its groups as-is.
  *
- * Returns a single [DataRow] where:
- * - each column corresponds to a [pivot] group;
- * - with several pivot keys created via [and][PivotDsl.and], there is a column group per pivot key,
- *   with columns inside corresponding to the values of that key — unless [pivot] was called with
- *   `inward = false`, which keeps the pivot key values as top-level columns;
- * - with nested pivot keys created via [then][PivotDsl.then], the columns nest by key values:
- *   a column group per value of the first key, with the columns for the values of the remaining keys
- *   inside (`inward` does not change this nesting);
- * - each column holding a group is a [FrameColumn] with the rows of the corresponding pivot group.
+ * Returns a new [DataRow] with the [pivot] keys as top-level columns
+ * (or as [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+ * for multiple or nested pivot keys).
+ * Each [pivot] key column is a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]
+ * with a single value: the [DataFrame] of the rows belonging to the corresponding group.
  *
- * This is equivalent to calling [aggregate][Pivot.aggregate] { this }.
+ * This is a shortcut for [aggregate][Pivot.aggregate]` { this }`,
+ * where the whole group is used as the aggregation result.
+ *
+ * Check out [`pivot` Grammar][PivotDocs.Grammar].
+ *
+ * For more information: {@include [DocumentationUrls.Pivot]} {@include [DocumentationUrls.PivotAggregation]}
  *
  * See also:
- * - [pivot].
- * - common [aggregate][Pivot.aggregate].
- * - [frames][PivotGroupBy.frames] — the same aggregation on a [Pivot] combined with [groupBy][Pivot.groupBy].
+ * - [toDataFrame][GroupBy.toDataFrame] — the [GroupBy] counterpart that returns
+ *   the grouping key columns together with the groups in a [FrameColumn].
+ * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  *
- * For more information: {@include [DocumentationUrls.PivotAggregation]}
+ * ### Examples
  *
- * ### Example
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotFrames_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotFrames_strings]
  *
- * @return A single [DataRow] with one [FrameColumn] per pivot group, holding each group as a [DataFrame].
+ * @param [T] The schema marker type of the pivoted [DataFrame].
+ * @return A new [DataRow] with the [pivot] keys as columns
+ *   and the corresponding groups of rows as their values.
  */
 public fun <T> Pivot<T>.frames(): DataRow<*> = aggregate { this }
 

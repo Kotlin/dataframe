@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDslDocsSnippet
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
 
@@ -19,7 +20,18 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  * Aggregates this [Pivot] using the provided statistics
  * inside the [AggregateDsl].
  *
- * Returns a new [DataRow] with the original [pivot] keys as top-level columns on top level
+ * Every value computed inside the [aggregating expression][body]
+ * and stored with [into][AggregateDsl.into] becomes a new column
+ * nested under the corresponding [pivot] key.
+ * If nothing is stored with [into][AggregateDsl.into]
+ * and the last expression of [body] is not [Unit],
+ * its value is stored directly under the [pivot] key.
+ * If something is stored with [into][AggregateDsl.into],
+ * a trailing value that is not stored with [into][AggregateDsl.into] is ignored —
+ * unlike in [GroupBy.aggregate][Grouped.aggregate],
+ * which stores it in a new column named `"aggregated"`.
+ *
+ * Returns a new [DataRow] with the original [pivot] keys as top-level columns
  * and the corresponding aggregated values in new nested columns.
  *
  * @include [AggregateDslDocs]
@@ -31,22 +43,23 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  *
  * Check out [`pivot` Grammar][PivotDocs.Grammar] for more information.
  *
- * For more information: {@include [DocumentationUrls.Pivot]}
+ * For more information: {@include [DocumentationUrls.Pivot]} {@include [DocumentationUrls.PivotAggregation]}
  *
- * #### Example
- * ```kotlin
- * df.pivot { city }.aggregate {
- *   // Count rows within each pivot group and store the result
- *   // into a new "total" column (a new sub-column under each key column)
- *   count() into "total"
+ * See also:
+ * - [GroupBy.aggregate][Grouped.aggregate] — the [GroupBy] counterpart
+ *   that produces a [DataFrame] with one row per group.
+ * - [Pivot aggregations][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot],
+ *   including the predefined [statistics][PivotDocs.AggregationStatistics].
  *
- *   // Compute the maximum in "age" column within each group
- *   // and store it into a new "maxAge" column
- *   max { age } into "maxAge"
- * }
- * ```
+ * ### Examples
  *
- * @param body The aggregation logic defined using [AggregateDsl].
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotAggregateMultiple_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotAggregate_properties]
+ *
+ * @param [T] The schema marker type of the pivoted [DataFrame].
+ * @param [R] The result type of the [aggregating expression][body]; usually `Unit`.
+ * @include [CommonStatisticsDocs.SeparateParam]
+ * @param [body] The aggregation logic defined using [AggregateDsl].
  * @return A new [DataRow] with the results of the aggregation applied to each group.
  */
 public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<AggregateDsl<T>, R>): DataRow<*> =
@@ -60,7 +73,13 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
  * Aggregates this [GroupBy] using the provided statistics
  * inside the [AggregateGroupedDsl].
  *
- * Returns a new [DataFrame] with the original [groupBy] key columns
+ * Every value computed inside the [aggregating expression][body]
+ * and stored with [into][AggregateDsl.into] becomes a new column in the result.
+ * If the last expression of [body] is not [Unit]
+ * and is not stored with [into][AggregateDsl.into],
+ * its value is stored in a new column named `"aggregated"`.
+ *
+ * Returns a new [DataFrame] with one row per group: the original [groupBy] key columns
  * and the corresponding aggregated values in new columns.
  *
  * @include [AggregateGroupedDslDocsSnippet]
@@ -68,44 +87,25 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
  *
  * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
  *
- * For more information: {@include [DocumentationUrls.GroupBy]}
+ * For more information: {@include [DocumentationUrls.GroupBy]} {@include [DocumentationUrls.GroupByAggregation]}
  *
- * #### Examples
- * ```kotlin
- * df.groupBy { city }.aggregate {
- *   // Count rows within each group and store the result
- *   // into a new "total" column
- *   count() into "total"
+ * See also:
+ * - [aggregate][Pivot.aggregate] — the [Pivot] counterpart that produces a single [DataRow].
+ * - [GroupBy aggregation][GroupByDocs.Aggregation] — all other ways to aggregate a [GroupBy],
+ *   including the predefined [statistics][GroupByDocs.AggregationStatistics].
+ * - [GroupBy reducing][GroupByDocs.Reducing] — a specific case of aggregation
+ *   where each group is collapsed into a single row.
  *
- *   // Compute the maximum in "age" column within each group
- *   // and store it into a new "maxAge" column
- *   max { age } into "maxAge"
- * }
- * ```
+ * ### Examples
  *
- * ```kotlin
- * df.groupBy { name.firstName }.aggregate {
- *     // Pivot the "city" column within each group,
- *     // creating a PivotGroupBy with "name" as grouping keys
- *     // and "city" as pivoted columns
- *     pivot { city }.aggregate {
- *         // Aggregate the mean of "age" column values for each
- *         // "firstName" × "city" combination group into the "meanAge" column
- *         mean { age } into "meanAge"
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.aggregateOnGroupBy_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.aggregateOnGroupByWithoutInto_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotInAggregate_properties]
  *
- *         // Aggregate the size of each `PivotGroupBy` group
- *         // into the "count" column
- *         count() into "count"
- *     }
- *
- *     // Common `count` aggregation
- *     // into "total" column
- *     count() into "total"
- * }
- * ```
- *
- * @param body The aggregation logic defined using [AggregateGroupedDsl].
- * @return A new [DataFrame] with the results of the aggregation applied to each group.
+ * @param [T] The schema marker type of the [groups][GroupBy.groups] in the underlying [GroupBy].
+ * @param [R] The result type of the [aggregating expression][body]; usually `Unit`.
+ * @param [body] The aggregation logic defined using [AggregateGroupedDsl].
+ * @return A new [DataFrame] with one row per group with the results of the aggregation applied to it.
  */
 @Refine
 @Interpretable("Aggregate")
