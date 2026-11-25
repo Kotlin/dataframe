@@ -1151,4 +1151,46 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     }
 
     // endregion
+
+    // region PivotGroupBy.matches
+
+    @Test
+    fun matchesOnPivotGroupBy() {
+        // SampleStart
+        // For each combination of a "city" and an "isHappy" value:
+        // `true` if there is at least one person with this combination, `false` otherwise
+        df.pivot { isHappy }.groupBy { city }.matches()
+        // SampleEnd
+    }
+
+    @Test
+    fun matchesYesNoOnPivotGroupBy() {
+        // SampleStart
+        // For each combination of a "city" and an "isHappy" value:
+        // "yes" if there is at least one person with this combination, "no" otherwise
+        df.pivot { isHappy }.groupBy { city }.matches(yes = "yes", no = "no")
+        // SampleEnd
+    }
+
+    // endregion
+
+    // region PivotGroupBy.aggregate
+
+    @Test
+    fun aggregateOnPivotGroupBy() {
+        // SampleStart
+        df.pivot { isHappy }.groupBy { city }.aggregate {
+            // Count rows within each "city" × "isHappy" combination group and store the result
+            // into a new "total" column (a new sub-column under each "isHappy" key)
+            count() into "total"
+
+            // Compute the maximum of the "age" column values within each group
+            // and store it into a new "max age" column.
+            // Empty groups produce -1 instead of `null`.
+            max { age } default -1 into "max age"
+        }
+        // SampleEnd
+    }
+
+    // endregion
 }
