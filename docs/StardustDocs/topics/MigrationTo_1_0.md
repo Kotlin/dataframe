@@ -218,6 +218,14 @@ Calling `indices()` on a variable typed as `BaseColumn` no longer compiles — e
 a different value. The old overload stays in the jar, hidden from overload resolution, so code compiled
 against earlier versions keeps linking.
 
+### `randomLong` now includes both bounds of the range
+
+[`DataFrameBuilder.randomLong(nrow, range)`](createDataFrame.md#dataframeof) still takes a `ClosedRange<Long>`,
+but now includes both of its bounds, like `randomInt` does:
+`randomLong(3, 1L..2L)` can produce `2`, and a single-value range
+such as `5L..5L` returns `5` instead of throwing.
+`randomDouble(nrow, range)` keeps the standard library's exclusive upper bound,
+so a single-value range still throws there.
 ### `pivot` results no longer keep the original schema type
 
 All terminal operations of [`pivot`](pivot.md) — on `Pivot`, `PivotGroupBy`, `ReducedPivot`, `ReducedPivotGroupBy`,
@@ -237,6 +245,17 @@ with the String API, or [`cast`](cast.md) the result to a `@DataSchema` that des
 |-------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | `df.pivot { city }.groupBy { name }.count().filter { name == "Alice" }` | `df.pivot { city }.groupBy { name }.count().filter { "name"<String>() == "Alice" }` |
 | `df.groupBy { name }.pivotCounts { city }.sortBy { name }`              | `df.groupBy { name }.pivotCounts { city }.sortBy("name")`                           |
+
+### `cast<T>()` verifies the schema by default
+
+`cast<T>()` on a `DataFrame`, `DataRow` or `ColumnGroup` now checks the data against `T`,
+and `cast<Keys, Groups>()` on a `GroupBy` checks the key columns against `Keys` and every group against `Groups`.
+If the schema was only partially correct, the code now throws an exception.
+Migrate such calls to `castUnchecked()` or `cast(verify = false)`, or fix the schema itself.
+
+`Keys` of a `GroupBy` describes only the key columns. So `groupBy.cast<FullSchema, FullSchema>()`,
+where `FullSchema` is the schema of the original `DataFrame`, now throws unless every column is a key:
+replace it with `groupBy.castUnchecked<FullSchema, FullSchema>()`.
 
 ### Removed functions and classes
 
@@ -281,18 +300,20 @@ The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `df.add(columns)` / `df.add(dataframes)`                                                                 | `df.addAll(columns)` / `df.addAll(dataframes)`                                                                                | Renamed to improve completion.                                               |
 | `row.isEmpty()` / `row.isNotEmpty()`                                                                     | `row.values().all { it == null }` / `row.values().any { it != null }`                                                         | Removed a shortcut to clarify the behaviour;                                 |
 | `row.getRow(index)` /  `row.getRowOrNull(index)` / `row.getRows(indices)`                                | `row.df().getRow(index)` /  `row.df().getRowOrNull(index)` / `row.df().getRows(indices)`                                      | Removed a shortcut to clarify the behaviour;                                 |
-| `df.copy()`                                                                                              | `df.columns().toDataFrame().cast()`                                                                                           | Removed a shortcut to clarify the behaviour;                                 |
+| `df.copy()`                                                                                              | `df.columns().toDataFrame().castUnchecked()`                                                                                  | Removed a shortcut to clarify the behaviour;                                 |
 | `KeyValueProperty<T>`                                                                                    | `NameValueProperty<T>`                                                                                                        | Removed duplicated functionality.                                            |
 | `rename { columns }.into(..)` (will remain WARNING)                                                      | `rename { columns }.to(..)`                                                                                                   | Renamed to better reflect the English sentence "rename this column to that". |
 | `df.sortBy { col.desc() }` / `df.sortByDesc { col.desc() }`                                              | `df.sortBy { col.reversed() }` / `df.sortByDesc { col.reversed() }`                                                           | Renamed to better reflect its purpose.                                       |
 | `gb.sortByCount()`                                                                                       | `gb.sortByCountDesc()`                                                                                                         | Renamed to better reflect its purpose.                                       |
 | `df.sumFor { cols into path(..) }`                                                     | `df.sumFor { cols into pathOf(..) }`                                                                        | Removed duplicated functionality. All methods with `ColumnsForAggregateSelector` lambda.                                           |
+| `dataFrameOf(column<String>("name"), column<Int>("age"))` (will remain WARNING)                         | `dataFrameOf("name", "age")`                                                                                                 | Column Accessors API.                                                        |
+| `df.getColumnGroupOrNull(name)`                                                                          | `df.getColumnOrNull(name)?.asColumnGroup()`                                                                                   | Removed a shortcut; it was the only `OrNull` variant of `getColumnGroup`.    |
 
 ## Parsing and Converting Date-Time
 
 In 0.15 and up to 1.0-Beta4 we did support the [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
 types; however, they were still treated as second-class in DataFrame. [`ParserOptions`](parse.md#parser-options)
-were still built around the Java `DataTimeFormatter`-paradigm.
+were still built around the Java `DateTimeFormatter`-paradigm.
 Starting from 1.0-Beta5, [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime) types now become first-class
 citizens,
 while still allowing you to use Java types if you need them.

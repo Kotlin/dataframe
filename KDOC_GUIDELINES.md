@@ -50,6 +50,8 @@ Some parts of public API are not intended for end users but can be used in Compi
 KDF extension libraries. These methods should have a small KDoc as well.
 
 Deprecated methods, properties, classes, and constructors are not required to have KDocs.
+When a deprecated API is mentioned at all, its KDoc or page states the deprecation and the replacement — never
+presents it as a recommended way.
 
 A replacement operation's KDoc does not reference the function it replaces: the deprecation
 message and the migration guide carry the rename story, so nothing in the KDoc has to be removed
@@ -174,7 +176,7 @@ allowing their KDocs to be referenced as standalone topics from other KDocs.
 They are not marked with `@ExcludeFromSources` and included in the sources.
 
 For convenience, there are *link snippets* for each KDoc-topic, 
-which contain a link to it, and then can be added to other KDoc it via `@include`.
+which contain a link to it, and then can be added to other KDocs via `@include`.
 
 ```kotlin
 /**
@@ -527,6 +529,10 @@ fun concatDataColumns() {
 }
 ```
 
+The order of the tags in the KDoc above matters: `@sample` and any text after it go above the first block tag
+(`@param`, `@throws`) — anything below a block tag becomes part of that tag in the rendered KDoc
+(`KODEX_KDOC_PREPROCESSING.md` → Notation explains the mechanism).
+
 Use `@sampleNoComments` instead of `@sample` if the sample code has KDocs that shouldn't be copied.
 Check the result in `generated-sources` after `processKDocsMain` (see [Compiling KDocs](#compiling-kdocs)).
 
@@ -776,6 +782,12 @@ But keep these things in mind:
 - KoDEx reads `$` even inside a ` ``` ` block, so a Kotlin string template in an example is silently eaten:
   `"${i + 1}. $name"` came out of `processKDocsMain` as `"+ 1. "`. Escape every `$` you mean literally as
   `\$` — the escape character is removed in the last processing wave, so the generated KDoc shows `$` again.
+- A `@set` value that is a markdown link (`[Float][Float]`) does not render as a link when `{@get}`
+  substitutes it inside a code span — it comes out as literal `[Float][Float]Array`. When composing a
+  name from `{@get [TYPE]}` plus literal characters inside backticks, pass plain values (`Float`), not links.
+- A trailing `?` composed from `{@get [TYPE]}` plus literal characters goes **after** the closing backtick:
+  `[Comparable]`<`[T]`>`?` renders `Comparable<T>?`, while putting it inside — `` `<`[T]`?`>` `` — renders
+  `Comparable<T?>`. The notation is silent — check the expanded output.
 - Use `&nbsp;` (or `{@include [Indent]}`) to add non-breaking-space-based indents in your code samples.
 - Never put `!` directly in front of a `[]` reference, like `if ![skipNaN]`. KoDEx turns the reference into
   `![<code>skipNaN</code>][skipNaN]`, which Markdown reads as an image without a URL, crashing Dokka with a

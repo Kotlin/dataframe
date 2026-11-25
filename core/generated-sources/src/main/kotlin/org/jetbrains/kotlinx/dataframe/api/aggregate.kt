@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
 import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
 
 // region Pivot
@@ -17,7 +18,18 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  * Aggregates this [<code>Pivot</code>][Pivot] using the provided statistics
  * inside the [<code>AggregateDsl</code>][AggregateDsl].
  *
- * Returns a new [<code>DataRow</code>][DataRow] with the original [<code>pivot</code>][pivot] keys as top-level columns on top level
+ * Every value computed inside the [<code>aggregating expression</code>][body]
+ * and stored with [<code>into</code>][AggregateDsl.into] becomes a new column
+ * nested under the corresponding [<code>pivot</code>][pivot] key.
+ * If nothing is stored with [<code>into</code>][AggregateDsl.into]
+ * and the last expression of [<code>body</code>][body] is not [<code>Unit</code>][Unit],
+ * its value is stored directly under the [<code>pivot</code>][pivot] key.
+ * If something is stored with [<code>into</code>][AggregateDsl.into],
+ * a trailing value that is not stored with [<code>into</code>][AggregateDsl.into] is ignored —
+ * unlike in [<code>GroupBy.aggregate</code>][Grouped.aggregate],
+ * which stores it in a new column named `"aggregated"`.
+ *
+ * Returns a new [<code>DataRow</code>][DataRow] with the original [<code>pivot</code>][pivot] keys as top-level columns
  * and the corresponding aggregated values in new nested columns.
  *
  * [<code>AggregateDsl</code>][AggregateDsl] allows you to compute statistics on the columns within groups in [<code>Pivot</code>][Pivot]
@@ -44,25 +56,54 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  *
  * Check out [<code>`pivot` Grammar</code>][PivotDocs.Grammar] for more information.
  *
- * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+ * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html) [See "`Pivot` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation)
  *
- * #### Example
+ * See also:
+ * - [<code>GroupBy.aggregate</code>][Grouped.aggregate] — the [<code>GroupBy</code>][GroupBy] counterpart
+ *   that produces a [<code>DataFrame</code>][DataFrame] with one row per group.
+ * - [<code>Pivot aggregations</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot],
+ *   including the predefined [<code>statistics</code>][PivotDocs.AggregationStatistics].
+ *
+ * ### Examples
+ *
  * ```kotlin
- * df.pivot { city }.aggregate {
- *   // Count rows within each pivot group and store the result
- *   // into a new "total" column (a new sub-column under each key column)
- *   count() into "total"
+ * df.pivot { isHappy }.aggregate {
+ *     // Count rows within each pivot group and store the result
+ *     // into a new "total" column (a new sub-column under each "isHappy" key column)
+ *     count() into "total"
  *
- *   // Compute the maximum in "age" column within each group
- *   // and store it into a new "maxAge" column
- *   max { age } into "maxAge"
+ *     // Count rows with "age" of at least 18 within each pivot group
+ *     // and store the result into a new "adults" column
+ *     count { age >= 18 } into "adults"
+ *
+ *     // Compute the median of the "age" column values within each pivot group
+ *     // and store it into a new "median age" column
+ *     median { age } into "median age"
+ *
+ *     // Compute the minimum of the "age" column values within each pivot group
+ *     // and store it into a new "min age" column
+ *     min { age } into "min age"
+ *
+ *     // Store the "name" column group of the oldest person within each pivot group
+ *     // as a new "oldest" column group
+ *     maxBy { age }.name into "oldest"
  * }
  * ```
+ * ```kotlin
+ * // The last expression is not stored with `into`,
+ * // so its value is stored directly under the pivot keys
+ * df.pivot { isHappy }.aggregate { minBy { age }.name }
+ * ```
  *
- * @param body The aggregation logic defined using [<code>AggregateDsl</code>][AggregateDsl].
+ * @param [T] The schema marker type of the pivoted [<code>DataFrame</code>][DataFrame].
+ * @param [R] The result type of the [<code>aggregating expression</code>][body]; usually `Unit`.
+ * @param [separate] If `false` (the default), the resulting columns are indexed
+ *   first by the pivot key(s) and then by the names of the aggregated columns.
+ *   If `true`, this order is reversed: the results are grouped by aggregated column first.
+ * @param [body] The aggregation logic defined using [<code>AggregateDsl</code>][AggregateDsl].
  * @return A new [<code>DataRow</code>][DataRow] with the results of the aggregation applied to each group.
  */
-public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<AggregateDsl<T>, R>): DataRow<T> =
+public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<AggregateDsl<T>, R>): DataRow<*> =
     delegate {
         aggregate(separate, body)
     }
@@ -73,7 +114,13 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
  * Aggregates this [<code>GroupBy</code>][GroupBy] using the provided statistics
  * inside the [<code>AggregateGroupedDsl</code>][AggregateGroupedDsl].
  *
- * Returns a new [<code>DataFrame</code>][DataFrame] with the original [<code>groupBy</code>][groupBy] key columns
+ * Every value computed inside the [<code>aggregating expression</code>][body]
+ * and stored with [<code>into</code>][AggregateDsl.into] becomes a new column in the result.
+ * If the last expression of [<code>body</code>][body] is not [<code>Unit</code>][Unit]
+ * and is not stored with [<code>into</code>][AggregateDsl.into],
+ * its value is stored in a new column named `"aggregated"`.
+ *
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group: the original [<code>groupBy</code>][groupBy] key columns
  * and the corresponding aggregated values in new columns.
  *
  * [<code>AggregateGroupedDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl] allows you to compute statistics on the columns within groups in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]
@@ -109,46 +156,73 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
  *
  * Check out [<code>`groupBy` Grammar</code>][GroupByDocs.Grammar] for more information.
  *
- * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
+ * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html) [See "`GroupBy` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation)
  *
- * #### Examples
+ * See also:
+ * - [<code>aggregate</code>][Pivot.aggregate] — the [<code>Pivot</code>][Pivot] counterpart that produces a single [<code>DataRow</code>][DataRow].
+ * - [<code>GroupBy aggregation</code>][GroupByDocs.Aggregation] — all other ways to aggregate a [<code>GroupBy</code>][GroupBy],
+ *   including the predefined [<code>statistics</code>][GroupByDocs.AggregationStatistics].
+ * - [<code>GroupBy reducing</code>][GroupByDocs.Reducing] — a specific case of aggregation
+ *   where each group is collapsed into a single row.
+ *
+ * ### Examples
+ *
  * ```kotlin
  * df.groupBy { city }.aggregate {
- *   // Count rows within each group and store the result
- *   // into a new "total" column
- *   count() into "total"
+ *     // Count rows within each group and store the result
+ *     // into a new "total" column
+ *     count() into "total"
  *
- *   // Compute the maximum in "age" column within each group
- *   // and store it into a new "maxAge" column
- *   max { age } into "maxAge"
+ *     // Count rows with "age" column value greater than 18 within each group
+ *     // and store the result into a new "adults" column
+ *     count { age > 18 } into "adults"
+ *
+ *     // Compute the median of the "age" column values within each group
+ *     // and store it into a new "median age" column
+ *     median { age } into "median age"
+ *
+ *     // Compute the minimum of the "age" column values within each group
+ *     // and store it into a new "min age" column
+ *     min { age } into "min age"
+ *
+ *     // Store the "name" column group values of the oldest person in each group
+ *     // as a new "oldest" column group
+ *     maxBy { age }.name into "oldest"
  * }
  * ```
- *
+ * ```kotlin
+ * // The last expression is not stored with `into`,
+ * // so its value is stored in a new column named "aggregated"
+ * df.groupBy { city }.aggregate { maxBy { age }.name }
+ * ```
  * ```kotlin
  * df.groupBy { name.firstName }.aggregate {
- *     // Pivot the "city" column within each group,
- *     // creating a PivotGroupBy with "name" as grouping keys
- *     // and "city" as pivoted columns
- *     pivot { city }.aggregate {
- *         // Aggregate the mean of "age" column values for each
- *         // "firstName" × "city" combination group into the "meanAge" column
- *         mean { age } into "meanAge"
+ *     // Pivot the "isHappy" column within each group,
+ *     // creating a PivotGroupBy with "name.firstName" as grouping keys
+ *     // and "isHappy" as pivoted columns
+ *     pivot { isHappy }.aggregate(separate = true) {
+ *         // Compute the mean of the "age" column values for each
+ *         // "firstName" × "isHappy" combination group into the "mean age" column
+ *         mean { age } into "mean age"
  *
- *         // Aggregate the size of each `PivotGroupBy` group
+ *         // Count rows within each "firstName" × "isHappy" combination group
  *         // into the "count" column
  *         count() into "count"
  *     }
  *
- *     // Common `count` aggregation
- *     // into "total" column
+ *     // Common `count` aggregation into the "total" column
  *     count() into "total"
  * }
  * ```
  *
- * @param body The aggregation logic defined using [<code>AggregateGroupedDsl</code>][AggregateGroupedDsl].
- * @return A new [<code>DataFrame</code>][DataFrame] with the results of the aggregation applied to each group.
+ * @param [T] The schema marker type of the [<code>groups</code>][GroupBy.groups] in the underlying [<code>GroupBy</code>][GroupBy].
+ * @param [R] The result type of the [<code>aggregating expression</code>][body]; usually `Unit`.
+ * @param [body] The aggregation logic defined using [<code>AggregateGroupedDsl</code>][AggregateGroupedDsl].
+ * @return A new [<code>DataFrame</code>][DataFrame] with one row per group with the results of the aggregation applied to it.
  */
 @Refine
 @Interpretable("Aggregate")
 public fun <T, R> Grouped<T>.aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T> =
-    aggregateGroupBy((this as GroupBy<*, *>).toDataFrame(), { groups.cast() }, removeColumns = true, body).cast<T>()
+    aggregateGroupBy((this as GroupBy<*, *>).toDataFrame(), {
+        groups.cast()
+    }, removeColumns = true, body).castUnchecked<T>()

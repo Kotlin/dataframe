@@ -75,7 +75,7 @@ public fun <T> DataFrame<T>.addAll(vararg columns: BaseColumn<*>): DataFrame<T> 
  * @return new [<code>DataFrame</code>][DataFrame] with added columns.
  */
 public fun <T> DataFrame<T>.addAll(columns: Iterable<BaseColumn<*>>): DataFrame<T> =
-    dataFrameOf(columns() + columns).cast()
+    dataFrameOf(columns() + columns).castUnchecked()
 
 /**
  * Adds all columns from the given [<code>dataFrames</code>][dataFrames] to the end of this [<code>DataFrame</code>][DataFrame] (at the top level).
@@ -423,7 +423,7 @@ public class AddDsl<T>(
 public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)
     body(dsl)
-    return dataFrameOf(this@add.columns() + dsl.columns).cast()
+    return dataFrameOf(this@add.columns() + dsl.columns).castUnchecked()
 }
 
 /**

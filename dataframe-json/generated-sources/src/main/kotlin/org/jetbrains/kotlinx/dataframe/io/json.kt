@@ -577,7 +577,7 @@ public fun AnyFrame.toJsonWithMetadata(
 }
 
 /**
- * Interface for defining a custom encoder. That applied to the value during dataframe JSON serialization
+ * Interface for defining a custom encoder that is applied to values during dataframe JSON serialization.
  */
 public interface CustomEncoder {
     /**

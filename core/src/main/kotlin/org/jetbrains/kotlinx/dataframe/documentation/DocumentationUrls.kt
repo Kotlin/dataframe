@@ -34,6 +34,9 @@ public interface DocumentationUrls {
     /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
     public typealias CompilerPlugin = Nothing
 
+    /** [Kotlin DataFrame Compiler Plugin]({@include [Url]}/compiler-plugin.html) */
+    public typealias CompilerPluginLink = Nothing
+
     /** [See Packaging into a fat JAR on the documentation website.]({@include [Url]}/packaging.html) */
     public typealias Packaging = Nothing
 
@@ -154,6 +157,9 @@ public interface DocumentationUrls {
 
     /** [See `convertTo` on the documentation website.]({@include [Url]}/convertto.html) */
     public typealias ConvertTo = Nothing
+
+    /** [See `inferType` on the documentation website.]({@include [Url]}/infertype.html) */
+    public typealias InferType = Nothing
 
     /** [See `toList` on the documentation website.]({@include [Url]}/tolist.html) */
     public typealias ToList = Nothing
@@ -279,6 +285,12 @@ public interface DocumentationUrls {
     /** [See `columnOf` on the documentation website.]({@include [Url]}/createcolumn.html#columnof) */
     public typealias ColumnOf = Nothing
 
+    /** [See `toColumn` on the documentation website.]({@include [Url]}/createcolumn.html#tocolumn) */
+    public typealias ToColumn = Nothing
+
+    /** [See `toColumnOf` on the documentation website.]({@include [Url]}/createcolumn.html#tocolumnof) */
+    public typealias ToColumnOf = Nothing
+
     /** [See `dataFrameOf` on the documentation website.]({@include [Url]}/createdataframe.html#dataframeof) */
     public typealias DataFrameOf = Nothing
 
@@ -287,6 +299,9 @@ public interface DocumentationUrls {
 
     /** [See `emptyDataFrame` on the documentation website.]({@include [Url]}/createdataframe.html#emptydataframe) */
     public typealias EmptyDataFrame = Nothing
+
+    /** [See `pathOf` on the documentation website.]({@include [Url]}/columnselectors.html#pathof) */
+    public typealias PathOf = Nothing
 
     /** [See `gather` on the documentation website.]({@include [Url]}/gather.html) */
     public typealias Gather = Nothing
@@ -645,6 +660,38 @@ public interface DocumentationUrls {
 
     /** [See `indices` on the documentation website.]({@include [Url]}/indexing.html#row-indices) */
     public typealias Indices = Nothing
+
+    /** [See `getColumn` on the documentation website.]({@include [Url]}/getcolumn.html) */
+    public interface GetColumn {
+
+        /** [See `getColumnGroup` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumngroup) */
+        public typealias GetColumnGroup = Nothing
+
+        /** [See `getColumns` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumns) */
+        public typealias GetColumns = Nothing
+
+        /** [See `getFrameColumn` on the documentation website.]({@include [Url]}/getcolumn.html#getframecolumn) */
+        public typealias GetFrameColumn = Nothing
+
+        /** [See `getColumnIndex` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumnindex) */
+        public typealias GetColumnIndex = Nothing
+
+        /** [See `getColumnPath` and `getColumnPaths` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumnpath-and-getcolumnpaths) */
+        public typealias GetColumnPaths = Nothing
+
+        /** [See `getColumnWithPath` and `getColumnsWithPaths` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumnwithpath-and-getcolumnswithpaths) */
+        public typealias GetColumnsWithPaths = Nothing
+    }
+
+    /** [See "Get rows" on the documentation website.]({@include [Url]}/getrow.html) */
+    public typealias GetRow = Nothing
+
+    /** [See `rows` on the documentation website.]({@include [Url]}/rows.html) */
+    public interface Rows {
+
+        /** [See `rowsReversed` on the documentation website.]({@include [Url]}/rows.html#rowsreversed) */
+        public typealias RowsReversed = Nothing
+    }
 
     /** [See `JsonPath` on the documentation website.]({@include [Url]}/read.html#specify-key-value-paths) */
     public typealias JsonPath = Nothing

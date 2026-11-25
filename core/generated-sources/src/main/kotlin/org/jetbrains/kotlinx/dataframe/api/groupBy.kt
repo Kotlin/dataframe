@@ -47,7 +47,7 @@ import kotlin.reflect.KProperty
  *   and then reduced or aggregated into a [<code>DataFrame</code>][DataFrame].
  *
  * Grouping keys can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -68,7 +68,7 @@ import kotlin.reflect.KProperty
  * Don't confuse this with [<code>group</code>][group], which groups columns into a
  * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * See also [<code>pivot</code>][DataFrame.pivot] that groups rows of [<code>DataFrame</code>][DataFrame] vertically.
+ * See also [<code>pivot</code>][DataFrame.pivot] that groups rows of [<code>DataFrame</code>][DataFrame] horizontally.
  */
 internal interface GroupByDocs {
     /**
@@ -475,7 +475,7 @@ internal interface GroupByDocs {
  *   and then reduced or aggregated into a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Grouping keys can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -496,7 +496,7 @@ internal interface GroupByDocs {
  * Don't confuse this with [<code>group</code>][org.jetbrains.kotlinx.dataframe.api.group], which groups columns into a
  * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * See also [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] that groups rows of [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] vertically.
+ * See also [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] that groups rows of [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] horizontally.
  * ### This `groupBy` Overload
  *
  *
@@ -563,7 +563,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
  *   and then reduced or aggregated into a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Grouping keys can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -584,7 +584,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
  * Don't confuse this with [<code>group</code>][org.jetbrains.kotlinx.dataframe.api.group], which groups columns into a
  * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * See also [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] that groups rows of [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] vertically.
+ * See also [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] that groups rows of [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] horizontally.
  * ### This `groupBy` Overload
  *
  *
@@ -600,7 +600,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
  *
  *
  *
- * @param [cols] The [<code>Column names</code>][String] that defines which columns are used
+ * @param [cols] The [<code>Column names</code>][String] that define which columns are used
  * as keys for grouping.
  * @return A new [<code>GroupBy</code>][GroupBy] containing the unique combinations of values from the provided [<code>key columns</code>][cols],
  * together with their corresponding groups of rows.
@@ -641,7 +641,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: ColumnReference<*>, moveToTop: 
  * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  * Grouping keys can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -689,6 +689,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: ColumnReference<*>, moveToTop: 
  * @return A new [<code>PivotGroupBy</code>][PivotGroupBy] that preserves the original [<code>pivot</code>][pivot] key columns
  * and uses the provided columns as [<code>groupBy</code>][groupBy] keys.
  */
+@Interpretable("PivotGroupBy")
 public fun <T> Pivot<T>.groupBy(moveToTop: Boolean = true, columns: ColumnsSelector<T, *>): PivotGroupBy<T> =
     (this as PivotImpl<T>).toGroupedPivot(moveToTop, columns)
 
@@ -719,7 +720,7 @@ public fun <T> Pivot<T>.groupBy(vararg columns: ColumnReference<*>): PivotGroupB
  * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  * Grouping keys can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -737,11 +738,12 @@ public fun <T> Pivot<T>.groupBy(vararg columns: ColumnReference<*>): PivotGroupB
  * `df.`[<code>groupBy</code>][org.jetbrains.kotlinx.dataframe.api.groupBy]`("length", "age")`
  *
  *
- * @param [columns] The [<code>Column names</code>][String] that defines which columns are used
+ * @param [columns] The [<code>Column names</code>][String] that define which columns are used
  * as keys for grouping.
  * @return A new [<code>PivotGroupBy</code>][PivotGroupBy] that preserves the original [<code>pivot</code>][pivot] key columns
  * and uses the provided columns as [<code>groupBy</code>][groupBy] keys.
  */
+@StringApiInterpretable(interpreter = "PivotGroupBy", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Pivot<T>.groupBy(vararg columns: String): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -773,6 +775,7 @@ public fun <T> Pivot<T>.groupBy(vararg columns: KProperty<*>): PivotGroupBy<T> =
  * @return A new [<code>PivotGroupBy</code>][PivotGroupBy] that preserves the original [<code>pivot</code>][pivot] key columns
  * and uses the remaining columns as [<code>groupBy</code>][groupBy] keys.
  */
+@Interpretable("PivotGroupByOther")
 public fun <T> Pivot<T>.groupByOther(): PivotGroupBy<T> {
     val impl = this as PivotImpl<T>
     val pivotColumns = df.getPivotColumnPaths(columns).toColumnSet()
@@ -949,6 +952,15 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 
 /**
  * Represents a dataframe-like structure with grouped values, offering aggregation capabilities.
+ *
+ * Implemented by [<code>GroupBy</code>][GroupBy], which consists of the grouping [<code>keys</code>][GroupBy.keys]
+ * and the corresponding [<code>groups</code>][GroupBy.groups] of rows.
+ * A [<code>GroupBy</code>][GroupBy] can be:
+ * * [<code>transformed</code>][GroupByDocs.Transformation] into a new [<code>GroupBy</code>][GroupBy];
+ * * [<code>reduced</code>][GroupByDocs.Reducing] into a [<code>DataFrame</code>][DataFrame], where each group is collapsed
+ *   into a single representative row;
+ * * [<code>aggregated</code>][GroupByDocs.Aggregation] into a [<code>DataFrame</code>][DataFrame], where each group is transformed
+ *   into one or more rows of derived values.
  *
  * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  */

@@ -26,7 +26,12 @@ import kotlinx.datetime.Instant as DeprecatedInstant
 
 /**
  * Create Arrow [Field] (note: this is part of [Schema], does not contain data itself) that has the same
- * name, type and nullability as [this]
+ * name, type and nullability as [this].
+ *
+ * Nullability is the one exception: a column of `Nothing` or `Nothing?` maps to a nullable `Null` field, and
+ * for `Nothing` the nullability is not preserved — an Arrow
+ * [NullVector][org.apache.arrow.vector.NullVector] has no validity bitmap, so a non-nullable `Null` field
+ * is not representable.
  */
 public fun DataColumn<*>.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Field {
     val column = this
@@ -103,7 +108,12 @@ internal val DEFAULT_INSTANT_UNIT: TimeUnit = TimeUnit.MICROSECOND
 internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMismatch) -> Unit): Field {
     val nullable = isMarkedNullable
     return when {
-        this == nullableNothingType -> Field(name, FieldType(true, ArrowType.Null(), null), emptyList())
+        // Both `Nothing` and `Nothing?` land here: an empty column is `Nothing` (not nullable), and being the
+        // subtype of every type it would otherwise match the first `isSubtypeOf` branch below and silently
+        // become `Utf8` (issue #1812). The field is nullable even for the non-nullable `Nothing` — an Arrow
+        // `NullVector` carries no validity bitmap, so a non-nullable `Null` field is not representable
+        // (Arrow's own `Field.createVector` widens it back).
+        isSubtypeOf(nullableNothingType) -> Field(name, FieldType(true, ArrowType.Null(), null), emptyList())
 
         isSubtypeOf(typeOf<String?>()) ->
             Field(name, FieldType(nullable, ArrowType.Utf8(), null), emptyList())
@@ -158,6 +168,8 @@ internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMis
 /**
  * Create Arrow [Schema] matching [this] actual data.
  * Columns with not supported types will be interpreted as String
+ *
+ * The one exception is the nullability of a `Nothing`/`Nothing?` column — see [toArrowField].
  *
  * Note the two ways a date-time column is mapped: a `LocalDateTime` column becomes `Date(MILLISECOND)`, while an
  * `Instant` column becomes `Timestamp(MICROSECOND, "UTC")` — a timestamp *with* a time zone, which is how Arrow

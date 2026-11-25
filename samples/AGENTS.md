@@ -117,6 +117,8 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   `.saveTextSample()` for `String`/`CodeString` — see above) and add highlighting (`.format` / `.formatHeader` /
   `.defaultHeaderFormatting { }` — rows for row-oriented operations, headers for column-oriented ones). Korro puts
   every saved output into the topic itself, inside the sample's `FUN`/`END` block.
+  When the sample's result is an expression, keep `val df =` out of the shown code by putting `// SampleEnd`
+  mid-chain and continuing with `.saveDfHtmlSample()` on the next line (`MapSamples.mapDf` is the pattern).
 - **Assert the shown code, not a copy of it — one asserted statement per sample.** Chain assertions (`.also { }`)
   and the output-saving calls onto the shown statement after `// SampleEnd` — korro excludes everything past the
   mark from the snippet, so the test exercises exactly the code the page shows. Never assert a shown statement
@@ -141,6 +143,12 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   accessors (`it.ts`) vanish from the assertion too. Mind the package: `DataColumn.toDataFrame()` lives
   in `api`, while `io.toDataFrame` is `ArrowReader`'s extension — with `dataframe-arrow` on the classpath,
   importing the `io` one gives `UNRESOLVED_REFERENCE_WRONG_RECEIVER`.
+- Shown sample code is page content: when its faithful shape violates ktlint, suppress at file level
+  (`@file:Suppress("ktlint")`, as `Generate.kt` and `TestBase.kt` do) rather than letting `ktlintFormat` rewrite
+  what the page displays. Suppress only what that shape needs: when one sample's layout breaks one rule (a row of
+  `dataFrameOf(…)(…)` values per line), put `@Suppress("ktlint:standard:<rule>")` on that test function instead.
+  Never carry a file-level suppression over into a new file from the file it replaces — it switches the whole
+  file off, and line length and wrapping then go unchecked.
 - **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without
   deprecation warnings.
 - Conversion shortcuts with `@Refine` (e.g. `toLocalDate(format)`, `toJavaLocalDate(formatter)`) change the

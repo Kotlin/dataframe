@@ -26,7 +26,7 @@ Extension properties for data access are generated only for new and overridden m
 val ColumnsContainer<DataFrameType1>.age: DataColumn<Int> get() = this["age"] as DataColumn<Int>
 val DataRow<DataFrameType1>.age: Int get() = this["age"] as Int
 val ColumnsContainer<DataFrameType1>.isAdult: DataColumn<Boolean> get() = this["isAdult"] as DataColumn<Boolean>
-val DataRow<DataFrameType1>.isAdult: String get() = this["isAdult"] as Boolean
+val DataRow<DataFrameType1>.isAdult: Boolean get() = this["isAdult"] as Boolean
 ```
 
 Then variable `filtered` is cast to new interface:

@@ -356,7 +356,7 @@ All code samples are written as usual tests inside the [:samples](samples) modul
 * Make sure samples are valid by running these tests.
 * Code samples are extracted from the source code using [Korro](https://github.com/devcrocod/korro).
 * HTML dataframes and svg plots are automatically generated using [Sample Helper](https://github.com/Kotlin/kandy/tree/main/util/kandy-samples-utils).
-and save into [a `resources` directory](docs/StardustDocs/resources) 
+and saved into [a `resources` directory](docs/StardustDocs/resources) 
 and [an `images` directory](docs/StardustDocs/images) respectively.
 
 General rules:
@@ -469,7 +469,7 @@ and outputs created using [Sample Helper](#sample-helper).
 1) Create a topic as `.md` file in [docs/StardustDocs/topics](docs/StardustDocs/topics) if it doesn't exist yet.
    Add it to the [site map](docs/StardustDocs/d.tree).
 2) Write the topic content following rules and structure.
-   * Find KDoc operation in the [generated source folder](core/generated-sources) if it exists and well-written. 
+   * Find KDoc operation in the [generated source folder](core/generated-sources) if it exists and is well-written. 
    Try to reuse it for the page. 
 3) Create a test file in the [`:samples`](/samples) module 
    [by this path](samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api).

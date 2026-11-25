@@ -4,6 +4,9 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.withExpr
@@ -19,8 +22,10 @@ import kotlin.reflect.typeOf
 /**
  * Aggregates this [<code>Pivot</code>][Pivot] by evaluating the given [<code>row expression</code>][expression] on every row of each pivot group.
  *
- * For each pivot cell: an empty group yields `null` (type `V?`), a group of exactly one row yields
- * that single value (type `V`), and a group of several rows yields a `List<V>`.
+ *
+ *
+ * For each pivot cell: an empty group yields `null`, a group of exactly one row yields
+ * that single value, and a group of several rows yields a `List` of all its values.
  *
  * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
@@ -39,7 +44,7 @@ import kotlin.reflect.typeOf
  * @param [expression] The expression evaluated for each row within each pivot group.
  * @return A new [<code>DataRow</code>][DataRow] with pivot keys as columns or column groups containing the computed results.
  */
-public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<T> =
+public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<*> =
     delegate {
         with(expression)
     }
@@ -97,7 +102,7 @@ public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpressio
  * @param [expression] The [<code>RowExpression</code>][RowExpression] computing the value from the reduced row.
  * @return A new [<code>DataRow</code>][DataRow] with the computed values under their [<code>pivot</code>][pivot] keys.
  */
-public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<T> =
+public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<*> =
     pivot.delegate {
         reduce(reducer).with(expression)
     }
@@ -110,8 +115,10 @@ public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowEx
  * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by evaluating the given [<code>row expression</code>][expression] on every row
  * in each group defined by the grouping and pivot keys.
  *
- * For each pivot cell: an empty group yields `null` (type `V?`), a group of exactly one row yields
- * that single value (type `V`), and a group of several rows yields a `List<V>`.
+ *
+ *
+ * For each pivot cell: an empty group yields `null`, a group of exactly one row yields
+ * that single value, and a group of several rows yields a `List` of all its values.
  *
  * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
@@ -127,7 +134,9 @@ public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowEx
  * @return A new [<code>DataFrame</code>][DataFrame] with the grouping key columns, one row per grouping key combination,
  * and pivot keys as columns or column groups containing the computed results.
  */
-public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
+@Refine
+@Interpretable("PivotGroupByWith")
+public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<*> {
     val type = typeOf<V>()
     return aggregate { internal().withExpr(type, emptyPath(), expression) }
 }
@@ -157,7 +166,9 @@ public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowEx
  * @return A new [<code>DataFrame</code>][DataFrame] with the grouping key columns, one row per grouping key combination,
  * and pivot keys as columns or column groups containing the computed results.
  */
-public inline fun <T, reified V> ReducedPivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
+@Refine
+@Interpretable("ReducedPivotGroupByWith")
+public inline fun <T, reified V> ReducedPivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<*> {
     val type = typeOf<V>()
     return pivot.aggregate {
         val value = reducer(this)?.let {

@@ -190,6 +190,10 @@ internal const val SUGGEST_IF_NULL = "This is here for binary compatibility. $ME
 
 internal const val INDICES_BASE_COLUMN = "This function is only here for binary compatibility. $MESSAGE_1_0"
 
+internal const val CAST_UNCHECKED =
+    "Unchecked `cast<T>()` was renamed to `castUnchecked<T>()`; `cast<T>()` now verifies the schema. " +
+        "This function is only here for binary compatibility."
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
@@ -298,7 +302,7 @@ internal const val GET_ROW_REPLACE = "df().getRow(index)"
 internal const val GET_ROWS_ITERABLE_REPLACE = "df().getRows(indices)"
 internal const val GET_ROWS_RANGE_REPLACE = "df().getRows(indices)"
 internal const val GET_ROW_OR_NULL_REPLACE = "df().getRowOrNull(index)"
-internal const val COPY_REPLACE = "columns().toDataFrame().cast()"
+internal const val COPY_REPLACE = "columns().toDataFrame().castUnchecked()"
 
 internal const val LISTS_TO_DATAFRAME_MIGRATION =
     "Function moved from io to api package, and a new `header` parameter is introduced. $MESSAGE_1_1"
@@ -321,12 +325,24 @@ internal const val AGGREGATE_DSL_PATH: String =
 internal const val AGGREGATE_DSL_PATH_REPLACE = "pathOf(*names)"
 internal const val PATH_OF_IMPORT = "org.jetbrains.kotlinx.dataframe.api.pathOf"
 
+internal const val GET_COLUMN_GROUP_OR_NULL: String =
+    "This function is the only `OrNull` variant of `getColumnGroup` and is deprecated in favor of `getColumnOrNull(name)?.asColumnGroup()`. $MESSAGE_1_1"
+internal const val GET_COLUMN_GROUP_OR_NULL_REPLACE = "this.getColumnOrNull(name)?.asColumnGroup()"
+internal const val AS_COLUMN_GROUP_IMPORT = "org.jetbrains.kotlinx.dataframe.api.asColumnGroup"
+
 // endregion
 
 // region keep across releases
 
 internal const val DEPRECATED_ACCESS_API =
     "It's recommended to migrate to the String or Extension Properties Access API https://kotlin.github.io/dataframe/apilevels.html"
+
+internal const val COLUMN_REFERENCE_CAST_TO_NOT_NULLABLE =
+    "This function is an unchecked cast and duplicates `cast()`."
+
+internal const val SET_NULLABLE =
+    "This function doesn't change the column, and the new nullability is not visible in its result type; " +
+        "use `castToNullable()` or `castToNotNullable()` directly."
 
 internal const val DEPRECATED_DATA_ROW_COLUMN_REFERENCE_GET =
     "Accessing a DataRow by ColumnReference (row[col]) is deprecated. Prefer String or extension property access (e.g., row[\"name\"] or row.name). The reverse indexing col[row] and colAccessor.getValue(row) remains supported"

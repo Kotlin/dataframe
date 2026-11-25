@@ -53,6 +53,10 @@ logic in `impl/`, not in the public file.
 Operations are annotated for the compiler / IntelliJ plugins (`@Refine`, `@Interpretable("…")`, `@AccessApiOverload`,
 `@RequiredByIntellijPlugin`, from `annotations/`). Preserve these annotations when editing signatures.
 
+An operation's overloads must agree on non-value columns (column groups, frame columns) — decide the policy once,
+checking the nearest sibling operation (`parseImpl`, for instance, recurses into a selected column group) rather
+than inventing a per-overload behaviour.
+
 ## Column(s) Selection DSL
 
 The receiver of the selector lambdas (`ColumnsSelector`/`ColumnSelector`, defined in `aliases.kt`) is
@@ -107,7 +111,10 @@ KDoc** (KoDEx resolves all `{@include …}`/`@set`/`@get` there).
   actual Kotlin Notebook integration lives in `:dataframe-jupyter`.
 - `io/` — read/write helpers and the **deprecated** in-core csv/tsv/html integrations (`csv.kt`, `tsv.kt`,
   `html.kt`, `guess.kt`, `Compression.kt`); prefer the dedicated `dataframe-csv`/`dataframe-json` modules.
-- `documentation/` — see below. `exceptions/` — custom exceptions. `util/` — deprecation-message constants.
+- `documentation/` — see below. `exceptions/` — custom exceptions. `util/` — deprecation-message constants;
+  the `// region` of a constant in `deprecationMessages.kt` decides its migration-guide table (`WARNING in
+  1.0, ERROR in 1.1` → the "`WARNING` in 1.0 and `ERROR` in 1.1" table; `keep across releases` → the same
+  table, marked "(will remain WARNING)").
 
 ## KoDEx documentation-only pattern (core specifics)
 

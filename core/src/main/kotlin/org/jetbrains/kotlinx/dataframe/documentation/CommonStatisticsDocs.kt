@@ -153,6 +153,16 @@ internal interface CommonStatisticsDocs {
     typealias SeparateParam = Nothing
 
     /**
+     * {@comment Note about what the aggregated value of a pivot cell is depending on the number of rows
+     *    in the group. KDoc-snippet. Shared by the `values` and `with` pivot aggregations.}
+     *
+     * For each pivot cell: an empty group yields `null`, a group of exactly one row yields
+     * that single value, and a group of several rows yields a `List` of all its values.
+     */
+    @ExcludeFromSources
+    typealias PivotCellOneOrManyResultSnippet = Nothing
+
+    /**
      * {@comment The documentation website links all [Grouped] KDocs end with. KDoc-snippet.}
      *
      * For more information: {@include [DocumentationUrls.GroupByStatistics]}, and

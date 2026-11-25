@@ -461,7 +461,7 @@ public fun <T> Iterable<Pair<ColumnPath, BaseColumn<*>>>.toDataFrameFromPairs():
             assert(columns[index] != null)
         }
     }
-    return columns.map { it!! }.toDataFrame().cast()
+    return columns.map { it!! }.toDataFrame().castUnchecked()
 }
 
 /**

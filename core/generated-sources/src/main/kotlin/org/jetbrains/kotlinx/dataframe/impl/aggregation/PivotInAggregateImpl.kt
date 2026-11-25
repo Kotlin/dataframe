@@ -20,7 +20,7 @@ internal data class PivotInAggregateImpl<T>(
 
     override fun default(value: Any?) = copy(default = value)
 
-    override fun <R> aggregate(separate: Boolean, body: AggregateBody<T, R>): DataFrame<T> {
+    override fun <R> aggregate(separate: Boolean, body: AggregateBody<T, R>): DataFrame<*> {
         require(aggregator is GroupByReceiverImpl<T>)
 
         val childAggregator = aggregator.child()

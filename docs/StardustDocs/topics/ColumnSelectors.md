@@ -454,7 +454,7 @@ in the [`ColumnSet`](#column-resolvers), it will not be included in the result.
 It's useful in combination with [`colsAtAnyDepth {}`](ColumnSelectors.md#cols-at-any-depth), as that function can
 create a [`ColumnSet`](#column-resolvers) containing both a column and the [column group](DataColumn.md#columngroup) it's in.
 
-In the past, was named `top()` and `roots()`, but these names have been deprecated.
+In the past, it was named `top()` and `roots()`, but these names have been deprecated.
 
 **For example:**
 
@@ -1031,12 +1031,21 @@ All functions described above for selecting columns in various ways return a `Co
   It can also be renamed during selection.
   - **`ColumnPath`** — a wrapper for a [`DataColumn`](DataColumn.md) path
     in a [`DataFrame`](DataFrame.md) that can also serve as a `ColumnAccessor`.
+    Create one with `pathOf("group2", "info")`.
+- **`ColumnSet`** — resolves to an ordered list of [`DataColumn`s](DataColumn.md).
+
 ```kotlin
-// Select all columns from the group by path "group2"/"info":
-df.select { pathOf("group2", "info").allCols() }
 // For each selected column, place it under its ancestor group
 // from two levels up in the column path hierarchy:
 df.group { colsAtAnyDepth().colsOf<String>() }
 .into { it.path.dropLast(2) }
 ```
-- **`ColumnSet`** — resolves to an ordered list of [`DataColumn`s](DataColumn.md).
+
+#### pathOf
+
+`pathOf` creates a `ColumnPath` from the given column names, outermost first:
+
+```kotlin
+// Select all columns from the group by path "group2"/"info":
+df.select { pathOf("group2", "info").allCols() }
+```

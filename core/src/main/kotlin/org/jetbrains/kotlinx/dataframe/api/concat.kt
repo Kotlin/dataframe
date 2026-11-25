@@ -234,7 +234,7 @@ public fun <T> DataFrame<T>.concat(vararg frames: DataFrame<T>): DataFrame<T> = 
 @Refine
 @Interpretable("DataFrameConcat")
 public infix fun <T, T1> DataFrame<T>.concat(frame: DataFrame<T1>): DataFrame<Any> =
-    concatImpl(listOf(this) + frame).cast()
+    concatImpl(listOf(this) + frame).castUnchecked()
 
 /**
  * Returns a [DataFrame] containing the rows of this [DataFrame] followed by [rows].
@@ -476,6 +476,6 @@ public fun <T> Iterable<DataColumn<T>>.concat(): DataColumn<T> {
  */
 @JvmName("concatRows")
 public fun <T> Iterable<DataRow<T>?>.concat(): DataFrame<T> =
-    concatImpl(map { it?.toDataFrame() ?: DataFrame.empty(1).cast() })
+    concatImpl(map { it?.toDataFrame() ?: DataFrame.empty(1).castUnchecked() })
 
 // endregion

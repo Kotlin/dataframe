@@ -694,7 +694,8 @@ public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
  *
  * The [<code>columnConverter</code>][columnConverter] is a lambda with the current [<code>DataFrame</code>][DataFrame] as receiver and the selected column as argument.
  * It returns a new column that will replace the original column.
- * **Preserves original column name for each column (even it was explicitly changed in [<code>columnConverter</code>][columnConverter] expression).**
+ * **Preserves original column name for each column
+ * (even if it was explicitly changed in the [<code>columnConverter</code>][columnConverter] expression).**
  *
  * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
  *
@@ -781,7 +782,7 @@ public inline fun <reified C> DataColumn<*>.convertTo(): DataColumn<C> = convert
  * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
  *
  * @param [newType] The target type, provided as a [<code>KType</code>][KType], to convert values to.
- * @return A new [<code>DataColumn</code>][DataColumn] with the values converted to [<code>type</code>][type].
+ * @return A new [<code>DataColumn</code>][DataColumn] with the values converted to [<code>newType</code>][newType].
  */
 @Suppress("UNCHECKED_CAST")
 public fun DataColumn<*>.convertTo(newType: KType): DataColumn<*> = convertToTypeImpl(newType, null)
@@ -815,7 +816,7 @@ public inline fun <reified C> DataColumn<String?>.convertTo(parserOptions: Parse
  *
  * @param [newType] The target type to convert values to.
  * @param [parserOptions] Optional [<code>ParserOptions</code>][ParserOptions] to customize parsing behavior (e.g., locale, null strings).
- * @return A new [<code>DataColumn</code>][DataColumn] with the values converted to [<code>type</code>][type].
+ * @return A new [<code>DataColumn</code>][DataColumn] with the values converted to [<code>newType</code>][newType].
  */
 public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOptions? = null): DataColumn<*> =
     convertToTypeImpl(newType, parserOptions)

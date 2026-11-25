@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
@@ -185,7 +184,7 @@ public class ConvertType<T>(
 public inline fun <reified T : Any> DataFrame<*>.convertTo(
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
-): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
+): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).castUnchecked()
 
 /**
  * Converts values in [<code>DataFrame</code>][DataFrame] to match given column schema [<code>T</code>][T].
@@ -211,7 +210,7 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
  * ```
  *
  * @param [T] class that defines target schema for conversion.
- * @param [schemaFrom] dataframe which type [<code>T</code>][T] will be used.
+ * @param [schemaFrom] dataframe whose type [<code>T</code>][T] will be used.
  * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [<code>DataFrame</code>][DataFrame].
  * @param [body] optional dsl to define custom type converters.
  * @throws [IllegalArgumentException] if [<code>DataFrame</code>][DataFrame] doesn't contain columns that are required by destination schema.
@@ -224,7 +223,7 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
-): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
+): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).castUnchecked()
 
 /**
  * Converts values in [<code>DataFrame</code>][DataFrame] to match given column schema [<code>schemaType</code>][schemaType].

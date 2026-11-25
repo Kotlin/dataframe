@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -64,7 +65,7 @@ internal class ColumnGroupWithParent<T>(
     override operator fun <R> get(column: KProperty<R>): DataColumn<R> = get(column.columnName).cast()
 
     override operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> =
-        get(column.columnName).asColumnGroup().cast()
+        get(column.columnName).asColumnGroup().castUnchecked()
 
     override operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> =
         get(column.columnName).asAnyFrameColumn().castFrameColumn()

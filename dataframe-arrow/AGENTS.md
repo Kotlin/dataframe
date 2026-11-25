@@ -100,7 +100,10 @@ Three more writer invariants, with a test each:
   *not* writable: a top-level one degrades to `Utf8`, a nested one fails on allocation.
 
 The Arrow ↔ Kotlin type mapping is published as a table in `docs/StardustDocs/topics/dataSources/ApacheArrow.md`
-and pinned by `ArrowTypeMappingTest`; change the code, the test and the table in the same commit. The read and
+and pinned by `ArrowTypeMappingTest`; change the code, the test and the table in the same commit. A new write
+row lands in both the `writeCases` list **and** the `roundTripped` agreement map of
+`the documented mappings round-trip` — nothing enforces the second, and a row missing from it is pinned
+one-sided. The read and
 write tables are **not** symmetric — reading builds lists and frame columns, writing has no list mapping at all.
 
 **Legacy/deprecated:** `arrowReading.kt` also defines `ArrowFeather`, an implementation of the old
