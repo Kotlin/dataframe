@@ -688,36 +688,36 @@ class ConvertTests {
     @Test
     fun `toLocalDate with a time zone works on a typed Instant column`() {
         val ts by columnOf(nearMidnightStdlib, null)
-        ts.toDataFrame().convert { ts }.toLocalDate(TimeZone.UTC)[ts].values().toList() shouldBe
+        ts.toDataFrame().convert { ts }.toLocalDate(TimeZone.UTC)[ts.name()].values().toList() shouldBe
             listOf(LocalDate(2024, 1, 1), null)
-        ts.toDataFrame().convert { ts }.toLocalDate(berlin)[ts].values().toList() shouldBe
+        ts.toDataFrame().convert { ts }.toLocalDate(berlin)[ts.name()].values().toList() shouldBe
             listOf(LocalDate(2024, 1, 2), null)
     }
 
     @Test
     fun `toLocalDate with a time zone works on a typed kotlinx datetime Instant column`() {
         val ts by columnOf(nearMidnightKotlinx, null)
-        ts.toDataFrame().convert { ts }.toLocalDate(TimeZone.UTC)[ts].values().toList() shouldBe
+        ts.toDataFrame().convert { ts }.toLocalDate(TimeZone.UTC)[ts.name()].values().toList() shouldBe
             listOf(LocalDate(2024, 1, 1), null)
-        ts.toDataFrame().convert { ts }.toLocalDate(berlin)[ts].values().toList() shouldBe
+        ts.toDataFrame().convert { ts }.toLocalDate(berlin)[ts.name()].values().toList() shouldBe
             listOf(LocalDate(2024, 1, 2), null)
     }
 
     @Test
     fun `toLocalTime with a time zone works on a typed Instant column`() {
         val ts by columnOf(nearMidnightStdlib, null)
-        ts.toDataFrame().convert { ts }.toLocalTime(TimeZone.UTC)[ts].values().toList() shouldBe
+        ts.toDataFrame().convert { ts }.toLocalTime(TimeZone.UTC)[ts.name()].values().toList() shouldBe
             listOf(LocalTime(23, 30), null)
-        ts.toDataFrame().convert { ts }.toLocalTime(berlin)[ts].values().toList() shouldBe
+        ts.toDataFrame().convert { ts }.toLocalTime(berlin)[ts.name()].values().toList() shouldBe
             listOf(LocalTime(0, 30), null)
     }
 
     @Test
     fun `toLocalTime with a time zone works on a typed kotlinx datetime Instant column`() {
         val ts by columnOf(nearMidnightKotlinx, null)
-        ts.toDataFrame().convert { ts }.toLocalTime(TimeZone.UTC)[ts].values().toList() shouldBe
+        ts.toDataFrame().convert { ts }.toLocalTime(TimeZone.UTC)[ts.name()].values().toList() shouldBe
             listOf(LocalTime(23, 30), null)
-        ts.toDataFrame().convert { ts }.toLocalTime(berlin)[ts].values().toList() shouldBe
+        ts.toDataFrame().convert { ts }.toLocalTime(berlin)[ts.name()].values().toList() shouldBe
             listOf(LocalTime(0, 30), null)
     }
 
@@ -731,11 +731,13 @@ class ConvertTests {
     @Test
     fun `converting an Instant column to LocalDate defaults to the system time zone`() {
         val col = columnOf(nearMidnightStdlib)
-        listOf("UTC", "Europe/Berlin").forEach { zoneId ->
+        listOf(
+            "UTC" to LocalDate(2024, 1, 1),
+            "Europe/Berlin" to LocalDate(2024, 1, 2),
+        ).forEach { (zoneId, expected) ->
             zoneId.asClue {
                 withDefaultTimeZone(zoneId) {
-                    col.convertToLocalDate()[0] shouldBe
-                        if (zoneId == "UTC") LocalDate(2024, 1, 1) else LocalDate(2024, 1, 2)
+                    col.convertToLocalDate()[0] shouldBe expected
                 }
             }
         }
@@ -744,11 +746,13 @@ class ConvertTests {
     @Test
     fun `converting an Instant column to LocalTime defaults to the system time zone`() {
         val col = columnOf(nearMidnightStdlib)
-        listOf("UTC", "Europe/Berlin").forEach { zoneId ->
+        listOf(
+            "UTC" to LocalTime(23, 30),
+            "Europe/Berlin" to LocalTime(0, 30),
+        ).forEach { (zoneId, expected) ->
             zoneId.asClue {
                 withDefaultTimeZone(zoneId) {
-                    col.convertToLocalTime()[0] shouldBe
-                        if (zoneId == "UTC") LocalTime(23, 30) else LocalTime(0, 30)
+                    col.convertToLocalTime()[0] shouldBe expected
                 }
             }
         }
@@ -757,11 +761,13 @@ class ConvertTests {
     @Test
     fun `toLocalDate defaults to the system time zone on a column selected by name`() {
         val df = dataFrameOf("ts")(nearMidnightMillis)
-        listOf("UTC", "Europe/Berlin").forEach { zoneId ->
+        listOf(
+            "UTC" to LocalDate(2024, 1, 1),
+            "Europe/Berlin" to LocalDate(2024, 1, 2),
+        ).forEach { (zoneId, expected) ->
             zoneId.asClue {
                 withDefaultTimeZone(zoneId) {
-                    df.convert("ts").toLocalDate()["ts"][0] shouldBe
-                        if (zoneId == "UTC") LocalDate(2024, 1, 1) else LocalDate(2024, 1, 2)
+                    df.convert("ts").toLocalDate()["ts"][0] shouldBe expected
                 }
             }
         }
@@ -770,17 +776,13 @@ class ConvertTests {
     @Test
     fun `toLocalDate defaults to the system time zone on a typed Instant column`() {
         val ts by columnOf(nearMidnightStdlib, null)
-        listOf("UTC", "Europe/Berlin").forEach { zoneId ->
+        listOf(
+            "UTC" to listOf(LocalDate(2024, 1, 1), null),
+            "Europe/Berlin" to listOf(LocalDate(2024, 1, 2), null),
+        ).forEach { (zoneId, expected) ->
             zoneId.asClue {
                 withDefaultTimeZone(zoneId) {
-                    ts.toDataFrame().convert { ts }.toLocalDate()[ts].values().toList() shouldBe
-                        if (zoneId ==
-                            "UTC"
-                        ) {
-                            listOf(LocalDate(2024, 1, 1), null)
-                        } else {
-                            listOf(LocalDate(2024, 1, 2), null)
-                        }
+                    ts.toDataFrame().convert { ts }.toLocalDate()[ts.name()].values().toList() shouldBe expected
                 }
             }
         }
@@ -938,6 +940,33 @@ class ConvertTests {
         withDefaultTimeZone("Europe/Berlin") {
             df.convert("ts").toLocalDate(TimeZone.UTC)["ts"].values().toList() shouldBe
                 listOf(LocalDate(2024, 1, 1), LocalDate(2024, 1, 2))
+        }
+    }
+
+    @Test
+    fun `a value that fails to convert in a mixed column is reported with its column and row`() {
+        val df = dataFrameOf("ts")(nearMidnightMillis, "abc")
+        listOf<() -> Any?>(
+            { df.convert("ts").toLocalDate(TimeZone.UTC) },
+            { df.convert("ts").toLocalTime(TimeZone.UTC) },
+            { df.convert("ts").toLocalDateTime(TimeZone.UTC) },
+        ).forEach { conversion ->
+            val e = shouldThrow<CellConversionException> { conversion() }
+            e.value shouldBe "abc"
+            e.row shouldBe 1
+            e.column shouldBe pathOf("ts")
+        }
+    }
+
+    @Test
+    fun `a value without a converter in a mixed column is reported with its column`() {
+        val df = dataFrameOf("ts")(nearMidnightMillis, 1.5)
+        listOf<() -> Any?>(
+            { df.convert("ts").toLocalDate(TimeZone.UTC) },
+            { df.convert("ts").toLocalTime(TimeZone.UTC) },
+            { df.convert("ts").toLocalDateTime(TimeZone.UTC) },
+        ).forEach { conversion ->
+            shouldThrow<TypeConverterNotFoundException> { conversion() }.column shouldBe pathOf("ts")
         }
     }
 

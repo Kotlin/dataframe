@@ -58,7 +58,6 @@ import java.util.Locale
 import java.util.stream.Collectors
 import kotlin.time.Duration
 import kotlin.time.Instant
-import kotlinx.datetime.Instant as DeprecatedInstant
 
 /**
  * Samples for the `convert` website page.
@@ -479,8 +478,8 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
     fun convertDeprecatedInstantToLocalDateWithZone() {
         // SampleStart
         val ts by columnOf(
-            DeprecatedInstant.parse("2024-01-01T23:30:00Z"),
-            DeprecatedInstant.parse("2024-06-15T08:45:00Z"),
+            kotlinx.datetime.Instant.parse("2024-01-01T23:30:00Z"),
+            kotlinx.datetime.Instant.parse("2024-06-15T08:45:00Z"),
         )
         // kotlinx.datetime.Instant -> kotlinx.datetime.LocalDate in the given time zone
         ts.toDataFrame().convert { ts }.toLocalDate(TimeZone.UTC)
@@ -492,8 +491,8 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
     fun convertDeprecatedInstantToLocalTimeWithZone() {
         // SampleStart
         val ts by columnOf(
-            DeprecatedInstant.parse("2024-01-01T23:30:00Z"),
-            DeprecatedInstant.parse("2024-06-15T08:45:00Z"),
+            kotlinx.datetime.Instant.parse("2024-01-01T23:30:00Z"),
+            kotlinx.datetime.Instant.parse("2024-06-15T08:45:00Z"),
         )
         // kotlinx.datetime.Instant -> kotlinx.datetime.LocalTime in the given time zone
         ts.toDataFrame().convert { ts }.toLocalTime(TimeZone.UTC)

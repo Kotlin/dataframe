@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
@@ -839,6 +840,36 @@ internal fun StdlibInstant.toLocalDate(zone: TimeZone = defaultTimeZone) = toLoc
 internal fun StdlibInstant.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).time
 
 /**
+ * Converts a column inferred as a common supertype ([Any], [Comparable], [Number], [Serializable]) value by value:
+ * the column type says nothing about the values, so each one is looked at on its own.
+ *
+ * [convertInZone] converts the values of the zone-taking source types and returns `null` for any other value;
+ * those go through the converter table in the system current time zone, as in [convertToTypeImpl].
+ * A value that fails to convert is reported with its column and row, like [convertToTypeImpl] does.
+ */
+private fun AnyCol.convertPerValueInZone(to: KType, convertInZone: (Any) -> Any?): AnyCol {
+    val from = type
+    var currentRow = 0
+    try {
+        val values = values.mapIndexed { row, value ->
+            currentRow = row
+            value?.let { convertInZone(it) ?: it.convertViaTable(from, to, path) }
+        }
+        return DataColumn.createValueColumn(name, values, to.withNullability(values.any { it == null }))
+    } catch (e: TypeConversionException) {
+        throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
+    }
+}
+
+private fun Any.convertViaTable(columnType: KType, to: KType, path: ColumnPath): Any? {
+    val clazz = javaClass.kotlin
+    if (clazz.isSubclassOf(to.jvmErasure)) return this
+    val converter = getConverter(clazz.createStarProjectedType(false), to)
+        ?: throw TypeConverterNotFoundException(columnType, to, path)
+    return converter(this)
+}
+
+/**
  * Zone-aware [LocalDate] conversion for a column of an erased type: the zone-dependent source types
  * ([Long], [Int], [kotlin.time.Instant], [kotlinx.datetime.Instant]) dispatch to their zone-taking
  * conversions. Columns of every other type are converted as if [zone] was not passed: conversions
@@ -858,22 +889,16 @@ internal fun AnyCol.convertToLocalDateInZone(zone: TimeZone): AnyCol =
 
         DeprecatedInstant::class -> (this as DataColumn<DeprecatedInstant?>).convertToLocalDate(zone)
 
-        Any::class, Comparable::class, Number::class, java.io.Serializable::class -> {
-            // Mixed-value columns are inferred as a common supertype (Long + Int -> Number), so the column
-            // type says nothing about the values: every value of a zone-taking source type converts in
-            // [zone], other values go through the converter table in the system current time zone.
-            @Suppress("UNCHECKED_CAST")
-            (this as DataColumn<Any?>).map { value ->
+        Any::class, Comparable::class, Number::class, java.io.Serializable::class ->
+            convertPerValueInZone(typeOf<LocalDate?>()) { value ->
                 when (value) {
-                    null -> null
                     is Long -> value.toLocalDate(zone)
                     is Int -> value.toLong().toLocalDate(zone)
                     is StdlibInstant -> value.toLocalDate(zone)
                     is DeprecatedInstant -> value.toStdlibInstant().toLocalDate(zone)
-                    else -> value.convertTo(typeOf<LocalDate?>()) as LocalDate?
+                    else -> null
                 }
             }
-        }
 
         else -> convertToTypeImpl(typeOf<LocalDate?>(), null)
     }
@@ -898,22 +923,16 @@ internal fun AnyCol.convertToLocalTimeInZone(zone: TimeZone): AnyCol =
 
         DeprecatedInstant::class -> (this as DataColumn<DeprecatedInstant?>).convertToLocalTime(zone)
 
-        Any::class, Comparable::class, Number::class, java.io.Serializable::class -> {
-            // Mixed-value columns are inferred as a common supertype (Long + Int -> Number), so the column
-            // type says nothing about the values: every value of a zone-taking source type converts in
-            // [zone], other values go through the converter table in the system current time zone.
-            @Suppress("UNCHECKED_CAST")
-            (this as DataColumn<Any?>).map { value ->
+        Any::class, Comparable::class, Number::class, java.io.Serializable::class ->
+            convertPerValueInZone(typeOf<LocalTime?>()) { value ->
                 when (value) {
-                    null -> null
                     is Long -> value.toLocalTime(zone)
                     is Int -> value.toLong().toLocalTime(zone)
                     is StdlibInstant -> value.toLocalTime(zone)
                     is DeprecatedInstant -> value.toStdlibInstant().toLocalTime(zone)
-                    else -> value.convertTo(typeOf<LocalTime?>()) as LocalTime?
+                    else -> null
                 }
             }
-        }
 
         else -> convertToTypeImpl(typeOf<LocalTime?>(), null)
     }
@@ -938,22 +957,16 @@ internal fun AnyCol.convertToLocalDateTimeInZone(zone: TimeZone): AnyCol =
 
         DeprecatedInstant::class -> (this as DataColumn<DeprecatedInstant?>).convertToLocalDateTime(zone)
 
-        Any::class, Comparable::class, Number::class, java.io.Serializable::class -> {
-            // Mixed-value columns are inferred as a common supertype (Long + Int -> Number), so the column
-            // type says nothing about the values: every value of a zone-taking source type converts in
-            // [zone], other values go through the converter table in the system current time zone.
-            @Suppress("UNCHECKED_CAST")
-            (this as DataColumn<Any?>).map { value ->
+        Any::class, Comparable::class, Number::class, java.io.Serializable::class ->
+            convertPerValueInZone(typeOf<LocalDateTime?>()) { value ->
                 when (value) {
-                    null -> null
                     is Long -> value.toLocalDateTime(zone)
                     is Int -> value.toLong().toLocalDateTime(zone)
                     is StdlibInstant -> value.toLocalDateTime(zone)
                     is DeprecatedInstant -> value.toStdlibInstant().toLocalDateTime(zone)
-                    else -> value.convertTo(typeOf<LocalDateTime?>()) as LocalDateTime?
+                    else -> null
                 }
             }
-        }
 
         else -> convertToTypeImpl(typeOf<LocalDateTime?>(), null)
     }
