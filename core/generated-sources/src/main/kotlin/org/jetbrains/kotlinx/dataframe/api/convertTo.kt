@@ -210,7 +210,7 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
  * ```
  *
  * @param [T] class that defines target schema for conversion.
- * @param [schemaFrom] dataframe which type [<code>T</code>][T] will be used.
+ * @param [schemaFrom] dataframe whose type [<code>T</code>][T] will be used.
  * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [<code>DataFrame</code>][DataFrame].
  * @param [body] optional dsl to define custom type converters.
  * @throws [IllegalArgumentException] if [<code>DataFrame</code>][DataFrame] doesn't contain columns that are required by destination schema.
