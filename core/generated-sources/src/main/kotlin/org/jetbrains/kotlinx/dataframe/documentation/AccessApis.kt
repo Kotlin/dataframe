@@ -27,7 +27,7 @@ internal interface AccessApis {
      *
      * ### String Column Accessors
      *
-     * You can also specify a column using a [<code>String</code>][String] representing their name
+     * You can also specify a column using a [<code>String</code>][String] representing its name
      * and path inside the [<code>Columns Selection DSL</code>][SelectingColumns.ColumnsSelectionDsl] and
      * [<code>Row Expressions</code>][ExpressionsGivenRow].
      *

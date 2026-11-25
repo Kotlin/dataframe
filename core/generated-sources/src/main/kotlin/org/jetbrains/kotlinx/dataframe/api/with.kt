@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.withExpr
@@ -21,8 +22,10 @@ import kotlin.reflect.typeOf
 /**
  * Aggregates this [<code>Pivot</code>][Pivot] by evaluating the given [<code>row expression</code>][expression] on every row of each pivot group.
  *
- * For each pivot cell: an empty group yields `null` (type `V?`), a group of exactly one row yields
- * that single value (type `V`), and a group of several rows yields a `List<V>`.
+ *
+ *
+ * For each pivot cell: an empty group yields `null`, a group of exactly one row yields
+ * that single value, and a group of several rows yields a `List` of all its values.
  *
  * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
@@ -112,8 +115,10 @@ public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowEx
  * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by evaluating the given [<code>row expression</code>][expression] on every row
  * in each group defined by the grouping and pivot keys.
  *
- * For each pivot cell: an empty group yields `null` (type `V?`), a group of exactly one row yields
- * that single value (type `V`), and a group of several rows yields a `List<V>`.
+ *
+ *
+ * For each pivot cell: an empty group yields `null`, a group of exactly one row yields
+ * that single value, and a group of several rows yields a `List` of all its values.
  *
  * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
