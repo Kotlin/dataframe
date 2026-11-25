@@ -16,6 +16,11 @@ on:
 jobs:
   cleanup_preview_branches:
     name: Delete preview branches of generated code
+    concurrency:
+      # Same group as generated-sources.yml: cancels an in-flight preview run and waits for it to finish,
+      # so a branch it already pushed is visible here instead of being left behind
+      group: generated-sources-preview-pr-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - name: Delete preview branches
