@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.GroupByDocs
 import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotDocs
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 
 /**
@@ -19,7 +20,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
  * and a [Pivot] is aggregated into a single [DataRow]
  * with the pivot keys as top-level columns.
  *
- * See [GroupBy aggregation][GroupByDocs.Aggregation] and [Pivot aggregation][PivotDocs.Aggregation]
+ * See [GroupBy aggregation][GroupByDocs.Aggregation], [Pivot aggregation][PivotDocs.Aggregation],
+ * and [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation]
  * for the available aggregation operations.
  *
  * For more information: {@include [DocumentationUrls.GroupBy]} {@include [DocumentationUrls.Pivot]}
