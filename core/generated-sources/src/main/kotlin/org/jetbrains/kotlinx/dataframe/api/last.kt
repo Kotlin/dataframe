@@ -397,9 +397,7 @@ public fun <T> Pivot<T>.last(predicate: RowFilter<T>): ReducedPivot<T> = reduce 
  * If any combined [<code>pivot</code>][pivot] + [<code>groupBy</code>][groupBy] group in [<code>PivotGroupBy</code>][PivotGroupBy] is empty, in the resulting [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy]
  * it will be represented by a [<code>row</code>][DataRow] with `null` values (except the grouping key).
  *
- * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
- *
- * For more information about [<code>PivotGroupBy</code>][PivotGroupBy] with examples: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
+ * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html) [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  * ### Example
  * ```kotlin
@@ -430,13 +428,7 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  * in the resulting [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] it will be represented by a [<code>row</code>][DataRow] with `null` values
  * (except the grouping key).
  *
- * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
- *
- * [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
- *
- * [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
- *
- * [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
+ * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html) [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  *
  *
