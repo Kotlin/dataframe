@@ -45,7 +45,8 @@ internal interface AccessApis {
      * is through auto-generated extension properties.
      *
      * These properties are generated based on the
-     * [<code>dataframe schema</code>][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema],
+     * [<code>dataframe schema</code>][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] by the
+     * [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html),
      * with their names and types inferred from the names and types of the corresponding columns.
      * This also works for hierarchical [<code>DataFrame</code>][DataFrame] structures
      * (i.e., [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
@@ -76,7 +77,7 @@ internal interface AccessApis {
      * df.filter { age > 18 && name.startsWith("A") }
      * ```
      *
-     * For more information: [See Extension Properties API on the documentation website.](https://kotlin.github.io/dataframe/extensionpropertiesapi.html)
+     * For more information: [See Extension Properties API on the documentation website.](https://kotlin.github.io/dataframe/extensionpropertiesapi.html) [See Compiler Plugin on the documentation website.](https://kotlin.github.io/dataframe/compiler-plugin.html)
      */
     typealias ExtensionPropertiesApi = Nothing
 }
