@@ -9,33 +9,40 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 // region Pivot
 
 /**
- * Aggregates this [<code>Pivot</code>][Pivot] by keeping each pivot group as a [<code>DataFrame</code>][DataFrame].
+ * Aggregates this [<code>Pivot</code>][Pivot] by keeping its groups as-is.
  *
- * Returns a single [<code>DataRow</code>][DataRow] where:
- * - each column corresponds to a [<code>pivot</code>][pivot] group;
- * - with several pivot keys created via [<code>and</code>][PivotDsl.and], there is a column group per pivot key,
- *   with columns inside corresponding to the values of that key — unless [<code>pivot</code>][pivot] was called with
- *   `inward = false`, which keeps the pivot key values as top-level columns;
- * - with nested pivot keys created via [<code>then</code>][PivotDsl.then], the columns nest by key values:
- *   a column group per value of the first key, with the columns for the values of the remaining keys
- *   inside (`inward` does not change this nesting);
- * - each column holding a group is a [<code>FrameColumn</code>][FrameColumn] with the rows of the corresponding pivot group.
+ * Returns a new [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as top-level columns
+ * (or as [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+ * for multiple or nested pivot keys).
+ * Each [<code>pivot</code>][pivot] key column is a [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]
+ * with a single value: the [<code>DataFrame</code>][DataFrame] of the rows belonging to the corresponding group.
  *
- * This is equivalent to calling [<code>aggregate</code>][Pivot.aggregate] { this }.
+ * This is a shortcut for [<code>aggregate</code>][Pivot.aggregate]` { this }`,
+ * where the whole group is used as the aggregation result.
+ *
+ * Check out [<code>`pivot` Grammar</code>][PivotDocs.Grammar].
+ *
+ * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html) [See "`Pivot` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation)
  *
  * See also:
- * - [<code>pivot</code>][pivot].
- * - common [<code>aggregate</code>][Pivot.aggregate].
- * - [<code>frames</code>][PivotGroupBy.frames] — the same aggregation on a [<code>Pivot</code>][Pivot] combined with [<code>groupBy</code>][Pivot.groupBy].
+ * - [<code>toDataFrame</code>][GroupBy.toDataFrame] — the [<code>GroupBy</code>][GroupBy] counterpart that returns
+ *   the grouping key columns together with the groups in a [<code>FrameColumn</code>][FrameColumn].
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
  *
- * For more information: [See "`Pivot` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation)
+ * ### Examples
  *
- * ### Example
  * ```kotlin
+ * // Keep the group of rows of each "isHappy" value as is, in a frame column
  * df.pivot { isHappy }.frames()
  * ```
+ * ```kotlin
+ * // Keep the group of rows of each "isHappy" value as is, in a frame column
+ * df.pivot("isHappy").frames()
+ * ```
  *
- * @return A single [<code>DataRow</code>][DataRow] with one [<code>FrameColumn</code>][FrameColumn] per pivot group, holding each group as a [<code>DataFrame</code>][DataFrame].
+ * @param [T] The schema marker type of the pivoted [<code>DataFrame</code>][DataFrame].
+ * @return A new [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as columns
+ *   and the corresponding groups of rows as their values.
  */
 public fun <T> Pivot<T>.frames(): DataRow<*> = aggregate { this }
 

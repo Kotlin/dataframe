@@ -952,7 +952,7 @@ df.groupBy { city }.aggregate {
     // and store it into a new "min age" column
     min { age } into "min age"
 
-    // Store the "name" column group of the oldest person in each group
+    // Store the "name" column group values of the oldest person in each group
     // as a new "oldest" column group
     maxBy { age }.name into "oldest"
 }
@@ -979,7 +979,7 @@ df.groupBy("city").aggregate {
     // and store it into a new "min age" column
     min("age") into "min age"
 
-    // Store the "name" column group of the oldest person in each group
+    // Store the "name" column group values of the oldest person in each group
     // as a new "oldest" column group
     maxBy("age")["name"] into "oldest"
 }

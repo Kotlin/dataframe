@@ -953,6 +953,15 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 /**
  * Represents a dataframe-like structure with grouped values, offering aggregation capabilities.
  *
+ * Implemented by [<code>GroupBy</code>][GroupBy], which consists of the grouping [<code>keys</code>][GroupBy.keys]
+ * and the corresponding [<code>groups</code>][GroupBy.groups] of rows.
+ * A [<code>GroupBy</code>][GroupBy] can be:
+ * * [<code>transformed</code>][GroupByDocs.Transformation] into a new [<code>GroupBy</code>][GroupBy];
+ * * [<code>reduced</code>][GroupByDocs.Reducing] into a [<code>DataFrame</code>][DataFrame], where each group is collapsed
+ *   into a single representative row;
+ * * [<code>aggregated</code>][GroupByDocs.Aggregation] into a [<code>DataFrame</code>][DataFrame], where each group is transformed
+ *   into one or more rows of derived values.
+ *
  * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  */
 public interface Grouped<out T> : Aggregatable<T>
