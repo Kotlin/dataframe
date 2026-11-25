@@ -57,7 +57,7 @@ df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.inplace()
 Stores split values in new columns.
 * `into(col1, col2, ... )` — stores split values in new top-level columns
 * `inward(col1, col2, ...)` — stores split values in new columns nested inside the original column
-* `intoColumns` — splits [`FrameColumns`](DataColumn.md#framecolumn) into [`ColumnGroups`](DataColumn.md#columngroup) storing in every cell in a `List` of the original values per column
+* `intoColumns` — splits [`FrameColumns`](DataColumn.md#framecolumn) into [`ColumnGroups`](DataColumn.md#columngroup) storing in every cell a `List` of the original values per column
 
 **Reverse operation:** [`merge`](merge.md)
 

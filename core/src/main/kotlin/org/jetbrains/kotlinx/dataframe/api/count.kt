@@ -316,7 +316,7 @@ public fun <T> PivotGroupBy<T>.count(): DataFrame<*> = aggregate { count() defau
  * df.pivot { city }.groupBy { age }.count()
  * ```
  *
- * @return A [DataFrame] with [groupBy] rows and pivoted counts as columns matching the [predicate]..
+ * @return A [DataFrame] with [groupBy] rows and pivoted counts as columns matching the [predicate].
  */
 @Refine
 @Interpretable("PivotGroupByCount1")
