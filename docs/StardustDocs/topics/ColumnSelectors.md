@@ -454,7 +454,7 @@ in the [`ColumnSet`](#column-resolvers), it will not be included in the result.
 It's useful in combination with [`colsAtAnyDepth {}`](ColumnSelectors.md#cols-at-any-depth), as that function can
 create a [`ColumnSet`](#column-resolvers) containing both a column and the [column group](DataColumn.md#columngroup) it's in.
 
-In the past, was named `top()` and `roots()`, but these names have been deprecated.
+In the past, it was named `top()` and `roots()`, but these names have been deprecated.
 
 **For example:**
 

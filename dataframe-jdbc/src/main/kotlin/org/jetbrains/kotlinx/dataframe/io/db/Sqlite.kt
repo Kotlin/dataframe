@@ -576,7 +576,7 @@ public class Sqlite(
          * (takes precedence over [forType][SqliteCustomConvertersBuilder.forType] for the named column).
          *
          * Both DSL functions accept two generic type parameters:
-         *  - `T` — the storage class of the raw stored value [String], [Int], [Long], [Double],
+         *  - `T` — the storage class of the raw stored value ([String], [Int], [Long], [Double],
          *         or [ByteArray] or their nullable variants).
          *  - `R` — the target Kotlin type of the resulting DataFrame column; must be reified.
          *

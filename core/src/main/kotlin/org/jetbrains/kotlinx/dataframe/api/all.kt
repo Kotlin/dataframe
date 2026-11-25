@@ -352,7 +352,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @set [CommonAllSubsetDocs.BEHAVIOR] after [column\], excluding [column\] itself
      * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return an empty [ColumnSet][ColumnSet]
      * @param [column\] The specified column after which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely.
+     *   both relatively to the current [ColumnsResolver] and absolutely.
      */
     @ExcludeFromSources
     private typealias AllAfterDocs = Nothing
@@ -592,7 +592,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @set [CommonAllSubsetDocs.BEHAVIOR] from [column\], including [column\] itself
      * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return an empty [ColumnSet][ColumnSet]
      * @param [column\] The specified column from which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely.
+     *   both relatively to the current [ColumnsResolver] and absolutely.
      */
     @ExcludeFromSources
     private typealias AllFromDocs = Nothing
@@ -831,7 +831,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @set [CommonAllSubsetDocs.BEHAVIOR] before [column\], excluding [column\] itself
      * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return a [ColumnSet][ColumnSet] containing all columns
      * @param [column\] The specified column before which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely.
+     *   both relatively to the current [ColumnsResolver] and absolutely.
      */
     @ExcludeFromSources
     private typealias AllBeforeDocs = Nothing
@@ -1070,7 +1070,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @set [CommonAllSubsetDocs.BEHAVIOR] up to [column\], including [column\] itself
      * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return a [ColumnSet][ColumnSet] containing all columns
      * @param [column\] The specified column up to which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely.
+     *   both relatively to the current [ColumnsResolver] and absolutely.
      */
     @ExcludeFromSources
     private typealias AllUpToDocs = Nothing
