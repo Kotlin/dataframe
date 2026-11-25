@@ -37,7 +37,7 @@ internal fun <T, C : Any?, R : Any?> DataFrame<T>.aggregateAll(
 ): R {
     val cols = get(columns)
     return if (cols.size == 1) {
-        aggregator.aggregateSingleColumn(cols[0])
+        aggregator.aggregateSingleColumn(cols.single())
     } else {
         aggregator.aggregateMultipleColumns(cols.asSequence())
     }

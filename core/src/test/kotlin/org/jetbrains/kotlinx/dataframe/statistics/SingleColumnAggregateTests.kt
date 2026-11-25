@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.junit.Test
 
-/** https://github.com/Kotlin/dataframe/issues/1693 */
+/** Issue #1693 */
 class SingleColumnAggregateTests {
 
     @Test
