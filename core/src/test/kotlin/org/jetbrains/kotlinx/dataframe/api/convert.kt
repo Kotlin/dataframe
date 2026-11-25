@@ -49,6 +49,17 @@ import java.time.LocalTime as JavaLocalTime
 class ConvertTests {
 
     @Test
+    fun `convert with can use converted value from preceding row`() {
+        val value by columnOf(1, 2, 3, 4)
+
+        val converted = value.toDataFrame().convert { value }.with {
+            (prev()?.newValue<Long>() ?: 0L) + it
+        }
+
+        converted["value"].values() shouldBe listOf(1L, 3L, 6L, 10L)
+    }
+
+    @Test
     fun `convert LocalTime Kotlin to Java and back`() {
         val time by columnOf(LocalTime(11, 22, 33))
         val converted = time.toDataFrame().convert { time }.to<JavaLocalTime>()
