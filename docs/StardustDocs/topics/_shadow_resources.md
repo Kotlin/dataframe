@@ -119,6 +119,7 @@
 <resource src="convertInstantToLocalDate.html"></resource>
 <resource src="convertNotNull.html"></resource>
 <resource src="convertPerRowCol.html"></resource>
+<resource src="convertRunningTotal.html"></resource>
 <resource src="convertStringTo.html"></resource>
 <resource src="convertStringToLocalDate.html"></resource>
 <resource src="convertStringToLocalDateShortcut.html"></resource>

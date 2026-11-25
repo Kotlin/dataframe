@@ -1,6 +1,18 @@
 [//]: # (title: convert)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ConvertSamples-->
 
+<web-summary>
+Discover the `convert` operation for Kotlin DataFrame.
+</web-summary>
+
+<card-summary>
+Discover the `convert` operation for Kotlin DataFrame.
+</card-summary>
+
+<link-summary>
+Discover the `convert` operation for Kotlin DataFrame.
+</link-summary>
+
 Returns a [`DataFrame`](DataFrame.md) with changed values in some columns. Allows changing column types.
 
 **API reference**: [`convert`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/convert.html)
@@ -8,10 +20,11 @@ Returns a [`DataFrame`](DataFrame.md) with changed values in some columns. Allow
 ```text
 convert { columnsSelector }
     .cast<Type>() // optional: adjusts the static type before the terminal step
-    .with { rowExpression } | .notNull { rowExpression } | .perRowCol { rowColExpression }
+    .with { rowConverter } | .notNull { rowExpression } | .perRowCol { rowColExpression }
     | .asFrame { frameExpression } | .asColumn { colExpression }
     | .to<Type>() | .toDataFrames()
 
+rowConverter = AddDataRow.(OldValue) -> NewValue
 rowExpression = DataRow.(OldValue) -> NewValue
 rowColExpression = (DataRow, DataColumn) -> NewValue
 colExpression = DataFrame.(DataColumn) -> DataColumn
@@ -48,7 +61,13 @@ df
 
 ## with
 
-Computes a new value for every cell of the selected columns with a [row expression](DataRow.md#row-expressions).
+Computes a new value for every cell of the selected columns with an expression that receives the current row as
+`this` and the original value of the current cell as `it`.
+
+The expression receiver is an
+[`AddDataRow`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/-add-data-row/index.html),
+which extends [`DataRow`](DataRow.md). Use `prev()?.newValue()` to access a value already converted in the preceding
+row. This can be used to calculate running totals and other recurrence relations.
 
 <!---FUN convert-->
 <tabs>
@@ -67,6 +86,20 @@ df.convert { "age"<Int>() }.with { it.toDouble() }
 
 </tab></tabs>
 <inline-frame src="./resources/convert.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+Calculate a running total of the `age` column and rename it to `runningAge` in place:
+
+<!---FUN convertRunningTotal-->
+
+```kotlin
+df.convert { age into "runningAge" }.with {
+    (prev()?.newValue<Int>() ?: 0) + it
+}
+```
+
+<inline-frame src="./resources/convertRunningTotal.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 
