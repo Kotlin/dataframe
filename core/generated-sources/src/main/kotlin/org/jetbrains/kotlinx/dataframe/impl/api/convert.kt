@@ -29,9 +29,14 @@ import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumn
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalDate
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalDateTime
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalTime
 import org.jetbrains.kotlinx.dataframe.api.isValueColumn
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
@@ -833,6 +838,138 @@ internal fun Long.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTim
 internal fun StdlibInstant.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).date
 
 internal fun StdlibInstant.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).time
+
+/**
+ * Converts a column inferred as a common supertype ([<code>Any</code>][Any], [<code>Comparable</code>][Comparable], [<code>Number</code>][Number], [<code>Serializable</code>][Serializable]) value by value:
+ * the column type says nothing about the values, so each one is looked at on its own.
+ *
+ * [<code>convertInZone</code>][convertInZone] converts the values of the zone-taking source types and returns `null` for any other value;
+ * those go through the converter table in the system current time zone, as in [<code>convertToTypeImpl</code>][convertToTypeImpl].
+ * A value that fails to convert is reported with its column and row, like [<code>convertToTypeImpl</code>][convertToTypeImpl] does.
+ */
+private fun AnyCol.convertPerValueInZone(to: KType, convertInZone: (Any) -> Any?): AnyCol {
+    val from = type
+    var currentRow = 0
+    try {
+        val values = values.mapIndexed { row, value ->
+            currentRow = row
+            value?.let { convertInZone(it) ?: it.convertViaTable(from, to, path) }
+        }
+        return DataColumn.createValueColumn(name, values, to.withNullability(values.any { it == null }))
+    } catch (e: TypeConversionException) {
+        throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
+    }
+}
+
+private fun Any.convertViaTable(columnType: KType, to: KType, path: ColumnPath): Any? {
+    val clazz = javaClass.kotlin
+    if (clazz.isSubclassOf(to.jvmErasure)) return this
+    val converter = getConverter(clazz.createStarProjectedType(false), to)
+        ?: throw TypeConverterNotFoundException(columnType, to, path)
+    return converter(this)
+}
+
+/**
+ * Zone-aware [<code>LocalDate</code>][LocalDate] conversion for a column of an erased type: the zone-dependent source types
+ * ([<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant], [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant]) dispatch to their zone-taking
+ * conversions. Columns of every other type are converted as if [<code>zone</code>][zone] was not passed: conversions
+ * that do not depend on a time zone ignore it, while [<code>Byte</code>][Byte], [<code>Short</code>][Short] and [<code>JavaInstant</code>][JavaInstant] sources are
+ * interpreted in the system current time zone. A column inferred as a common supertype ([<code>Any</code>][Any],
+ * [<code>Comparable</code>][Comparable], [<code>Number</code>][Number], [<code>Serializable</code>][Serializable]) is converted per value: [<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant] and [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] values
+ * use [<code>zone</code>][zone], other values go through the converter table in the system current time zone.
+ */
+@Suppress("UNCHECKED_CAST")
+internal fun AnyCol.convertToLocalDateInZone(zone: TimeZone): AnyCol =
+    when (type.jvmErasure) {
+        Long::class -> (this as DataColumn<Long?>).convertToLocalDate(zone)
+
+        Int::class -> (this as DataColumn<Int?>).convertToLocalDate(zone)
+
+        StdlibInstant::class -> (this as DataColumn<StdlibInstant?>).convertToLocalDate(zone)
+
+        DeprecatedInstant::class -> (this as DataColumn<DeprecatedInstant?>).convertToLocalDate(zone)
+
+        Any::class, Comparable::class, Number::class, java.io.Serializable::class ->
+            convertPerValueInZone(typeOf<LocalDate?>()) { value ->
+                when (value) {
+                    is Long -> value.toLocalDate(zone)
+                    is Int -> value.toLong().toLocalDate(zone)
+                    is StdlibInstant -> value.toLocalDate(zone)
+                    is DeprecatedInstant -> value.toStdlibInstant().toLocalDate(zone)
+                    else -> null
+                }
+            }
+
+        else -> convertToTypeImpl(typeOf<LocalDate?>(), null)
+    }
+
+/**
+ * Zone-aware [<code>LocalTime</code>][LocalTime] conversion for a column of an erased type: the zone-dependent source types
+ * ([<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant], [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant]) dispatch to their zone-taking
+ * conversions. Columns of every other type are converted as if [<code>zone</code>][zone] was not passed: conversions
+ * that do not depend on a time zone ignore it, while [<code>Byte</code>][Byte], [<code>Short</code>][Short] and [<code>JavaInstant</code>][JavaInstant] sources are
+ * interpreted in the system current time zone. A column inferred as a common supertype ([<code>Any</code>][Any],
+ * [<code>Comparable</code>][Comparable], [<code>Number</code>][Number], [<code>Serializable</code>][Serializable]) is converted per value: [<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant] and [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] values
+ * use [<code>zone</code>][zone], other values go through the converter table in the system current time zone.
+ */
+@Suppress("UNCHECKED_CAST")
+internal fun AnyCol.convertToLocalTimeInZone(zone: TimeZone): AnyCol =
+    when (type.jvmErasure) {
+        Long::class -> (this as DataColumn<Long?>).convertToLocalTime(zone)
+
+        Int::class -> (this as DataColumn<Int?>).convertToLocalTime(zone)
+
+        StdlibInstant::class -> (this as DataColumn<StdlibInstant?>).convertToLocalTime(zone)
+
+        DeprecatedInstant::class -> (this as DataColumn<DeprecatedInstant?>).convertToLocalTime(zone)
+
+        Any::class, Comparable::class, Number::class, java.io.Serializable::class ->
+            convertPerValueInZone(typeOf<LocalTime?>()) { value ->
+                when (value) {
+                    is Long -> value.toLocalTime(zone)
+                    is Int -> value.toLong().toLocalTime(zone)
+                    is StdlibInstant -> value.toLocalTime(zone)
+                    is DeprecatedInstant -> value.toStdlibInstant().toLocalTime(zone)
+                    else -> null
+                }
+            }
+
+        else -> convertToTypeImpl(typeOf<LocalTime?>(), null)
+    }
+
+/**
+ * Zone-aware [<code>LocalDateTime</code>][LocalDateTime] conversion for a column of an erased type: the zone-dependent source types
+ * ([<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant], [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant]) dispatch to their zone-taking
+ * conversions. Columns of every other type are converted as if [<code>zone</code>][zone] was not passed: conversions
+ * that do not depend on a time zone ignore it, while [<code>Byte</code>][Byte], [<code>Short</code>][Short] and [<code>JavaInstant</code>][JavaInstant] sources are
+ * interpreted in the system current time zone. A column inferred as a common supertype ([<code>Any</code>][Any],
+ * [<code>Comparable</code>][Comparable], [<code>Number</code>][Number], [<code>Serializable</code>][Serializable]) is converted per value: [<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant] and [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] values
+ * use [<code>zone</code>][zone], other values go through the converter table in the system current time zone.
+ */
+@Suppress("UNCHECKED_CAST")
+internal fun AnyCol.convertToLocalDateTimeInZone(zone: TimeZone): AnyCol =
+    when (type.jvmErasure) {
+        Long::class -> (this as DataColumn<Long?>).convertToLocalDateTime(zone)
+
+        Int::class -> (this as DataColumn<Int?>).convertToLocalDateTime(zone)
+
+        StdlibInstant::class -> (this as DataColumn<StdlibInstant?>).convertToLocalDateTime(zone)
+
+        DeprecatedInstant::class -> (this as DataColumn<DeprecatedInstant?>).convertToLocalDateTime(zone)
+
+        Any::class, Comparable::class, Number::class, java.io.Serializable::class ->
+            convertPerValueInZone(typeOf<LocalDateTime?>()) { value ->
+                when (value) {
+                    is Long -> value.toLocalDateTime(zone)
+                    is Int -> value.toLong().toLocalDateTime(zone)
+                    is StdlibInstant -> value.toLocalDateTime(zone)
+                    is DeprecatedInstant -> value.toStdlibInstant().toLocalDateTime(zone)
+                    else -> null
+                }
+            }
+
+        else -> convertToTypeImpl(typeOf<LocalDateTime?>(), null)
+    }
 
 internal val defaultTimeZone get() = TimeZone.currentSystemDefault()
 
