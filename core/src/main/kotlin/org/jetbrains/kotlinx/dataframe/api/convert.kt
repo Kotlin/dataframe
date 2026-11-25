@@ -554,7 +554,8 @@ public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
  *
  * The [columnConverter] is a lambda with the current [DataFrame] as receiver and the selected column as argument.
  * It returns a new column that will replace the original column.
- * **Preserves original column name for each column (even it was explicitly changed in [columnConverter] expression).**
+ * **Preserves original column name for each column
+ * (even if it was explicitly changed in the [columnConverter] expression).**
  *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
@@ -644,7 +645,7 @@ public inline fun <reified C> DataColumn<*>.convertTo(): DataColumn<C> = convert
  * For more information: {@include [DocumentationUrls.Convert]}
  *
  * @param [newType] The target type, provided as a [KType], to convert values to.
- * @return A new [DataColumn] with the values converted to [type].
+ * @return A new [DataColumn] with the values converted to [newType].
  */
 @Suppress("UNCHECKED_CAST")
 public fun DataColumn<*>.convertTo(newType: KType): DataColumn<*> = convertToTypeImpl(newType, null)
@@ -676,7 +677,7 @@ public inline fun <reified C> DataColumn<String?>.convertTo(parserOptions: Parse
  *
  * @param [newType] The target type to convert values to.
  * @param [parserOptions] Optional [ParserOptions] to customize parsing behavior (e.g., locale, null strings).
- * @return A new [DataColumn] with the values converted to [type].
+ * @return A new [DataColumn] with the values converted to [newType].
  */
 public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOptions? = null): DataColumn<*> =
     convertToTypeImpl(newType, parserOptions)

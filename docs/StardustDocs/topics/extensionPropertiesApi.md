@@ -75,7 +75,7 @@ val df = DataFrame.readCsv("example.csv")
 
 **After cell execution** data schema and extensions for this `DataFrame` will be generated 
 so you can use extensions for accessing columns, 
-using it in operations inside the [Column Selector DSL](ColumnSelectors.md) 
+using them in operations inside the [Column Selector DSL](ColumnSelectors.md) 
 and [DataRow API](DataRow.md):
 
 
@@ -152,7 +152,7 @@ val df = DataFrame.readCsv("example.csv").cast<Person>()
 
 Extensions for this `DataFrame` will be generated automatically by the plugin, 
 so you can use extensions for accessing columns, 
-using it in operations inside the [Column Selector DSL](ColumnSelectors.md)
+using them in operations inside the [Column Selector DSL](ColumnSelectors.md)
 and [DataRow API](DataRow.md).
 
 

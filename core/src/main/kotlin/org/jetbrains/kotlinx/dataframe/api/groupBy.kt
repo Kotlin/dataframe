@@ -64,7 +64,7 @@ import kotlin.reflect.KProperty
  * Don't confuse this with [group], which groups columns into a
  * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * See also [pivot][DataFrame.pivot] that groups rows of [DataFrame] vertically.
+ * See also [pivot][DataFrame.pivot] that groups rows of [DataFrame] horizontally.
  */
 internal interface GroupByDocs {
     /**
@@ -410,7 +410,7 @@ internal interface GroupByDocs {
 
     /**
      * Grouping keys can also be created inline
-     * (i.g. by creating a new column using [expr] or simply renaming the old one
+     * (e.g. by creating a new column using [expr] or simply renaming the old one
      * using [named]):
      * ```kotlin
      * // Create a new column "newName" based on existing "oldName" values
@@ -458,7 +458,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
  * @include [CommonGroupByDocs]
  * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetGroupByOperationArg]}
  *
- * @param [cols] The [Column names][String] that defines which columns are used
+ * @param [cols] The [Column names][String] that define which columns are used
  * as keys for grouping.
  * @return A new [GroupBy] containing the unique combinations of values from the provided [key columns][cols],
  * together with their corresponding groups of rows.
@@ -523,7 +523,7 @@ public fun <T> Pivot<T>.groupBy(vararg columns: ColumnReference<*>): PivotGroupB
  * `df.`{@get [OPERATION]}`("length", "age")`
  *
  * {@include [SetGroupByOperationArg]}
- * @param [columns] The [Column names][String] that defines which columns are used
+ * @param [columns] The [Column names][String] that define which columns are used
  * as keys for grouping.
  * @return A new [PivotGroupBy] that preserves the original [pivot] key columns
  * and uses the provided columns as [groupBy] keys.

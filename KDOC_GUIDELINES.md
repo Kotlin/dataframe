@@ -176,7 +176,7 @@ allowing their KDocs to be referenced as standalone topics from other KDocs.
 They are not marked with `@ExcludeFromSources` and included in the sources.
 
 For convenience, there are *link snippets* for each KDoc-topic, 
-which contain a link to it, and then can be added to other KDoc it via `@include`.
+which contain a link to it, and then can be added to other KDocs via `@include`.
 
 ```kotlin
 /**

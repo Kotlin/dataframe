@@ -58,15 +58,15 @@ public fun Geometry.rotate(angleRadians: Double): Geometry {
 }
 
 /**
- * Reflects the geometry across the X axis, inverting its horizontal position.
+ * Reflects the geometry horizontally around its center, inverting its X coordinates.
  *
- * @return A new geometry reflected across the X axis.
+ * @return A new geometry mirrored along the X axis.
  */
 public fun Geometry.reflectX(): Geometry = scaleAroundCenter(-1.0, 1.0)
 
 /**
- * Reflects the geometry across the Y axis, inverting its vertical position.
+ * Reflects the geometry vertically around its center, inverting its Y coordinates.
  *
- * @return A new geometry reflected across the Y axis.
+ * @return A new geometry mirrored along the Y axis.
  */
 public fun Geometry.reflectY(): Geometry = scaleAroundCenter(1.0, -1.0)

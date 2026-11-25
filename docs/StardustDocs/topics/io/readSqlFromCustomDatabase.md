@@ -352,7 +352,7 @@ However, there are two other places where you can customize how DataFrame will h
   a list of (preprocessed) values into an actual column (`List<D>` -> `DataColumn<P>`).
 
 Depending on your use case, you may want to override one or both of these.
-Let's demonstrate this with an example where we automatically convert all `DATE` columns to `kotlin.time.Instant`:
+Let's demonstrate this with an example where we automatically convert all `DATE` columns to `kotlinx.datetime.LocalDate`:
 
 <!---FUN HSQLDB_preprocessing_DbType-->
 

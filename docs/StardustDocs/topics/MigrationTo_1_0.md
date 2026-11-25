@@ -313,7 +313,7 @@ The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 
 In 0.15 and up to 1.0-Beta4 we did support the [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
 types; however, they were still treated as second-class in DataFrame. [`ParserOptions`](parse.md#parser-options)
-were still built around the Java `DataTimeFormatter`-paradigm.
+were still built around the Java `DateTimeFormatter`-paradigm.
 Starting from 1.0-Beta5, [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime) types now become first-class
 citizens,
 while still allowing you to use Java types if you need them.

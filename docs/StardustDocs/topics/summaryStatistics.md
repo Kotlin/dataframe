@@ -54,7 +54,7 @@ Big numbers (`BigInteger`, `BigDecimal`) are **not** supported by [sum](sum.md),
 Please [convert](convert.md) big numbers to primitive types before using statistics,
 or compute the statistic manually with Java big number arithmetic.
 
-When statistics `x` is applied to several columns, it can be computed in several modes:
+When statistic `x` is applied to several columns, it can be computed in several modes:
 * `x(): DataRow` computes separate value per every suitable column
 * `x { columns }: Value` computes single value across all given columns 
 * `xFor { columns }: DataRow` computes separate value per every given column
