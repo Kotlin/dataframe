@@ -113,7 +113,7 @@ class CountTests {
     @Test
     fun `count on DataFrame`() {
         df.count() shouldBe 3
-        df.count { age > 18 } shouldBe 2
+        df.count { "age"<Int>() > 18 } shouldBe 2
         df.count { it["name"] == "Alice" } shouldBe 1
     }
 

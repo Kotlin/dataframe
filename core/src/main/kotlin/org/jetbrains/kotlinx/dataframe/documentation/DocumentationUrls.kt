@@ -40,6 +40,7 @@ public interface DocumentationUrls {
     /** [See Packaging into a fat JAR on the documentation website.]({@include [Url]}/packaging.html) */
     public typealias Packaging = Nothing
 
+    /** [See DataRow on the documentation website.]({@include [Url]}/datarow.html) */
     public interface DataRow {
         /** [See Row Expressions on the documentation website.]({@include [Url]}/datarow.html#row-expressions) */
         public typealias RowExpressions = Nothing
