@@ -23,9 +23,13 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  * Every value computed inside the [aggregating expression][body]
  * and stored with [into][AggregateDsl.into] becomes a new column
  * nested under the corresponding [pivot] key.
- * If the last expression of [body] is not [Unit]
- * and is not stored with [into][AggregateDsl.into],
+ * If nothing is stored with [into][AggregateDsl.into]
+ * and the last expression of [body] is not [Unit],
  * its value is stored directly under the [pivot] key.
+ * If something is stored with [into][AggregateDsl.into],
+ * a trailing value that is not stored with [into][AggregateDsl.into] is ignored —
+ * unlike in [GroupBy.aggregate][Grouped.aggregate],
+ * which stores it in a new column named `"aggregated"`.
  *
  * Returns a new [DataRow] with the original [pivot] keys as top-level columns
  * and the corresponding aggregated values in new nested columns.

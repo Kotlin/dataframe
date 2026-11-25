@@ -234,6 +234,8 @@ internal interface GroupedAndPivotValuesDocs {
      * are collected into a [DataFrame] instead of a [List],
      * making the corresponding result column a [FrameColumn].
      *
+     * @include [ValuesInAggregationDocs.LostKeyColumnsSnippet]
+     *
      * Check out [`groupBy` Grammar][GroupByDocs.Grammar].
      *
      * For more information: {@include [DocumentationUrls.GroupBy]} {@include [DocumentationUrls.Values]}
@@ -275,7 +277,8 @@ internal interface GroupedAndPivotValuesDocs {
      * by the selected columns first, and by the [pivot] keys second).
      *
      * Values from a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * are collected into a [DataFrame], so the corresponding pivot cell contains that [DataFrame].
+     * follow the same rule: a single row gives a [DataRow],
+     * and several rows are collected into a [DataFrame].
      *
      * Check out [`pivot` Grammar][PivotDocs.Grammar].
      *
@@ -299,6 +302,7 @@ internal interface GroupedAndPivotValuesDocs {
     /**
      * @param [dropNA\] If `true`, {@include [NALink]} values (`null`, [Double.NaN] or [Float.NaN])
      *   are removed from the collected values. `false` by default.
+     *   Each column is filtered independently of the others.
      * @param [distinct\] If `true`, duplicate values are removed from the collected values,
      *   keeping the first occurrence of each. `false` by default.
      * @comment The shared `dropNA` and `distinct` parameters documentation. KDoc-snippet.

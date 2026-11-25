@@ -165,8 +165,11 @@ public abstract class AggregateDsl<out T> :
      *
      * In pivot aggregations (of a [Pivot], a [PivotGroupBy],
      * or a [pivot][AggregateGroupedDsl.pivot] inside an aggregation),
-     * `null` results — including the pivot cells without any rows —
-     * are replaced with [defaultValue].
+     * `null` results stored with [into] are replaced with [defaultValue],
+     * and so are the pivot cells without any rows.
+     * Without [into], [defaultValue] only fills the pivot cells
+     * without any rows — a `null` result of the last expression
+     * of the aggregation body stays `null`.
      * Outside of pivot aggregations, `null` results are not replaced.
      *
      * Can be used before or after [into].

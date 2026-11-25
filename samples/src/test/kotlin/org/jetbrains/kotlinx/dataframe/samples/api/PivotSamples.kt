@@ -612,7 +612,7 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
 
             // Count rows with "age" of at least 18 within each pivot group
             // and store the result into a new "adults" column
-            count { "age"<Int>() > 18 } into "adults"
+            count { "age"<Int>() >= 18 } into "adults"
 
             // Compute the median of the "age" column values within each pivot group
             // and store it into a new "median age" column
