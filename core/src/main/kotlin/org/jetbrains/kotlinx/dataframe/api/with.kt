@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.RowExpressionsLink
@@ -15,13 +16,6 @@ import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import kotlin.reflect.typeOf
 
 // region docs
-
-/**
- * For each pivot cell: an empty group yields `null` (type `V?`), a group of exactly one row yields
- * that single value (type `V`), and a group of several rows yields a `List<V>`.
- */
-@ExcludeFromSources
-private typealias PivotWithOneOrManyResultSnippet = Nothing
 
 /**
  * For each pivot cell: a group with no row selected by the reducer yields `null` (type `V?`),
@@ -37,7 +31,7 @@ private typealias PivotWithReducedResultSnippet = Nothing
 /**
  * Aggregates this [Pivot] by evaluating the given [row expression][expression] on every row of each pivot group.
  *
- * @include [PivotWithOneOrManyResultSnippet]
+ * @include [CommonStatisticsDocs.PivotCellOneOrManyResultSnippet]
  *
  * For more information: {@include [DocumentationUrls.Pivot]}
  *
@@ -104,7 +98,7 @@ public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowEx
  * Aggregates this [PivotGroupBy] by evaluating the given [row expression][expression] on every row
  * in each group defined by the grouping and pivot keys.
  *
- * @include [PivotWithOneOrManyResultSnippet]
+ * @include [CommonStatisticsDocs.PivotCellOneOrManyResultSnippet]
  *
  * For more information: {@include [DocumentationUrls.Pivot]}
  *

@@ -452,6 +452,7 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotFrames_properties() {
         // SampleStart
+        // Keep the group of rows of each "isHappy" value as is, in a frame column
         df.pivot { isHappy }.frames()
             // SampleEnd
             .toDataFrame()
@@ -461,6 +462,7 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotFrames_strings() {
         // SampleStart
+        // Keep the group of rows of each "isHappy" value as is, in a frame column
         df.pivot("isHappy").frames()
         // SampleEnd
     }
@@ -472,6 +474,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotValuesAggregate_properties() {
         // SampleStart
+        // For each "isHappy" value, collect the "name" and "age" values of all rows of the group
+        // into lists and store them in the nested columns with the same names as the original ones
         df.pivot { isHappy }.values { name and age }
             // SampleEnd
             .toDataFrame()
@@ -481,6 +485,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotValuesAggregate_strings() {
         // SampleStart
+        // For each "isHappy" value, collect the "name" and "age" values of all rows of the group
+        // into lists and store them in the nested columns with the same names as the original ones
         df.pivot("isHappy").values("name", "age")
         // SampleEnd
     }
@@ -488,6 +494,9 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotValuesAggregateAll_properties() {
         // SampleStart
+        // For each "isHappy" value, collect the values of all columns except the pivoted one
+        // from all rows of the group into lists
+        // and store them in the nested columns with the same names as the original ones
         df.pivot { isHappy }.values()
             // SampleEnd
             .toDataFrame()
@@ -497,6 +506,9 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotValuesAggregateAll_strings() {
         // SampleStart
+        // For each "isHappy" value, collect the values of all columns except the pivoted one
+        // from all rows of the group into lists
+        // and store them in the nested columns with the same names as the original ones
         df.pivot("isHappy").values()
         // SampleEnd
     }
@@ -565,10 +577,24 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     fun pivotAggregateMultiple_properties() {
         // SampleStart
         df.pivot { isHappy }.aggregate {
+            // Count rows within each pivot group and store the result
+            // into a new "total" column (a new sub-column under each "isHappy" key column)
             count() into "total"
+
+            // Count rows with "age" of at least 18 within each pivot group
+            // and store the result into a new "adults" column
             count { age >= 18 } into "adults"
+
+            // Compute the median of the "age" column values within each pivot group
+            // and store it into a new "median age" column
             median { age } into "median age"
+
+            // Compute the minimum of the "age" column values within each pivot group
+            // and store it into a new "min age" column
             min { age } into "min age"
+
+            // Store the "name" column group of the oldest person within each pivot group
+            // as a new "oldest" column group
             maxBy { age }.name into "oldest"
         }
             // SampleEnd
@@ -580,10 +606,24 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     fun pivotAggregateMultiple_strings() {
         // SampleStart
         df.pivot("isHappy").aggregate {
+            // Count rows within each pivot group and store the result
+            // into a new "total" column (a new sub-column under each "isHappy" key column)
             count() into "total"
-            count { "age"<Int>() > 18 } into "adults"
+
+            // Count rows with "age" of at least 18 within each pivot group
+            // and store the result into a new "adults" column
+            count { "age"<Int>() >= 18 } into "adults"
+
+            // Compute the median of the "age" column values within each pivot group
+            // and store it into a new "median age" column
             median("age") into "median age"
+
+            // Compute the minimum of the "age" column values within each pivot group
+            // and store it into a new "min age" column
             min("age") into "min age"
+
+            // Store the "name" column group of the oldest person within each pivot group
+            // as a new "oldest" column group
             maxBy("age")["name"] into "oldest"
         }
         // SampleEnd
@@ -592,6 +632,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotAggregate_properties() {
         // SampleStart
+        // The last expression is not stored with `into`,
+        // so its value is stored directly under the pivot keys
         df.pivot { isHappy }.aggregate { minBy { age }.name }
             // SampleEnd
             .toDataFrame()
@@ -601,6 +643,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotAggregate_strings() {
         // SampleStart
+        // The last expression is not stored with `into`,
+        // so its value is stored directly under the pivot keys
         df.pivot("isHappy").aggregate { minBy("age")["name"] }
         // SampleEnd
     }
@@ -890,10 +934,20 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     fun pivotInAggregate_properties() {
         // SampleStart
         df.groupBy { name.firstName }.aggregate {
+            // Pivot the "isHappy" column within each group,
+            // creating a PivotGroupBy with "name.firstName" as grouping keys
+            // and "isHappy" as pivoted columns
             pivot { isHappy }.aggregate(separate = true) {
+                // Compute the mean of the "age" column values for each
+                // "firstName" × "isHappy" combination group into the "mean age" column
                 mean { age } into "mean age"
+
+                // Count rows within each "firstName" × "isHappy" combination group
+                // into the "count" column
                 count() into "count"
             }
+
+            // Common `count` aggregation into the "total" column
             count() into "total"
         }
             // SampleEnd
@@ -904,10 +958,20 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     fun pivotInAggregate_strings() {
         // SampleStart
         df.groupBy { "name"["firstName"] }.aggregate {
+            // Pivot the "isHappy" column within each group,
+            // creating a PivotGroupBy with "name.firstName" as grouping keys
+            // and "isHappy" as pivoted columns
             pivot("isHappy").aggregate(separate = true) {
+                // Compute the mean of the "age" column values for each
+                // "firstName" × "isHappy" combination group into the "mean age" column
                 mean("age") into "mean age"
+
+                // Count rows within each "firstName" × "isHappy" combination group
+                // into the "count" column
                 count() into "count"
             }
+
+            // Common `count` aggregation into the "total" column
             count() into "total"
         }
         // SampleEnd
