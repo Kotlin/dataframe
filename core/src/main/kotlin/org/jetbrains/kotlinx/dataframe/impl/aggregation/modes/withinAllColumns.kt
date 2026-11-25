@@ -34,7 +34,14 @@ internal fun <T, C : Any?, R : Any?> Aggregator<*, R>.aggregateAll(
 internal fun <T, C : Any?, R : Any?> DataFrame<T>.aggregateAll(
     aggregator: Aggregator<C & Any, R>,
     columns: ColumnsSelector<T, C>,
-): R = aggregator.aggregateMultipleColumns(get(columns).asSequence())
+): R {
+    val cols = get(columns)
+    return if (cols.size == 1) {
+        aggregator.aggregateSingleColumn(cols.single())
+    } else {
+        aggregator.aggregateMultipleColumns(cols.asSequence())
+    }
+}
 
 internal fun <T, C : Any?, R : Any?> Grouped<T>.aggregateAll(
     aggregator: Aggregator<C & Any, R>,
