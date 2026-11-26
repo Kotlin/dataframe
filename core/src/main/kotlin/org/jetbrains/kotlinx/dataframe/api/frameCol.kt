@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -13,7 +12,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -65,13 +66,16 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`frameCol`**][ColumnsSelectionDsl.frameCol] */
-        public interface PlainDslName
+        @ExcludeFromSources
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`frameCol`**][ColumnsSelectionDsl.frameCol] */
-        public interface ColumnSetName
+        @ExcludeFromSources
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`frameCol`**][ColumnsSelectionDsl.frameCol] */
-        public interface ColumnGroupName
+        @ExcludeFromSources
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -88,6 +92,8 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * an accessor for a frame column inside a [ColumnGroup].
      * {@include [LineBreak]}
      * {@get [CommonFrameColDocs.NOTE]}
+     *
+     * For more information: {@include [DocumentationUrls.FrameCol]}
      *
      * ### Check out: [Grammar]
      *
@@ -117,34 +123,35 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.valueCol\]
      * @see [ColumnsSelectionDsl.col\]
      */
+    @ExcludeFromSources
     private interface CommonFrameColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
 
         /**
          * `df.`[select][DataFrame.select]` { {@get [CommonFrameColDocs.RECEIVER]}`[frameCol][frameCol]`({@get [CommonFrameColDocs.ARG]}) \}`
          */
-        interface SingleExample
+        typealias SingleExample = Nothing
 
         /**
          * `df.`[select][DataFrame.select]` { {@get [CommonFrameColDocs.RECEIVER]}`[frameCol][frameCol]`({@get [CommonFrameColDocs.ARG]}) \}`
          *
          * `df.`[select][DataFrame.select]` { {@get [CommonFrameColDocs.RECEIVER]}`[frameCol][frameCol]`<`[String][String]`>({@get [CommonFrameColDocs.ARG]}) \}`
          */
-        interface DoubleExample
+        typealias DoubleExample = Nothing
 
         // Receiver argument for the example(s)
-        interface RECEIVER
+        typealias RECEIVER = Nothing
 
         // Argument for the example(s)
-        interface ARG
+        typealias ARG = Nothing
 
         // Optional note
-        interface NOTE
+        typealias NOTE = Nothing
 
         /** @param [C\] The type of the frame column. */
-        interface FrameColumnTypeParam
+        typealias FrameColumnTypeParam = Nothing
     }
 
     // region reference
@@ -153,10 +160,11 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] frameColumnA}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.SingleExample]}}
-     * @param [col\] The [ColumnAccessor] pointing to the value column.
+     * @param [frameCol\] The [ColumnAccessor] pointing to the frame column.
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
-    private interface FrameColReferenceDocs
+    @ExcludeFromSources
+    private typealias FrameColReferenceDocs = Nothing
 
     /**
      * @include [FrameColReferenceDocs] {@set [CommonFrameColDocs.RECEIVER]}
@@ -188,7 +196,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.frameCol(
+    public fun <C> ColumnAccessor<DataRow<*>>.frameCol(
         frameCol: ColumnAccessor<DataFrame<C>>,
     ): ColumnAccessor<DataFrame<C>> = this.ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
@@ -224,9 +232,10 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] "frameColumnName"}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.DoubleExample]}}
-     * @param [name\] The name of the value column.
+     * @param [name\] The name of the frame column.
      */
-    private interface FrameColNameDocs
+    @ExcludeFromSources
+    private typealias FrameColNameDocs = Nothing
 
     /**
      * @include [FrameColNameDocs] {@set [CommonFrameColDocs.RECEIVER]}
@@ -265,13 +274,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
-    public fun AnyColumnGroupAccessor.frameCol(name: String): ColumnAccessor<DataFrame<*>> = frameCol<Any?>(name)
+    public fun ColumnAccessor<DataRow<*>>.frameCol(name: String): ColumnAccessor<DataFrame<*>> = frameCol<Any?>(name)
 
     /**
      * @include [FrameColNameDocs] {@set [CommonFrameColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
-    public fun <C> AnyColumnGroupAccessor.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
         this.ensureIsColumnGroup().frameColumn<C>(name).ensureIsFrameColumn()
 
     /**
@@ -324,9 +333,10 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] "pathTo"["frameColumnName"\] }
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.DoubleExample]}}
-     * @param [path\] The path to the value column.
+     * @param [path\] The path to the frame column.
      */
-    private interface FrameColPathDocs
+    @ExcludeFromSources
+    private typealias FrameColPathDocs = Nothing
 
     /**
      * @include [FrameColPathDocs] {@set [CommonFrameColDocs.RECEIVER]}
@@ -365,13 +375,14 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
-    public fun AnyColumnGroupAccessor.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> = frameCol<Any?>(path)
+    public fun ColumnAccessor<DataRow<*>>.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> =
+        frameCol<Any?>(path)
 
     /**
      * @include [FrameColPathDocs] {@set [CommonFrameColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
-    public fun <C> AnyColumnGroupAccessor.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
         this.ensureIsColumnGroup().frameColumn<C>(path).ensureIsFrameColumn()
 
     /**
@@ -424,10 +435,11 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] Type::frameColumnA}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.SingleExample]}}
-     * @param [property\] The [KProperty] reference to the value column.
+     * @param [property\] The [KProperty] reference to the frame column.
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
-    private interface FrameColKPropertyDocs
+    @ExcludeFromSources
+    private typealias FrameColKPropertyDocs = Nothing
 
     /**
      * @include [FrameColKPropertyDocs] {@set [CommonFrameColDocs.RECEIVER]}
@@ -472,15 +484,16 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     @AccessApiOverload
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
-    public fun <C> AnyColumnGroupAccessor.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
-        this.ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
+    public fun <C> ColumnAccessor<DataRow<*>>.frameCol(
+        property: KProperty<DataFrame<C>>,
+    ): ColumnAccessor<DataFrame<C>> = this.ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
     /**
      * @include [FrameColKPropertyDocs] {@set [CommonFrameColDocs.RECEIVER] myColumnGroup.}
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         this.ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
     /**
@@ -545,10 +558,11 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] 0}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.DoubleExample]}}
-     * @param [index\] The index of the value column.
+     * @param [index\] The index of the frame column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
-    private interface FrameColIndexDocs
+    @ExcludeFromSources
+    private typealias FrameColIndexDocs = Nothing
 
     /**
      * @include [FrameColIndexDocs] {@set [CommonFrameColDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
@@ -649,7 +663,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
 
 /**
  * Checks the validity of this [SingleColumn],
- * by adding a check to see it's a [FrameColumn] (so, a [SingleColumn]<*>)
+ * by adding a check to see if it's a [FrameColumn] (so, a [SingleColumn]<*>)
  * and throwing an [IllegalArgumentException] if it's not.
  */
 internal fun <C> SingleColumn<DataFrame<C>>.ensureIsFrameColumn(): SingleColumn<DataFrame<C>> =

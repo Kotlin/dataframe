@@ -1,7 +1,9 @@
 [//]: # (title: Input/output)
 
-When you work with data, you have to [read](read.md) it from disk or from remote URLs and [write](write.md) it on disk.
+When you work with data, you have to [read](read.md) it from disk or from remote URLs and [write](write.md) it to disk.
 This section describes how to do it. For now, CSV, TSV, JSON, XLS, XLSX, Apache Arrow formats are supported.
+
+**API reference**: [`io` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.io/index.html)
 
 The reading from SQL databases is also supported. Read [here](readSqlDatabases.md) to know more.
 

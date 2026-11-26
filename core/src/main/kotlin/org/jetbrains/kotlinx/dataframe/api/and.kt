@@ -10,8 +10,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
@@ -58,10 +60,12 @@ public interface AndColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`and`**][ColumnsSelectionDsl.and] */
-        public interface InfixName
+        @ExcludeFromSources
+        public typealias InfixName = Nothing
 
         /** __`.`__[**`and`**][ColumnsSelectionDsl.and] */
-        public interface Name
+        @ExcludeFromSources
+        public typealias Name = Nothing
     }
 
     /**
@@ -69,6 +73,8 @@ public interface AndColumnsSelectionDsl {
      * The [and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any {@include [AccessApiLink]}!
+     *
+     * For more information: {@include [DocumentationUrls.And]}
      *
      * ### Check out: [Grammar]
      *
@@ -97,7 +103,7 @@ public interface AndColumnsSelectionDsl {
      */
     private interface CommonAndDocs {
 
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     // region ColumnsResolver
@@ -110,7 +116,7 @@ public interface AndColumnsSelectionDsl {
      */
     private interface ColumnsResolverAndDocs {
 
-        interface Argument
+        typealias Argument = Nothing
     }
 
     /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */
@@ -140,7 +146,7 @@ public interface AndColumnsSelectionDsl {
      */
     private interface StringAndDocs {
 
-        interface Argument
+        typealias Argument = Nothing
     }
 
     /** @include [StringAndDocs] {@set [StringAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */
@@ -169,7 +175,7 @@ public interface AndColumnsSelectionDsl {
      */
     private interface KPropertyAndDocs {
 
-        interface Argument
+        typealias Argument = Nothing
     }
 
     /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */

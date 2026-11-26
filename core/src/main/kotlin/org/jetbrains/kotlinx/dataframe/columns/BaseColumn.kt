@@ -1,11 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
-import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
@@ -15,9 +15,11 @@ import kotlin.reflect.KType
 /**
  * Column with [type], [name]/[path] and [values]
  * Base interface for all three kinds of columns: [ValueColumn], [ColumnGroup] and [FrameColumn].
- * Column operations that doesn't clash by signature with [DataFrame] operations can be defined for [BaseColumn]
+ * Column operations that don't clash by signature with [DataFrame] operations can be defined for [BaseColumn]
  *
  * @param T type of values contained in column.
+ * @see [org.jetbrains.kotlinx.dataframe.api.columnOf]
+ * @see [org.jetbrains.kotlinx.dataframe.DataColumn.createByType]
  */
 public interface BaseColumn<out T> : ColumnReference<T> {
 
@@ -72,15 +74,22 @@ public interface BaseColumn<out T> : ColumnReference<T> {
      */
     public operator fun get(indices: Iterable<Int>): BaseColumn<T>
 
-    public operator fun get(columnName: String): AnyCol
+    public operator fun get(columnName: String): DataColumn<*>
 
     // endregion
 
     // region values
 
+    /**
+     * Returns this column's values as a read-only view — changing it is not supported and doesn't affect this column.
+     */
     public fun values(): Iterable<T>
 
-    public fun toList(): List<T> = values().asList()
+    /**
+     * Returns this column's values copied into a new [List] — changing it doesn't affect this column.
+     */
+    @RequiredByIntellijPlugin
+    public fun toList(): List<T> = values().toMutableList()
 
     public fun toSet(): Set<T>
 

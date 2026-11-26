@@ -65,7 +65,7 @@ internal fun DataColumn<Number?>.cumSumImpl(type: KType, skipNA: Boolean): DataC
             val types = this.asIterable().types().toSet()
             val unifiedType = types.unifiedNumberTypeOrNull(UnifiedNumberTypeOptions.PRIMITIVES_ONLY)
                 ?: error(
-                    "Couldn't unify the numbers of types ${
+                    "Couldn't unify the number types ${
                         types.joinToString { renderType(it) }
                     } of column ${name()} in cumSum. Please manually convert the numbers in column ${name()} to the same primitive number type before using cumSum.",
                 )
@@ -292,7 +292,7 @@ internal fun DataColumn<Long?>.cumSumImpl(skipNA: Boolean): DataColumn<Long?> {
  * T : Number(?) -> T(?)
  */
 public val cumSumTypeConversion: CalculateReturnType = { type, _ ->
-    when (val type = type.withNullability(false)) {
+    when (type.withNullability(false)) {
         // type changes to Int, carrying nullability
         typeOf<Short>(), typeOf<Byte>() -> typeOf<Int>().withNullability(type.isMarkedNullable)
 

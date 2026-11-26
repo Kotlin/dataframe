@@ -7,6 +7,8 @@ _Kotlin DataFrame_ and _Kotlin Collection_ represent two different approaches to
 * [`DataFrame`](DataFrame.md) stores data by fields/columns
 * `Collection` stores data by records/rows
 
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)
+
 Although [`DataFrame`](DataFrame.md)
 doesn't implement the [`Collection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/#kotlin.collections.Collection)
 or [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/)
@@ -15,10 +17,11 @@ such as [`filter`](filter.md), [`take`](sliceRows.md#take),
 [`first`](first.md), [`map`](map.md), [`groupBy`](groupBy.md) etc.
 
 [`DataFrame`](DataFrame.md) has two-way compatibility with [`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/) and [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/):
-* `List<T>` -> `DataFrame<T>`: [toDataFrame](createDataFrame.md#todataframe)
+* `List<T>` -> `DataFrame<T>`: [toDataFrame](createDataFrame.md#dataframe-from-iterable-t)
 * `DataFrame<T>` -> `List<T>`: [toList](toList.md)
-* `Map<String, List<*>>` -> `DataFrame<*>`: [toDataFrame](createDataFrame.md#todataframe)
+* `Map<String, List<*>>` -> `DataFrame<*>`: [toDataFrame](createDataFrame.md#dataframe-from-map-string-list)
 * `DataFrame<*>` -> `Map<String, List<*>>`: [toMap](toMap.md)
+* `List<List<T>>` -> `DataFrame<*>`: [toDataFrame](createDataFrame.md#dataframe-from-list-list-t)
 
 Columns, rows, and values of [`DataFrame`](DataFrame.md)
 can be accessed as [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/),
@@ -78,12 +81,12 @@ val df2 = df.add("c") { a + b }
 <tip>
 
 To enable extension properties generation, you should use the [DataFrame plugin](schemasGradle.md) 
-for Gradle or the [Kotlin Jupyter kernel](gettingStartedJupyterNotebook.md)
+for Gradle or the [Kotlin Jupyter kernel](SetupJupyter.md)
 
 </tip>
 
 After your data is transformed, [`DataFrame`](DataFrame.md) instances can be exported eagerly
-into [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) of another data class using [toList](toList.md) or [toListOf](toList.md#tolistof) extensions:
+into [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) of another data class using [toListOf](toList.md#tolistof):
 
 <!---FUN listInterop4-->
 
@@ -95,14 +98,13 @@ val result = df2.toListOf<Output>()
 
 <!---END-->
 
-```kotlin
-data class Output(val a: Int, val b: Int, val c: Int)
+`toListOf` works no matter what the type argument of the [`DataFrame`](DataFrame.md) is, so use it in most cases.
+[toList](toList.md#tolist) creates instances of the type argument itself,
+so use it only when this type argument is known to be a data class.
+With the [compiler plugin](Compiler-Plugin.md), this is not the case here:
+the plugin gives `df2` a generated type argument, which is not a data class, so `df2.toList()` throws.
 
-val result = df2.toListOf<Output>()
-```
-
-Alternatively, one can create lazy [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-sequence/) objects.
-This avoids holding the entire list of objects in memory as objects are created on the fly as needed.
+A [`ColumnGroup`](DataColumn.md#columngroup) becomes a nested data class:
 
 <!---FUN listInterop5-->
 
@@ -114,11 +116,18 @@ data class FullName(val name: String, val lastName: String)
 
 data class Person(val fullName: FullName, val age: Int)
 
-val persons = df.toListOf<Person>() // [Person(fullName = FullName(name = "John", lastName = "Doe"), age = 21)]
+val persons = df.toListOf<Person>() // [Person(fullName=FullName(name=John, lastName=Doe), age=21)]
 ```
 
 <!---END-->
 
+Alternatively, [`toSequence` and `toSequenceOf`](toList.md#tosequence-and-tosequenceof) create a lazy
+[`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/).
+The objects are created only when the sequence is iterated, so you do not need to hold all of them in memory at once.
+
+The rules for matching columns to data class properties are in [How rows become objects](toList.md#how-rows-become-objects).
+
 ### Converting columns with object instances to ColumnGroup
 
-[unfold](unfold.md) can be used as [`toDataFrame()`](createDataFrame.md#todataframe) analogue for specific columns inside existing dataframes
+[`unfold`](unfold.md) turns columns of objects inside an existing dataframe into [`ColumnGroup`](DataColumn.md#columngroup)s,
+the way [`toDataFrame()`](createDataFrame.md#todataframe) builds a dataframe from a list of objects.

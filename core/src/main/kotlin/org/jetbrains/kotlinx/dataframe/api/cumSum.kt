@@ -4,6 +4,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -22,15 +25,19 @@ import kotlin.reflect.KProperty
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA\] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [Double] and [Float] columns)
+ * or `null` (for other columns).
  *
- * {@get [CumSumDocs.CUMSUM_PARAM] @param [columns\]
- * The names of the columns to apply cumSum operation.}
+ * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * @param [skipNA\] Whether to skip null and NaN values (default: `true`).
+ * Similar to [sum][sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
  *
+ * {@get [CumSumDocs.CUMSUM_PARAM] @param [columns\] The selection of the columns to apply the `cumSum` operation to.
+ *   If not provided, `cumSum` will be applied to all primitive columns [at any depth][ColumnsSelectionDsl.colsAtAnyDepth].
+ * }
+ *
+ * @param [skipNA\] Whether to skip `null` and `NaN` values (default: `true`).
  * @return A new {@get [CumSumDocs.DATA_TYPE]} of the same type with the cumulative sums.
  *
  * {@get [CumSumDocs.CUMSUM_PARAM] @see [Selecting Columns][SelectSelectingOptions].}
@@ -39,9 +46,12 @@ import kotlin.reflect.KProperty
 @ExcludeFromSources
 @Suppress("ClassName")
 private interface CumSumDocs {
-    interface CUMSUM_PARAM
 
-    interface DATA_TYPE
+    // Can be emptied to disable information about selecting columns
+    typealias CUMSUM_PARAM = Nothing
+
+    // Either [DataColumn] or [DataFrame]
+    typealias DATA_TYPE = Nothing
 }
 
 /**
@@ -114,6 +124,8 @@ public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSki
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  */
+@Refine
+@Interpretable("DataFrameCumSum")
 public fun <T, C : Number?> DataFrame<T>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<T, C>,
@@ -123,6 +135,8 @@ public fun <T, C : Number?> DataFrame<T>.cumSum(
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  */
+@Refine
+@StringApiInterpretable(interpreter = "DataFrameCumSum", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) { columns.toColumnSet().cast() }
 
@@ -153,10 +167,11 @@ public fun <T> DataFrame<T>.cumSum(
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  * {@set [CumSumDocs.CUMSUM_PARAM]}
  */
+@Refine
+@Interpretable("DataFrameCumSum0")
 public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) {
-        // TODO keep at any depth?
-        colsAtAnyDepth().filter { it.isNumber() }.cast()
+        colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()
     }
 
 // endregion
@@ -167,6 +182,8 @@ public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataF
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  */
+@Refine
+@Interpretable("GroupByCumSum")
 public fun <T, G, C : Number?> GroupBy<T, G>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<G, C>,
@@ -176,6 +193,8 @@ public fun <T, G, C : Number?> GroupBy<T, G>.cumSum(
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  */
+@Refine
+@StringApiInterpretable("GroupByCumSum", stringArgument = "columns", targetArgument = "columns")
 public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) { columns.toColumnSet().cast() }
 
@@ -206,10 +225,11 @@ public fun <T, G> GroupBy<T, G>.cumSum(
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  * {@set [CumSumDocs.CUMSUM_PARAM]}
  */
+@Refine
+@Interpretable("GroupByCumSum0")
 public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) {
-        // TODO keep at any depth?
-        colsAtAnyDepth().filter { it.isNumber() }.cast()
+        colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()
     }
 
 // endregion

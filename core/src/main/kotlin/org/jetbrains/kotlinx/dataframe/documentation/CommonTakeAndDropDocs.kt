@@ -12,8 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 
 /**
  * ## {@get [TITLE]} (Cols)
- * This {@get [NOUN]}s the {@get [FIRST_OR_LAST]} [n\] columns from [this\] collecting
- * the result into a [ColumnSet].
+ * {@get [SUMMARY]}
  *
  * This function operates solely on columns at the top-level.
  *
@@ -21,6 +20,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
  *
  * NOTE: To avoid ambiguity, `{@get [CommonTakeAndDropDocs.OPERATION]}` is called `{@get [CommonTakeAndDropDocs.OPERATION]}Cols` when called on
  * a [ColumnGroup].
+ *
+ * For more information: {@get [URL]}
  *
  * ### Check out: [Grammar\]
  *
@@ -37,23 +38,35 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
  *
  * {@get [CommonTakeAndDropDocs.EXAMPLE]}
  *
+ * See also:
+ * {@get [SEE_ALSO]}
+ *
  * @param [n\] The number of columns to {@get [NOUN]}.
- * @return A [ColumnSet] containing the {@get [FIRST_OR_LAST]} [n\] columns.
+ * @return {@get [RETURN]}
  */
 internal interface CommonTakeAndDropDocs {
 
-    /** Title, like "Take Last" */
-    interface TITLE
+    // Title, like "Take Last"
+    typealias TITLE = Nothing
 
-    /** Operation, like "takeLast" */
-    interface OPERATION
+    // Operation, like "takeLast"
+    typealias OPERATION = Nothing
 
-    /** Operation, like "take" */
-    interface NOUN
+    // Operation, like "take"
+    typealias NOUN = Nothing
 
-    /** like "first" */
-    interface FIRST_OR_LAST
+    // Summary of the operation
+    typealias SUMMARY = Nothing
 
-    /** Example argument to use */
-    interface EXAMPLE
+    // Example argument to use
+    typealias EXAMPLE = Nothing
+
+    // Link to the corresponding page on the documentation website
+    typealias URL = Nothing
+
+    // Related operations (the `See also` part)
+    typealias SEE_ALSO = Nothing
+
+    // Value returned by the operation (the `@return` part)
+    typealias RETURN = Nothing
 }

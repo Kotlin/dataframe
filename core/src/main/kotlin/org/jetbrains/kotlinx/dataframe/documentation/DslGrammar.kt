@@ -1,9 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 /**
+ * {@comment
+ *    DSL Grammar KDoc-topic.
+ *    Link to it with `@include [DslGrammarLink]`.
+ * }
+ *
  * ## DSL Grammar
  *
- * If you've come across notations like **`a(`** `(`**`b`**` | [`**`c, .. `**`] )` **`)`**
+ * If you've come across notations like **`a(`**` (`**`b`**` | [`**`c, .. `**`] ) `**`)`**
  * either in the KDocs or on the website and would like some further explanation
  * for what it means, you've come to the right place.
  *
@@ -27,7 +32,8 @@ package org.jetbrains.kotlinx.dataframe.documentation
  * Always use your common sense reading it and if you're unsure, try out the function yourself or check
  * the source code :).
  */
-public interface DslGrammar
+public typealias DslGrammar = Nothing
 
 /** [(What is this notation?)][DslGrammar] */
-internal interface DslGrammarLink
+@ExcludeFromSources
+internal typealias DslGrammarLink = Nothing

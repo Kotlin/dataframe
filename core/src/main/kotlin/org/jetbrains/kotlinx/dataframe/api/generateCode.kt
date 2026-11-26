@@ -1,110 +1,278 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
+import org.jetbrains.kotlinx.dataframe.codeGen.Marker
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
-import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
+import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.id
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.toCamelCaseFrom
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.util.GENERATE_CODE
+import org.jetbrains.kotlinx.dataframe.util.GENERATE_CODE_REPLACE1
+import org.jetbrains.kotlinx.dataframe.util.GENERATE_CODE_REPLACE2
+import org.jetbrains.kotlinx.dataframe.util.GENERATE_INTERFACES
+
+// region Docs
+
+/**
+ * Generates a [CodeString] containing generated [@DataSchema][DataSchema] $[TYPES]
+ * for the given $[RECEIVER]
+ * (including all nested [frame columns][FrameColumn] and [column groups][ColumnGroup]).
+ *
+ * These generated declarations can also be called "markers".
+ *
+ * $[USEFUL_WHEN]
+ *
+ * This function is a simplified wrapper for the more advanced and customizable
+ * [CodeGenerator] API.
+ * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ *
+ * For more information: {@include [DocumentationUrls.DataSchemaGeneration]}
+ *
+ * @return [CodeString] – A value class wrapper for [String], containing
+ *   the generated Kotlin code of data schema declarations (markers).
+ */
+@Suppress("ClassName")
+@ExcludeFromSources
+private interface CommonGenerateCodeDocs {
+
+    // "interfaces" or "data classes"
+    typealias TYPES = Nothing
+
+    // "DataFrameSchema" or "DataFrame"
+    typealias RECEIVER = Nothing
+
+    // "Useful when statement" or "How to use"
+    typealias USEFUL_WHEN = Nothing
+}
+
+@ExcludeFromSources
+private interface Params {
+
+    /** @param markerName The base name to use for generated data schema declarations (markers). */
+    typealias MarkerName = Nothing
+
+    /** @include [MarkerName] If not specified, it generates a name from type [T]. */
+    typealias MarkerNameOptional = Nothing
+
+    /**
+     * @param extensionProperties Whether to generate [extension properties (column accessors)][ExtensionPropertiesApi]
+     *   in addition to data schema declarations (markers).
+     *   Useful if you don't use the compiler plugin, otherwise they are not needed;
+     *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
+     *   Default is `false`.
+     */
+    typealias ExtensionProperties = Nothing
+
+    /** @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC]. */
+    typealias Visibility = Nothing
+
+    /** @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`. */
+    typealias UseFqNames = Nothing
+
+    /**
+     * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
+     *  to Kotlin-style identifiers.
+     *  Generated properties will still refer to columns by their actual name
+     *  using the [@ColumnName][ColumnName] annotation.
+     *  Default is [NameNormalizer.default][NameNormalizer.Companion.default].
+     */
+    typealias NameNormalizer = Nothing
+
+    /**
+     * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
+     *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
+     *  - [MarkerNameProvider.PredefinedName] will use the name of the root marker for all nested declarations and append a numerical suffix to resolve name conflicts.
+     */
+    typealias NestedMarkerNameProvider = Nothing
+}
+
+// endregion
 
 // region DataFrame
 
-public inline fun <reified T> DataFrame<T>.generateCode(
-    fields: Boolean = true,
-    extensionProperties: Boolean = true,
-): CodeString =
-    schema().generateCode(
-        markerName = markerName<T>(),
-        fields = fields,
-        extensionProperties = extensionProperties,
-    )
-
-public fun <T> DataFrame<T>.generateCode(
+/**
+ * @include [CommonGenerateCodeDocs]
+ * @set [CommonGenerateCodeDocs.RECEIVER] [DataFrame's][this] [schema][DataFrameSchema]
+ * @set [CommonGenerateCodeDocs.TYPES] interfaces
+ * @set [CommonGenerateCodeDocs.USEFUL_WHEN] This is useful when working with the compiler plugin in cases where the schema
+ *   cannot be inferred automatically from the source. {@include [DocumentationUrls.CompilerPlugin]}
+ * @include [Params.MarkerNameOptional]
+ * @include [Params.ExtensionProperties]
+ * @include [Params.Visibility]
+ * @include [Params.UseFqNames]
+ * @include [Params.NameNormalizer]
+ * @include [Params.NestedMarkerNameProvider]
+ */
+public fun <T> DataFrame<T>.generateInterfaces(
     markerName: String,
-    fields: Boolean = true,
-    extensionProperties: Boolean = true,
-    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeString =
-    schema().generateCode(
-        markerName = markerName,
-        fields = fields,
-        extensionProperties = extensionProperties,
-        visibility = visibility,
-    )
-
-public inline fun <reified T> DataFrame<T>.generateInterfaces(): CodeString =
-    schema().generateInterfaces(
-        markerName = markerName<T>(),
-    )
-
-public inline fun <reified T> DataFrame<T>.generateDataClasses(
-    markerName: String? = null,
     extensionProperties: Boolean = false,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     useFqNames: Boolean = false,
     nameNormalizer: NameNormalizer = NameNormalizer.default,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString =
-    schema().generateDataClasses(
-        name = markerName ?: markerName<T>(),
+    schema().generateCodeImpl(
+        markerName = markerName,
         extensionProperties = extensionProperties,
         visibility = visibility,
         useFqNames = useFqNames,
         nameNormalizer = nameNormalizer,
+        asDataClass = false,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
     )
 
-public fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString =
-    schema().generateInterfaces(markerName = markerName)
+/** @include [DataFrame.generateInterfaces] */
+public inline fun <reified T> DataFrame<T>.generateInterfaces(
+    extensionProperties: Boolean = false,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+    useFqNames: Boolean = false,
+    nameNormalizer: NameNormalizer = NameNormalizer.default,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
+): CodeString =
+    schema().generateCodeImpl(
+        markerName = markerName<T>(),
+        extensionProperties = extensionProperties,
+        visibility = visibility,
+        useFqNames = useFqNames,
+        nameNormalizer = nameNormalizer,
+        asDataClass = false,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
+    )
+
+/**
+ * @include [CommonGenerateCodeDocs]
+ * @set [CommonGenerateCodeDocs.RECEIVER] [DataFrame's][this] [schema][DataFrameSchema]
+ * @set [CommonGenerateCodeDocs.TYPES] data classes
+ * @set [CommonGenerateCodeDocs.USEFUL_WHEN] This is useful when you want to:
+ *   - Work with the data as regular Kotlin data classes.
+ *   - Convert a dataframe to instantiated data classes with [`df.toListOf<DataClassType>()`][DataFrame.toListOf].
+ *   - Work with data classes serialization.
+ *   - Extract structured types for further use in your application.
+ * @include [Params.MarkerNameOptional]
+ * @include [Params.ExtensionProperties]
+ * @include [Params.Visibility]
+ * @include [Params.UseFqNames]
+ * @include [Params.NameNormalizer]
+ * @include [Params.NestedMarkerNameProvider]
+ */
+public fun <T> DataFrame<T>.generateDataClasses(
+    markerName: String,
+    extensionProperties: Boolean = false,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+    useFqNames: Boolean = false,
+    nameNormalizer: NameNormalizer = NameNormalizer.default,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
+): CodeString =
+    schema().generateCodeImpl(
+        markerName = markerName,
+        extensionProperties = extensionProperties,
+        visibility = visibility,
+        useFqNames = useFqNames,
+        nameNormalizer = nameNormalizer,
+        asDataClass = true,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
+    )
+
+/** @include [DataFrame.generateDataClasses] */
+public inline fun <reified T> DataFrame<T>.generateDataClasses(
+    extensionProperties: Boolean = false,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+    useFqNames: Boolean = false,
+    nameNormalizer: NameNormalizer = NameNormalizer.default,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
+): CodeString =
+    schema().generateCodeImpl(
+        markerName = markerName<T>(),
+        extensionProperties = extensionProperties,
+        visibility = visibility,
+        useFqNames = useFqNames,
+        nameNormalizer = nameNormalizer,
+        asDataClass = true,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
+    )
 
 // endregion
 
 // region DataFrameSchema
 
-@JvmName("generateCodeForSchema")
-public fun DataFrameSchema.generateCode(
-    markerName: String,
-    fields: Boolean = true,
-    extensionProperties: Boolean = true,
-    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeString {
-    val codeGen = CodeGenerator.create()
-    return codeGen.generate(
-        schema = this,
-        name = markerName,
-        fields = fields,
-        extensionProperties = extensionProperties,
-        isOpen = true,
-        visibility = visibility,
-    ).code.declarations.toCodeString()
-}
-
+/**
+ * @include [CommonGenerateCodeDocs]
+ * @set [CommonGenerateCodeDocs.RECEIVER] [DataFrameSchema][this]
+ * @set [CommonGenerateCodeDocs.TYPES] interfaces
+ * @set [CommonGenerateCodeDocs.USEFUL_WHEN] This is useful when working with the compiler plugin in cases where the schema
+ *   cannot be inferred automatically from the source. {@include [DocumentationUrls.CompilerPlugin]}
+ * @include [Params.MarkerName]
+ * @include [Params.ExtensionProperties]
+ * @include [Params.Visibility]
+ * @include [Params.UseFqNames]
+ * @include [Params.NameNormalizer]
+ * @include [Params.NestedMarkerNameProvider]
+ */
 @JvmName("generateInterfacesForSchema")
-public fun DataFrameSchema.generateInterfaces(markerName: String): CodeString =
-    generateCode(
-        markerName = markerName,
-        fields = true,
-        extensionProperties = false,
-    )
-
-@JvmName("generateDataClassesForSchema")
-public fun DataFrameSchema.generateDataClasses(
-    name: String,
+public fun DataFrameSchema.generateInterfaces(
+    markerName: String,
     extensionProperties: Boolean = false,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     useFqNames: Boolean = false,
     nameNormalizer: NameNormalizer = NameNormalizer.default,
-): CodeString {
-    val codeGen = CodeGenerator.create(useFqNames)
-    return codeGen.generate(
-        schema = this,
-        name = name,
-        fields = true,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
+): CodeString =
+    generateCodeImpl(
+        markerName = markerName,
         extensionProperties = extensionProperties,
-        isOpen = false,
         visibility = visibility,
+        useFqNames = useFqNames,
+        nameNormalizer = nameNormalizer,
+        asDataClass = false,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
+    )
+
+/**
+ * @include [CommonGenerateCodeDocs]
+ * {@set [CommonGenerateCodeDocs.RECEIVER] [DataFrameSchema][this]}
+ * {@set [CommonGenerateCodeDocs.TYPES] data classes}
+ * @set [CommonGenerateCodeDocs.USEFUL_WHEN] This is useful when you want to:
+ *   - Work with the data as regular Kotlin data classes.
+ *   - Convert a dataframe to instantiated data classes with [`df.toListOf<DataClassType>()`][DataFrame.toListOf].
+ *   - Work with data classes serialization.
+ *   - Extract structured types for further use in your application.
+ * @include [Params.MarkerName]
+ * @include [Params.ExtensionProperties]
+ * @include [Params.Visibility]
+ * @include [Params.UseFqNames]
+ * @include [Params.NameNormalizer]
+ * @include [Params.NestedMarkerNameProvider]
+ */
+@JvmName("generateDataClassesForSchema")
+public fun DataFrameSchema.generateDataClasses(
+    markerName: String,
+    extensionProperties: Boolean = false,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+    useFqNames: Boolean = false,
+    nameNormalizer: NameNormalizer = NameNormalizer.default,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
+): CodeString =
+    generateCodeImpl(
+        markerName = markerName,
+        extensionProperties = extensionProperties,
+        visibility = visibility,
+        useFqNames = useFqNames,
+        nameNormalizer = nameNormalizer,
         asDataClass = true,
-        fieldNameNormalizer = nameNormalizer,
-    ).code.declarations.toCodeString()
-}
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
+    )
 
 // endregion
 
@@ -119,12 +287,115 @@ internal inline fun <reified T> markerName(): String =
 /**
  * Converts delimited 'my_name', 'my name', etc., String to camelCase 'myName'
  */
-public val NameNormalizer.Companion.default: NameNormalizer get() = NameNormalizer.from(setOf('\t', ' ', '_'))
+public val NameNormalizer.Companion.toCamelCaseByDelimiter: NameNormalizer
+    get() = NameNormalizer.toCamelCaseFrom(setOf('\t', ' ', '_'))
 
+/**
+ * Performs no name normalization.
+ *
+ * (Inside the [code generation][CodeGenerator.generate],
+ * [ValidFieldName] is still used to prevent incompilable code from being generated.)
+ *
+ * @see [NameNormalizer.Companion.toCamelCaseByDelimiter]
+ */
+public val NameNormalizer.Companion.default: NameNormalizer
+    get() = NameNormalizer.id()
+
+/**
+ * A value class wrapper for [String], containing
+ * generated Kotlin code of data schema declarations (markers) and optionally extension properties.
+ *
+ * For more information: {@include [DocumentationUrls.DataSchemaGeneration]}
+ *
+ * @see CodeString.print
+ */
 @JvmInline
+@RequiredByIntellijPlugin
 public value class CodeString(public val value: String) {
     override fun toString(): String = value
 }
 
 @PublishedApi
 internal fun String.toCodeString(): CodeString = CodeString(this)
+
+/**
+ * Generates a [CodeString] containing generated [@DataSchema][DataSchema] declarations (markers).
+ */
+@PublishedApi
+internal fun DataFrameSchema.generateCodeImpl(
+    markerName: String,
+    extensionProperties: Boolean,
+    visibility: MarkerVisibility,
+    useFqNames: Boolean,
+    nameNormalizer: NameNormalizer,
+    asDataClass: Boolean,
+    knownMarkers: Iterable<Marker> = emptyList(),
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
+): CodeString {
+    val codeGen = CodeGenerator.create(useFqNames)
+    return codeGen.generate(
+        schema = this,
+        name = markerName,
+        fields = true,
+        extensionProperties = extensionProperties,
+        isOpen = !asDataClass,
+        visibility = visibility,
+        knownMarkers = knownMarkers,
+        asDataClass = asDataClass,
+        fieldNameNormalizer = nameNormalizer,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
+    ).code.declarations.toCodeString()
+}
+
+// region Deprecated
+
+@Deprecated(
+    message = GENERATE_CODE,
+    replaceWith = ReplaceWith(GENERATE_CODE_REPLACE1),
+    level = DeprecationLevel.WARNING,
+)
+public inline fun <reified T> DataFrame<T>.generateCode(
+    fields: Boolean = true,
+    extensionProperties: Boolean = true,
+): CodeString {
+    val codeGen = CodeGenerator.create()
+    return codeGen.generate(
+        schema = this.schema(),
+        name = markerName<T>(),
+        fields = fields,
+        extensionProperties = extensionProperties,
+        isOpen = true,
+        visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+    ).code.declarations.toCodeString()
+}
+
+@Deprecated(
+    message = GENERATE_CODE,
+    replaceWith = ReplaceWith(GENERATE_CODE_REPLACE2),
+    level = DeprecationLevel.WARNING,
+)
+@RequiredByIntellijPlugin
+public fun <T> DataFrame<T>.generateCode(
+    markerName: String,
+    fields: Boolean = true,
+    extensionProperties: Boolean = true,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+): CodeString {
+    val codeGen = CodeGenerator.create()
+    return codeGen.generate(
+        schema = this.schema(),
+        name = markerName,
+        fields = fields,
+        extensionProperties = extensionProperties,
+        isOpen = true,
+        visibility = visibility,
+    ).code.declarations.toCodeString()
+}
+
+@Deprecated(message = GENERATE_INTERFACES, level = DeprecationLevel.HIDDEN)
+public inline fun <reified T> DataFrame<T>.generateInterfaces(): CodeString = generateInterfaces<T>()
+
+@Deprecated(message = GENERATE_INTERFACES, level = DeprecationLevel.HIDDEN)
+public fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString = generateInterfaces(markerName)
+
+// endregion

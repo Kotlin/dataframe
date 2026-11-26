@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -32,7 +31,7 @@ import kotlin.reflect.KProperty
  *
  * Returns a new [DataFrame] with only the columns selected by [columns\].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
@@ -44,32 +43,33 @@ internal interface Select {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetSelectOperationArg]}
      */
-    interface SelectSelectingOptions
+    typealias SelectSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [select][select]} */
 @ExcludeFromSources
-private interface SetSelectOperationArg
+private typealias SetSelectOperationArg = Nothing
 
 /**
  * {@include [Select]}
  * ### This Select Overload
  */
 @ExcludeFromSources
-private interface CommonSelectDocs
+private typealias CommonSelectDocs = Nothing
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetSelectOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame].
  */
 @Refine
 @Interpretable("Select0")
-public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().cast()
+public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> =
+    get(columns).toDataFrame().castUnchecked()
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.KProperties.WithExample] {@include [SetSelectOperationArg]}
+ *
  * @param [columns] The [KProperties][KProperty] used to select the columns of this [DataFrame].
  */
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -78,19 +78,21 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetSelectOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame].
  */
+@Refine
+@Interpretable("SelectString")
 public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select { columns.toColumnSet() }
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetSelectOperationArg]}
+ *
  * @param [columns] The [Column Accessors][ColumnReference] used to select the columns of this [DataFrame].
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFrame<T> = select { columns.toColumnSet() }
+public fun <T> DataFrame<T>.select(vararg columns: ColumnReference<*>): DataFrame<T> = select { columns.toColumnSet() }
 
 // endregion
 
@@ -127,7 +129,8 @@ public interface SelectColumnsSelectionDsl {
     public interface Grammar {
 
         /** __`.`__[**`select`**][ColumnsSelectionDsl.select] */
-        public interface ColumnGroupName
+        @ExcludeFromSources
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -141,6 +144,8 @@ public interface SelectColumnsSelectionDsl {
      * the [ColumnGroup] you are selecting from.
      *
      * The [invoke][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     *
+     * For more information: {@include [DocumentationUrls.SelectFromColumnGroup]}
      *
      * ### Check out: [Grammar]
      *
@@ -166,11 +171,12 @@ public interface SelectColumnsSelectionDsl {
      * @receiver The [ColumnGroup] to select from.
      * @throws [IllegalArgumentException\] If [this\] is not a [ColumnGroup].
      * @return A [ColumnSet] containing the columns selected by [selector\].
-     * @see [SingleColumn.except\]
+     * @see [ColumnsSelectionDsl.except\]
      */
+    @ExcludeFromSources
     private interface CommonSelectDocs {
 
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**
@@ -206,6 +212,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  { "myColGroup"  `[`{`][String.select]`  colA  `[and][ColumnsSelectionDsl.and]`  colB  `[`}`][String.select]` }`
      */
+    @Interpretable("StringSelect")
     public fun <R> String.select(selector: ColumnsSelector<*, R>): ColumnSet<R> = columnGroup(this).select(selector)
 
     /**
@@ -220,6 +227,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[pathOf][pathOf]`("pathTo", "myColGroup")`[`() {`][ColumnPath.select]`  someCol  `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() `[`}`][ColumnPath.select]` }`
      */
+    @Interpretable("ColumnPathSelect")
     public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> = columnGroup(this).select(selector)
 }
 

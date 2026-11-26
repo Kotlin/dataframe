@@ -18,7 +18,7 @@ internal inline fun <T> Aggregatable<T>.remainingColumns(
 ): ColumnsSelector<T, Any?> = remainingColumnsSelector().filter { predicate(it.data) }
 
 /**
- * Emulates selecting all columns whose values are comparable to each other.
+ * Emulates selecting all columns whose values are mutually comparable to each other.
  * These are columns of type `R` where `R : Comparable<R>`.
  *
  * There is no way to denote this generically in types, however,

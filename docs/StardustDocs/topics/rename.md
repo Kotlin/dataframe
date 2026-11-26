@@ -2,11 +2,13 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Renames one or several columns without changing its location in [`DataFrame`](DataFrame.md).
+Renames one or several columns without changing their location in [`DataFrame`](DataFrame.md).
+
+**API reference**: [`rename`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/rename.html)
 
 ```kotlin
-df.rename { columns }.into(name)
-df.rename { columns }.into { nameExpression }
+df.rename { columns }.to(name)
+df.rename { columns }.to { nameExpression }
 
 nameExpression = (DataColumn) -> String
 ```
@@ -20,14 +22,14 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 <tab title="Properties">
 
 ```kotlin
-df.rename { name }.into("fullName")
+df.rename { name }.to("fullName")
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.rename("name").into("fullName")
+df.rename("name").to("fullName")
 ```
 
 </tab></tabs>
@@ -40,7 +42,7 @@ df.rename("name").into("fullName")
 <tab title="Properties">
 
 ```kotlin
-df.rename { age }.into {
+df.rename { age }.to {
     val mean = it.data.mean()
     "age [mean = $mean]"
 }
@@ -50,7 +52,7 @@ df.rename { age }.into {
 <tab title="Strings">
 
 ```kotlin
-df.rename("age").into {
+df.rename("age").to {
     val mean = it.data.cast<Int>().mean()
     "age [mean = $mean]"
 }
@@ -64,7 +66,7 @@ df.rename("age").into {
 
 ## renameToCamelCase
 
-A special case of `rename` that renames all column names in a DataFrame to "camelCase" format.
+A special case of `rename` that renames all column names in a [`DataFrame`](DataFrame.md) to "camelCase" format.
 
 This function standardizes column names by converting them from various naming styles—such as "snake_case",
 "PascalCase", "kebab-case", or "space delimited formats" into a consistent "camelCase" form.
@@ -77,6 +79,9 @@ Use it right after loading raw data to normalize column names into a consistent 
 This is especially helpful when preparing the data for further transformations, column access,
 or integration with Kotlin APIs—making the DataFrame easier and more predictable to work with.
 
+If called on a `ColumnReference`, `renameToCamelCase()` applies the same transformation rules
+to that column's name and returns a reference with the updated name.
+
 ### Examples
 
 <!---FUN notebook_test_rename_3-->
@@ -85,9 +90,9 @@ or integration with Kotlin APIs—making the DataFrame easier and more predictab
 df
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_rename_3.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Rename selected columns to "camelCase":
 
@@ -97,9 +102,9 @@ Rename selected columns to "camelCase":
 df.rename { ColumnA and `COLUMN-C` }.toCamelCase()
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_rename_4.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Rename all columns (including nested) to "camelCase":
 
@@ -109,9 +114,9 @@ Rename all columns (including nested) to "camelCase":
 df.renameToCamelCase()
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_rename_5.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ### Transformation Rules and Examples
 

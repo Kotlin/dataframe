@@ -2,118 +2,710 @@
 
 package org.jetbrains.kotlinx.dataframe.documentation
 
-internal interface DocumentationUrls {
+/*
+ * Documentation URLs KDoc-snippets.
+ *
+ * Contains all links to Kotlin DataFrame documentation pages.
+ *
+ * Include it in KDoc with `@include [-class-]`.
+ * For example: `For more information: {@include [DocumentationUrls.SomeUrl]}`.
+ */
+public interface DocumentationUrls {
 
     /** https://kotlin.github.io/dataframe */
-    interface Url
+    public typealias Url = Nothing
 
     /** [See Access APIs on the documentation website.]({@include [Url]}/apilevels.html) */
-    interface AccessApis {
+    public interface AccessApis {
 
         /** [See String API on the documentation website.]({@include [Url]}/stringapi.html) */
-        interface StringApi
+        public typealias StringApi = Nothing
 
-        /** [See Column Accessors API on the documentation website.]({@include [Url]}/columnaccessorsapi.html) */
-        interface ColumnAccessorsApi
-
-        /** [See KProperties API on the documentation website.]({@include [Url]}/kpropertiesapi.html) */
-        interface KPropertiesApi
+        /** [See Invoked String API on the documentation website.]({@include [Url]}/stringapi.html#invoked-string-api) */
+        public typealias InvokedStringApi = Nothing
 
         /** [See Extension Properties API on the documentation website.]({@include [Url]}/extensionpropertiesapi.html) */
-        interface ExtensionPropertiesApi
+        public typealias ExtensionPropertiesApi = Nothing
     }
 
     /** [See Column Selectors on the documentation website.]({@include [Url]}/columnselectors.html) */
-    interface ColumnSelectors
+    public typealias ColumnSelectors = Nothing
 
-    interface DataRow {
+    /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
+    public typealias CompilerPlugin = Nothing
+
+    /** [Kotlin DataFrame Compiler Plugin]({@include [Url]}/compiler-plugin.html) */
+    public typealias CompilerPluginLink = Nothing
+
+    /** [See Packaging into a fat JAR on the documentation website.]({@include [Url]}/packaging.html) */
+    public typealias Packaging = Nothing
+
+    /** [See DataRow on the documentation website.]({@include [Url]}/datarow.html) */
+    public interface DataRow {
         /** [See Row Expressions on the documentation website.]({@include [Url]}/datarow.html#row-expressions) */
-        interface RowExpressions
+        public typealias RowExpressions = Nothing
+
+        /** [See RowExpression on the documentation website.]({@include [Url]}/datarow.html#rowexpression) */
+        public typealias RowExpression = Nothing
+
+        /** [See RowValueExpression on the documentation website.]({@include [Url]}/datarow.html#rowvalueexpression) */
+        public typealias RowValueExpression = Nothing
 
         /** [See Row Conditions on the documentation website.]({@include [Url]}/datarow.html#row-conditions) */
-        interface RowConditions
+        public typealias RowConditions = Nothing
+
+        /** [See RowFilter on the documentation website.]({@include [Url]}/datarow.html#rowfilter) */
+        public typealias RowFilter = Nothing
+
+        /** [See RowValueFilter on the documentation website.]({@include [Url]}/datarow.html#rowvaluefilter) */
+        public typealias RowValueFilter = Nothing
+
+        /** [See Row Functions on the documentation website.]({@include [Url]}/datarow.html#row-functions) */
+        public typealias RowFunctions = Nothing
     }
 
     /** [See `drop` on the documentation website.]({@include [Url]}/drop.html) */
-    interface Drop {
+    public interface Drop {
 
         /** [See `dropNulls` on the documentation website.]({@include [Url]}/drop.html#dropnulls) */
-        interface DropNulls
+        public typealias DropNulls = Nothing
 
         /** [See `dropNaNs` on the documentation website.]({@include [Url]}/drop.html#dropnans) */
-        interface DropNaNs
+        public typealias DropNaNs = Nothing
 
         /** [See `dropNA` on the documentation website.]({@include [Url]}/drop.html#dropna) */
-        interface DropNA
+        public typealias DropNA = Nothing
     }
 
     /** [See `fill` on the documentation website.]({@include [Url]}/fill.html) */
-    interface Fill {
+    public interface Fill {
         /** [See `fillNulls` on the documentation website.]({@include [Url]}/fill.html#fillnulls) */
-        interface FillNulls
+        public typealias FillNulls = Nothing
 
         /** [See `fillNaNs` on the documentation website.]({@include [Url]}/fill.html#fillnans) */
-        interface FillNaNs
+        public typealias FillNaNs = Nothing
 
         /** [See `fillNA` on the documentation website.]({@include [Url]}/fill.html#fillna) */
-        interface FillNA
+        public typealias FillNA = Nothing
     }
 
-    /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanAndNa.html) */
-    interface NanAndNa {
+    /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanandna.html) */
+    public interface NanAndNa {
 
-        /** [See `NaN` on the documentation website.]({@include [Url]}/nanAndNa.html#nan) */
-        interface NaN
+        /** [See `NaN` on the documentation website.]({@include [Url]}/nanandna.html#nan) */
+        public typealias NaN = Nothing
 
-        /** [See `NA` on the documentation website.]({@include [Url]}/nanAndNa.html#na) */
-        interface NA
+        /** [See `NA` on the documentation website.]({@include [Url]}/nanandna.html#na) */
+        public typealias NA = Nothing
     }
 
     /** [See `select` on the documentation website.]({@include [Url]}/select.html) */
-    interface Select
+    public typealias Select = Nothing
 
     /** [See `update` on the documentation website.]({@include [Url]}/update.html) */
-    interface Update
+    public typealias Update = Nothing
 
     /** [See `remove` on the documentation website.]({@include [Url]}/remove.html) */
-    interface Remove
+    public typealias Remove = Nothing
 
-    /** <a href="{@include [Url]}/distinct.html">See `distinct` on the documentation website.</a> */
-    interface Distinct
+    /** [See `distinct` on the documentation website.]({@include [Url]}/distinct.html) */
+    public typealias Distinct = Nothing
+
+    /** [See `distinctBy` on the documentation website.]({@include [Url]}/distinct.html#distinctby) */
+    public typealias DistinctBy = Nothing
+
+    /** [See `duplicateRows` on the documentation website.]({@include [Url]}/duplicate.html#duplicaterows) */
+    public typealias DuplicateRows = Nothing
+
+    /** [See `duplicate` on a DataRow on the documentation website.]({@include [Url]}/duplicate.html#duplicate-on-a-datarow) */
+    public typealias DuplicateOnDataRow = Nothing
+
+    /** [See `duplicate` on a DataFrame on the documentation website.]({@include [Url]}/duplicate.html#duplicate-on-a-dataframe) */
+    public typealias DuplicateOnDataFrame = Nothing
 
     /** <a href="{@include [Url]}/flatten.html">See `flatten` on the documentation website.</a> */
-    interface Flatten
+    public typealias Flatten = Nothing
 
     /** <a href="{@include [Url]}/cumsum.html">See `cumSum` on the documentation website.</a> */
-    interface CumSum
+    public typealias CumSum = Nothing
 
     /** [See `describe` on the documentation website.]({@include [Url]}/describe.html) */
-    interface Describe
+    public typealias Describe = Nothing
 
     /** [See `move` on the documentation website.]({@include [Url]}/move.html) */
-    interface Move
+    public typealias Move = Nothing
+
+    /** [See `reorder` on the documentation website.]({@include [Url]}/reorder.html) */
+    public typealias Reorder = Nothing
+
+    /** [See `reorderColumnsBy` on the documentation website.]({@include [Url]}/reorder.html#reordercolumnsby) */
+    public typealias ReorderColumnsBy = Nothing
+
+    /** [See `reorderColumnsByName` on the documentation website.]({@include [Url]}/reorder.html#reordercolumnsbyname) */
+    public typealias ReorderColumnsByName = Nothing
 
     /** [See `group` on the documentation website.]({@include [Url]}/group.html) */
-    interface Group
+    public typealias Group = Nothing
 
-    /** [See `group` on the documentation website.]({@include [Url]}/ungroup.html) */
-    interface Ungroup
+    /** [See `ungroup` on the documentation website.]({@include [Url]}/ungroup.html) */
+    public typealias Ungroup = Nothing
 
     /** [See `convert` on the documentation website.]({@include [Url]}/convert.html) */
-    interface Convert
+    public typealias Convert = Nothing
 
-    /** [See `convert` on the documentation website.]({@include [Url]}/corr.html) */
-    interface Corr
+    /** [See `unfold` on the documentation website.]({@include [Url]}/unfold.html) */
+    public typealias Unfold = Nothing
+
+    /** [See `convertTo` on the documentation website.]({@include [Url]}/convertto.html) */
+    public typealias ConvertTo = Nothing
+
+    /** [See `inferType` on the documentation website.]({@include [Url]}/infertype.html) */
+    public typealias InferType = Nothing
+
+    /** [See `toList` on the documentation website.]({@include [Url]}/tolist.html) */
+    public typealias ToList = Nothing
+
+    /** [See `toListOf` on the documentation website.]({@include [Url]}/tolist.html#tolistof) */
+    public typealias ToListOf = Nothing
+
+    /** [See `toSequence` on the documentation website.]({@include [Url]}/tolist.html#tosequence-and-tosequenceof) */
+    public typealias ToSequence = Nothing
+
+    /** [See `corr` on the documentation website.]({@include [Url]}/corr.html) */
+    public typealias Corr = Nothing
 
     /** [See `add` on the documentation website.]({@include [Url]}/add.html) */
-    interface Add
+    public typealias Add = Nothing
+
+    /** [See `map` on the documentation website.]({@include [Url]}/map.html) */
+    public interface Map {
+
+        /** [See `map` on a `DataColumn` on the documentation website.]({@include [Url]}/map.html#map-on-datacolumn) */
+        public typealias OnColumn = Nothing
+
+        /** [See `map` over rows on the documentation website.]({@include [Url]}/map.html#map) */
+        public typealias OverRows = Nothing
+
+        /** [See `mapToColumn` on the documentation website.]({@include [Url]}/map.html#maptocolumn) */
+        public typealias ToColumn = Nothing
+
+        /** [See `mapToFrame` on the documentation website.]({@include [Url]}/map.html#maptoframe) */
+        public typealias ToFrame = Nothing
+
+        /** [See `map` on a `GroupBy` on the documentation website.]({@include [Url]}/map.html#map-on-groupby) */
+        public typealias OnGroupBy = Nothing
+    }
+
+    /** [See `append` on the documentation website.]({@include [Url]}/append.html) */
+    public typealias Append = Nothing
+
+    /** [See `appendNulls` on the documentation website.]({@include [Url]}/appendnulls.html) */
+    public typealias AppendNulls = Nothing
+
+    /** [See `all` on the documentation website.]({@include [Url]}/all.html) */
+    public typealias All = Nothing
+
+    /** [See `all`/`allCols` on the documentation website.]({@include [Url]}/columnselectors.html#all-cols) */
+    public typealias AllCols = Nothing
+
+    /** [See all(Cols) After/Before/From/UpTo on the documentation website.]({@include [Url]}/columnselectors.html#all-cols-after-before-from-up-to) */
+    public typealias AllColsWithSuffix = Nothing
+
+    /** [See (All) (Cols) Except on the documentation website.]({@include [Url]}/columnselectors.html#all-cols-except) */
+    public typealias AllColsExcept = Nothing
+
+    /** [See `and` on the documentation website.]({@include [Url]}/columnselectors.html#and) */
+    public typealias And = Nothing
+
+    /** [See `any` on the documentation website.]({@include [Url]}/any.html) */
+    public typealias Any = Nothing
+
+    /** [See `asIterable` on the documentation website.]({@include [Url]}/asiterable.html) */
+    public typealias AsIterable = Nothing
+
+    /** [See iterating on the documentation website.]({@include [Url]}/iterate.html) */
+    public typealias Iterate = Nothing
+
+    /** [See `forEach` on a `DataColumn` on the documentation website.]({@include [Url]}/iterate.html#foreach-on-datacolumn) */
+    public typealias IterateOnColumn = Nothing
+
+    /** [See `forEach` on a `GroupBy` on the documentation website.]({@include [Url]}/iterate.html#foreach-on-groupby) */
+    public typealias IterateOnGroupBy = Nothing
+
+    /** [See `asSequence` on the documentation website.]({@include [Url]}/assequencecolumn.html) */
+    public typealias AsSequenceCol = Nothing
+
+    /** [See `asSequence` on the documentation website.]({@include [Url]}/assequence.html) */
+    public typealias AsSequenceDf = Nothing
+
+    /** [See `associateBy` on the documentation website.]({@include [Url]}/associateby.html) */
+    public typealias AssociateBy = Nothing
+
+    /** [See `associate` on the documentation website.]({@include [Url]}/associate.html) */
+    public typealias Associate = Nothing
+
+    /** [See `between` on the documentation website.]({@include [Url]}/between.html) */
+    public typealias Between = Nothing
+
+    /** [See `cast` on the documentation website.]({@include [Url]}/cast.html) */
+    public typealias Cast = Nothing
+
+    /** [See `chunked` on the documentation website.]({@include [Url]}/chunked.html) */
+    public typealias Chunked = Nothing
+
+    /** [See `col` on the documentation website.]({@include [Url]}/columnselectors.html#col) */
+    public typealias Col = Nothing
+
+    /** [See `colGroup` on the documentation website.]({@include [Url]}/columnselectors.html#value-col-frame-col-col-group) */
+    public typealias ColGroup = Nothing
+
+    /** [See `colGroups` on the documentation website.]({@include [Url]}/columnselectors.html#value-columns-frame-columns-column-groups) */
+    public typealias ColGroups = Nothing
+
+    /** [See `cols` on the documentation website.]({@include [Url]}/columnselectors.html#cols) */
+    public typealias Cols = Nothing
+
+    /** [See `colsAtAnyDepth` on the documentation website.]({@include [Url]}/columnselectors.html#cols-at-any-depth) */
+    public typealias ColsAtAnyDepth = Nothing
+
+    /** [See `colsInGroups` on the documentation website.]({@include [Url]}/columnselectors.html#cols-in-groups) */
+    public typealias ColsInGroups = Nothing
+
+    /** [See `colsOf` on the documentation website.]({@include [Url]}/columnselectors.html#cols-of) */
+    public typealias ColsOf = Nothing
+
+    /** [See `colsOfKind` on the documentation website.]({@include [Url]}/columnselectors.html#cols-of-kind) */
+    public typealias ColsOfKind = Nothing
+
+    /** [See `Column Name Filters` on the documentation website.]({@include [Url]}/columnselectors.html#column-name-filters) */
+    public typealias ColumnNameFilters = Nothing
+
+    /** [See `Range of Columns` on the documentation website.]({@include [Url]}/columnselectors.html#range-of-columns) */
+    public typealias RangeOfColumns = Nothing
+
+    /** [See `columnOf` on the documentation website.]({@include [Url]}/createcolumn.html#columnof) */
+    public typealias ColumnOf = Nothing
+
+    /** [See `toColumn` on the documentation website.]({@include [Url]}/createcolumn.html#tocolumn) */
+    public typealias ToColumn = Nothing
+
+    /** [See `toColumnOf` on the documentation website.]({@include [Url]}/createcolumn.html#tocolumnof) */
+    public typealias ToColumnOf = Nothing
+
+    /** [See `dataFrameOf` on the documentation website.]({@include [Url]}/createdataframe.html#dataframeof) */
+    public typealias DataFrameOf = Nothing
+
+    /** [See `DynamicDataFrameBuilder` on the documentation website.]({@include [Url]}/createdataframe.html#dynamicdataframebuilder) */
+    public typealias DynamicDataFrameBuilder = Nothing
+
+    /** [See `emptyDataFrame` on the documentation website.]({@include [Url]}/createdataframe.html#emptydataframe) */
+    public typealias EmptyDataFrame = Nothing
+
+    /** [See `pathOf` on the documentation website.]({@include [Url]}/columnselectors.html#pathof) */
+    public typealias PathOf = Nothing
 
     /** [See `gather` on the documentation website.]({@include [Url]}/gather.html) */
-    interface Gather
+    public typealias Gather = Nothing
 
     /** [See `filter` on the documentation website.]({@include [Url]}/filter.html) */
-    interface Filter
+    public typealias Filter = Nothing
+
+    /** [See `filter` on the documentation website.]({@include [Url]}/filter.html#filter-on-a-datacolumn) */
+    public typealias FilterColumn = Nothing
+
+    /** [See `xs` on the documentation website.]({@include [Url]}/xs.html) */
+    public typealias Xs = Nothing
+
+    /** [See `count` on the documentation website.]({@include [Url]}/count.html) */
+    public typealias Count = Nothing
+
+    /** [See `countDistinct` on the documentation website.]({@include [Url]}/countdistinct.html) */
+    public typealias CountDistinct = Nothing
+
+    /** [See `isEmpty` on the documentation website.]({@include [Url]}/isempty.html) */
+    public typealias IsEmpty = Nothing
+
+    /** [See `isNotEmpty` on the documentation website.]({@include [Url]}/isempty.html#isnotempty) */
+    public typealias IsNotEmpty = Nothing
+
+    /** [See `valueCounts` on the documentation website.]({@include [Url]}/valuecounts.html) */
+    public typealias ValueCounts = Nothing
+
+    /** [See `values` on the documentation website.]({@include [Url]}/values.html) */
+    public typealias Values = Nothing
 
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
-    interface Explode
+    public typealias Explode = Nothing
+
+    /** [See `implode` on the documentation website.]({@include [Url]}/implode.html) */
+    public typealias Implode = Nothing
+
+    /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
+    public typealias DataSchemaGeneration = Nothing
+
+    /** [See `schema` on the documentation website.]({@include [Url]}/schema.html) */
+    public typealias Schema = Nothing
+
+    /** [See `format` on the documentation website.]({@include [Url]}/format.html) */
+    public typealias Format = Nothing
+
+    /** [See `toHtml` on the documentation website.]({@include [Url]}/tohtml.html) */
+    public typealias ToHtml = Nothing
+
+    /** [See `insert` on the documentation website.]({@include [Url]}/insert.html) */
+    public typealias Insert = Nothing
+
+    /** [See `rename` on the documentation website.]({@include [Url]}/rename.html) */
+    public typealias Rename = Nothing
+
+    /** [See `replace` on the documentation website.]({@include [Url]}/replace.html) */
+    public typealias Replace = Nothing
+
+    /** [See `groupBy` on the documentation website.]({@include [Url]}/groupby.html) */
+    public typealias GroupBy = Nothing
+
+    /** [See "`GroupBy` Transformation" on the documentation website.]({@include [Url]}/groupby.html#transformation) */
+    public typealias GroupByTransformation = Nothing
+
+    /** [See "`GroupBy` Reducing" on the documentation website.]({@include [Url]}/groupby.html#reducing) */
+    public typealias GroupByReducing = Nothing
+
+    /** [See "`GroupBy` Aggregation" on the documentation website.]({@include [Url]}/groupby.html#aggregation) */
+    public typealias GroupByAggregation = Nothing
+
+    /** [See "`GroupBy` Aggregation Statistics" on the documentation website.]({@include [Url]}/groupby.html#aggregation-statistics) */
+    public typealias GroupByAggregationStatistics = Nothing
+
+    /** [See "`groupBy` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#groupby-statistics) */
+    public typealias GroupByStatistics = Nothing
+
+    /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/pivot.html#pivot-groupby) */
+    public typealias PivotGroupBy = Nothing
+
+    /** [See `pivot` on the documentation website.]({@include [Url]}/pivot.html) */
+    public typealias Pivot = Nothing
+
+    /** [See `pivotMatches` on the documentation website.]({@include [Url]}/pivot.html#pivotmatches) */
+    public typealias PivotMatches = Nothing
+
+    /** [See `pivotCounts` on the documentation website.]({@include [Url]}/pivot.html#pivotcounts) */
+    public typealias PivotCounts = Nothing
+
+    /** [See "`pivot` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#pivot-statistics) */
+    public typealias PivotStatistics = Nothing
+
+    /** [See "`Pivot` Reducing" on the documentation website.]({@include [Url]}/pivot.html#reducing) */
+    public typealias PivotReducing = Nothing
+
+    /** [See "`Pivot` Aggregation" on the documentation website.]({@include [Url]}/pivot.html#aggregation) */
+    public typealias PivotAggregation = Nothing
+
+    /** [See "`Pivot` Aggregation statistics" on the documentation website.]({@include [Url]}/pivot.html#aggregation-statistics) */
+    public typealias PivotAggregationStatistics = Nothing
+
+    /** [See "`pivot` inside aggregation" on the documentation website.]({@include [Url]}/pivot.html#pivot-inside-aggregate) */
+    public typealias PivotInsideAggregate = Nothing
+
+    /** [See `join` on the documentation website.]({@include [Url]}/join.html) */
+    public typealias Join = Nothing
+
+    /** [See `joinWith` on the documentation website.]({@include [Url]}/joinwith.html) */
+    public typealias JoinWith = Nothing
+
+    /** [See "Summary statistics" on the documentation website.]({@include [Url]}/summarystatistics.html) */
+    public typealias Statistics = Nothing
+
+    /** [See "Row statistics" on the documentation website.]({@include [Url]}/rowstats.html) */
+    public typealias RowStatistics = Nothing
+
+    /** [See "Number Unification" on the documentation website.]({@include [Url]}/numberunification.html) */
+    public typealias NumberUnification = Nothing
+
+    /** [See `sum` on the documentation website.]({@include [Url]}/sum.html) */
+    public interface Sum {
+
+        /** [See "`sum` Type Conversion" on the documentation website.]({@include [Url]}/sum.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
+    /** [See `mean` on the documentation website.]({@include [Url]}/mean.html) */
+    public interface Mean {
+
+        /** [See "`mean` Type Conversion" on the documentation website.]({@include [Url]}/mean.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
+    /** [See `std` on the documentation website.]({@include [Url]}/std.html) */
+    public interface Std {
+
+        /** [See "`std` Type Conversion" on the documentation website.]({@include [Url]}/std.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
+    /** [See `median` on the documentation website.]({@include [Url]}/median.html) */
+    public interface Median {
+
+        /** [See "`median` Type Conversion" on the documentation website.]({@include [Url]}/median.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
+    /** [See `percentile` on the documentation website.]({@include [Url]}/percentile.html) */
+    public interface Percentile {
+
+        /** [See "`percentile` Type Conversion" on the documentation website.]({@include [Url]}/percentile.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+
+        /** [See "Quantile Estimation Methods" on the documentation website.]({@include [Url]}/percentile.html#quantile-estimation-methods) */
+        public typealias QuantileEstimationMethods = Nothing
+    }
+
+    /** [See "min / max" on the documentation website.]({@include [Url]}/minmax.html) */
+    public interface MinMax {
+
+        /** [See "min / max Type Conversion" on the documentation website.]({@include [Url]}/minmax.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
+    /** [See `maxBy` on the documentation website.]({@include [Url]}/maxby.html) */
+    public typealias MaxBy = Nothing
+
+    /** [See `minBy` on the documentation website.]({@include [Url]}/minby.html) */
+    public typealias MinBy = Nothing
+
+    /** [See `concat` on the documentation website.]({@include [Url]}/concat.html) */
+    public typealias Concat = Nothing
+
+    /** [See `Column arithmetics` on the documentation website.]({@include [Url]}/columnarithmetics.html) */
+    public interface ColumnArithmetics {
+
+        /** [See `not` on the documentation website.]({@include [Url]}/columnarithmetics.html#not) */
+        public typealias Not = Nothing
+
+        /** [See `plus` on the documentation website.]({@include [Url]}/columnarithmetics.html#plus) */
+        public typealias Plus = Nothing
+
+        /** [See `minus` on the documentation website.]({@include [Url]}/columnarithmetics.html#minus) */
+        public typealias Minus = Nothing
+
+        /** [See `unaryMinus` on the documentation website.]({@include [Url]}/columnarithmetics.html#unary-minus) */
+        public typealias UnaryMinus = Nothing
+
+        /** [See `times` on the documentation website.]({@include [Url]}/columnarithmetics.html#times) */
+        public typealias Times = Nothing
+
+        /** [See `div` on the documentation website.]({@include [Url]}/columnarithmetics.html#div) */
+        public typealias Div = Nothing
+
+        /** [See `Compare` on the documentation website.]({@include [Url]}/columnarithmetics.html#compare) */
+        public typealias Compare = Nothing
+    }
+
+    /** [See `distinct` in the Columns Selection DSL on the documentation website.]({@include [Url]}/columnselectors.html#distinct) */
+    public typealias DistinctCols = Nothing
+
+    /** [See `drop` on the documentation website.]({@include [Url]}/slicerows.html#drop) */
+    public typealias DropFirst = Nothing
+
+    /** [See `dropLast` on the documentation website.]({@include [Url]}/slicerows.html#droplast) */
+    public typealias DropLast = Nothing
+
+    /** [See `dropWhile` on the documentation website.]({@include [Url]}/slicerows.html#dropwhile) */
+    public typealias DropWhile = Nothing
+
+    /** [See drop(Last)(Cols)(While) on the documentation website.]({@include [Url]}/columnselectors.html#drop-last-cols-while) */
+    public typealias DropCols = Nothing
+
+    /** [See take(Last)(Cols)(While) on the documentation website.]({@include [Url]}/columnselectors.html#take-last-cols-while) */
+    public typealias TakeCols = Nothing
+
+    /** [See `take` on the documentation website.]({@include [Url]}/slicerows.html#take) */
+    public typealias TakeFirst = Nothing
+
+    /** [See `takeLast` on the documentation website.]({@include [Url]}/slicerows.html#takelast) */
+    public typealias TakeLast = Nothing
+
+    /** [See `takeWhile` on the documentation website.]({@include [Url]}/slicerows.html#takewhile) */
+    public typealias TakeWhile = Nothing
+
+    /** [See `expr` on the documentation website.]({@include [Url]}/columnselectors.html#expr-column-expression) */
+    public typealias Expr = Nothing
+
+    /** [See `filter` in the Columns Selection DSL on the documentation website.]({@include [Url]}/columnselectors.html#filter) */
+    public typealias FilterCols = Nothing
+
+    /** [See `first` on the documentation website.]({@include [Url]}/first.html) */
+    public typealias First = Nothing
+
+    /** [See `first` on the documentation website.]({@include [Url]}/firstoncolumn.html) */
+    public typealias FirstOnColumn = Nothing
+
+    /** [See `firstOrNull` on the documentation website.]({@include [Url]}/first.html#firstornull) */
+    public typealias FirstOrNull = Nothing
+
+    /** [See `firstOrNull` on the documentation website.]({@include [Url]}/firstoncolumn.html#firstornull) */
+    public typealias FirstOrNullOnColumn = Nothing
+
+    /** [See `last` on the documentation website.]({@include [Url]}/last.html) */
+    public typealias Last = Nothing
+
+    /** [See `last` on the documentation website.]({@include [Url]}/lastoncolumn.html) */
+    public typealias LastOnColumn = Nothing
+
+    /** [See `lastOrNull` on the documentation website.]({@include [Url]}/last.html#lastornull) */
+    public typealias LastOrNull = Nothing
+
+    /** [See `lastOrNull` on the documentation website.]({@include [Url]}/lastoncolumn.html#lastornull) */
+    public typealias LastOrNullOnColumn = Nothing
+
+    /** [See `single` on the documentation website.]({@include [Url]}/single.html) */
+    public typealias Single = Nothing
+
+    /** [See `single` on the documentation website.]({@include [Url]}/singleoncolumn.html) */
+    public typealias SingleOnColumn = Nothing
+
+    /** [See `singleOrNull` on the documentation website.]({@include [Url]}/single.html#singleornull) */
+    public typealias SingleOrNull = Nothing
+
+    /** [See First (Col), Last (Col), Single (Col) on the documentation website.]({@include [Url]}/columnselectors.html#first-col-last-col-single-col) */
+    public typealias FirstLastSingleCols = Nothing
+
+    /** [See `formatHeader` on the documentation website.]({@include [Url]}/format.html#formatheader) */
+    public typealias FormatHeader = Nothing
+
+    /** [See `frameCol` on the documentation website.]({@include [Url]}/columnselectors.html#value-col-frame-col-col-group) */
+    public typealias FrameCol = Nothing
+
+    /** [See `frameCols` on the documentation website.]({@include [Url]}/columnselectors.html#value-columns-frame-columns-column-groups) */
+    public typealias FrameCols = Nothing
+
+    /** [See `none` in the Columns Selection DSL on the documentation website.]({@include [Url]}/columnselectors.html#none) */
+    public typealias NoneCols = Nothing
+
+    /** [See `none` on the documentation website.]({@include [Url]}/none.html) */
+    public typealias None = Nothing
+
+    /** [See `requireColumn` on the documentation website.]({@include [Url]}/require.html) */
+    public typealias Require = Nothing
+
+    /** [See `head` on the documentation website.]({@include [Url]}/head.html) */
+    public typealias Head = Nothing
+
+    /** [See `tail` on the documentation website.]({@include [Url]}/tail.html) */
+    public typealias Tail = Nothing
+
+    /** [See `split` on the documentation website.]({@include [Url]}/split.html) */
+    public typealias Split = Nothing
+
+    /** [See `merge` on the documentation website.]({@include [Url]}/merge.html) */
+    public typealias Merge = Nothing
+
+    /** [See (Cols) Without Nulls on the documentation website.]({@include [Url]}/columnselectors.html#cols-without-nulls) */
+    public typealias WithoutNulls = Nothing
+
+    /** [See Rename: `named` / `into` on the documentation website.]({@include [Url]}/columnselectors.html#rename) */
+    public typealias RenameCols = Nothing
+
+    /** [See `renameToCamelCase` on the documentation website.]({@include [Url]}/rename.html#renametocamelcase) */
+    public typealias RenameToCamelCase = Nothing
+
+    /** [See Select from Column Group on the documentation website.]({@include [Url]}/columnselectors.html#select-from-column-group) */
+    public typealias SelectFromColumnGroup = Nothing
+
+    /** [See `simplify` on the documentation website.]({@include [Url]}/columnselectors.html#simplify) */
+    public typealias Simplify = Nothing
+
+    /** [See `valueCol` on the documentation website.]({@include [Url]}/columnselectors.html#value-col-frame-col-col-group) */
+    public typealias ValueCol = Nothing
+
+    /** [See `valueCols` on the documentation website.]({@include [Url]}/columnselectors.html#value-columns-frame-columns-column-groups) */
+    public typealias ValueCols = Nothing
+
+    /** [See DataFrame from List<List<T>> on the documentation website.]({@include [Url]}/createdataframe.html#dataframe-from-list-list-t) */
+    public typealias CreateDataFrameFromListOfLists = Nothing
+
+    /** [See DataFrame from Iterable<T> on the documentation website.]({@include [Url]}/createdataframe.html#dataframe-from-iterable-t) */
+    public typealias CreateDataFrameFromIterable = Nothing
+
+    /** [See DataFrame from Map<String, List<*>> on the documentation website.]({@include [Url]}/createdataframe.html#dataframe-from-map-string-list) */
+    public typealias CreateDataFrameFromMap = Nothing
+
+    /** [See Global Parser Options on the documentation website.]({@include [Url]}/parse.html#global-parser-options) */
+    public typealias GlobalParserOptions = Nothing
+
+    /** [See Parser Options on the documentation website.]({@include [Url]}/parse.html#parser-options) */
+    public typealias ParserOptions = Nothing
+
+    /** [See Parsing Date-time Strings on the documentation website.]({@include [Url]}/parse.html#parsing-date-time-strings) */
+    public typealias ParsingDateTimeStrings = Nothing
+
+    /** [See Parsing Order on the documentation website.]({@include [Url]}/parse.html#parsing-order) */
+    public typealias ParsingOrder = Nothing
+
+    /** [See Parsing Doubles on the documentation website.]({@include [Url]}/parse.html#parsing-doubles) */
+    public typealias ParsingDoubles = Nothing
+
+    /** [See `parse` on the documentation website.]({@include [Url]}/parse.html) */
+    public typealias Parse = Nothing
+
+    /** [See `parse` on a DataColumn on the documentation website.]({@include [Url]}/parse.html#on-a-datacolumn) */
+    public typealias ParseOnDataColumn = Nothing
+
+    /** [See `shuffle` on the documentation website.]({@include [Url]}/shuffle.html) */
+    public typealias Shuffle = Nothing
+
+    /** [See `reverse` on the documentation website.]({@include [Url]}/reverse.html) */
+    public typealias Reverse = Nothing
+
+    /** [See `sortWith` on the documentation website.]({@include [Url]}/sortby.html#sortwith) */
+    public typealias SortWith = Nothing
+
+    /** [See `indices` on the documentation website.]({@include [Url]}/indexing.html#row-indices) */
+    public typealias Indices = Nothing
+
+    /** [See `getColumn` on the documentation website.]({@include [Url]}/getcolumn.html) */
+    public interface GetColumn {
+
+        /** [See `getColumnGroup` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumngroup) */
+        public typealias GetColumnGroup = Nothing
+
+        /** [See `getColumns` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumns) */
+        public typealias GetColumns = Nothing
+
+        /** [See `getFrameColumn` on the documentation website.]({@include [Url]}/getcolumn.html#getframecolumn) */
+        public typealias GetFrameColumn = Nothing
+
+        /** [See `getColumnIndex` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumnindex) */
+        public typealias GetColumnIndex = Nothing
+
+        /** [See `getColumnPath` and `getColumnPaths` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumnpath-and-getcolumnpaths) */
+        public typealias GetColumnPaths = Nothing
+
+        /** [See `getColumnWithPath` and `getColumnsWithPaths` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumnwithpath-and-getcolumnswithpaths) */
+        public typealias GetColumnsWithPaths = Nothing
+    }
+
+    /** [See "Get rows" on the documentation website.]({@include [Url]}/getrow.html) */
+    public typealias GetRow = Nothing
+
+    /** [See `rows` on the documentation website.]({@include [Url]}/rows.html) */
+    public interface Rows {
+
+        /** [See `rowsReversed` on the documentation website.]({@include [Url]}/rows.html#rowsreversed) */
+        public typealias RowsReversed = Nothing
+    }
+
+    /** [See `JsonPath` on the documentation website.]({@include [Url]}/read.html#specify-key-value-paths) */
+    public typealias JsonPath = Nothing
+
+    /** [See the "value" and "array" columns on the documentation website.]({@include [Url]}/read.html#value-and-array-columns) */
+    public typealias JsonValueAndArrayColumns = Nothing
+
+    /** [Deephaven CSV](https://github.com/deephaven/deephaven-csv) */
+    public typealias Deephaven = Nothing
+
+    /** [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/) */
+    public typealias ApacheCsv = Nothing
+
+    /** [See PostgreSQL type mapping on the documentation website.]({@include [Url]}/readsqltypemapping-postgresql.html) */
+    public typealias ReadSqlTypeMappingPostgreSql = Nothing
 }

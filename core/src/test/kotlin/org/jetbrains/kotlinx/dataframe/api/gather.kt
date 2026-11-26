@@ -106,8 +106,8 @@ class GatherTests {
                 val dataRows = cols.map { it[0] }
 
                 val newDf = listOf(
-                    name.withValues(List(cols.size) { name[0] }),
-                    mode.withValues(cols.map { it.name() }),
+                    List(cols.size) { name[0] }.toColumn("name"),
+                    cols.map { it.name() }.toColumn("mode"),
                     dataRows.map { it.getValueOrNull<String>("c1") }.toColumn("c1"),
                     dataRows.map { it.getValueOrNull<String>("c2") }.toColumn("c2"),
                     dataRows.map { it.getValueOrNull<String>("c3") }.toColumn("c3"),
@@ -143,8 +143,8 @@ class GatherTests {
 
     @Test
     fun `gather mix of columns`() {
-        val a by columnOf(1, 1.1)
-        val b by columnOf(2, 2.2)
+        val a by columnOf<Number>(1, 1.1)
+        val b by columnOf<Number>(2, 2.2)
 
         val df = dataFrameOf(a, b)[0..0]
 

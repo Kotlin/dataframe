@@ -54,10 +54,8 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
         )
     }
 
-    private val _data: MutableList<Any?> = ArrayList(1000)
-
     val data: List<Any?>
-        get() = _data
+        field = ArrayList(1000)
 
     var hasNulls: Boolean = false
         private set
@@ -111,11 +109,11 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
         isNull: BooleanArray,
     ) {
         while (data.size < destBegin) {
-            _data += null
+            data += null
             hasNulls = true
         }
         for ((srcIndex, _) in (destBegin..<destEnd).withIndex()) {
-            _data += getValue(src, srcIndex, isNull)
+            data += getValue(src, srcIndex, isNull)
         }
     }
 
@@ -126,7 +124,7 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
         isNull: BooleanArray,
     ) {
         for ((srcIndex, destIndex) in (destBegin..<destEnd).withIndex()) {
-            _data[destIndex] = getValue(src, srcIndex, isNull)
+            data[destIndex] = getValue(src, srcIndex, isNull)
         }
     }
 

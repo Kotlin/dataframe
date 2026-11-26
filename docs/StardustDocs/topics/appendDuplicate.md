@@ -1,4 +1,5 @@
 [//]: # (title: Append / duplicate rows)
 
 * [`append`](append.md) — append new rows
-* [`duplicate`](duplicate.md) — duplicate selected rows
+* [`appendNulls`](appendNulls.md) — append rows filled with null values
+* [`duplicate`](duplicate.md) — repeat rows or whole dataframes

@@ -1,7 +1,9 @@
-# @DataSchema declarations
+# @DataSchema Declarations
 
 `DataSchema` can be used as an argument for [cast](cast.md) and [convertTo](convertTo.md) functions. 
 It provides typed data access for raw dataframes you read from I/O sources and serves as a starting point for the compiler plugin to derive schema changes.
+
+**API reference**: [`DataSchema`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.annotations/-data-schema/index.html)
 
 Example 1:
 ```kotlin
@@ -63,7 +65,7 @@ df.rename { firstName }.into("name")
 
 ## Data Class
 
-DataSchema can be a top-level data class, in which case two additional API become available
+DataSchema can be a top-level data class, in which case two additional APIs become available
 
 ```kotlin
 @DataSchema
@@ -140,7 +142,7 @@ Nested structure can be a JSON that you read from a file.
 ]
 ```
 
-You get dataframe with this schema
+You get a dataframe with this schema
 
 ```text
 id: String

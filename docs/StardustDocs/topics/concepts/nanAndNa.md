@@ -17,7 +17,7 @@ or [dropNaNs](drop.md#dropnans) to drop rows with `NaNs` in them.
 
 ## NA
 
-`NA` in Dataframe can be seen as: [`NaN`](#nan) or `null`. Which is another way to say that the value
+`NA` in DataFrame can be seen as: [`NaN`](#nan) or `null`. Which is another way to say that the value
 is "**N**ot **A**vailable".
 
 You can use [fillNA](fill.md#fillna) to replace `NAs` in certain columns with a given value or expression

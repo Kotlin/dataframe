@@ -1,0 +1,573 @@
+# Migration to 1.0
+
+## Deprecations and removals
+
+As we move toward version 1.0, many functions have been changed, deprecated, or removed.
+This section provides a complete overview of all API changes to help you migrate to 1.0.
+
+### Renamed functions and classes to the correct CamelCase spelling { id="camelCase" }
+
+All functions and classes in Kotlin DataFrame
+have been renamed to
+[the correct CamelCase spelling](https://developer.android.com/kotlin/style-guide#camel_case).
+
+See below for a complete list of the renamed functions and classes.
+
+### Migration to Deephaven CSV
+
+All CSV (as well as TSV) IO was migrated to a new, fast, and efficient
+[Deephaven CSV](https://github.com/deephaven/deephaven-csv) implementation.
+It significantly improves CSV IO performance and brings many new parametrization options.
+
+All related methods are now located in the separate [`dataframe-csv`](Modules.md#dataframe-csv) module
+(which is included by default in the general [`dataframe`](Modules.md#dataframe-general) artifact
+and in `%use dataframe` in [Kotlin Notebook](SetupKotlinNotebook.md)).
+
+Functions were also renamed to [the correct CamelCase spelling](#camelCase).
+
+All new functions keep the same arguments as before and additionally introduce new ones.
+Also, [there are new arguments that expose Deephaven CSV features](read.md#unlocking-deephaven-csv-features).
+
+See [](read.md#read-from-csv).
+
+> All outdated CSV IO functions raise `WARNING` in 1.0 and will raise `ERROR` in 1.1.
+
+| 0.15                                            | 1.0                                             |
+|-------------------------------------------------|-------------------------------------------------|
+| `CSV`/`TSV`                                     | `CsvDeephaven`/`TsvDeephaven`                   |
+| `DataFrame.readCSV(..)`/`DataFrame.readTSV(..)` | `DataFrame.readCsv(..)`/`DataFrame.readTsv(..)` |
+| `DataFrame.read(delimiter=.., ..)`              | `DataFrame.readCsv(delimiter=.., ..)`           |
+| `df.writeCSV(..)`/`df.writeTSV(..)`             | `df.writeCsv(..)`/`df.writeTsv(..)`             |
+| `df.toCSV(..)`                                  | `df.toCsvStr(..)`                               |
+
+### Deprecation of `BigDecimal` and `BigInteger` statistics
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.guides.MigrationTo10Samples-->
+
+The [statistical operations](summaryStatistics.md) that compute with values —
+[`sum`](sum.md), [`mean`](mean.md), [`std`](std.md), and [`cumSum`](cumSum.md) —
+no longer support `java.math.BigDecimal` and `java.math.BigInteger` columns,
+due to their type-specific arithmetic semantics
+and to maintain consistent behavior across numeric types.
+Calling them on columns of either type now throws an exception at runtime.
+
+Convert the column to a list and use Kotlin standard library functions and
+Java big numbers arithmetic instead.
+Alternatively, you can [`convert`](convert.md) them to primitive types before calling the statistical operations.
+
+The operations that only compare values — [`min`/`max`](minmax.md), including their `by` overloads —
+keep working with big numbers.
+[`median`](median.md) and [`percentile`](percentile.md) are no longer explicitly supported for big numbers:
+some of their overloads still return a non-interpolated value, while others throw at runtime.
+
+The following examples assume that `bigIntCol` and `bigDecimalCol` are
+nullable columns of `BigInteger` and `BigDecimal`.
+
+| 0.15                                     | 1.0                                                                                                                                                     |
+|------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `df.bigIntCol.sum()`                     | `df.bigIntCol.toList().filterNotNull().sumOf { it }`                                                                                                    |
+| `df.bigDecimalCol.sum()`                 | `df.bigDecimalCol.toList().filterNotNull().sumOf { it }`                                                                                                |
+| `df.sum { bigIntCol and bigDecimalCol }` | `df.bigIntCol.toList().filterNotNull().sumOf { it }.toBigDecimal() + df.bigDecimalCol.toList().filterNotNull().sumOf { it }`                            |
+| `df.bigIntCol.mean()`                    | `df.bigIntCol.toList().filterNotNull().let { values -> values.sumOf { it }.toBigDecimal().divide(values.size.toBigDecimal(), MathContext.DECIMAL128) }` |
+| `df.bigDecimalCol.mean()`                | `df.bigDecimalCol.toList().filterNotNull().let { values -> values.sumOf { it }.divide(values.size.toBigDecimal(), MathContext.DECIMAL128) }`            |
+
+Java arithmetics:
+
+| 0.15                     | 1.0                                                                                |
+|--------------------------|------------------------------------------------------------------------------------|
+| `df.bigIntCol.sum()`     | `df.bigIntCol.toList().filterNotNull().fold(BigInteger.ZERO, BigInteger::add)`     |
+| `df.bigDecimalCol.sum()` | `df.bigDecimalCol.toList().filterNotNull().fold(BigDecimal.ZERO, BigDecimal::add)` |
+
+All other Kotlin DataFrame operations continue to work as usual:
+
+<!---FUN bigNumbersFilter-->
+
+```kotlin
+df.filter { bigDecimalCol?.let { it > BigDecimal.valueOf(150.0) } == true }
+```
+
+<!---END-->
+
+### Column name repair standardization and `NameRepairStrategy` deprecation
+
+Now all `DataFrame` creation / reading methods handle duplicating column names the same way.
+
+`NameRepairStrategy` and `readExcel()` overloads that use it are deprecated.
+
+| 0.15                                             | 1.0                                                              | 
+|--------------------------------------------------|------------------------------------------------------------------|
+| `DataFrame.readExcel(nameRepairStrategy = ..)`   | Deprecated                                                       |
+
+### Migration to Standard Library `Instant`
+
+Since Kotlin 2.1.20,
+[
+`Instant` is now part of the standard library](https://kotlinlang.org/docs/whatsnew2120.html#new-time-tracking-functionality)  
+(as `kotlin.time.Instant`).
+You can still use the old (deprecated) `kotlinx.datetime.Instant` type, but its support will be removed in Kotlin
+DataFrame 1.1.
+
+> New `Instant` in the Kotlin Standard Library becomes stable in 2.3.0.
+> In earlier versions, all related operations should be marked with the `@OptIn(ExperimentalTime::class)` annotation.
+> {style="note"}
+
+For now, each `Instant`-related operation has been split into two new ones —
+one for the new stdlib `kotlin.time.Instant` and one for the old deprecated `kotlinx.datetime.Instant`.
+The behavior of old operations remains unchanged: they work with `kotlinx.datetime.Instant` and raise `ERROR` in 1.0.
+In version 1.1, they will be returned and will operate on the new stdlib `kotlin.time.Instant`.
+
+<table>
+<tr>
+<th>0.15</th>
+<th>1.0</th>
+<th>Note</th>
+</tr>
+<tr>
+<td rowspan="2"><code>col.convertToInstant()</code></td>
+<td><code>col.convertToDeprecatedInstant()</code></td>
+<td><code>WARNING</code> in 1.0, <code>ERROR</code> in 1.1</td>
+</tr>
+<tr>
+<td><code>col.convertToStdlibInstant()</code></td>
+<td>Will be renamed back into <code>convertToInstant()</code> in 1.1</td>
+</tr>
+<tr>
+<td rowspan="2"><code>df.convert { columns }.toInstant()</code></td>
+<td><code>df.convert { columns }.convertToDeprecatedInstant()</code></td>
+<td><code>WARNING</code> in 1.0, <code>ERROR</code> in 1.1</td>
+</tr>
+<tr>
+<td><code>df.convert { columns }.convertToStdlibInstant()</code></td>
+<td>Will be renamed back into <code>convertToInstant()</code> in 1.1</td>
+</tr>
+<tr>
+<td rowspan="2"><code>ColType.Instant</code></td>
+<td><code>ColType.DeprecatedInstant</code></td>
+<td><code>WARNING</code> in 1.0, <code>ERROR</code> in 1.1</td>
+</tr>
+<tr>
+<td><code>ColType.StdlibInstant</code></td>
+<td>Will be renamed back into <code>Instant</code> in 1.1</td>
+</tr>
+</table>
+
+
+In version 1.0-Beta5 and later, all parsing operations convert `Instant`
+values into the new standard library `kotlin.time.Instant` type by default.
+To enable parsing into the deprecated `kotlinx.datetime.Instant`,
+set the corresponding parsing option **`ParserOptions.parseExperimentalInstant = false`**
+(before 1.0-Beta5, this option was `false`, from 1.0-Beta5 onwards it is `true` by default).
+
+For example:
+
+```kotlin
+DataFrame.readCsv(
+    ...,
+parserOptions = ParserOptions(parseExperimentalInstant = false)
+)
+```
+
+### Deprecation of `cols()` and other methods in Columns Selection DSL
+
+`cols()` overloads without arguments, which select all columns of a DataFrame or
+all subcolumns inside a column group in the [Columns Selection DSL](ColumnSelectors.md),
+are deprecated in favor of `all()` and `allCols()` respectively.
+These replacements allow the [Compiler Plugin](Compiler-Plugin.md) to fully support such selections.
+
+`colsAtAnyDepth()`, `colsInGroups()`, and `single()` overloads with a `predicate` argument
+that filters columns are also deprecated for better Compiler Plugin support.
+Use `.filter(predicate)` for filtering instead.
+
+| 0.15                                             | 1.0                                                              | 
+|--------------------------------------------------|------------------------------------------------------------------|
+| `df.select { cols() }`                           | `df.select { all() }`                                            |
+| `df.select { colGroup.cols() }`                  | `df.select { colGroup.allCols() }`                               |
+| `df.select { colsAtAnyDepth { predicate } }`     | `df.select { colsAtAnyDepth().filter { predicate } }`            |
+| `df.select { colsInGroups { predicate } }`       | `df.select { colsInGroups().filter { predicate } }`              |
+| `df.select { single { predicate } }`             | `df.select { cols().filter { predicate }.single() }`             |
+| `df.select { colGroup.singleCol { predicate } }` | `df.select { colGroup.allCols().filter { predicate }.single() }` |
+| `df.select { colSet.single { predicate } }`      | `df.select { colSet.filter { predicate }.single() }`             |
+
+### `reorderColumnsBy` and `reorderColumnsByName` no longer reorder inside frame columns by default
+
+With `atAnyDepth = true` (the default), [`reorderColumnsBy`](reorder.md#reordercolumnsby) and
+[`reorderColumnsByName`](reorder.md#reordercolumnsbyname) now reorder the columns inside column groups only,
+like `colsAtAnyDepth()`. The columns inside the dataframes of frame columns keep their order.
+To reorder them too, as before, pass `inFrameColumns = true`: `df.reorderColumnsByName(inFrameColumns = true)`.
+
+### `GroupBy.sortBy` and `sortByDesc` no longer reorder groups
+
+[`GroupBy.sortBy`](sortBy.md#sorting-within-groups) and `GroupBy.sortByDesc` now sort rows only within each group
+and preserve the order of key-group pairs. To sort the groups themselves by their keys, use `sortByKey` or
+`sortByKeyDesc` instead. If both the groups and their rows need to be sorted, call the corresponding operations
+separately.
+
+| 0.15                                            | 1.0                                                     |
+|-------------------------------------------------|---------------------------------------------------------|
+| `df.groupBy { city }.sortBy { city and day }`   | `df.groupBy { city }.sortByKey().sortBy { day }`        |
+
+### `indices()` on a `BaseColumn` receiver no longer resolves
+
+The column-level [`indices()`](indexing.md#row-indices) operation is declared on `DataColumn` now, next to
+the `indices` property. A column group is both a column and a dataframe, so the call used to be ambiguous
+between the column-level and the dataframe-level overload and did not compile; it now resolves to the
+dataframe-level `indices()` and returns the row indices of the dataframe the group forms.
+
+Calling `indices()` on a variable typed as `BaseColumn` no longer compiles — every column value is a
+`DataColumn`, so type the variable accordingly. Value and frame columns are unaffected, and no call returns
+a different value. The old overload stays in the jar, hidden from overload resolution, so code compiled
+against earlier versions keeps linking.
+
+### `randomLong` now includes both bounds of the range
+
+[`DataFrameBuilder.randomLong(nrow, range)`](createDataFrame.md#dataframeof) still takes a `ClosedRange<Long>`,
+but now includes both of its bounds, like `randomInt` does:
+`randomLong(3, 1L..2L)` can produce `2`, and a single-value range
+such as `5L..5L` returns `5` instead of throwing.
+`randomDouble(nrow, range)` keeps the standard library's exclusive upper bound,
+so a single-value range still throws there.
+### `pivot` results no longer keep the original schema type
+
+All terminal operations of [`pivot`](pivot.md) — on `Pivot`, `PivotGroupBy`, `ReducedPivot`, `ReducedPivotGroupBy`,
+and the `pivotCounts`/`pivotMatches` shortcuts — now return `DataFrame<*>` or `DataRow<*>` instead of
+`DataFrame<T>`/`DataRow<T>`, because the previous type was incorrect.
+
+For `Pivot` and `ReducedPivot`, the result has none of the original columns, only the pivoted ones, so `T`
+didn't describe it at all. `PivotGroupBy`, `ReducedPivotGroupBy`, and the `pivotCounts`/`pivotMatches`
+shortcuts keep the grouping key columns, so `T` was partially valid: the extension properties of the keys worked,
+but the extension properties of all other columns of `T` compiled and then failed at runtime. A partially correct
+type is still incorrect, so these operations return `DataFrame<*>` too.
+
+As a result, extension properties of the original schema no longer resolve on pivot results. Access columns
+with the String API, or [`cast`](cast.md) the result to a `@DataSchema` that describes it.
+
+| 0.15                                                                    | 1.0                                                                                 |
+|-------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| `df.pivot { city }.groupBy { name }.count().filter { name == "Alice" }` | `df.pivot { city }.groupBy { name }.count().filter { "name"<String>() == "Alice" }` |
+| `df.groupBy { name }.pivotCounts { city }.sortBy { name }`              | `df.groupBy { name }.pivotCounts { city }.sortBy("name")`                           |
+
+### `cast<T>()` verifies the schema by default
+
+`cast<T>()` on a `DataFrame`, `DataRow` or `ColumnGroup` now checks the data against `T`,
+and `cast<Keys, Groups>()` on a `GroupBy` checks the key columns against `Keys` and every group against `Groups`.
+If the schema was only partially correct, the code now throws an exception.
+Migrate such calls to `castUnchecked()` or `cast(verify = false)`, or fix the schema itself.
+
+`Keys` of a `GroupBy` describes only the key columns. So `groupBy.cast<FullSchema, FullSchema>()`,
+where `FullSchema` is the schema of the original `DataFrame`, now throws unless every column is a key:
+replace it with `groupBy.castUnchecked<FullSchema, FullSchema>()`.
+
+### Removed functions and classes
+
+The following functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
+
+| 0.15                                                           | 1.0                                                                          | Reason                                 |
+|----------------------------------------------------------------|------------------------------------------------------------------------------|----------------------------------------|
+| `DataColumn.createFrameColumn(name, df, startIndices)`         | `df.chunked(name, startIndices)`                                             | Replaced with another function.        |
+| `DataColumn.createWithTypeInference(name, values, nullable)`   | `DataColumn.createByInference(name, values, TypeSuggestion.Infer, nullable)` | Replaced with another function.        |
+| `DataColumn.create(name, values, infer)`                       | `DataColumn.createByType(name, values, infer)`                               | Replaced with another function.        |
+| `col.isComparable()`                                           | `col.valuesAreComparable()`                                                  | Renamed to better reflect its purpose. |
+| `df.minus { columns }`                                         | `df.remove { columns }`                                                      | Replaced with another function.        |
+| `df.move { columns }.toLeft()`/`df.moveToLeft{ columns }`      | `df.move { columns }.toStart()`/`df.moveToStart { columns }`                 | Renamed to better reflect its purpose. |
+| `df.move { columns }.toRight()`/`df.moveToRight{ columns }`    | `df.move { columns }.toEnd()`/`df.moveToEnd{ columns }`                      | Renamed to better reflect its purpose. |
+| `row.rowMin()`/`row.rowMinOrNull()`                            | `row.rowMinOf()`/`row.rowMinOfOrNull()`                                      | Renamed to better reflect its purpose. |
+| `row.rowMax()`/`row.rowMaxOrNull()`                            | `row.rowMaxOf()`/`AnyRow.rowMaxOfOrNull()`                                   | Renamed to better reflect its purpose. |
+| `row.rowPercentile()`/`row.rowPercentileOrNull()`              | `row.rowPercentileOf()`/`row.rowPercentileOfOrNull()`                        | Renamed to better reflect its purpose. |
+| `row.rowMedian()`/`row.rowMedianOrNull()`                      | `row.rowMedianOf()`/`row.rowMedianOfOrNull()`                                | Renamed to better reflect its purpose. |
+| `df.convert { columns }.to { converter }`                      | `df.convert { columns }.asColumn { converter }`                              | Renamed to better reflect its purpose. |
+| `df.toHTML(..)`/`df.toStandaloneHTML()`                        | `df.toHtml(..)`/`df.toStandaloneHtml()`                                      | Renamed to the correct CamelCase.      |
+| `df.writeHTML()`                                               | `df.writeHtml()`                                                             | Renamed to the correct CamelCase.      |
+| `asURL(fileOrUrl)`/`isURL(path)`                               | `asUrl(fileOrUrl)`/`isUrl(path)`                                             | Renamed to the correct CamelCase.      |
+| `df.convert { columns }.toURL()`/`df.convertToURL { columns }` | `df.convert { columns }.toUrl()`/`df.convertToUrl { columns }`               | Renamed to the correct CamelCase.      |
+| `df.filterBy(column)`                                          | `df.filter { column }`                                                       | Replaced with another function.        |
+| `FormattingDSL`                                                | `FormattingDsl`                                                              | Renamed to the correct CamelCase.      |
+| `RGBColor`                                                     | `RgbColor`                                                                   | Renamed to the correct CamelCase.      |
+| `df.insert(column).after(columnPath)`                          | `df.insert(column).after { columnPath }`                                     | Replaced with another overload.        |
+| `df.insert(column).under(columnPath)`                          | `df.insert(column).under { columnPath }`                                     | Replaced with another overload.        |
+| `CompareResult.Equals` / `CompareResult.isEqual()`             | `CompareResult.Matches` / `CompareResult.matches()`                          | Renamed to better reflect its purpose. |
+| `CompareResult.isSuperOrEqual()`                               | `CompareResult.isSuperOrMatches()`                                           | Renamed to better reflect its purpose. |
+
+The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
+
+| 0.15                                                                                                     | 1.0                                                                                                                           | Reason                                                                       |
+|----------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| `df.split { columns }.default(..)` / `df.split { columns }.into(..)` / `df.split { columns }.inward(..)` | `df.split { columns }.by(..).default(..)` / `df.split { columns }.by(..).into(..)` / `df.split { columns }.by(..).inward(..)` | Removed a shortcut to clarify the behaviour; Only for `String` columns.      |
+| `dataFrameOf(header, values)`                                                                            | `dataFrameOf(header).withValues(values)`                                                                                      | Replaced with another function.                                              |
+| `df.generateCode(..)`                                                                                    | `df.generateInterfaces(..)`                                                                                                   | Replaced with another function.                                              |
+| `df.select { mapToColumn(name, infer) { body } }`                                                        | `df.select { expr(name, infer) { body } }`                                                                                    | Removed duplicated functionality.                                            |
+| `stringCol.length()`                                                                                     | `stringCol.map { it?.length ?: 0 }`                                                                                           | Removed a shortcut to clarify the behaviour; Only for `String` columns.      |
+| `stringCol.lowercase()` / `stringCol.uppercase()`                                                        | `stringCol.map { it?.lowercase() }` / `stringCol.map { it?.uppercase() }`                                                     | Removed a shortcut to clarify the behaviour; Only for `String` columns.      |
+| `df.add(columns)` / `df.add(dataframes)`                                                                 | `df.addAll(columns)` / `df.addAll(dataframes)`                                                                                | Renamed to improve completion.                                               |
+| `row.isEmpty()` / `row.isNotEmpty()`                                                                     | `row.values().all { it == null }` / `row.values().any { it != null }`                                                         | Removed a shortcut to clarify the behaviour;                                 |
+| `row.getRow(index)` /  `row.getRowOrNull(index)` / `row.getRows(indices)`                                | `row.df().getRow(index)` /  `row.df().getRowOrNull(index)` / `row.df().getRows(indices)`                                      | Removed a shortcut to clarify the behaviour;                                 |
+| `df.copy()`                                                                                              | `df.columns().toDataFrame().castUnchecked()`                                                                                  | Removed a shortcut to clarify the behaviour;                                 |
+| `KeyValueProperty<T>`                                                                                    | `NameValueProperty<T>`                                                                                                        | Removed duplicated functionality.                                            |
+| `rename { columns }.into(..)` (will remain WARNING)                                                      | `rename { columns }.to(..)`                                                                                                   | Renamed to better reflect the English sentence "rename this column to that". |
+| `df.sortBy { col.desc() }` / `df.sortByDesc { col.desc() }`                                              | `df.sortBy { col.reversed() }` / `df.sortByDesc { col.reversed() }`                                                           | Renamed to better reflect its purpose.                                       |
+| `gb.sortByCount()`                                                                                       | `gb.sortByCountDesc()`                                                                                                         | Renamed to better reflect its purpose.                                       |
+| `df.sumFor { cols into path(..) }`                                                     | `df.sumFor { cols into pathOf(..) }`                                                                        | Removed duplicated functionality. All methods with `ColumnsForAggregateSelector` lambda.                                           |
+| `dataFrameOf(column<String>("name"), column<Int>("age"))` (will remain WARNING)                         | `dataFrameOf("name", "age")`                                                                                                 | Column Accessors API.                                                        |
+| `df.getColumnGroupOrNull(name)`                                                                          | `df.getColumnOrNull(name)?.asColumnGroup()`                                                                                   | Removed a shortcut; it was the only `OrNull` variant of `getColumnGroup`.    |
+
+## Parsing and Converting Date-Time
+
+In 0.15 and up to 1.0-Beta4 we did support the [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
+types; however, they were still treated as second-class in DataFrame. [`ParserOptions`](parse.md#parser-options)
+were still built around the Java `DateTimeFormatter`-paradigm.
+Starting from 1.0-Beta5, [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime) types now become first-class
+citizens,
+while still allowing you to use Java types if you need them.
+
+<table>
+<tr>
+<th>0.15</th>
+<th>1.0</th>
+<th>Reason</th>
+</tr>
+<tr>
+<td>
+
+```kotlin
+df.parse()
+```
+
+</td>
+<td>
+
+```kotlin
+df.parse()
+```
+
+</td>
+<td>Default parsing behavior remains largely unchanged.</td>
+</tr>
+<tr>
+<td>
+
+```kotlin
+df.parse(
+    ParserOptions(
+        skipTypes = setOf(
+            typeOf<kotlinx.datetime.LocalDate>(),
+            ...,
+    ),
+),
+)
+```
+
+</td>
+<td>
+
+```kotlin
+df.parse(
+    ParserOptions(dateTime = DateTimeParserOptions.Java),
+)
+```
+
+</td>
+<td>If you want to force parsing to Java date-time types, you no longer have to use skipTypes; you can simply change the `dateTime` argument.</td>
+</tr>
+<tr>
+<td>
+
+```kotlin
+DataFrame.parser.addSkipType(
+    typeOf<kotlinx.datetime.LocalDate>(),
+)
+```
+
+</td>
+<td>
+
+```kotlin
+DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
+```
+
+</td>
+<td>The same logic applies for the <a href="parse.md#global-parser-options">global parser options</a>.</td>
+</tr>
+<tr>
+<td rowspan="2">
+
+```kotlin
+ParserOptions(dateTimeFormatter = myFormatter)
+```
+
+</td>
+<td>
+Kotlin:
+
+```kotlin
+ParserOptions(
+    dateTime = DateTimeParserOptions.Kotlin
+        .withFormat<_>(myKotlinFormat),
+)
+```
+
+</td>
+<td rowspan="2">You now need to explicitly specify you expect Java or Kotlin date-time types via `DateTimeParserOptions.X`. Then you can specify the relevant options, like a `kotlinx.datetime.format.DateTimeFormat` or `java.time.DateTimeFormatter`. These are typed now too, optionally for Java.</td>
+</tr>
+<tr>
+<td>
+Java:
+
+```kotlin
+ParserOptions(
+    dateTime = DateTimeParserOptions.Java
+        .withFormatter<java.time.LocalDateTime>(myJavaFormatter),
+)
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+```kotlin
+ParserOptions(
+    locale = myLocale,
+    dateTimeFormatter = myFormatter,
+)
+```
+
+</td>
+<td>
+
+```kotlin
+ParserOptions(
+    dateTime = DateTimeParserOptions.Java
+        .withLocale(myLocale)
+        .withFormatter<java.time.LocalDateTime>(myFormatter),
+)
+```
+
+</td>
+<td>Locale for date-time only works for Java types. If you need Kotlin types and a locale, use <a href="convert.md">convert</a> to convert to Kotlin types afterwards.</td>
+</tr>
+<tr>
+<td rowspan="2">
+
+```kotlin
+ParserOptions(dateTimePattern = "MM/dd yyyy")
+```
+
+</td>
+<td>
+Kotlin:
+
+```kotlin
+@OptIn(FormatStringsInDatetimeFormats::class)
+ParserOptions(
+    dateTime = DateTimeParserOptions.Kotlin
+        .withPattern<kotlinx.datetime.LocalDate>("MM/dd yyyy"),
+)
+```
+
+</td>
+<td rowspan="2">Again, you now need to specify the target date-time library and the expected type for your pattern (optionally for Java). In Kotlin you also need to opt-in, because using `DateTimeFormat` instead is <a href="https://github.com/Kotlin/kotlinx-datetime#using-unicode-format-strings-like-yyyy-mm-dd">recommended</a>.</td>
+</tr>
+<tr>
+<td>
+Java:
+
+```kotlin
+ParserOptions(
+    dateTime = DateTimeParserOptions.Java
+        .withPattern<java.time.LocalDate>("MM/dd yyyy"),
+)
+```
+
+</td>
+</tr>
+<tr>
+<td rowspan="2">
+
+```kotlin
+DataFrame.parser.addDateTimePattern("MM/dd yyyy")
+```
+
+</td>
+<td>
+Kotlin:
+
+```kotlin
+@OptIn(FormatStringsInDatetimeFormats::class)
+DataFrame.parser
+    .addDateTimeUnicodePattern<kotlinx.datetime.LocalDate>("MM/dd yyyy")
+```
+
+</td>
+<td rowspan="2">Same idea. Though you can now also use `...addDateTimeFormat()` / `...addJavaDateTimeFormatter()`, which we would recommend more.</td>
+</tr>
+<tr>
+<td>
+Java:
+
+```kotlin
+DataFrame.parser
+    .addJavaDateTimePattern<java.time.LocalDate>("MM/dd yyyy")
+```
+
+</td>
+</tr>
+<tr>
+<td rowspan="2">
+
+```kotlin
+convert { stringCols }.toLocalDate(pattern = "MM/dd yyyy")
+```
+
+</td>
+<td>
+Kotlin:
+
+```kotlin
+@OptIn(FormatStringsInDatetimeFormats::class)
+convert { stringCols }.toLocalDate(pattern = "MM/dd yyyy")
+```
+
+</td>
+<td rowspan="2">Same logic applies to convert: you need to opt-in to use patterns for Kotlin types and specify "Java" for Java types.</td>
+</tr>
+<tr>
+<td>
+Java:
+
+```kotlin
+convert { stringCols }.toJavaLocalDate(pattern = "MM/dd yyyy")
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+```kotlin
+stringCol.convertToLocalDate(locale = Locale.GERMAN)
+```
+
+</td>
+<td>
+
+```kotlin
+stringCol
+    .convertToJavaLocalDate(locale = Locale.GERMAN)
+    .convertToLocalDate()
+```
+
+</td>
+<td>If you need to supply a locale to be able to parse date-time types, parse to Java types first, then convert to Kotlin ones.</td>
+</tr>
+</table>
+
+For more information, check out [](parse.md#parsing-date-time-strings).
+
+<!--TODO (https://github.com/Kotlin/dataframe/issues/1630)
+
+## Modules
+
+## Compiler Plugin
+
+## Changes in working with JDBC
+
+-->

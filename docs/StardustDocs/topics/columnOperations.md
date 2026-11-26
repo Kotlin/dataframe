@@ -1,3 +1,12 @@
-[//]: # (title: Column operations)
+[//]: # (title: Column Operations)
+<show-structure depth="3"/>
 
-// TODO
+* [`statistics`](columnStatistics.md) — summary statistics ([`sum`](sum.md), [`mean`](mean.md), etc.) and cumulative statistics ([`cumSum`](cumSum.md), etc.)
+* [`asIterable`](asIterable.md) — returns values of [`DataColumn`](DataColumn.md) as [`Iterable`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-iterable/)
+* [`asSequence`](asSequenceColumn.md) — returns values of [`DataColumn`](DataColumn.md) as [`Sequence`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/-sequence/)
+* [`between`](between.md) — returns a Boolean [`DataColumn`](DataColumn.md) indicating whether each value lies between two bounds
+* [`first`](firstOnColumn.md) — returns the first value in a [`DataColumn`](DataColumn.md)
+* [`last`](lastOnColumn.md) — returns the last value in a [`DataColumn`](DataColumn.md)
+* [`single`](singleOnColumn.md) — returns the single value in a [`DataColumn`](DataColumn.md)
+
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)

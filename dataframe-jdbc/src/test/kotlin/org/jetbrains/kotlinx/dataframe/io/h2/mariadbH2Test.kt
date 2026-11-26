@@ -8,12 +8,12 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.aliasesNameColumns
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -22,86 +22,89 @@ import java.sql.Blob
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.sql.Time
+import java.sql.Timestamp
 import java.util.Date
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
 
 private const val URL = "jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1;MODE=MariaDB;DATABASE_TO_LOWER=TRUE"
 
 @DataSchema
 interface Table1MariaDb {
     val id: Int
-    val bitCol: Boolean
+    val bitcol: Boolean
     val tinyintcol: Int
-    val smallintcol: Short?
+    val smallintcol: Int
     val mediumintcol: Int
     val mediumintunsignedcol: Int
     val integercol: Int
-    val intCol: Int
-    val integerunsignedcol: Long
+    val intcol: Int
+    val integerunsignedcol: Int
     val bigintcol: Long
-    val floatcol: Float
+    val floatcol: Double
     val doublecol: Double
     val decimalcol: BigDecimal
-    val dateCol: String
-    val datetimeCol: String
-    val timestampCol: String
-    val timeCol: String
-    val yearCol: String
-    val varcharCol: String
-    val charCol: String
-    val binaryCol: ByteArray
-    val varbinaryCol: ByteArray
-    val tinyblobCol: ByteArray
-    val blobCol: ByteArray
-    val mediumblobCol: ByteArray
-    val longblobCol: ByteArray
-    val textCol: String
-    val mediumtextCol: String
-    val longtextCol: String
-    val enumCol: String
-    val jsonCol: String
+    val datecol: Date
+    val datetimecol: Instant
+    val timestampcol: Instant
+    val timecol: Time
+    val yearcol: Int
+    val varcharcol: String
+    val charcol: String
+    val binarycol: ByteArray
+    val varbinarycol: ByteArray
+    val tinyblobcol: Blob
+    val blobcol: Blob
+    val mediumblobcol: Blob
+    val longblobcol: Blob
+    val textcol: String
+    val mediumtextcol: String
+    val longtextcol: String
+    val enumcol: Any
+    val jsoncol: ByteArray
 }
 
 @DataSchema
 interface Table2MariaDb {
     val id: Int
-    val bitCol: Boolean?
-    val tinyintCol: Int?
-    val smallintCol: Int?
-    val mediumintCol: Int?
-    val mediumintUnsignedCol: Int?
-    val integercol: Int?
-    val intCol: Int?
-    val integerUnsignedCol: Long?
-    val bigintCol: Long?
-    val floatCol: Float?
-    val doubleCol: Double?
-    val decimalCol: Double?
-    val dateCol: String?
-    val datetimeCol: String?
-    val timestampCol: String?
-    val timeCol: String?
-    val yearCol: String?
-    val varcharCol: String?
-    val charCol: String?
-    val binaryCol: ByteArray?
-    val varbinaryCol: ByteArray?
-    val tinyblobCol: ByteArray?
-    val blobCol: ByteArray?
-    val mediumblobCol: ByteArray?
-    val longblobCol: ByteArray?
-    val textCol: String?
-    val mediumtextCol: String?
-    val longtextCol: String?
-    val enumCol: String?
-    val jsonCol: String?
+    val bitcol: Boolean
+    val tinyintcol: Int
+    val smallintcol: Int
+    val mediumintcol: Int
+    val mediumintunsignedcol: Int
+    val integercol: Int
+    val intcol: Int
+    val integerunsignedcol: Int
+    val bigintcol: Long
+    val floatcol: Double
+    val doublecol: Double
+    val decimalcol: BigDecimal
+    val datecol: Date
+    val datetimecol: Instant
+    val timestampcol: Instant
+    val timecol: Time
+    val yearcol: Int
+    val varcharcol: String
+    val charcol: String
+    val binarycol: ByteArray
+    val varbinarycol: ByteArray
+    val tinyblobcol: Blob
+    val blobcol: Blob
+    val mediumblobcol: Blob
+    val longblobcol: Blob
+    val textcol: String?
+    val mediumtextcol: String?
+    val longtextcol: String
+    val enumcol: Any
+    val jsoncol: String? // no such column in the table yet: read as nulls
 }
 
 @DataSchema
 interface Table3MariaDb {
     val id: Int
-    val enumCol: String
-    val setCol: Char?
+    val enumcol: Any
+    val setcol: String? // no such column in the table yet: read as nulls
 }
 
 private const val JSON_STRING =
@@ -231,8 +234,8 @@ class MariadbH2Test {
                     st.setDouble(11, i * 10.0)
                     st.setBigDecimal(12, BigDecimal(i * 10))
                     st.setDate(13, java.sql.Date(System.currentTimeMillis()))
-                    st.setTimestamp(14, java.sql.Timestamp(System.currentTimeMillis()))
-                    st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(14, Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(15, Timestamp(System.currentTimeMillis()))
                     st.setTime(16, java.sql.Time(System.currentTimeMillis()))
                     st.setInt(17, 2023)
                     st.setString(18, "varcharValue$i")
@@ -269,8 +272,8 @@ class MariadbH2Test {
                     st.setDouble(11, i * 20.0)
                     st.setBigDecimal(12, BigDecimal(i * 20))
                     st.setDate(13, java.sql.Date(System.currentTimeMillis()))
-                    st.setTimestamp(14, java.sql.Timestamp(System.currentTimeMillis()))
-                    st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(14, Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(15, Timestamp(System.currentTimeMillis()))
                     st.setTime(16, java.sql.Time(System.currentTimeMillis()))
                     st.setInt(17, 2023)
                     st.setString(18, "varcharValue$i")
@@ -303,13 +306,13 @@ class MariadbH2Test {
 
     @Test
     fun `basic test for reading sql tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
-        val result = df1.filter { it[Table1MariaDb::id] == 1 }
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>(verify = true)
+        val result = df1.filter { "id"<Int>() == 1 }
         result[0][26] shouldBe "textValue1"
         val byteArray = "tinyblobValue".toByteArray()
         (result[0][22] as Blob).getBytes(1, byteArray.size) contentEquals byteArray
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrameSchema.readSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textcol"]!!.type shouldBe typeOf<String>()
         schema.columns["varbinarycol"]!!.type shouldBe typeOf<ByteArray>()
@@ -317,16 +320,16 @@ class MariadbH2Test {
         schema.columns["longblobcol"]!!.type shouldBe typeOf<Blob>()
         schema.columns["tinyblobcol"]!!.type shouldBe typeOf<Blob>()
         schema.columns["datecol"]!!.type shouldBe typeOf<Date>()
-        schema.columns["datetimecol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
-        schema.columns["timestampcol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
+        schema.columns["datetimecol"]!!.type shouldBe typeOf<Instant>()
+        schema.columns["timestampcol"]!!.type shouldBe typeOf<Instant>()
         schema.columns["timecol"]!!.type shouldBe typeOf<java.sql.Time>()
         schema.columns["yearcol"]!!.type shouldBe typeOf<Int>()
 
-        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MariaDb>()
-        val result2 = df2.filter { it[Table2MariaDb::id] == 1 }
+        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MariaDb>(verify = true)
+        val result2 = df2.filter { "id"<Int>() == 1 }
         result2[0][26] shouldBe null
 
-        val schema2 = DataFrame.getSchemaForSqlTable(connection, "table2")
+        val schema2 = DataFrameSchema.readSqlTable(connection, "table2")
         schema2.columns["id"]!!.type shouldBe typeOf<Int>()
         schema2.columns["textcol"]!!.type shouldBe typeOf<String?>()
     }
@@ -343,11 +346,11 @@ class MariadbH2Test {
             JOIN table2 t2 ON t1.id = t2.id
             """.trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MariaDb>()
-        val result = df.filter { it[Table3MariaDb::id] == 1 }
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MariaDb>(verify = true)
+        val result = df.filter { "id"<Int>() == 1 }
         result[0][1] shouldBe "Value1"
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["enumcol"]!!.type shouldBe typeOf<Any>()
     }
@@ -356,18 +359,18 @@ class MariadbH2Test {
     fun `read from all tables`() {
         val dataframes = DataFrame.readAllSqlTables(connection, limit = 1000).values.toList()
 
-        val table1Df = dataframes[0].cast<Table1MariaDb>()
+        val table1Df = dataframes[0].cast<Table1MariaDb>(verify = true)
 
         table1Df.rowsCount() shouldBe 3
-        table1Df.filter { it[Table1MariaDb::integercol] > 100 }.rowsCount() shouldBe 2
+        table1Df.filter { "integercol"<Int>() > 100 }.rowsCount() shouldBe 2
         table1Df[0][11] shouldBe 10.0
         table1Df[0][26] shouldBe "textValue1"
 
-        val table2Df = dataframes[1].cast<Table2MariaDb>()
+        val table2Df = dataframes[1].cast<Table2MariaDb>(verify = true)
 
         table2Df.rowsCount() shouldBe 3
         table2Df.filter {
-            it[Table2MariaDb::integercol] != null && it[Table2MariaDb::integercol]!! > 400
+            "integercol"<Int?>()?.let { it > 400 } ?: false
         }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
@@ -375,39 +378,39 @@ class MariadbH2Test {
 
     @Test
     fun `reading numeric types`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>(verify = true)
 
         val result = df1.select("tinyintcol")
-            .add("tinyintcol2") { it[Table1MariaDb::tinyintcol] }
+            .add("tinyintcol2") { "tinyintcol"<Int>() }
 
         result[0][1] shouldBe 1
 
         val result2 = df1.select("mediumintcol")
-            .add("mediumintcol2") { it[Table1MariaDb::mediumintcol] }
+            .add("mediumintcol2") { "mediumintcol"<Int>() }
 
         result2[0][1] shouldBe 100
 
         val result3 = df1.select("mediumintunsignedcol")
-            .add("mediumintunsignedcol2") { it[Table1MariaDb::mediumintunsignedcol] }
+            .add("mediumintunsignedcol2") { "mediumintunsignedcol"<Int>() }
 
         result3[0][1] shouldBe 100
 
         val result5 = df1.select("bigintcol")
-            .add("bigintcol2") { it[Table1MariaDb::bigintcol] }
+            .add("bigintcol2") { "bigintcol"<Long>() }
 
         result5[0][1] shouldBe 100
 
         val result7 = df1.select("doublecol")
-            .add("doublecol2") { it[Table1MariaDb::doublecol] }
+            .add("doublecol2") { "doublecol"<Double>() }
 
         result7[0][1] shouldBe 10.0
 
         val result8 = df1.select("decimalcol")
-            .add("decimalcol2") { it[Table1MariaDb::decimalcol] }
+            .add("decimalcol2") { "decimalcol"<BigDecimal>() }
 
         result8[0][1] shouldBe BigDecimal("10")
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrameSchema.readSqlTable(connection, "table1")
 
         schema.columns["tinyintcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int?>()
@@ -422,5 +425,10 @@ class MariadbH2Test {
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column`() {
+        aliasesNameColumns(connection)
     }
 }

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import kotlin.reflect.KType
 
 /**
@@ -11,8 +12,16 @@ import kotlin.reflect.KType
 public interface AggregatorInputHandler<in Value : Any, out Return : Any?> : AggregatorHandler<Value, Return> {
 
     /**
+     * The type of the value if the input is empty.
+     */
+    public val valueTypeIfEmpty: KType
+        get() = nothingType
+
+    /**
      * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],
      * this function can be called to calculate it by combining the set of known [valueTypes].
+     *
+     * Returns [valueTypeIfEmpty] if [valueTypes] is empty.
      */
     public fun calculateValueType(valueTypes: Set<KType>): ValueType
 
@@ -22,6 +31,8 @@ public interface AggregatorInputHandler<in Value : Any, out Return : Any?> : Agg
      * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],
      * this function can be called to calculate it by getting the types of [values] at runtime.
      * This is heavy because it uses reflection on each value.
+     *
+     * Returns [valueTypeIfEmpty] if [values] is empty.
      */
     public fun calculateValueType(values: Sequence<Value?>): ValueType
 

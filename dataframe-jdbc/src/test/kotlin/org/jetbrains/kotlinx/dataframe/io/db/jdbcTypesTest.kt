@@ -1,0 +1,722 @@
+@file:Suppress("ClassName")
+
+package org.jetbrains.kotlinx.dataframe.io.db
+
+import io.kotest.matchers.shouldBe
+import org.junit.Test
+import org.junit.experimental.runners.Enclosed
+import org.junit.runner.RunWith
+import org.postgresql.geometric.PGbox
+import org.postgresql.geometric.PGcircle
+import org.postgresql.geometric.PGline
+import org.postgresql.geometric.PGlseg
+import org.postgresql.geometric.PGpath
+import org.postgresql.geometric.PGpoint
+import org.postgresql.geometric.PGpolygon
+import org.postgresql.util.PGInterval
+import org.postgresql.util.PGmoney
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.sql.Blob
+import java.sql.Clob
+import java.sql.NClob
+import java.sql.Ref
+import java.sql.RowId
+import java.sql.SQLXML
+import java.sql.Time
+import java.sql.Types
+import java.time.OffsetDateTime
+import java.time.OffsetTime
+import java.util.Date
+import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
+import kotlin.time.Instant
+import kotlin.uuid.Uuid
+import kotlinx.datetime.LocalDate as KotlinLocalDate
+import kotlinx.datetime.LocalDateTime as KotlinLocalDateTime
+import kotlinx.datetime.LocalTime as KotlinLocalTime
+
+/**
+ * Non-integration tests for [DbType.getExpectedJdbcType] and related type-mapping logic.
+ *
+ * For each DB type implemented in Kotlin DataFrame, checks the mapping between all of the SQL types and their
+ * expected types for a [column][org.jetbrains.kotlinx.dataframe.DataColumn].
+ *
+ * Each DB owns a [TypeMapping] list that acts as the source of truth for its SQL → Kotlin type
+ * mapping. The list is exercised for both nullable and non-nullable columns.
+ *
+ * Note that for all DBs (except SQLite), drivers report canonical name, erasing type aliases.
+ */
+@RunWith(Enclosed::class)
+class JdbcTypesTest {
+
+    class DefaultDbTypeTypes {
+
+        // A concrete DbType whose behavior is exactly the default one from the base class.
+        private object DefaultDbType : DbType("default") {
+            override val driverClassName: String get() = "does.not.matter"
+
+            override fun isSystemTable(tableMetadata: TableMetadata): Boolean = false
+
+            override fun buildTableMetadata(tables: java.sql.ResultSet): TableMetadata = TableMetadata("t", null, null)
+        }
+
+        @Test
+        fun `common SQL types map to the expected Kotlin type`() {
+            assertMappings(DefaultDbType, commonJdbcTypeMappings)
+        }
+
+        @Test
+        fun `TIMESTAMP with LocalDateTime driver class maps to java_time_LocalDateTime`() {
+            assertMappings(DefaultDbType, listOf(timestampAsLocalDateTime))
+        }
+
+        @Test
+        fun `BINARY with UUID driver class maps to UUID`() {
+            assertMappings(DefaultDbType, listOf(binaryAsUuid))
+        }
+
+        @Test
+        fun `Types_OTHER with byte array javaClassName maps to ByteArray`() {
+            DefaultDbType.getExpectedJdbcType(
+                createColumnMetadata(
+                    sqlTypeName = "OTHER",
+                    jdbcType = Types.OTHER,
+                    javaClassName = "[B",
+                    isNullable = false,
+                ),
+            ) shouldBe typeOf<ByteArray>()
+        }
+
+        @Test
+        fun `Types_OTHER with generic Object maps to Any`() {
+            DefaultDbType.getExpectedJdbcType(
+                createColumnMetadata(
+                    sqlTypeName = "OTHER",
+                    jdbcType = Types.OTHER,
+                    javaClassName = "java.lang.Object",
+                    isNullable = true,
+                ),
+            ) shouldBe typeOf<Any?>()
+        }
+
+        @Test
+        fun `unknown jdbcType falls back to String`() {
+            DefaultDbType.getExpectedJdbcType(
+                createColumnMetadata(
+                    sqlTypeName = "MADE_UP",
+                    jdbcType = UNKNOWN_JDBC_TYPE,
+                    javaClassName = "java.lang.Object",
+                    isNullable = false,
+                ),
+            ) shouldBe typeOf<String>()
+        }
+    }
+
+    class MariaDbTypes {
+
+        @Test
+        fun `common SQL types map to the expected Kotlin type`() {
+            assertMappings(MariaDb, commonJdbcTypeMappings)
+        }
+
+        @Test
+        fun `MariaDB-specific overrides`() {
+            assertMappings(MariaDb, mariaDbSpecificMappings)
+        }
+
+        @Test
+        fun `unknown jdbcType falls back to String`() {
+            assertUnknownMapsToString(MariaDb)
+        }
+    }
+
+    class MySqlTypes {
+
+        @Test
+        fun `common SQL types map to the expected Kotlin type`() {
+            assertMappings(MySql, commonJdbcTypeMappings)
+        }
+
+        @Test
+        fun `MySQL-specific overrides`() {
+            assertMappings(MySql, mySqlSpecificMappings)
+        }
+
+        @Test
+        fun `unknown jdbcType falls back to String`() {
+            assertUnknownMapsToString(MySql)
+        }
+    }
+
+    /**
+     * SQLite is dynamically typed: it has only 5 storage classes (NULL, INTEGER, REAL, TEXT, BLOB)
+     * and picks one per row based on the value, guided by "type affinity" derived from the
+     * declared column type. The Xerial JDBC driver reports metadata based on the actual stored
+     * value, so `getExpectedJdbcType` sees driver-specific `jdbcType` and `javaClassName` combos
+     * that differ from other databases. The tests below reflect that.
+     */
+    class SqliteTypes {
+
+        @Test
+        fun `INTEGER affinity — declared int-like types map to Long`() {
+            assertMappings(Sqlite.default, sqliteIntegerAffinityMappings)
+        }
+
+        @Test
+        fun `REAL affinity — declared real-like types map to Double`() {
+            assertMappings(Sqlite.default, sqliteRealAffinityMappings)
+        }
+
+        @Test
+        fun `TEXT affinity — declared text-like types map to String`() {
+            assertMappings(Sqlite.default, sqliteTextAffinityMappings)
+        }
+
+        @Test
+        fun `BLOB affinity — declared BLOB maps to ByteArray`() {
+            assertMappings(Sqlite.default, sqliteBlobAffinityMappings)
+        }
+
+        @Test
+        fun `NUMERIC affinity — declared numeric-like types map by declared type`() {
+            assertMappings(Sqlite.default, sqliteNumericAffinityMappings)
+        }
+
+        @Test
+        fun `BOOLEAN declared type resolves to Boolean`() {
+            // SQLite has no native boolean storage — values are kept as INTEGER (0/1). The Xerial
+            // driver still reports Types.BOOLEAN in metadata, but `rs.getObject` returns Integer.
+            // The final DataFrame column type is `Boolean`, produced by a preprocessor that runs
+            // `convertToBoolean` on each raw value (see `generateConverter`).
+            assertMappings(
+                Sqlite.default,
+                listOf(
+                    TypeMapping("BOOLEAN", Types.BOOLEAN, "java.lang.Integer", typeOf<Boolean>()),
+                ),
+            )
+        }
+
+        @Test
+        fun `unrecognised declared type is treated by NUMERIC affinity`() {
+            // For an unknown declared type Xerial applies NUMERIC affinity and reports the
+            // jdbcType of the actual stored value; for a text sample that is VARCHAR.
+            Sqlite.default.getExpectedJdbcType(
+                createColumnMetadata(
+                    sqlTypeName = "CUSTOM_TYPE",
+                    jdbcType = Types.VARCHAR,
+                    javaClassName = "java.lang.String",
+                    isNullable = false,
+                ),
+            ) shouldBe typeOf<String>()
+        }
+
+        @Test
+        fun `custom type mapping overrides the default mapping by SQL type name`() {
+            // The identity `forType<T>(name)` overload pins the resulting DataFrame column type
+            // to `T`. Nullability is part of `T` (there is no implicit widening from the column's
+            // isNullable metadata) — declare `T` as nullable explicitly if you want nullable.
+            val custom = Sqlite.withCustomConverters {
+                forType<Long?>("INTEGER")
+                forType<String>("MY_TYPE")
+            }
+            // INTEGER is normally Int, but is overridden to Long? — regardless of column nullability.
+            listOf(false, true).forEach { isNullable ->
+                val meta = createColumnMetadata(
+                    sqlTypeName = "INTEGER",
+                    jdbcType = Types.INTEGER,
+                    javaClassName = "java.lang.Integer",
+                    isNullable = isNullable,
+                )
+                custom.getPreprocessedValueType(meta, custom.getExpectedJdbcType(meta)) shouldBe typeOf<Long?>()
+            }
+            // Custom type name is respected as-is: `MY_TYPE` -> String
+            val meta = createColumnMetadata(
+                sqlTypeName = "MY_TYPE",
+                jdbcType = Types.OTHER,
+                javaClassName = "java.lang.Object",
+                isNullable = false,
+            )
+            custom.getPreprocessedValueType(meta, custom.getExpectedJdbcType(meta)) shouldBe typeOf<String>()
+        }
+
+        @Test
+        fun `unknown jdbcType falls back to String`() {
+            assertUnknownMapsToString(Sqlite.default)
+        }
+    }
+
+    class PostgreSqlTypes {
+
+        @Test
+        fun `common SQL types map to the expected Kotlin type`() {
+            assertMappings(PostgreSql, commonJdbcTypeMappings)
+        }
+
+        @Test
+        fun `PGobject types map to their PGobject Kotlin types`() {
+            assertMappings(PostgreSql, postgreSqlSpecificMappings)
+        }
+
+        @Test
+        fun `PGobject lookup is case-insensitive`() {
+            PostgreSql.getExpectedJdbcType(
+                createColumnMetadata(
+                    sqlTypeName = "POINT",
+                    jdbcType = Types.OTHER,
+                    javaClassName = "org.postgresql.geometric.PGpoint",
+                    isNullable = true,
+                ),
+            ) shouldBe typeOf<PGpoint?>()
+        }
+
+        @Test
+        fun `unrecognised PGobject types fall back to Any`() {
+            // Composite / hstore / PostGIS types come through the driver as generic PGobject
+            // with Types.OTHER. Because they are not in PostgreSql's pgObjectTypes lookup
+            // table, the mapping falls through to the default DbType handler, which returns
+            // Any for Types.OTHER + non-`[B` javaClassName.
+            listOf(
+                // Anonymous composite / user-defined ROW.
+                "record",
+                // hstore extension.
+                "hstore",
+                // PostGIS types.
+                "geometry",
+                "geography",
+            ).forEach { typeName ->
+                PostgreSql.getExpectedJdbcType(
+                    createColumnMetadata(
+                        sqlTypeName = typeName,
+                        jdbcType = Types.OTHER,
+                        javaClassName = "org.postgresql.util.PGobject",
+                        isNullable = false,
+                    ),
+                ) shouldBe typeOf<Any>()
+            }
+        }
+
+        @Test
+        fun `PGobject types without a dedicated driver class map to String`() {
+            assertMappings(PostgreSql, postgreSqlTextFormMappings)
+        }
+
+        @Test
+        fun `uuid maps to Uuid`() {
+            assertMappings(PostgreSql, listOf(postgreSqlUuidMapping))
+        }
+
+        @Test
+        fun `JSON and UUID of H2 in PostgreSQL mode keep the H2 mapping`() {
+            // H2 in PostgreSQL mode delegates its type mapping to PostgreSql, but reports its own
+            // metadata: a JSON column comes back as a byte array, and a UUID column as Types.BINARY.
+            // Both values are read differently from the PostgreSQL driver's, so neither may switch
+            // to the PostgreSQL mapping.
+            assertMappings(
+                H2(H2.Mode.PostgreSql),
+                listOf(
+                    TypeMapping("JSON", Types.OTHER, "[B", typeOf<ByteArray>()),
+                    TypeMapping("UUID", Types.BINARY, "java.util.UUID", typeOf<Uuid>()),
+                ),
+            )
+        }
+
+        @Test
+        fun `unknown jdbcType falls back to String`() {
+            assertUnknownMapsToString(PostgreSql)
+        }
+    }
+
+    class MsSqlTypes {
+
+        @Test
+        fun `common SQL types map to the expected Kotlin type`() {
+            assertMappings(MsSql, commonJdbcTypeMappings)
+        }
+
+        @Test
+        fun `MSSQL-specific overrides`() {
+            assertMappings(MsSql, msSqlSpecificMappings)
+        }
+
+        @Test
+        fun `unknown jdbcType falls back to String`() {
+            assertUnknownMapsToString(MsSql)
+        }
+    }
+
+    class H2Types {
+
+        @Test
+        fun `Regular mode uses default type mappings`() {
+            assertMappings(H2(H2.Mode.Regular), commonJdbcTypeMappings)
+        }
+
+        @Test
+        fun `MySql mode delegates to MySQL-specific overrides`() {
+            assertMappings(H2(H2.Mode.MySql), mySqlSpecificMappings)
+        }
+
+        @Test
+        fun `MariaDb mode delegates to MariaDB-specific overrides`() {
+            assertMappings(H2(H2.Mode.MariaDb), mariaDbSpecificMappings)
+        }
+
+        @Test
+        fun `unknown jdbcType falls back to String`() {
+            assertUnknownMapsToString(H2(H2.Mode.Regular))
+        }
+    }
+}
+
+// -------------------- Type mapping model & helpers --------------------
+
+/**
+ * JDBC column metadata → Kotlin type mapping.
+ * Nullability is omitted ([expectedType] should be non-nullable).
+ *
+ * @property sqlTypeName the jdbc reported SQL type name (e.g. "BIGINT")
+ * @property jdbcType the jdbc reported SQL type constant from [java.sql.Types]
+ * @property javaClassName the JDBC-reported class name for this column (as returned by
+ *   [java.sql.ResultSetMetaData.getColumnClassName])
+ * @property expectedType the expected non-nullable Kotlin type
+ * @property size the jdbc reported column display size; only matters for the few mappings that depend
+ *   on the declared column width, namely the `BIT(n)` ones in MySQL, MariaDB and PostgreSQL.
+ *   Defaults to `1`, the width that means "not a multi-bit column" — so a new `BIT` entry added
+ *   without an explicit [size] keeps the single-bit meaning instead of silently flipping to the
+ *   multi-bit mapping
+ */
+internal data class TypeMapping(
+    val sqlTypeName: String,
+    val jdbcType: Int,
+    val javaClassName: String,
+    val expectedType: KType,
+    val size: Int = 1,
+)
+
+internal const val UNKNOWN_JDBC_TYPE: Int = -9999
+
+/**
+ * Test helper that constructs a [TableColumnMetadata] with sensible defaults.
+ * Not a mock — a lightweight factory to keep test call sites readable.
+ */
+internal fun createColumnMetadata(
+    name: String = "col",
+    sqlTypeName: String,
+    jdbcType: Int,
+    size: Int = 10,
+    javaClassName: String,
+    isNullable: Boolean,
+): TableColumnMetadata =
+    TableColumnMetadata(
+        name = name,
+        sqlTypeName = sqlTypeName,
+        jdbcType = jdbcType,
+        size = size,
+        javaClassName = javaClassName,
+        isNullable = isNullable,
+    )
+
+/**
+ * Verifies each mapping resolves correctly for both nullable and non-nullable columns.
+ * Runs the full type-resolution pipeline (`getExpectedJdbcType` → `getPreprocessedValueType`)
+ * and compares against the **final DataFrame column type**, which is what the reference
+ * documentation describes.
+ */
+internal fun assertMappings(dbType: DbType, mappings: List<TypeMapping>) {
+    mappings.forEach { m ->
+        listOf(false, true).forEach { isNullable ->
+            val meta = createColumnMetadata(
+                sqlTypeName = m.sqlTypeName,
+                jdbcType = m.jdbcType,
+                size = m.size,
+                javaClassName = m.javaClassName,
+                isNullable = isNullable,
+            )
+            val jdbcType = dbType.getExpectedJdbcType(meta)
+            val finalType = dbType.getPreprocessedValueType(meta, jdbcType)
+            finalType shouldBe m.expectedType.withNullability(isNullable)
+        }
+    }
+}
+
+internal fun assertUnknownMapsToString(dbType: DbType) {
+    dbType.getExpectedJdbcType(
+        createColumnMetadata(
+            sqlTypeName = "MADE_UP",
+            jdbcType = UNKNOWN_JDBC_TYPE,
+            javaClassName = "java.lang.Object",
+            isNullable = false,
+        ),
+    ) shouldBe typeOf<String>()
+
+    dbType.getExpectedJdbcType(
+        createColumnMetadata(
+            sqlTypeName = "MADE_UP",
+            jdbcType = UNKNOWN_JDBC_TYPE,
+            javaClassName = "java.lang.Object",
+            isNullable = true,
+        ),
+    ) shouldBe typeOf<String?>()
+}
+
+// -------------------- Type mapping tables --------------------
+
+/**
+ * The default SQL → Kotlin type mapping applied by [DbType].
+ * Every DB that does not override the given entry falls through to this table.
+ */
+internal val commonJdbcTypeMappings: List<TypeMapping> = listOf(
+    // a single-bit column; drivers report BIT for wider columns too, see [postgreSqlSpecificMappings]
+    TypeMapping("BIT", Types.BIT, "java.lang.Boolean", typeOf<Boolean>(), size = 1),
+    TypeMapping("TINYINT", Types.TINYINT, "java.lang.Integer", typeOf<Int>()),
+    TypeMapping("SMALLINT", Types.SMALLINT, "java.lang.Integer", typeOf<Int>()),
+    TypeMapping("INTEGER", Types.INTEGER, "java.lang.Integer", typeOf<Int>()),
+    TypeMapping("BIGINT", Types.BIGINT, "java.lang.Long", typeOf<Long>()),
+    TypeMapping("FLOAT", Types.FLOAT, "java.lang.Float", typeOf<Float>()),
+    TypeMapping("REAL", Types.REAL, "java.lang.Float", typeOf<Float>()),
+    TypeMapping("DOUBLE", Types.DOUBLE, "java.lang.Double", typeOf<Double>()),
+    TypeMapping("NUMERIC", Types.NUMERIC, "java.math.BigDecimal", typeOf<BigDecimal>()),
+    TypeMapping("DECIMAL", Types.DECIMAL, "java.math.BigDecimal", typeOf<BigDecimal>()),
+    TypeMapping("CHAR", Types.CHAR, "java.lang.String", typeOf<String>()),
+    TypeMapping("VARCHAR", Types.VARCHAR, "java.lang.String", typeOf<String>()),
+    TypeMapping("LONGVARCHAR", Types.LONGVARCHAR, "java.lang.String", typeOf<String>()),
+    TypeMapping("NCHAR", Types.NCHAR, "java.lang.String", typeOf<String>()),
+    TypeMapping("NVARCHAR", Types.NVARCHAR, "java.lang.String", typeOf<String>()),
+    TypeMapping("LONGNVARCHAR", Types.LONGNVARCHAR, "java.lang.String", typeOf<String>()),
+    TypeMapping("DATE", Types.DATE, "java.sql.Date", typeOf<Date>()),
+    TypeMapping("TIME", Types.TIME, "java.sql.Time", typeOf<Time>()),
+    TypeMapping("TIMESTAMP", Types.TIMESTAMP, "java.sql.Timestamp", typeOf<Instant>()),
+    TypeMapping("TIME_WITH_TIMEZONE", Types.TIME_WITH_TIMEZONE, "java.time.OffsetTime", typeOf<OffsetTime>()),
+    TypeMapping(
+        "TIMESTAMP_WITH_TIMEZONE",
+        Types.TIMESTAMP_WITH_TIMEZONE,
+        "java.time.OffsetDateTime",
+        typeOf<OffsetDateTime>(),
+    ),
+    TypeMapping("BINARY", Types.BINARY, "[B", typeOf<ByteArray>()),
+    TypeMapping("VARBINARY", Types.VARBINARY, "[B", typeOf<ByteArray>()),
+    TypeMapping("LONGVARBINARY", Types.LONGVARBINARY, "[B", typeOf<ByteArray>()),
+    TypeMapping("BOOLEAN", Types.BOOLEAN, "java.lang.Boolean", typeOf<Boolean>()),
+    TypeMapping("BLOB", Types.BLOB, "java.sql.Blob", typeOf<Blob>()),
+    TypeMapping("CLOB", Types.CLOB, "java.sql.Clob", typeOf<Clob>()),
+    TypeMapping("NCLOB", Types.NCLOB, "java.sql.NClob", typeOf<NClob>()),
+    TypeMapping("SQLXML", Types.SQLXML, "java.sql.SQLXML", typeOf<SQLXML>()),
+    TypeMapping("ROWID", Types.ROWID, "java.sql.RowId", typeOf<RowId>()),
+    TypeMapping("REF", Types.REF, "java.sql.Ref", typeOf<Ref>()),
+    TypeMapping("REF_CURSOR", Types.REF_CURSOR, "java.sql.Ref", typeOf<Ref>()),
+)
+
+/** TIMESTAMP columns whose JDBC-reported class is `java.time.LocalDateTime` are preprocessed to `kotlinx.datetime.LocalDateTime`. */
+internal val timestampAsLocalDateTime: TypeMapping = TypeMapping(
+    sqlTypeName = "TIMESTAMP",
+    jdbcType = Types.TIMESTAMP,
+    javaClassName = "java.time.LocalDateTime",
+    expectedType = typeOf<KotlinLocalDateTime>(),
+)
+
+/** BINARY columns storing UUIDs (`java.util.UUID`) are preprocessed to `kotlin.uuid.Uuid`. */
+internal val binaryAsUuid: TypeMapping = TypeMapping(
+    sqlTypeName = "BINARY",
+    jdbcType = Types.BINARY,
+    javaClassName = "java.util.UUID",
+    expectedType = typeOf<Uuid>(),
+)
+
+/**
+ * MariaDB overrides on top of [commonJdbcTypeMappings]. Also includes entries that reflect
+ * the MariaDB JDBC driver's specific `javaClassName` reporting (e.g. `BLOB` as `[B`,
+ * `SMALLINT` as `java.lang.Short`).
+ */
+internal val mariaDbSpecificMappings: List<TypeMapping> = listOf(
+    TypeMapping("BIGINT UNSIGNED", Types.BIGINT, "java.math.BigInteger", typeOf<BigInteger>()),
+    TypeMapping("INT UNSIGNED", Types.INTEGER, "java.lang.Long", typeOf<Long>()),
+    TypeMapping("INTEGER UNSIGNED", Types.INTEGER, "java.lang.Long", typeOf<Long>()),
+    TypeMapping("SMALLINT", Types.SMALLINT, "java.lang.Short", typeOf<Short>()),
+    // A column reported as `[B` (byte array) is read as `ByteArray`.
+    TypeMapping("BLOB", Types.BLOB, "[B", typeOf<ByteArray>()),
+    // The MariaDB driver reports `java.sql.Blob` as the column class for TINYBLOB/BLOB/MEDIUMBLOB/LONGBLOB,
+    // while `ResultSet.getObject` returns `byte[]` for them, so they are read as `ByteArray` (#2087).
+    // The driver reports these columns as VARBINARY/LONGVARBINARY, never as `Types.BLOB`.
+    TypeMapping("TINYBLOB", Types.VARBINARY, "java.sql.Blob", typeOf<ByteArray>()),
+    TypeMapping("BLOB", Types.VARBINARY, "java.sql.Blob", typeOf<ByteArray>()),
+    TypeMapping("MEDIUMBLOB", Types.VARBINARY, "java.sql.Blob", typeOf<ByteArray>()),
+    TypeMapping("LONGBLOB", Types.LONGVARBINARY, "java.sql.Blob", typeOf<ByteArray>()),
+    // H2 in MariaDB mode delegates its type mapping here, but reports `Types.BLOB` and does return
+    // real `java.sql.Blob` values, so that combination must stay mapped to `Blob`.
+    TypeMapping("BINARY LARGE OBJECT", Types.BLOB, "java.sql.Blob", typeOf<Blob>()),
+    // A multi-bit BIT(M) column returns a byte[]; MariaDB reports its column class as `byte[]`,
+    // not as the `"[B"` JVM binary name the default mapping looks for (#2087).
+    TypeMapping("BIT", Types.BIT, "byte[]", typeOf<ByteArray>(), size = 3),
+    // YEAR columns are reported as Types.DATE by the driver.
+    TypeMapping("YEAR", Types.DATE, "java.sql.Date", typeOf<Date>()),
+)
+
+/**
+ * MSSQL overrides on top of [commonJdbcTypeMappings].
+ *
+ * `-155` is the driver-specific `microsoft.sql.Types.DATETIMEOFFSET`; the default mapping has no
+ * entry for it, so without the override the column would fall back to `String` while the driver
+ * returns a `microsoft.sql.DateTimeOffset` value (#2087).
+ *
+ * The two driver-specific type constants are written out as literals here on purpose, rather than
+ * shared with the private ones in `MsSql`: they are the driver's values, so an independent copy pins
+ * them, while a shared constant would make a wrong value pass this test and only fail against a real
+ * server.
+ */
+internal val msSqlSpecificMappings: List<TypeMapping> = listOf(
+    TypeMapping("datetimeoffset", -155, "microsoft.sql.DateTimeOffset", typeOf<OffsetDateTime>()),
+    // the driver returns Short for both; TINYINT is unsigned (0..255) in MSSQL and does not fit a Byte
+    TypeMapping("smallint", Types.SMALLINT, "java.lang.Short", typeOf<Short>()),
+    TypeMapping("tinyint", Types.TINYINT, "java.lang.Short", typeOf<Short>()),
+    // `-156` is `microsoft.sql.Types.SQL_VARIANT`; the class of the value differs from row to row
+    TypeMapping("sql_variant", -156, "java.lang.Object", typeOf<Any>()),
+)
+
+/** MySQL overrides on top of [commonJdbcTypeMappings]. */
+internal val mySqlSpecificMappings: List<TypeMapping> = listOf(
+    TypeMapping("BIGINT UNSIGNED", Types.BIGINT, "java.math.BigInteger", typeOf<BigInteger>()),
+    TypeMapping("INT UNSIGNED", Types.INTEGER, "java.lang.Long", typeOf<Long>()),
+    // A multi-bit BIT(M) column returns a byte[] in both MySQL and MariaDB, while the column class
+    // they report is `java.lang.Boolean` (MySQL) or `byte[]` (MariaDB) — neither of which the default
+    // mapping recognizes, so it fell through to Boolean (#2087). BIT(1) really is a Boolean.
+    TypeMapping("BIT", Types.BIT, "java.lang.Boolean", typeOf<ByteArray>(), size = 3),
+    TypeMapping("BIT", Types.BIT, "byte[]", typeOf<ByteArray>(), size = 3),
+)
+
+/** PostgreSQL PGobject overrides — matched by `sqlTypeName` (case-insensitively). */
+internal val postgreSqlSpecificMappings: List<TypeMapping> = listOf(
+    TypeMapping("box", Types.OTHER, "org.postgresql.geometric.PGbox", typeOf<PGbox>()),
+    TypeMapping("circle", Types.OTHER, "org.postgresql.geometric.PGcircle", typeOf<PGcircle>()),
+    TypeMapping("line", Types.OTHER, "org.postgresql.geometric.PGline", typeOf<PGline>()),
+    TypeMapping("lseg", Types.OTHER, "org.postgresql.geometric.PGlseg", typeOf<PGlseg>()),
+    TypeMapping("path", Types.OTHER, "org.postgresql.geometric.PGpath", typeOf<PGpath>()),
+    TypeMapping("point", Types.OTHER, "org.postgresql.geometric.PGpoint", typeOf<PGpoint>()),
+    TypeMapping("polygon", Types.OTHER, "org.postgresql.geometric.PGpolygon", typeOf<PGpolygon>()),
+    TypeMapping("money", Types.OTHER, "org.postgresql.util.PGmoney", typeOf<PGmoney>()),
+    TypeMapping("interval", Types.OTHER, "org.postgresql.util.PGInterval", typeOf<PGInterval>()),
+    // The driver reports every BIT column as Types.BIT with `java.lang.Boolean` as its column class,
+    // but only a single-bit column really returns a Boolean; a wider one returns a PGobject holding
+    // the bit string, which is read as its String form instead (#2087). The declared column width is
+    // the only thing in the metadata that tells the two apart.
+    TypeMapping("bit", Types.BIT, "java.lang.Boolean", typeOf<Boolean>(), size = 1),
+    TypeMapping("bit", Types.BIT, "java.lang.Boolean", typeOf<String>(), size = 3),
+)
+
+/**
+ * PostgreSQL types the driver returns as a plain `PGobject`, with no class of their own. They are read
+ * as the text PostgreSQL prints for the value (#2103). The column classes are the ones the driver
+ * reports: `PGobject` for `json`/`jsonb`, `java.lang.String` for the rest.
+ */
+internal val postgreSqlTextFormMappings: List<TypeMapping> = listOf(
+    TypeMapping("json", Types.OTHER, "org.postgresql.util.PGobject", typeOf<String>()),
+    TypeMapping("jsonb", Types.OTHER, "org.postgresql.util.PGobject", typeOf<String>()),
+    TypeMapping("inet", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("cidr", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("macaddr", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("macaddr8", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tsvector", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tsquery", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("varbit", Types.OTHER, "java.lang.String", typeOf<String>(), size = 3),
+    TypeMapping("int4range", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("int8range", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("numrange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tsrange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tstzrange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("daterange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("int4multirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("int8multirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("nummultirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tsmultirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tstzmultirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("datemultirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+)
+
+/** The PostgreSQL driver reports `uuid` as `Types.OTHER` and returns a `java.util.UUID` (#2103). */
+internal val postgreSqlUuidMapping: TypeMapping = TypeMapping("uuid", Types.OTHER, "java.util.UUID", typeOf<Uuid>())
+
+// -------------------- SQLite-specific mappings --------------------
+//
+// SQLite has only 5 storage classes (NULL, INTEGER, REAL, TEXT, BLOB) and applies "type affinity"
+// per column based on the declared type:
+//   - INTEGER affinity: declared type contains "INT"
+//   - TEXT    affinity: declared type contains "CHAR", "CLOB", or "TEXT"
+//   - BLOB    affinity: declared type contains "BLOB" or is missing
+//   - REAL    affinity: declared type contains "REAL", "FLOA", or "DOUB"
+//   - NUMERIC affinity: everything else (e.g. BOOLEAN, DATE, DATETIME, DECIMAL, NUMERIC, ...)
+//
+// The Xerial JDBC driver reports the declared type verbatim in `sqlTypeName`, but both
+// `jdbcType` and `javaClassName` follow the storage class of the *first row* (a BIGINT column
+// whose first row is 'abc' is reported as `Types.VARCHAR`). The mappings below reflect what
+// the column is read as for a column of the given declared type once a representative value
+// has been inserted (i.e. the common case for reading data).
+
+/**
+ * INTEGER affinity — declared int-like types storing an int value. All of them are [Long]:
+ * SQLite stores every integer as a 64-bit value, whatever width the declared type names.
+ */
+internal val sqliteIntegerAffinityMappings: List<TypeMapping> = listOf(
+    TypeMapping("INTEGER", Types.INTEGER, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("INT", Types.INTEGER, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("MEDIUMINT", Types.INTEGER, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("TINYINT", Types.TINYINT, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("SMALLINT", Types.SMALLINT, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("INT2", Types.SMALLINT, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("BIGINT", Types.BIGINT, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("UNSIGNED BIG INT", Types.BIGINT, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("INT8", Types.BIGINT, "java.lang.Integer", typeOf<Long>()),
+)
+
+/** REAL affinity — declared real-like types storing a floating-point value. */
+internal val sqliteRealAffinityMappings: List<TypeMapping> = listOf(
+    TypeMapping("REAL", Types.REAL, "java.lang.Double", typeOf<Double>()),
+    TypeMapping("FLOAT", Types.FLOAT, "java.lang.Double", typeOf<Double>()),
+    TypeMapping("DOUBLE", Types.DOUBLE, "java.lang.Double", typeOf<Double>()),
+    TypeMapping("DOUBLE PRECISION", Types.DOUBLE, "java.lang.Double", typeOf<Double>()),
+)
+
+/** TEXT affinity — declared text-like types storing a string. */
+internal val sqliteTextAffinityMappings: List<TypeMapping> = listOf(
+    TypeMapping("TEXT", Types.VARCHAR, "java.lang.String", typeOf<String>()),
+    TypeMapping("VARCHAR", Types.VARCHAR, "java.lang.String", typeOf<String>()),
+    TypeMapping("NVARCHAR", Types.VARCHAR, "java.lang.String", typeOf<String>()),
+    TypeMapping("CHAR", Types.CHAR, "java.lang.String", typeOf<String>()),
+    TypeMapping("NCHAR", Types.CHAR, "java.lang.String", typeOf<String>()),
+    TypeMapping("CLOB", Types.CLOB, "java.lang.String", typeOf<String>()),
+)
+
+/** BLOB affinity — declared BLOB storing binary bytes. */
+internal val sqliteBlobAffinityMappings: List<TypeMapping> = listOf(
+    TypeMapping("BLOB", Types.BLOB, "java.lang.Object", typeOf<ByteArray>()),
+)
+
+/**
+ * NUMERIC affinity — DECIMAL and NUMERIC follow the actual storage class (numeric ambiguity;
+ * there is no single "canonical" numeric type). DATE / DATETIME / TIME / TIMESTAMP get an
+ * idiomatic Kotlin date-time type in the DataFrame schema (`kotlinx.datetime.LocalDate` /
+ * `kotlinx.datetime.LocalDateTime` / `kotlinx.datetime.LocalTime` / `kotlin.time.Instant`) and
+ * are converted from their storage class during preprocessing — see the SQLite type mapping doc.
+ *
+ * Detection is by `sqlTypeName` (not `jdbcType`), because Xerial changes the reported jdbcType
+ * based on the actual storage: e.g. a `DATE` column with a REAL value is reported as `FLOAT`.
+ */
+internal val sqliteNumericAffinityMappings: List<TypeMapping> = listOf(
+    TypeMapping("NUMERIC", Types.NUMERIC, "java.lang.Double", typeOf<Double>()),
+    TypeMapping("NUMERIC", Types.NUMERIC, "java.lang.Integer", typeOf<Int>()),
+    TypeMapping("DECIMAL", Types.DECIMAL, "java.lang.Double", typeOf<Double>()),
+    // DATE with all three storage classes:
+    TypeMapping("DATE", Types.DATE, "java.lang.String", typeOf<KotlinLocalDate>()), // TEXT (ISO)
+    TypeMapping("DATE", Types.DATE, "java.lang.Integer", typeOf<KotlinLocalDate>()), // INTEGER (Unix)
+    TypeMapping("DATE", Types.FLOAT, "java.lang.Double", typeOf<KotlinLocalDate>()), // REAL (Julian day)
+    // DATETIME variants:
+    TypeMapping("DATETIME", Types.DATE, "java.lang.String", typeOf<KotlinLocalDateTime>()),
+    TypeMapping("DATETIME", Types.DATE, "java.lang.Integer", typeOf<KotlinLocalDateTime>()),
+    // TIME variants:
+    TypeMapping("TIME", Types.TIME, "java.lang.String", typeOf<KotlinLocalTime>()),
+    TypeMapping("TIME", Types.INTEGER, "java.lang.Integer", typeOf<KotlinLocalTime>()),
+    // TIMESTAMP with all three storage classes:
+    TypeMapping("TIMESTAMP", Types.TIMESTAMP, "java.lang.String", typeOf<Instant>()), // TEXT (ISO)
+    TypeMapping("TIMESTAMP", Types.TIMESTAMP, "java.lang.Integer", typeOf<Instant>()), // INTEGER (Unix)
+    TypeMapping("TIMESTAMP", Types.FLOAT, "java.lang.Double", typeOf<Instant>()), // REAL (Julian day)
+)

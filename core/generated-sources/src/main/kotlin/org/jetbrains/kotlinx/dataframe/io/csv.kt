@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -20,6 +19,10 @@ import org.jetbrains.kotlinx.dataframe.util.APACHE_CSV
 import org.jetbrains.kotlinx.dataframe.util.AS_URL
 import org.jetbrains.kotlinx.dataframe.util.AS_URL_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.AS_URL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_TYPE_DEPRECATED_INSTANT
+import org.jetbrains.kotlinx.dataframe.util.COL_TYPE_DEPRECATED_INSTANT_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_TYPE_INSTANT
+import org.jetbrains.kotlinx.dataframe.util.COL_TYPE_INSTANT_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.READ_CSV
@@ -31,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.util.READ_CSV_URL_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.READ_DELIM
 import org.jetbrains.kotlinx.dataframe.util.READ_DELIM_READER_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.READ_DELIM_STREAM_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.SUPPORTED_DATAFRAME_FORMAT
 import org.jetbrains.kotlinx.dataframe.util.TO_CSV
 import org.jetbrains.kotlinx.dataframe.util.TO_CSV_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.TO_CSV_REPLACE
@@ -54,19 +58,31 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
 import java.nio.charset.Charset
+import java.nio.file.Path
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
-@Deprecated(message = APACHE_CSV, level = DeprecationLevel.WARNING)
+@Deprecated(message = APACHE_CSV, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
+
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
         DataFrame.readCSV(stream = stream, delimiter = delimiter, header = header)
 
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
     override fun readDataFrame(file: File, header: List<String>): AnyFrame =
         DataFrame.readCSV(file = file, delimiter = delimiter, header = header)
+
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
+    override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
+        // core CSV impl is deprecated, delegate via File to preserve module boundaries
+        DataFrame.readCSV(file = path.toFile(), delimiter = delimiter, header = header)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "csv"
 
@@ -317,7 +333,7 @@ public fun DataFrame.Companion.readDelim(
     )
 }
 
-/** Column types that DataFrame can [parse] from a [String]. */
+/** Column types that DataFrame can [<code>parse</code>][parse] from a [<code>String</code>][String]. */
 public enum class ColType {
     Int,
     Long,
@@ -329,19 +345,35 @@ public enum class ColType {
     LocalTime,
     LocalDateTime,
     String,
+
+    @Deprecated(
+        message = COL_TYPE_INSTANT,
+        replaceWith = ReplaceWith(COL_TYPE_INSTANT_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
     Instant,
     Duration,
     Url,
     JsonArray,
     JsonObject,
     Char,
+
+    @Deprecated(
+        message = COL_TYPE_DEPRECATED_INSTANT,
+        replaceWith = ReplaceWith(COL_TYPE_DEPRECATED_INSTANT_REPLACE),
+        level = DeprecationLevel.WARNING,
+    )
+    DeprecatedInstant,
+
+    /** Temporary, will be renamed to [Instant] in 1.1+ */
+    StdlibInstant,
     ;
 
     public companion object {
 
         /**
          * You can add a default column type to the `colTypes` parameter
-         * by setting the key to [ColType.DEFAULT] and the value to the desired type.
+         * by setting the key to [<code>ColType.DEFAULT</code>][ColType.DEFAULT] and the value to the desired type.
          */
         public const val DEFAULT: kotlin.String = ".default"
     }
@@ -352,21 +384,44 @@ public fun ColType.toType(): KClass<*> = toKType().classifier as KClass<*>
 public fun ColType.toKType(): KType =
     when (this) {
         ColType.Int -> typeOf<Int>()
+
         ColType.Long -> typeOf<Long>()
+
         ColType.Double -> typeOf<Double>()
+
         ColType.Boolean -> typeOf<Boolean>()
+
         ColType.BigDecimal -> typeOf<BigDecimal>()
+
         ColType.BigInteger -> typeOf<BigInteger>()
+
         ColType.LocalDate -> typeOf<LocalDate>()
+
         ColType.LocalTime -> typeOf<LocalTime>()
+
         ColType.LocalDateTime -> typeOf<LocalDateTime>()
+
         ColType.String -> typeOf<String>()
-        ColType.Instant -> typeOf<Instant>()
+
+        ColType.DeprecatedInstant -> typeOf<DeprecatedInstant>()
+
+        ColType.StdlibInstant -> typeOf<StdlibInstant>()
+
         ColType.Duration -> typeOf<Duration>()
+
         ColType.Url -> typeOf<URL>()
+
         ColType.JsonArray -> typeOf<DataFrame<*>>()
+
         ColType.JsonObject -> typeOf<DataRow<*>>()
+
         ColType.Char -> typeOf<Char>()
+
+        else -> {
+            // can't reference ColType.Instant directly because of the deprecation cycle
+            require(this.name == "Instant") { "Unknown column type: $this" }
+            typeOf<DeprecatedInstant>()
+        }
     }
 
 @Deprecated(

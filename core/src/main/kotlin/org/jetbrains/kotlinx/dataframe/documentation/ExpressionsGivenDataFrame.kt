@@ -1,5 +1,3 @@
-@file:ExcludeFromSources
-
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -8,14 +6,15 @@ import org.jetbrains.kotlinx.dataframe.DataFrameExpression as DfDataFrameExpress
 
 /**
  * ## Expressions Given DataFrame
- * Expressing values using a "Data Frame Expression" can occur exclusively in a
+ * Expressing values using a "DataFrame Expression" can occur exclusively in a
  * {@include [DataFrameExpressionLink]}.
  */
 internal interface ExpressionsGivenDataFrame {
 
-    interface OPERATION
+    @ExcludeFromSources
+    typealias OPERATION = Nothing
 
-    /** Provide a new value for every selected data frame using a [dataframe expression][DfDataFrameExpression]. */
+    /** Provide a new value for every selected dataframe using a [dataframe expression][DfDataFrameExpression]. */
     interface DataFrameExpression {
 
         /**
@@ -25,9 +24,10 @@ internal interface ExpressionsGivenDataFrame {
          *
          * {@get [OPERATION]}` { `[select][DataFrame.select]` { lastName } }`
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
-    /** [Data Frame Expression][DataFrameExpression] */
-    interface DataFrameExpressionLink
+    /** [DataFrame Expression][DataFrameExpression] */
+    @ExcludeFromSources
+    typealias DataFrameExpressionLink = Nothing
 }

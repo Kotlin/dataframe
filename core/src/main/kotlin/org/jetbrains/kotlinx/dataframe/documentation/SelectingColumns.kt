@@ -6,62 +6,74 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDslLink
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDslLink
-import org.jetbrains.kotlinx.dataframe.api.colsOf
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.fillNulls
-import org.jetbrains.kotlinx.dataframe.api.gather
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import kotlin.reflect.KProperty
 
 /** [Selecting Columns][SelectingColumns] */
 @ExcludeFromSources
-internal interface SelectingColumnsLink
+internal typealias SelectingColumnsLink = Nothing
 
 /**
+ * {@comment
+ *    Selecting Columns KDoc-topic.
+ *    Link to it with `@include [SelectingColumnsLink]`.
+ * }
+ *
  * ## Selecting Columns
- * Selecting columns for various operations (including but not limited to
- * [DataFrame.select], [DataFrame.update], [DataFrame.gather], and [DataFrame.fillNulls])
+ *
+ * Selecting columns for various [DataFrame] operations
  * can be done in the following ways:
- * ### 1. {@include [DslLink]}
- * {@include [Dsl.WithExample]}
- * #### NOTE: There's also a 'single column' variant used sometimes: {@include [DslSingleLink]}.
- * ### 2. {@include [ColumnNamesLink]}
- * {@include [ColumnNames.WithExample]}
- * ### 3. {@include [ColumnAccessorsLink]}
- * {@include [ColumnAccessors.WithExample]}
- * ### 4. {@include [KPropertiesLink]}
- * {@include [KProperties.WithExample]}
+ * ### 1. {@include [CSDslWithExampleLink]}
+ * {@include [ColumnsSelectionDsl.ColumnsSelectionDslWithExample]}
+ * > There's also a 'single column' variant used sometimes: {@include [CSDslSingleWithExampleLink]}.
+ * ### 2. {@include [ColumnNamesWithExampleLink]}
+ * {@include [ColumnNamesApi.ColumnNamesApiWithExample]}
  */
 internal interface SelectingColumns {
 
     /**
+     * {@comment
+     *    Note about column groups and nested columns KDoc-snippet.
+     *    Paste it into KDoc using `@include [ColumnGroupsAndNestedColumnsSnippet]`.
+     * }
+     *
      * This can include [column groups][ColumnGroup] and nested columns.
      */
     @ExcludeFromSources
-    interface ColumnGroupsAndNestedColumnsMention
+    typealias ColumnGroupsAndNestedColumnsSnippet = Nothing
 
     /*
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
     @ExcludeFromSources
-    interface OPERATION
+    typealias OPERATION = Nothing
 
+    /*
+     * Operation receiver variable name
+     */
+    @ExcludeFromSources
+    typealias RECEIVER = Nothing
     // Using <code>` notation to not create double `` when including
 
     /** {@set [OPERATION] <code>`operation`</code>} */
     @ExcludeFromSources
-    interface SetDefaultOperationArg
+    typealias SetDefaultOperationArg = Nothing
+
+    /** {@set [RECEIVER] <code>`df`</code>} */
+    @ExcludeFromSources
+    typealias SetDefaultReceiverArg = Nothing
 
     /**
+     * {@comment
+     *    Columns Selection DSL KDoc-topic.
+     *    Link to it with `@include [CSDslLink]`
+     *    or paste it into KDoc with `@include [ColumnsSelectionDsl]`.
+     * }
+     *
      * Select or express columns using the {@include [ColumnsSelectionDslLink]}.
-     * (Any (combination of) {@include [AccessApiLink]}).
      *
      * This DSL is initiated by a [Columns Selector][ColumnsSelector] lambda,
      * which operates in the context of the {@include [ColumnsSelectionDslLink]} and
@@ -69,39 +81,53 @@ internal interface SelectingColumns {
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * #### NOTE:
-     * While you can use the {@include [AccessApi.StringApiLink]} and {@include [AccessApi.KPropertiesApiLink]}
-     * in this DSL directly with any function, they are NOT valid return types for the
-     * [Columns Selector][ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference] first, for instance
-     * with a function like [`col("name")`][ColumnsSelectionDsl.col].
+     * The Columns Selection DSL allows using [Extension Properties][AccessApis.ExtensionPropertiesApi]
+     * for specifying columns type- and name-safe.
      *
-     * ### Check out: [Columns Selection DSL Grammar][ColumnsSelectionDsl.DslGrammar]
+     * Check out: [Columns Selection DSL Grammar][ColumnsSelectionDsl.DslGrammar]
      * {@include [LineBreak]}
      * @include [DocumentationUrls.ColumnSelectors]
      */
-    interface Dsl {
+    interface ColumnsSelectionDsl {
 
         /**
-         * {@include [Dsl]}
+         * {@comment
+         *    Columns Selection DSL with example KDoc-topic.
+         *    Link to it with `@include [CSDslWithExampleLink]`
+         *    or paste it into KDoc with `@include [ColumnsSelectionDslWithExample]`
+         * }
+         *
+         * {@include [ColumnsSelectionDsl]}
          *
          * #### For example:
          *
-         * `df.`{@get [OPERATION]}` { length `[and][ColumnsSelectionDsl.and]` age }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}` { length `[and][ColumnsSelectionDsl.and]` age }`
          *
-         * `df.`{@get [OPERATION]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * `df.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
          *
          * @include [SetDefaultOperationArg]
+         * @include [SetDefaultReceiverArg]
          */
-        interface WithExample
+        typealias ColumnsSelectionDslWithExample = Nothing
     }
 
-    /** [Columns Selection DSL][Dsl.WithExample] */
+    /** [Columns Selection DSL][ColumnsSelectionDsl] */
     @ExcludeFromSources
-    interface DslLink
+    typealias CSDslLink = Nothing
+
+    /** [Columns Selection DSL][ColumnsSelectionDsl.ColumnsSelectionDslWithExample] */
+    @ExcludeFromSources
+    typealias CSDslWithExampleLink = Nothing
 
     /**
+     * {@comment
+     *    Column Selection DSL KDoc-topic.
+     *    Link to it with `@include [CSDslSingleLink]`
+     *    or paste it into KDoc with `@include [ColumnSelectionDsl]`.
+     * }
+     *
      * Select or express a single column using the Column Selection DSL.
      * (Any {@include [AccessApiLink]}).
      *
@@ -111,100 +137,81 @@ internal interface SelectingColumns {
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into a single column.
      *
-     * #### NOTE:
-     * While you can use the {@include [AccessApi.StringApiLink]} and {@include [AccessApi.KPropertiesApiLink]}
-     * in this DSL directly with any function, they are NOT valid return types for the
-     * [Column Selector][ColumnSelector]/[Columns Selector][ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference] first, for instance
-     * with a function like [`col("name")`][ColumnsSelectionDsl.col].
+     * The Column Selection DSL allows using [Extension Properties][AccessApis.ExtensionPropertiesApi]
+     * for specifying column type- and name-safe.
      *
      * {@include [LineBreak]}
      * @include [DocumentationUrls.ColumnSelectors]
      */
-    interface DslSingle {
+    interface ColumnSelectionDsl {
 
         /**
-         * {@include [DslSingle]}
+         * {@comment
+         *    Column Selection DSL with example KDoc-topic.
+         *    Link to it with `@include [CSDslSingleWithExampleLink]`
+         *    or paste it into KDoc with `@include [ColumnsSelectionDslWithExample]`
+         * }
+         *
+         * {@include [ColumnSelectionDsl]}
          *
          * #### For example:
          *
-         * `df.`{@get [OPERATION]}` { length }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}` { length }`
          *
-         * `df.`{@get [OPERATION]}`  {  `[col][ColumnsSelectionDsl.col]`(1) }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[col][ColumnsSelectionDsl.col]`(1) }`
          *
-         * `df.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
+         *
          * @include [SetDefaultOperationArg]
+         * @include [SetDefaultReceiverArg]
          */
-        interface WithExample
+        typealias ColumnsSelectionDslWithExample = Nothing
     }
 
-    /** [Column Selection DSL][DslSingle.WithExample] */
+    /** [Column Selection DSL][ColumnSelectionDsl] */
     @ExcludeFromSources
-    interface DslSingleLink
+    typealias CSDslSingleLink = Nothing
+
+    /** [Column Selection DSL][ColumnSelectionDsl.ColumnsSelectionDslWithExample] */
+    @ExcludeFromSources
+    typealias CSDslSingleWithExampleLink = Nothing
 
     /**
-     * Select columns using their [column names][String]
-     * ({@include [AccessApi.StringApiLink]}).
+     * {@comment
+     *    Column Names API KDoc-topic.
+     *    Link to it with `@include [ColumnNamesLink]`
+     *    or paste it into KDoc with `@include [`Column Names API`]`.
+     * }
+     *
+     * Select single or multiple columns using their names as [String]s.
+     * ({@include [AccessApis.StringApiLink]}).
      */
-    interface ColumnNames {
+    interface ColumnNamesApi {
 
         /**
-         * {@include [ColumnNames]}
+         * {@comment
+         *    Column Names API with Example KDoc-topic.
+         *    Link to it with `@include [ColumnNamesWithExampleLink]`
+         *    or paste it into KDoc with `@include [`Column Names API with Example`]`.
+         * }
+         *
+         * {@include [ColumnNamesApi]}
          *
          * #### For example:
          *
-         * `df.`{@get [OPERATION]}`("length", "age")`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`("length", "age")`
+         *
          * @include [SetDefaultOperationArg]
+         * @include [SetDefaultReceiverArg]
          */
-        interface WithExample
+        typealias ColumnNamesApiWithExample = Nothing
     }
 
-    /** [Column names][ColumnNames.WithExample] */
+    /** [Column names][ColumnNamesApi] */
     @ExcludeFromSources
-    interface ColumnNamesLink
+    typealias ColumnNamesLink = Nothing
 
-    /**
-     * Select columns using [column accessors][ColumnReference]
-     * ({@include [AccessApi.ColumnAccessorsApiLink]}).
-     */
-    interface ColumnAccessors {
-
-        /**
-         * {@include [ColumnAccessors]}
-         *
-         * #### For example:
-         *
-         * `val length by `[column][column]`<`[Double][Double]`>()`
-         *
-         * `val age by `[column][column]`<`[Double][Double]`>()`
-         *
-         * `df.`{@get [OPERATION]}`(length, age)`
-         * @include [SetDefaultOperationArg]
-         */
-        interface WithExample
-    }
-
-    /** [Column references][ColumnAccessors.WithExample] */
+    /** [Column names][ColumnNamesApi.ColumnNamesApiWithExample] */
     @ExcludeFromSources
-    interface ColumnAccessorsLink
-
-    /** Select columns using [KProperties][KProperty] ({@include [AccessApi.KPropertiesApiLink]}). */
-    interface KProperties {
-
-        /**
-         * {@include [KProperties]}
-         *
-         * #### For example:
-         * ```kotlin
-         * data class Person(val length: Double, val age: Double)
-         * ```
-         *
-         * `df.`{@get [OPERATION]}`(Person::length, Person::age)`
-         * @include [SetDefaultOperationArg]
-         */
-        interface WithExample
-    }
-
-    /** [KProperties][KProperties.WithExample] */
-    @ExcludeFromSources
-    interface KPropertiesLink
+    typealias ColumnNamesWithExampleLink = Nothing
 }

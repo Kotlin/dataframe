@@ -12,4 +12,5 @@ import org.jetbrains.kotlinx.dataframe.geo.jts.computeBounds
  * @return The bounding envelope that includes all geometries,
  * associated with the CRS of the `GeoDataFrame`.
  */
-fun GeoDataFrame<*>.bounds(): ReferencedEnvelope = ReferencedEnvelope(df.geometry.asIterable().computeBounds(), crs)
+public fun GeoDataFrame<*>.bounds(): ReferencedEnvelope =
+    ReferencedEnvelope(df.geometry.asIterable().computeBounds(), crs)

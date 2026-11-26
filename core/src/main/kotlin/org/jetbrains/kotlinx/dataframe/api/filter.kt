@@ -16,9 +16,11 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.getTrueIndices
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -30,6 +32,8 @@ import kotlin.reflect.KProperty
 
 /**
  * Returns a new [DataColumn] containing only the elements that match the given [predicate].
+ *
+ * For more information: {@include [DocumentationUrls.FilterColumn]}
  *
  * @param predicate the condition used to filter the elements in the DataColumn.
  * @return a new DataColumn containing elements that satisfy the predicate.
@@ -47,10 +51,9 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
  * Filters the rows of this [DataFrame] based on the provided [RowFilter].
  * Returns a new [DataFrame] containing only the rows that satisfy the given [predicate].
  *
- * A [RowFilter] provides each row as a lambda argument, allowing you to define filtering logic
- * using a [Boolean] condition.
+ * {@include [SelectingRows.RowFilterSnippet]}
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * For more information, see: {@include [DocumentationUrls.Filter]}
  *
@@ -128,7 +131,8 @@ public interface FilterColumnsSelectionDsl {
     public interface Grammar {
 
         /** __`.`__[**`filter`**][ColumnsSelectionDsl.filter] */
-        public interface ColumnSetName
+        @ExcludeFromSources
+        public typealias ColumnSetName = Nothing
     }
 
     /**
@@ -139,6 +143,8 @@ public interface FilterColumnsSelectionDsl {
      *
      * Aside from calling [filter][ColumnSet.filter] directly, you can also use the [get][ColumnsSelectionDsl.get] operator
      * in most cases. This function belongs to [cols][ColumnsSelectionDsl.cols] but operates identically.
+     *
+     * For more information: {@include [DocumentationUrls.FilterCols]}
      *
      * ### Check out: [Grammar]
      *
@@ -157,7 +163,7 @@ public interface FilterColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.cols]
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         colsInternal(predicate as ColumnFilter<*>).cast()
 }
 

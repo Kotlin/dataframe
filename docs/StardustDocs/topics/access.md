@@ -5,6 +5,8 @@
 
 Get [rows](DataRow.md) or [columns](DataColumn.md):
 
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)
+
 <!---FUN getRowsColumns-->
 
 ```kotlin
@@ -16,7 +18,8 @@ df.values() // Sequence<Any?>
 <!---END-->
 
 **Learn how to:**
-* [Access data by index](indexing.md)
+* [Access a cell by index](indexing.md#access-a-cell-by-index)
+* [Get row indices](indexing.md#row-indices)
 * [Iterate over data](iterate.md)
 * [Get a single row](getRow.md)
-* [Get single column](getColumns.md)
+* [Get a single column](getColumns.md)

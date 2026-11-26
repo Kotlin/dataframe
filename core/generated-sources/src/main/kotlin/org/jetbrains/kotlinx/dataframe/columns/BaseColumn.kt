@@ -1,11 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
-import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
@@ -13,11 +13,13 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
 /**
- * Column with [type], [name]/[path] and [values]
- * Base interface for all three kinds of columns: [ValueColumn], [ColumnGroup] and [FrameColumn].
- * Column operations that doesn't clash by signature with [DataFrame] operations can be defined for [BaseColumn]
+ * Column with [<code>type</code>][type], [<code>name</code>][name]/[<code>path</code>][path] and [<code>values</code>][values]
+ * Base interface for all three kinds of columns: [<code>ValueColumn</code>][ValueColumn], [<code>ColumnGroup</code>][ColumnGroup] and [<code>FrameColumn</code>][FrameColumn].
+ * Column operations that don't clash by signature with [<code>DataFrame</code>][DataFrame] operations can be defined for [<code>BaseColumn</code>][BaseColumn]
  *
  * @param T type of values contained in column.
+ * @see [org.jetbrains.kotlinx.dataframe.api.columnOf]
+ * @see [org.jetbrains.kotlinx.dataframe.DataColumn.createByType]
  */
 public interface BaseColumn<out T> : ColumnReference<T> {
 
@@ -37,16 +39,16 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     // region get
 
     /**
-     * Gets the row at given [index].
+     * Gets the row at given [<code>index</code>][index].
      *
-     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.col] to select a column by index.
+     * NOTE: This doesn't work in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], use [<code>ColumnsSelectionDsl.col</code>][ColumnsSelectionDsl.col] to select a column by index.
      */
     public operator fun get(index: Int): T
 
     /**
      * Gets the rows at given indices.
      *
-     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
+     * NOTE: This doesn't work in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], use [<code>ColumnsSelectionDsl.cols</code>][ColumnsSelectionDsl.cols] to select columns by index.
      */
     public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> =
         get(
@@ -61,26 +63,33 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     /**
      * Gets the rows at given range of indices.
      *
-     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by range.
+     * NOTE: This doesn't work in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], use [<code>ColumnsSelectionDsl.cols</code>][ColumnsSelectionDsl.cols] to select columns by range.
      */
     public operator fun get(range: IntRange): BaseColumn<T>
 
     /**
      * Gets the rows at given indices.
      *
-     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
+     * NOTE: This doesn't work in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], use [<code>ColumnsSelectionDsl.cols</code>][ColumnsSelectionDsl.cols] to select columns by index.
      */
     public operator fun get(indices: Iterable<Int>): BaseColumn<T>
 
-    public operator fun get(columnName: String): AnyCol
+    public operator fun get(columnName: String): DataColumn<*>
 
     // endregion
 
     // region values
 
+    /**
+     * Returns this column's values as a read-only view — changing it is not supported and doesn't affect this column.
+     */
     public fun values(): Iterable<T>
 
-    public fun toList(): List<T> = values().asList()
+    /**
+     * Returns this column's values copied into a new [<code>List</code>][List] — changing it doesn't affect this column.
+     */
+    @RequiredByIntellijPlugin
+    public fun toList(): List<T> = values().toMutableList()
 
     public fun toSet(): Set<T>
 

@@ -5,11 +5,11 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 /**
- * Column that stores values of type [DataFrame]
+ * Column that stores values of type [<code>DataFrame</code>][DataFrame]
  *
- * Can be instantiated by [DataColumn.createFrameColumn].
+ * Can be instantiated by [<code>DataColumn.createFrameColumn</code>][DataColumn.createFrameColumn].
  *
- * @param T schema marker of contained dataframes. See [DataFrame] for details.
+ * @param T schema marker of contained dataframes. See [<code>DataFrame</code>][DataFrame] for details.
  */
 public interface FrameColumn<out T> : DataColumn<DataFrame<T>> {
 

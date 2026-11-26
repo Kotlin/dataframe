@@ -19,7 +19,10 @@ import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
+import org.jetbrains.kotlinx.dataframe.impl.isJavaRecord
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
+import org.jetbrains.kotlinx.dataframe.impl.recordComponentNames
+import org.jetbrains.kotlinx.dataframe.impl.replace
 import org.jetbrains.kotlinx.dataframe.impl.schema.sortWithConstructor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -28,15 +31,20 @@ import java.time.temporal.TemporalAmount
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
+import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
+import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 // non-standard value types (not supertypes, but exact types)
 private val valueTypes = setOf(
@@ -52,7 +60,8 @@ private val valueTypes = setOf(
     kotlin.time.Duration::class,
     kotlinx.datetime.LocalDate::class,
     kotlinx.datetime.LocalDateTime::class,
-    kotlinx.datetime.Instant::class,
+    DeprecatedInstant::class,
+    StdlibInstant::class,
     kotlinx.datetime.TimeZone::class,
     kotlinx.datetime.DateTimePeriod::class,
     kotlinx.datetime.DateTimeUnit::class,
@@ -76,8 +85,8 @@ internal val KClass<*>.canBeUnfolded: Boolean
 
 /**
  * Checks if `KClass` is a value type (number, datetime, string, etc.)
- * Should be aligned with `ConeKotlinType.isValueType()` in
- * plugins/kotlin-dataframe/src/org/jetbrains/kotlinx/dataframe/plugin/impl/api/toDataFrame.kt
+ * Should be aligned with `ConeKotlinType.isValueType()` in the compiler plugin:
+ * https://github.com/JetBrains/kotlin/blob/master/plugins/kotlin-dataframe/kotlin-dataframe.k2/src/org/jetbrains/kotlinx/dataframe/plugin/impl/api/toDataFrame.kt
  */
 @PublishedApi
 internal val KClass<*>.isValueType: Boolean
@@ -95,17 +104,14 @@ internal val KClass<*>.isValueType: Boolean
  */
 @PublishedApi
 internal val KClass<*>.hasProperties: Boolean
-    get() = this.memberProperties.any { it.visibility == KVisibility.PUBLIC } ||
-        // check pojo-like classes
-        this.memberFunctions.any { it.visibility == KVisibility.PUBLIC && it.isGetterLike() }
+    get() = properties().isNotEmpty()
 
 internal class CreateDataFrameDslImpl<T>(
     override val source: Iterable<T>,
-    private val clazz: KClass<*>,
+    private val type: KType,
     private val prefix: ColumnPath = emptyPath(),
     private val configuration: TraverseConfiguration = TraverseConfiguration(),
-) : CreateDataFrameDsl<T>(),
-    TraversePropertiesDsl by configuration {
+) : CreateDataFrameDsl<T>() {
 
     internal val columns = mutableListOf<Pair<ColumnPath, AnyBaseCol>>()
 
@@ -116,7 +122,7 @@ internal class CreateDataFrameDslImpl<T>(
     }
 
     override operator fun String.invoke(builder: CreateDataFrameDsl<T>.() -> Unit) {
-        val child = CreateDataFrameDslImpl(source, clazz, prefix + this)
+        val child = CreateDataFrameDslImpl(source, type, prefix + this)
         builder(child)
         columns.addAll(child.columns)
     }
@@ -179,11 +185,12 @@ internal class CreateDataFrameDslImpl<T>(
         }
         val df = convertToDataFrame(
             data = source,
-            clazz = clazz,
+            type = type,
             roots = roots.toList(),
             excludes = dsl.excludeProperties,
             preserveClasses = dsl.preserveClasses,
             preserveProperties = dsl.preserveProperties,
+            excludeClasses = dsl.excludeClasses,
             maxDepth = maxDepth,
         )
         df.columns().forEach {
@@ -194,10 +201,20 @@ internal class CreateDataFrameDslImpl<T>(
 
 @PublishedApi
 internal fun <T> Iterable<T>.createDataFrameImpl(
+    type: KType,
+    body: CreateDataFrameDslImpl<T>.() -> Unit,
+): DataFrame<T> {
+    val builder = CreateDataFrameDslImpl(this, type)
+    builder.body()
+    return builder.columns.toDataFrameFromPairs()
+}
+
+@Deprecated("backward compatibility for Kandy", level = DeprecationLevel.ERROR)
+internal fun <T> Iterable<T>.createDataFrameImpl(
     clazz: KClass<*>,
     body: CreateDataFrameDslImpl<T>.() -> Unit,
 ): DataFrame<T> {
-    val builder = CreateDataFrameDslImpl(this, clazz)
+    val builder = CreateDataFrameDslImpl(this, clazz.starProjectedType)
     builder.body()
     return builder.columns.toDataFrameFromPairs()
 }
@@ -205,22 +222,26 @@ internal fun <T> Iterable<T>.createDataFrameImpl(
 @PublishedApi
 internal fun convertToDataFrame(
     data: Iterable<*>,
-    clazz: KClass<*>,
+    type: KType,
     roots: List<KCallable<*>>,
     excludes: Set<KCallable<*>>,
     preserveClasses: Set<KClass<*>>,
     preserveProperties: Set<KCallable<*>>,
+    excludeClasses: Set<KClass<*>>,
     maxDepth: Int,
 ): AnyFrame {
+    val clazz = type.classifierOrAny()
+    // this check relies on later recursive calls having roots = emptyList()
+    if (roots.isEmpty() && !clazz.canBeUnfolded) {
+        val column = DataColumn.createByType("value", data.toList(), type)
+        return dataFrameOf(column)
+    }
+
+    val substitution: Map<KTypeParameter, KType> = type.typeParametersSubstitution()
+
     val properties: List<KCallable<*>> = roots
         .ifEmpty {
-            clazz.memberProperties
-                .filter { it.visibility == KVisibility.PUBLIC }
-        }
-        // fall back to getter functions for pojo-like classes if no member properties were found
-        .ifEmpty {
-            clazz.memberFunctions
-                .filter { it.visibility == KVisibility.PUBLIC && it.isGetterLike() }
+            clazz.properties()
         }
         // sort properties by order in constructor
         .sortWithConstructor(clazz)
@@ -228,10 +249,12 @@ internal fun convertToDataFrame(
     val columns = properties.mapNotNull {
         val property = it
         if (excludes.contains(property)) return@mapNotNull null
+        val klass = it.returnType.classifier as? KClass<*>
+        if (excludeClasses.contains(klass)) return@mapNotNull null
 
         class ValueClassConverter(val unbox: Method, val box: Method)
 
-        val valueClassConverter = (it.returnType.classifier as? KClass<*>)?.let { kClass ->
+        val valueClassConverter = klass?.let { kClass ->
             if (!kClass.isValue) return@let null
 
             val constructor = requireNotNull(kClass.primaryConstructor) {
@@ -286,7 +309,7 @@ internal fun convertToDataFrame(
             }
         }
 
-        val returnType = property.returnType.let { type ->
+        val returnType = property.returnType.replace(substitution).let { type ->
             if (type.classifier is KClass<*>) {
                 type
             } else {
@@ -296,17 +319,34 @@ internal fun convertToDataFrame(
         val kClass = returnType.classifier as KClass<*>
         val fieldKind = returnType.getFieldKind()
 
-        val keepSubtree =
-            maxDepth <= 0 && !fieldKind.shouldBeConvertedToFrameColumn && !fieldKind.shouldBeConvertedToColumnGroup
-        val shouldCreateValueCol = keepSubtree ||
-            kClass == Any::class ||
-            kClass in preserveClasses ||
-            property in preserveProperties ||
-            kClass.isValueType
-
+        // property type might not be of FrameColumn kind if `AnyFrame?`, but we still have to narrow it to FrameCol
+        // when no actual nulls are met
         val shouldCreateFrameCol = kClass == DataFrame::class && !nullable
+
+        val keepSubtree =
+            maxDepth <= 0 &&
+                !fieldKind.shouldBeConvertedToFrameColumn &&
+                !fieldKind.shouldBeConvertedToColumnGroup &&
+                !shouldCreateFrameCol
+
+        val shouldCreateValueCol =
+            keepSubtree ||
+                kClass in preserveClasses ||
+                property in preserveProperties ||
+                (
+                    !kClass.canBeUnfolded &&
+                        !fieldKind.shouldBeConvertedToFrameColumn &&
+                        !fieldKind.shouldBeConvertedToColumnGroup &&
+                        !shouldCreateFrameCol
+                )
+
         val shouldCreateColumnGroup = kClass == DataRow::class
 
+        if (shouldCreateFrameCol && shouldCreateValueCol) {
+            throw IllegalArgumentException(
+                "You cannot create a `ValueColumn<DataFrame<*>>`, a `FrameColumn` should be used instead. If you used `preserve(DataFrame::class)`, please remove it.",
+            )
+        }
         when {
             hasExceptions -> DataColumn.createByInference(it.columnName, values, nullable = nullable)
 
@@ -326,7 +366,7 @@ internal fun convertToDataFrame(
             shouldCreateColumnGroup ->
                 DataColumn.createColumnGroup(
                     name = it.columnName,
-                    df = (values as List<AnyRow>).concat(),
+                    df = (values as List<AnyRow?>).concat(),
                 )
 
             kClass.isSubclassOf(Iterable::class) ->
@@ -365,11 +405,12 @@ internal fun convertToDataFrame(
                                         require(it is Iterable<*>)
                                         convertToDataFrame(
                                             data = it,
-                                            clazz = elementClass,
+                                            type = elementType,
                                             roots = emptyList(),
                                             excludes = excludes,
                                             preserveClasses = preserveClasses,
                                             preserveProperties = preserveProperties,
+                                            excludeClasses = excludeClasses,
                                             maxDepth = maxDepth - 1,
                                         )
                                     }
@@ -383,11 +424,12 @@ internal fun convertToDataFrame(
             else -> {
                 val df = convertToDataFrame(
                     data = values,
-                    clazz = kClass,
+                    type = returnType,
                     roots = emptyList(),
                     excludes = excludes,
                     preserveClasses = preserveClasses,
                     preserveProperties = preserveProperties,
+                    excludeClasses = excludeClasses,
                     maxDepth = maxDepth - 1,
                 )
                 DataColumn.createColumnGroup(name = it.columnName, df = df)
@@ -399,4 +441,28 @@ internal fun convertToDataFrame(
     } else {
         dataFrameOf(columns)
     }
+}
+
+private fun KType.classifierOrAny(): KClass<*> = classifier as? KClass<*> ?: Any::class
+
+internal fun KType.typeParametersSubstitution(): Map<KTypeParameter, KType> {
+    val klass = classifier as? KClass<*> ?: return emptyMap()
+    return klass.typeParameters.zip(arguments).mapNotNull { (param, projection) ->
+        projection.type?.let { param to it }
+    }.toMap()
+}
+
+private fun KClass<*>.properties(): List<KCallable<*>> {
+    // fall back to getter functions for pojo-like classes if no member properties were found
+    return memberProperties
+        .filter { it.visibility == KVisibility.PUBLIC }
+        .ifEmpty {
+            if (this.isJavaRecord) {
+                val componentNames = this.recordComponentNames
+                memberFunctions.filter { it.name in componentNames }
+            } else {
+                memberFunctions
+                    .filter { it.visibility == KVisibility.PUBLIC && it.isGetterLike() }
+            }
+        }
 }

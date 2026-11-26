@@ -24,10 +24,10 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -38,24 +38,26 @@ jobs:
           git config --global user.name "GitHub Actions"
 
       - name: Run Gradle task
-        run: ./gradlew processKDocsMain korro
+        timeout-minutes: 60
+        run: ./gradlew clean processKDocsMain korro syncExampleFolders
 
       - name: Check for changes in generated sources
         id: git-diff
-        run: echo "changed=$(if git diff --quiet './core/generated-sources' './dataframe-csv/generated-sources' './docs/StardustDocs/resources/snippets' './docs/StardustDocs/topics'; then echo 'false'; else echo 'true'; fi)" >> $GITHUB_OUTPUT
+        run: |
+          git add './core/generated-sources' './dataframe-csv/generated-sources' './dataframe-json/generated-sources' './dataframe-geo/generated-sources' './dataframe-excel/generated-sources' './dataframe-jdbc/generated-sources' './docs/StardustDocs/resources/snippets' './docs/StardustDocs/topics' './examples/projects'
+          echo "changed=$(if git diff --staged --quiet; then echo 'false'; else echo 'true'; fi)" >> $GITHUB_OUTPUT
 
       - name: Commit and push if changes
         id: git-commit
         if: steps.git-diff.outputs.changed == 'true'
         run: |
           git checkout -b generated-sources/docs-update-${{ github.run_number }}
-          git add './core/generated-sources' './dataframe-csv/generated-sources' './docs/StardustDocs/resources/snippets' './docs/StardustDocs/topics'
           git commit -m "Update generated sources with recent changes"
           git push origin generated-sources/docs-update-${{ github.run_number }}
           echo "commit=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
       - name: Update status to PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         if: steps.git-diff.outputs.changed == 'true'
         with:
           # language=js

@@ -4,10 +4,12 @@
 
 Returns [`DataFrame`](DataFrame.md) with union of columns from several given [`DataFrame`](DataFrame.md) objects.
 
+**API reference**: [`addAll`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/add-all.html)
+
 <!---FUN addDataFrames-->
 
 ```kotlin
-df.add(df1, df2)
+df.addAll(df1, df2)
 ```
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html" width="100%"/>

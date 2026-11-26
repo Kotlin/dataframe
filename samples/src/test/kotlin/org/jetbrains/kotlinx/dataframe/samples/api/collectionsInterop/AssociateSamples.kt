@@ -1,0 +1,41 @@
+package org.jetbrains.kotlinx.dataframe.samples.api.collectionsInterop
+
+import org.jetbrains.kotlinx.dataframe.api.associate
+import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
+import org.jetbrains.kotlinx.dataframe.samples.api.age
+import org.jetbrains.kotlinx.dataframe.samples.api.city
+import org.jetbrains.kotlinx.dataframe.samples.api.firstName
+import org.jetbrains.kotlinx.dataframe.samples.api.lastName
+import org.jetbrains.kotlinx.dataframe.samples.api.name
+import org.junit.Test
+
+class AssociateSamples : DataFrameSampleHelper("associate", "api/collectionsInterop") {
+
+    private val df = peopleDf
+
+    @Test
+    fun notebook_test_associate_1() {
+        // SampleStart
+        df
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun notebook_test_associate_2() {
+        // SampleStart
+        df.associate { "${name.firstName} ${name.lastName}" to age }
+            // SampleEnd
+            .entries.joinToString(",\n  ", "{\n  ", "\n}") { "${it.key}: ${it.value}" }
+            .saveTextSample()
+    }
+
+    @Test
+    fun notebook_test_associate_3() {
+        // SampleStart
+        df.associate { city to "${name.firstName} ${name.lastName}" }
+            // SampleEnd
+            .entries.joinToString(",\n  ", "{\n  ", "\n}") { "${it.key}: ${it.value}" }
+            .saveTextSample()
+    }
+}

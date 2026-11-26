@@ -20,7 +20,7 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /** [Columns Selection DSL][ColumnsSelectionDsl] */
-internal interface ColumnsSelectionDslLink
+internal typealias ColumnsSelectionDslLink = Nothing
 
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
@@ -36,10 +36,10 @@ public annotation class ColumnsSelectionDslMarker
 
 /**
  * ## Columns Selection DSL
- * {@include [SelectingColumns.Dsl.WithExample]}
+ * {@include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]}
  * {@set [SelectingColumns.OPERATION] [select][DataFrame.select]}
  *
- * @comment This interface be safely cast to [SingleColumn] across the library because it's always
+ * @comment This interface can be safely cast to [SingleColumn] across the library because it's always
  * implemented in combination with [DataFrameReceiver] which is a [SingleColumn] itself.
  * It does not directly implement [SingleColumn] for DSL purposes.
  */
@@ -167,12 +167,12 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          * {@include [DslGrammarTemplate.TextDef]}
          */
         @[ExcludeFromSources ExportAsHtml]
-        public interface DefinitionsPartOfGrammar
+        public typealias DefinitionsPartOfGrammar = Nothing
 
         /**
          * {@include [DslGrammarTemplate.ColumnRef]}` `{@include [ColumnRangeColumnsSelectionDsl.Grammar.PlainDslName]}` `{@include [DslGrammarTemplate.ColumnRef]}
          *
-         * `| `**`this`**`/`**`it`**[**`\[`**\][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. `[**`\]`**\][cols]
+         * `| `**`this`**`/`**`it`**[**`\[`**\][cols]<code></code>{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. `[**`\]`**\][cols]
          *
          * `| `**`this`**`/`**`it`**[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
          *
@@ -229,12 +229,12 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          * `| `{@include [WithoutNullsColumnsSelectionDsl.Grammar.PlainDslName]}**`()`**
          */
         @[ExcludeFromSources ExportAsHtml]
-        public interface PlainDslPartOfGrammar
+        public typealias PlainDslPartOfGrammar = Nothing
 
         /**
-         * {@include [Indent]}\[**`\[`**\][ColumnsSelectionDsl.col]{@include [DslGrammarTemplate.IndexRef]}\[**`\]`**\][ColumnsSelectionDsl.col]
+         * {@include [Indent]}\[**`\[`**\][ColumnsSelectionDsl.col]<code></code>{@include [DslGrammarTemplate.IndexRef]}\[**`\]`**\][ColumnsSelectionDsl.col]
          *
-         * {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]
+         * {@include [Indent]}`| `[**`[`**][cols]<code></code>{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]
          *
          * {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
          *
@@ -297,11 +297,11 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
              * {@include [ColumnSetPartOfGrammar]}
              */
             @ExportAsHtml
-            public interface ForHtml
+            public typealias ForHtml = Nothing
         }
 
         /**
-         * {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`[**`]`**][cols]
+         * {@include [Indent]}`| `[**`[`**][cols]<code></code>{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`[**`]`**][cols]
          *
          * {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
          *
@@ -374,7 +374,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
              * {@include [ColumnGroupPartOfGrammar]}
              */
             @ExportAsHtml
-            public interface ForHtml
+            public typealias ForHtml = Nothing
         }
     }
 

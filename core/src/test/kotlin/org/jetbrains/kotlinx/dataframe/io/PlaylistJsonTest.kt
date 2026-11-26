@@ -6,11 +6,11 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.aggregate
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.getColumnGroupOrNull
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.minBy
@@ -112,7 +112,7 @@ class PlaylistJsonTest {
     }
 
     val path = "../data/playlistItems.json"
-    val df = DataFrame.read(path)
+    val df = DataFrame.readJson(path)
     val typed = df.cast<DataRecord>()
     val item = typed.items[0]
 
@@ -176,7 +176,7 @@ class PlaylistJsonTest {
                 snippet.thumbnails.standard
         }
         item2.snippet.columnsCount() shouldBe item.snippet.columnsCount() - 1
-        item2.snippet.getColumnGroupOrNull("thumbnails") shouldBe null
+        item2.snippet.getColumnOrNull("thumbnails")?.asColumnGroup() shouldBe null
     }
 
     @Test
@@ -193,8 +193,8 @@ class PlaylistJsonTest {
     }
 
     @Test
-    fun `union`() {
-        val merged = item.concat(item)
+    fun union() {
+        val merged = listOf(item, item).concat()
         merged.rowsCount() shouldBe item.rowsCount() * 2
         val group = merged.snippet
         group.rowsCount() shouldBe item.snippet.rowsCount() * 2

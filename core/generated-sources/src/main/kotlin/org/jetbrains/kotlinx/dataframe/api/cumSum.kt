@@ -4,9 +4,13 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.math.cumSumImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -16,19 +20,22 @@ import kotlin.reflect.KProperty
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [DataColumn]
+ * Computes the cumulative sums of the values in each column from the [<code>DataColumn</code>][DataColumn]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
+ *
+ * `cumSum` only works on columns that contain solely primitive numbers.
+ *
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
  *
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
- *
- * @return A new [DataColumn] of the same type with the cumulative sums.
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>DataColumn</code>][DataColumn] of the same type with the cumulative sums.
  *
  *
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
@@ -42,19 +49,22 @@ public fun DataColumn<Short>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Data
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [DataColumn]
+ * Computes the cumulative sums of the values in each column from the [<code>DataColumn</code>][DataColumn]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
+ *
+ * `cumSum` only works on columns that contain solely primitive numbers.
+ *
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
  *
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
- *
- * @return A new [DataColumn] of the same type with the cumulative sums.
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>DataColumn</code>][DataColumn] of the same type with the cumulative sums.
  *
  *
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
@@ -68,19 +78,22 @@ public fun DataColumn<Short?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Dat
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [DataColumn]
+ * Computes the cumulative sums of the values in each column from the [<code>DataColumn</code>][DataColumn]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
+ *
+ * `cumSum` only works on columns that contain solely primitive numbers.
+ *
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
  *
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
- *
- * @return A new [DataColumn] of the same type with the cumulative sums.
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>DataColumn</code>][DataColumn] of the same type with the cumulative sums.
  *
  *
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
@@ -94,19 +107,22 @@ public fun DataColumn<Byte>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataC
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [DataColumn]
+ * Computes the cumulative sums of the values in each column from the [<code>DataColumn</code>][DataColumn]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
+ *
+ * `cumSum` only works on columns that contain solely primitive numbers.
+ *
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
  *
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
- *
- * @return A new [DataColumn] of the same type with the cumulative sums.
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>DataColumn</code>][DataColumn] of the same type with the cumulative sums.
  *
  *
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
@@ -120,19 +136,22 @@ public fun DataColumn<Byte?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Data
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [DataColumn]
+ * Computes the cumulative sums of the values in each column from the [<code>DataColumn</code>][DataColumn]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
+ *
+ * `cumSum` only works on columns that contain solely primitive numbers.
+ *
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
  *
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
- *
- * @return A new [DataColumn] of the same type with the cumulative sums.
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>DataColumn</code>][DataColumn] of the same type with the cumulative sums.
  *
  *
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
@@ -146,19 +165,22 @@ public fun DataColumn<Double?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Da
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [DataColumn]
+ * Computes the cumulative sums of the values in each column from the [<code>DataColumn</code>][DataColumn]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
+ *
+ * `cumSum` only works on columns that contain solely primitive numbers.
+ *
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
  *
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
- *
- * @return A new [DataColumn] of the same type with the cumulative sums.
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>DataColumn</code>][DataColumn] of the same type with the cumulative sums.
  *
  *
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
@@ -172,19 +194,22 @@ public fun DataColumn<Float?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Dat
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [DataColumn]
+ * Computes the cumulative sums of the values in each column from the [<code>DataColumn</code>][DataColumn]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
+ *
+ * `cumSum` only works on columns that contain solely primitive numbers.
+ *
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
  *
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
- *
- * @return A new [DataColumn] of the same type with the cumulative sums.
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>DataColumn</code>][DataColumn] of the same type with the cumulative sums.
  *
  *
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
@@ -201,25 +226,31 @@ public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSki
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [DataFrame]
+ * Computes the cumulative sums of the values in each column from the [<code>DataFrame</code>][DataFrame]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
  *
- * @param [columns]
- * The names of the columns to apply cumSum operation.
+ * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
- * @return A new [DataFrame] of the same type with the cumulative sums.
+ * @param [columns] The selection of the columns to apply the `cumSum` operation to.
+ *   If not provided, `cumSum` will be applied to all primitive columns [<code>at any depth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
+ *
+ *
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>DataFrame</code>][DataFrame] of the same type with the cumulative sums.
  *
  * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
+@Refine
+@Interpretable("DataFrameCumSum")
 public fun <T, C : Number?> DataFrame<T>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<T, C>,
@@ -228,45 +259,55 @@ public fun <T, C : Number?> DataFrame<T>.cumSum(
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [DataFrame]
+ * Computes the cumulative sums of the values in each column from the [<code>DataFrame</code>][DataFrame]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
  *
- * @param [columns]
- * The names of the columns to apply cumSum operation.
+ * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
- * @return A new [DataFrame] of the same type with the cumulative sums.
+ * @param [columns] The selection of the columns to apply the `cumSum` operation to.
+ *   If not provided, `cumSum` will be applied to all primitive columns [<code>at any depth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
+ *
+ *
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>DataFrame</code>][DataFrame] of the same type with the cumulative sums.
  *
  * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
+@Refine
+@StringApiInterpretable(interpreter = "DataFrameCumSum", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) { columns.toColumnSet().cast() }
 
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [DataFrame]
+ * Computes the cumulative sums of the values in each column from the [<code>DataFrame</code>][DataFrame]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
  *
- * @param [columns]
- * The names of the columns to apply cumSum operation.
+ * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
- * @return A new [DataFrame] of the same type with the cumulative sums.
+ * @param [columns] The selection of the columns to apply the `cumSum` operation to.
+ *   If not provided, `cumSum` will be applied to all primitive columns [<code>at any depth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
+ *
+ *
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>DataFrame</code>][DataFrame] of the same type with the cumulative sums.
  *
  * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
@@ -282,20 +323,24 @@ public fun <T> DataFrame<T>.cumSum(
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [DataFrame]
+ * Computes the cumulative sums of the values in each column from the [<code>DataFrame</code>][DataFrame]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
  *
- * @param [columns]
- * The names of the columns to apply cumSum operation.
+ * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
- * @return A new [DataFrame] of the same type with the cumulative sums.
+ * @param [columns] The selection of the columns to apply the `cumSum` operation to.
+ *   If not provided, `cumSum` will be applied to all primitive columns [<code>at any depth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
+ *
+ *
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>DataFrame</code>][DataFrame] of the same type with the cumulative sums.
  *
  * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
@@ -311,29 +356,33 @@ public fun <T> DataFrame<T>.cumSum(
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [DataFrame]
+ * Computes the cumulative sums of the values in each column from the [<code>DataFrame</code>][DataFrame]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
+ *
+ * `cumSum` only works on columns that contain solely primitive numbers.
+ *
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
  *
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
- *
- * @return A new [DataFrame] of the same type with the cumulative sums.
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>DataFrame</code>][DataFrame] of the same type with the cumulative sums.
  *
  *
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  *
  */
+@Refine
+@Interpretable("DataFrameCumSum0")
 public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) {
-        // TODO keep at any depth?
-        colsAtAnyDepth().filter { it.isNumber() }.cast()
+        colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()
     }
 
 // endregion
@@ -343,25 +392,31 @@ public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataF
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [GroupBy]
+ * Computes the cumulative sums of the values in each column from the [<code>GroupBy</code>][GroupBy]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
  *
- * @param [columns]
- * The names of the columns to apply cumSum operation.
+ * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
- * @return A new [GroupBy] of the same type with the cumulative sums.
+ * @param [columns] The selection of the columns to apply the `cumSum` operation to.
+ *   If not provided, `cumSum` will be applied to all primitive columns [<code>at any depth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
+ *
+ *
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>GroupBy</code>][GroupBy] of the same type with the cumulative sums.
  *
  * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
+@Refine
+@Interpretable("GroupByCumSum")
 public fun <T, G, C : Number?> GroupBy<T, G>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<G, C>,
@@ -370,45 +425,55 @@ public fun <T, G, C : Number?> GroupBy<T, G>.cumSum(
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [GroupBy]
+ * Computes the cumulative sums of the values in each column from the [<code>GroupBy</code>][GroupBy]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
  *
- * @param [columns]
- * The names of the columns to apply cumSum operation.
+ * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
- * @return A new [GroupBy] of the same type with the cumulative sums.
+ * @param [columns] The selection of the columns to apply the `cumSum` operation to.
+ *   If not provided, `cumSum` will be applied to all primitive columns [<code>at any depth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
+ *
+ *
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>GroupBy</code>][GroupBy] of the same type with the cumulative sums.
  *
  * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
+@Refine
+@StringApiInterpretable("GroupByCumSum", stringArgument = "columns", targetArgument = "columns")
 public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) { columns.toColumnSet().cast() }
 
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [GroupBy]
+ * Computes the cumulative sums of the values in each column from the [<code>GroupBy</code>][GroupBy]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
  *
- * @param [columns]
- * The names of the columns to apply cumSum operation.
+ * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
- * @return A new [GroupBy] of the same type with the cumulative sums.
+ * @param [columns] The selection of the columns to apply the `cumSum` operation to.
+ *   If not provided, `cumSum` will be applied to all primitive columns [<code>at any depth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
+ *
+ *
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>GroupBy</code>][GroupBy] of the same type with the cumulative sums.
  *
  * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
@@ -424,20 +489,24 @@ public fun <T, G> GroupBy<T, G>.cumSum(
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [GroupBy]
+ * Computes the cumulative sums of the values in each column from the [<code>GroupBy</code>][GroupBy]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
  *
- * @param [columns]
- * The names of the columns to apply cumSum operation.
+ * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
- * @return A new [GroupBy] of the same type with the cumulative sums.
+ * @param [columns] The selection of the columns to apply the `cumSum` operation to.
+ *   If not provided, `cumSum` will be applied to all primitive columns [<code>at any depth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
+ *
+ *
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>GroupBy</code>][GroupBy] of the same type with the cumulative sums.
  *
  * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
@@ -453,29 +522,33 @@ public fun <T, G> GroupBy<T, G>.cumSum(
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in each column from the [GroupBy]
+ * Computes the cumulative sums of the values in each column from the [<code>GroupBy</code>][GroupBy]
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [<code>Double</code>][Double] and [<code>Float</code>][Float] columns)
+ * or `null` (for other columns).
+ *
+ * `cumSum` only works on columns that contain solely primitive numbers.
+ *
+ * Similar to [<code>sum</code>][org.jetbrains.kotlinx.dataframe.api.sum], [<code>Byte</code>][Byte]- and [<code>Short</code>][Short]-columns are converted to [<code>Int</code>][Int].
  *
  *
  *
- * @param [skipNA] Whether to skip null and NaN values (default: `true`).
- *
- * @return A new [GroupBy] of the same type with the cumulative sums.
+ * @param [skipNA] Whether to skip `null` and `NaN` values (default: `true`).
+ * @return A new [<code>GroupBy</code>][GroupBy] of the same type with the cumulative sums.
  *
  *
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  *
  */
+@Refine
+@Interpretable("GroupByCumSum0")
 public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) {
-        // TODO keep at any depth?
-        colsAtAnyDepth().filter { it.isNumber() }.cast()
+        colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()
     }
 
 // endregion

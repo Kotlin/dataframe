@@ -1,0 +1,78 @@
+[//]: # (title: Import OpenAPI Schemas in Gradle project (Experimental))
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
+
+> The current Gradle plugin is **deprecated**. Its latest release is 1.0.0-Beta4 and will not have future releases.
+>
+> At the moment, OpenAPI code generation can be done **[via dedicated methods](OpenAPI.md)** instead of relying on the plugin.
+> Our plans for the next iteration of this feature can be found in [Issue #1844](https://github.com/Kotlin/dataframe/issues/1844).
+> {style="warning"}
+
+> **Experimental**: Support for OpenAPI 3.0 schemas is demoted to experimental
+> and may change or be removed in future releases. This is because OpenAPI 3.1 (and 3.2) have
+> introduced significant changes that require specialized handling.
+> Follow [Issue #897](https://github.com/Kotlin/dataframe/issues/897) for updates and please leave your feedback.
+> {style="warning"}
+
+JSON schema inference is great, but it's not perfect. However, more and more APIs offer
+[OpenAPI (Swagger)](https://swagger.io/) specifications. 
+
+Aside from API endpoints, they also hold
+[Data Models](https://swagger.io/docs/specification/data-models/) which include all the information about the types
+that can be returned from or supplied to the API. 
+
+Why should we reinvent the wheel and write our own schema inference
+when we can use the one provided by the API? 
+
+Not only will we now get the proper names of the types, but we will also
+get enums, correct inheritance and overall better type safety.
+
+First of all, you will need the extra dependency:
+
+```kotlin
+implementation("org.jetbrains.kotlinx:dataframe-openapi:%dataFrameVersion%")
+```
+
+OpenAPI type schemas can be generated using both methods described above:
+
+```kotlin
+@file:ImportDataSchema(
+    path = "https://petstore3.swagger.io/api/v3/openapi.json",
+    name = "PetStore",
+    enableExperimentalOpenApi = true,
+)
+
+import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+```
+
+```kotlin
+dataframes {
+    schema {
+        data = "https://petstore3.swagger.io/api/v3/openapi.json"
+        name = "PetStore"
+    }
+    enableExperimentalOpenApi = true
+}
+```
+
+The only difference is that the name provided is now irrelevant, since the type names are provided by the OpenAPI spec.
+(If you were wondering, yes, the Kotlin DataFrame library can tell the difference between an OpenAPI spec and normal JSON data)
+
+After importing the data schema, you can now start to import any JSON data you like using the generated schemas.
+For instance, one of the types in the schema above is `PetStore.Pet` (which can also be
+explored [here](https://petstore3.swagger.io/)),
+so let's parse some Pets:
+
+```kotlin
+val df: DataFrame<PetStore.Pet> =
+    PetStore.Pet.readJson("https://petstore3.swagger.io/api/v3/pet/findByStatus?status=available")
+```
+
+Now you will have a correctly typed [`DataFrame`](DataFrame.md)!
+
+You can also always ctrl+click on the `PetStore.Pet` type to see all the generated schemas.
+
+If you experience any issues with the OpenAPI support (since there are many gotchas and edge-cases when converting
+something as
+type-fluid as JSON to a strongly typed language), please open an issue on
+the [GitHub repo](https://github.com/Kotlin/dataframe/issues).

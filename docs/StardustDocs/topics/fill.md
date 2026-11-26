@@ -1,54 +1,88 @@
 [//]: # (title: fill)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.FillSamples-->
 
 Replace missing values.
 
+**API reference**: [`fillNulls`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/fill-nulls.html), [`fillNaNs`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/fill-na-ns.html), [`fillNA`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/fill-n-a.html)
+
 **Related operations**: [](updateConvert.md)
+
+The examples on this page use the following dataframe:
+
+<!---FUN fillDf-->
+
+```kotlin
+df
+```
+
+<inline-frame src="./resources/fillDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## fillNulls
 
-Replaces `null` values with given value or expression. 
+Replaces `null` values with the given value or expression.
+
+See also [dropNulls](drop.md#dropnulls), which removes rows with `null` values instead of replacing these values.
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN fillNulls-->
 
 ```kotlin
-df.fillNulls { colsOf<Int?>() }.with { -1 }
-// same as
-df.update { colsOf<Int?>() }.where { it == null }.with { -1 }
+df.fillNulls { weight }.with { -1.0 }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNulls.html" width="100%"/>
+<inline-frame src="./resources/fillNulls.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
+
+same as
+
+<!---FUN fillNullsAsUpdate-->
+
+```kotlin
+df.update { weight }.where { it == null }.with { -1.0 }
+```
+
+<!---END-->
+<inline-frame src="./resources/fillNulls.html" width="100%" height="500px"></inline-frame>
 
 ## fillNaNs
 
-Replaces [`NaN` values](nanAndNa.md#nan) (`Double.NaN` and `Float.NaN`) with given value or expression.
+Replaces [`NaN` values](nanAndNa.md#nan) (`Double.NaN` and `Float.NaN`) with the given value or expression.
+
+See also [dropNaNs](drop.md#dropnans), which removes rows with [`NaN` values](nanAndNa.md#nan)
+instead of replacing these values.
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN fillNaNs-->
 
 ```kotlin
-df.fillNaNs { colsOf<Double>() }.withZero()
+df.fillNaNs { weight }.withZero()
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNaNs.html" width="100%"/>
+<inline-frame src="./resources/fillNaNs.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 ## fillNA
 
-Replaces [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, and `Float.NaN`) with given value or expression.
+Replaces [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, and `Float.NaN`) with the given value or expression.
+
+See also [dropNA](drop.md#dropna), which removes rows with [`NA` values](nanAndNa.md#na)
+instead of replacing these values.
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN fillNA-->
 
 ```kotlin
-df.fillNA { weight }.with { -1 }
+df.fillNA { weight }.with { -1.0 }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNA.html" width="100%"/>
+<inline-frame src="./resources/fillNA.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->

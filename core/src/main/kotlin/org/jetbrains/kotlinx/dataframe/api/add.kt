@@ -1,20 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -25,6 +21,10 @@ import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
+import org.jetbrains.kotlinx.dataframe.util.ADD_VARARG_COLUMNS
+import org.jetbrains.kotlinx.dataframe.util.ADD_VARARG_COLUMNS_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.ADD_VARARG_FRAMES
+import org.jetbrains.kotlinx.dataframe.util.ADD_VARARG_FRAMES_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
@@ -35,14 +35,33 @@ import kotlin.reflect.KProperty
  *
  * Returns a new [DataFrame] with the new [columns] appended to the original list of [DataFrame.columns].
  *
- * For more information: {@include [DocumentationUrls.Add]}.
+ * For more information: {@include [DocumentationUrls.Add]}
  *
  * @param columns columns to add.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
  * @return new [DataFrame] with added columns.
  */
-public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addAll(columns.asIterable())
+@Deprecated(
+    message = ADD_VARARG_COLUMNS,
+    replaceWith = ReplaceWith(ADD_VARARG_COLUMNS_REPLACE),
+    level = DeprecationLevel.WARNING,
+)
+public fun <T> DataFrame<T>.add(vararg columns: BaseColumn<*>): DataFrame<T> = addAll(columns.asIterable())
+
+/**
+ * Adds new [columns] to the end of this [DataFrame] (at the top level).
+ *
+ * Returns a new [DataFrame] with the new [columns] appended to the original list of [DataFrame.columns].
+ *
+ * For more information: {@include [DocumentationUrls.Add]}
+ *
+ * @param columns columns to add.
+ * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
+ * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
+ * @return new [DataFrame] with added columns.
+ */
+public fun <T> DataFrame<T>.addAll(vararg columns: BaseColumn<*>): DataFrame<T> = addAll(columns.asIterable())
 
 /**
  * Adds new [columns] to the end of this [DataFrame] (at the top level).
@@ -56,8 +75,8 @@ public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addA
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
  * @return new [DataFrame] with added columns.
  */
-public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> =
-    dataFrameOf(columns() + columns).cast()
+public fun <T> DataFrame<T>.addAll(columns: Iterable<BaseColumn<*>>): DataFrame<T> =
+    dataFrameOf(columns() + columns).castUnchecked()
 
 /**
  * Adds all columns from the given [dataFrames] to the end of this [DataFrame] (at the top level).
@@ -65,14 +84,19 @@ public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> 
  * Returns a new [DataFrame] with the columns from the specified
  * [dataFrames] appended to the original list of [DataFrame.columns].
  *
- * For more information: {@include [DocumentationUrls.Add]}.
+ * For more information: {@include [DocumentationUrls.Add]}
  *
  * @param dataFrames dataFrames to get columns from.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
  * @return new [DataFrame] with added columns.
  */
-public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
+@Deprecated(
+    message = ADD_VARARG_FRAMES,
+    replaceWith = ReplaceWith(ADD_VARARG_FRAMES_REPLACE),
+    level = DeprecationLevel.WARNING,
+)
+public fun <T> DataFrame<T>.add(vararg dataFrames: DataFrame<*>): DataFrame<T> = addAll(dataFrames.asIterable())
 
 /**
  * Adds all columns from the given [dataFrames] to the end of this [DataFrame] (at the top level).
@@ -80,7 +104,24 @@ public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = add
  * Returns a new [DataFrame] with the columns from the specified
  * [dataFrames] appended to the original list of [DataFrame.columns].
  *
- * For more information: {@include [DocumentationUrls.Add]}.
+ * For more information: {@include [DocumentationUrls.Add]}
+ *
+ * @param dataFrames dataFrames to get columns from.
+ * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
+ * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
+ * @return new [DataFrame] with added columns.
+ */
+@Refine
+@Interpretable("DataFrameAddAll")
+public fun <T> DataFrame<T>.addAll(vararg dataFrames: DataFrame<*>): DataFrame<T> = addAll(dataFrames.asIterable())
+
+/**
+ * Adds all columns from the given [dataFrames] to the end of this [DataFrame] (at the top level).
+ *
+ * Returns a new [DataFrame] with the columns from the specified
+ * [dataFrames] appended to the original list of [DataFrame.columns].
+ *
+ * For more information: {@include [DocumentationUrls.Add]}
  *
  * @param dataFrames dataFrames to get columns from.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
@@ -88,7 +129,7 @@ public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = add
  * @return new [DataFrame] with added columns.
  */
 @JvmName("addAllFrames")
-public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> =
+public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<DataFrame<*>>): DataFrame<T> =
     addAll(dataFrames.flatMap { it.columns() })
 
 // endregion
@@ -99,16 +140,20 @@ public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T>
  * Receiver that is used by the [AddExpression] (for instance in the [add] and [update] operations)
  * to access new (added or updated) column value in preceding row.
  */
+@HasSchema(schemaArg = 0)
 public interface AddDataRow<out T> : DataRow<T> {
 
     /**
-     * Returns a new value that was already computed for some preceding row during current [add] or [update] column operation.
+     * Returns a new value that was already computed for some preceding row
+     * during the current [add] or [update] column operation.
      *
-     * Can be used to compute series of values with recurrence relations, e.g. fibonacci.
+     * Can be used to compute a series of values with recurrence relations, e.g. fibonacci.
      *
-     * @throws IndexOutOfBoundsException when called on a successive row that doesn't have new value yet
+     * For more information: {@include [DocumentationUrls.Add]}
+     *
+     * @throws IndexOutOfBoundsException when called on a successive row that doesn't have a new value yet
      */
-    public fun <C> AnyRow.newValue(): C
+    public fun <C> DataRow<*>.newValue(): C
 }
 
 /**
@@ -131,7 +176,7 @@ public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
  * For example, use `prev().newValue()` to access the new column value from the previous row.
  */
 @ExcludeFromSources
-internal interface AddExpressionDocs
+internal typealias AddExpressionDocs = Nothing
 
 /**
  * Creates a new column using an [AddExpression] and
@@ -157,7 +202,7 @@ internal interface AddExpressionDocs
  * }
  * ```
  *
- * For more information: {@include [DocumentationUrls.Add]}.
+ * For more information: {@include [DocumentationUrls.Add]}
  *
  * @param name name for a new column.
  * If it is empty, a unique column name will be generated.
@@ -198,10 +243,10 @@ public inline fun <reified R, T> DataFrame<T>.add(
  *
  * {@include [AddExpressionDocs]}
  *
- * For more information: {@include [DocumentationUrls.Add]}.
+ * For more information: {@include [DocumentationUrls.Add]}
  *
  * Returns a new [DataFrame] with the new column inserted at the given [path].
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * ## Example
  *
@@ -248,10 +293,12 @@ public class AddDsl<T>(
     @PublishedApi
     internal val columns: MutableList<AnyCol> = mutableListOf<AnyCol>()
 
-    public fun add(column: AnyColumnReference): Boolean = columns.add(column.resolveSingle(df)!!.data)
+    public fun add(column: ColumnReference<*>): Boolean = columns.add(column.resolveSingle(df)!!.data)
 
-    public operator fun AnyColumnReference.unaryPlus(): Boolean = add(this)
+    @Interpretable("AddDslReferencePlus")
+    public operator fun ColumnReference<*>.unaryPlus(): Boolean = add(this)
 
+    @Interpretable("AddDslStringPlus")
     public operator fun String.unaryPlus(): Boolean = add(df[this])
 
     @PublishedApi
@@ -261,6 +308,7 @@ public class AddDsl<T>(
         noinline expression: AddExpression<T, R>,
     ): Boolean = add(df.mapToColumn(name, infer, expression))
 
+    @Interpretable("AddDslExpr")
     public inline fun <reified R> expr(
         infer: Infer = Infer.Nulls,
         noinline expression: AddExpression<T, R>,
@@ -281,7 +329,8 @@ public class AddDsl<T>(
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: AddExpression<T, R>): Boolean =
         add(name, Infer.Nulls, expression)
 
-    public infix fun String.from(column: AnyColumnReference): Boolean = add(column.rename(this))
+    @Interpretable("AddDslFromString")
+    public infix fun String.from(column: ColumnReference<*>): Boolean = add(column.rename(this))
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -292,7 +341,7 @@ public class AddDsl<T>(
     public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean = name from column
 
     @Interpretable("Into")
-    public infix fun AnyColumnReference.into(name: String): Boolean = add(rename(name))
+    public infix fun ColumnReference<*>.into(name: String): Boolean = add(rename(name))
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -307,11 +356,11 @@ public class AddDsl<T>(
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public infix fun AnyColumnGroupAccessor.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
+    public infix fun ColumnAccessor<DataRow<*>>.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun group(column: AnyColumnGroupAccessor, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
+    public fun group(column: ColumnAccessor<DataRow<*>>, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
 
     @Interpretable("AddDslNamedGroup")
     public fun group(name: String, body: AddDsl<T>.() -> Unit) {
@@ -320,19 +369,21 @@ public class AddDsl<T>(
         add(dsl.columns.toColumnGroup(name))
     }
 
+    @Interpretable("AddDslAddGroup")
     public fun group(body: AddDsl<T>.() -> Unit): AddGroup<T> = AddGroup(body)
 
+    @Interpretable("AddDslAddGroupInto")
     public infix fun AddGroup<T>.into(groupName: String): Unit = group(groupName, body)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
+    public infix fun AddGroup<T>.into(column: ColumnAccessor<DataRow<*>>): Unit = into(column.name())
 }
 
 /**
  * Creates new columns using the [AddDsl] builder.
  *
- * An [AddDsl] allows to add multiple new columns and column groups to a [DataFrame]
+ * An [AddDsl] allows you to add multiple new columns and column groups to a [DataFrame]
  * using concise syntax based on `from`, `into` operations and [AddExpression]s.
  *
  * Returns a new [DataFrame] with the newly added columns.
@@ -361,7 +412,7 @@ public class AddDsl<T>(
  * }
  * ```
  *
- * For more information: {@include [DocumentationUrls.Add]}.
+ * For more information: {@include [DocumentationUrls.Add]}
  *
  * @param body An [AddDsl] expression used to define new columns and column groups.
  * @return A new [DataFrame] with the added columns.
@@ -371,7 +422,7 @@ public class AddDsl<T>(
 public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)
     body(dsl)
-    return dataFrameOf(this@add.columns() + dsl.columns).cast()
+    return dataFrameOf(this@add.columns() + dsl.columns).castUnchecked()
 }
 
 /**
@@ -382,6 +433,10 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  *
  * Returns a new [GroupBy] with the new column
  * appended to each group [DataFrame] to the original list of [DataFrame.columns].
+ *
+ * Check out [`GroupBy grammar`][Grammar].
+ *
+ * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
  * ## Example
  *
@@ -399,8 +454,6 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  * }
  * ```
  *
- * For more information: {@include [DocumentationUrls.Add]}.
- *
  * @param name name for a new column.
  * If it is empty, a unique column name will be generated.
  * Otherwise, it should be unique for original group [DataFrame]s.
@@ -409,7 +462,7 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  * @param expression [AddExpression] that computes column value for every [DataRow] of a new column.
  * @return new [GroupBy] with added column.
  *
- * @throws DuplicateColumnNamesException if group [DataFrame]s already contains a column with given [name].
+ * @throws DuplicateColumnNamesException if group [DataFrame]s already contain a column with given [name].
  */
 @Refine
 @Interpretable("GroupByAdd")

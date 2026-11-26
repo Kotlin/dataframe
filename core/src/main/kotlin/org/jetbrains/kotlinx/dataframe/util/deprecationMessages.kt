@@ -5,6 +5,10 @@ package org.jetbrains.kotlinx.dataframe.util
  * After each release, all messages should be reviewed and updated.
  * Level.WARNING -> Level.ERROR
  * Level.ERROR -> Remove
+ *
+ * Please add info about all deprecations / removals to the Migration Guide
+ * (./docs/StardustDocs/topics/MigrationTo_1_0.md)
+ * in the same PR!
  */
 
 // region WARNING in 0.15, ERROR in 1.0
@@ -43,6 +47,8 @@ public const val DF_READ_EXCEL: String = "This function is just here for binary 
 internal const val PARSER_OPTIONS = "This constructor is only here for binary compatibility. $MESSAGE_1_0"
 
 internal const val PARSER_OPTIONS_COPY = "This function is only here for binary compatibility. $MESSAGE_1_0"
+
+internal const val PRINT = "This function is only here for binary compatibility. $MESSAGE_1_0"
 
 internal const val IS_COMPARABLE =
     "This function is replaced by `valuesAreComparable()` to better reflect its purpose. $MESSAGE_1_0"
@@ -113,6 +119,81 @@ internal const val TO_URL_REPLACE = "toUrl()"
 internal const val FILTER_BY = "This function is deprecated in favor of `filter { }`. $MESSAGE_1_0"
 internal const val FILTER_BY_REPLACE = "filter { column }"
 
+internal const val FORMATTING_DSL = "Replaced by `FormattingDsl`. $MESSAGE_1_0"
+internal const val FORMATTING_DSL_REPLACE = "FormattingDsl"
+
+internal const val RGB_COLOR = "Replaced by `RgbColor`. $MESSAGE_1_0"
+internal const val RGB_COLOR_REPLACE = "RgbColor"
+
+internal const val COLS_TO_ALL = "This `cols()` overload will be removed in favor of `all()`. $MESSAGE_1_0"
+internal const val COLS_TO_ALL_REPLACE = "this.all()"
+
+internal const val COLS_TO_ALL_COLS = "This `cols()` overload will be removed in favor of `allCols()`. $MESSAGE_1_0"
+internal const val COLS_TO_ALL_COLS_REPLACE = "this.allCols()"
+
+internal const val CONVERT_TO_INSTANT =
+    "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Either migrate to kotlin.time.Instant and use convertToStdlibInstant() or use convertToDeprecatedInstant(). $MESSAGE_1_0 and migrated to kotlin.time.Instant in 1.1."
+internal const val CONVERT_TO_INSTANT_REPLACE = "this.convertToDeprecatedInstant()"
+
+internal const val TO_INSTANT =
+    "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Either migrate to kotlin.time.Instant and use toStdlibInstant() or use toDeprecatedInstant(). $MESSAGE_1_0 and migrated to kotlin.time.Instant in 1.1."
+internal const val TO_INSTANT_REPLACE = "this.toDeprecatedInstant()"
+
+internal const val COL_TYPE_INSTANT =
+    "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Either migrate to kotlin.time.Instant and use ColType.StdlibInstant or use ColType.DeprecatedInstant. $MESSAGE_1_0 and migrated to kotlin.time.Instant in 1.1."
+internal const val COL_TYPE_INSTANT_REPLACE = "ColType.DeprecatedInstant"
+
+internal const val INSERT_AFTER_COL_PATH =
+    "This `after()` overload will be removed in favor of `after { }` with Column Selection DSL. $MESSAGE_1_0"
+internal const val INSERT_AFTER_COL_PATH_REPLACE = "this.after { columnPath }"
+
+internal const val DISPLAY_CONFIGURATION = "This constructor is only here for binary compatibility. $MESSAGE_1_0"
+
+internal const val DISPLAY_CONFIGURATION_COPY = "This function is only here for binary compatibility. $MESSAGE_1_0"
+
+internal const val COMPARE_RESULT_EQUALS =
+    "'Equals' is deprecated in favor of 'Matches' to clarify column order is irrelevant. $MESSAGE_1_0"
+
+internal const val INSERT_UNDER = "This `ColumnPath` overload is deprecated in favor of `.under { path }`. $MESSAGE_1_0"
+
+internal const val ADD_DATE_TIME_PATTERN =
+    "This function is deprecated in favor of `addDateTimeFormat` built on kotlinx-datetime. Alternatively, use `addJavaDateTimePattern` for Java-based parsing. $MESSAGE_1_0"
+
+internal const val CONVERT_TO_WITHOUT_PARSER_OPTIONS =
+    "This overload is only here for binary compatibility. $MESSAGE_1_0"
+
+internal const val CONVERT_TO_KOTLIN_DATETIME_LOCALE =
+    "We no longer accept `Locale` in String -> Kotlin date-time conversion functions, " +
+        "as we now directly parse to Kotlin. " +
+        "If you need to specify a locale to make it work, convert to Java-based types first. $MESSAGE_1_0"
+
+internal const val DATAFRAME_READ =
+    "This function is deprecated in favor of the IO-specific functions, like `DataFrame.readCsv()`, and `DataFrame.readJson()`. $MESSAGE_1_0"
+
+internal const val DATAROW_READ =
+    "This function is deprecated in favor of the IO-specific functions, like `DataRow.readJson()`, and `DataFrame.readCsv().single()`. $MESSAGE_1_0"
+
+internal const val SUPPORTED_DATAFRAME_FORMAT: String =
+    "SupportedDataFrameFormat is deprecated. $MESSAGE_1_0"
+
+internal const val TRAVERSE_PROPERTIES_DSL =
+    "Top-level `exclude`/`preserve` calls in `toDataFrame {}` are deprecated. " +
+        "Move them into each `properties { }` block to configure traversal instead. $MESSAGE_1_0"
+
+internal const val DF_STD_BINARY_COMPAT = "This is here for binary compatibility. $MESSAGE_1_0"
+
+internal const val GROUPED_MEDIAN_FOR_BINARY_COMPAT = "This is here for binary compatibility. $MESSAGE_1_0"
+
+internal const val GROUPED_PERCENTILE_FOR_BINARY_COMPAT = "This is here for binary compatibility. $MESSAGE_1_0"
+
+internal const val SUGGEST_IF_NULL = "This is here for binary compatibility. $MESSAGE_1_0"
+
+internal const val INDICES_BASE_COLUMN = "This function is only here for binary compatibility. $MESSAGE_1_0"
+
+internal const val CAST_UNCHECKED =
+    "Unchecked `cast<T>()` was renamed to `castUnchecked<T>()`; `cast<T>()` now verifies the schema. " +
+        "This function is only here for binary compatibility."
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
@@ -180,12 +261,91 @@ internal const val SINGLE_COL_REPLACE = "this.allCols().filter(condition).single
 internal const val SINGLE_PLAIN_REPLACE = "this.cols().filter(condition).single()"
 internal const val SINGLE_SET_REPLACE = "this.filter(condition).single()"
 
+internal const val GENERATE_CODE =
+    "This function has been deprecated in favor of the more explicit `generateInterfaces()`. The `fields` parameter has also been removed. Use `CodeGenerator` explicitly, if you need it. $MESSAGE_1_1"
+
+internal const val GENERATE_CODE_REPLACE1 = "this.generateInterfaces(extensionProperties = extensionProperties)"
+internal const val GENERATE_CODE_REPLACE2 =
+    "this.generateInterfaces(markerName = markerName, extensionProperties = extensionProperties, visibility = visibility)"
+
+internal const val GENERATE_INTERFACES = "This function is just here for binary compatibility. $MESSAGE_1_1"
+
+internal const val UNIFIED_SIMILAR_CS_API = "Deprecated duplicated functionality. $MESSAGE_1_1"
+
+internal const val CONVERT_TO_DEPRECATED_INSTANT =
+    "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Migrate to kotlin.time.Instant and use convertToStdlibInstant() at your own pace. $MESSAGE_1_1"
+internal const val CONVERT_TO_DEPRECATED_INSTANT_REPLACE = "this.convertToStdlibInstant()"
+
+internal const val TO_DEPRECATED_INSTANT =
+    "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Migrate to kotlin.time.Instant and use toStdlibInstant() at your own pace. $MESSAGE_1_1"
+internal const val TO_DEPRECATED_INSTANT_REPLACE = "this.toStdlibInstant()"
+
+internal const val COL_TYPE_DEPRECATED_INSTANT =
+    "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Migrate to kotlin.time.Instant and use Coltype.StdlibInstant at your own pace. $MESSAGE_1_1"
+internal const val COL_TYPE_DEPRECATED_INSTANT_REPLACE = "ColType.StdlibInstant"
+
+internal const val MESSAGE_SHORTCUT = "This shortcut is deprecated. $MESSAGE_1_1"
+
+internal const val LENGTH_REPLACE = "this.map { it?.length ?: 0 }"
+internal const val LOWERCASE_REPLACE = "this.map { it?.lowercase() }"
+internal const val UPPERCASE_REPLACE = "this.map { it?.uppercase() }"
+
+internal const val ADD_VARARG_COLUMNS = "Deprecated in favor of `addAll(vararg)` to improve completion. $MESSAGE_1_1"
+internal const val ADD_VARARG_COLUMNS_REPLACE = "this.addAll(*columns)"
+
+internal const val ADD_VARARG_FRAMES = "Deprecated in favor of `addAll(vararg)` to improve completion. $MESSAGE_1_1"
+internal const val ADD_VARARG_FRAMES_REPLACE = "this.addAll(*dataFrames)"
+
+internal const val IS_EMPTY_REPLACE = "values().all { it == null }"
+internal const val IS_NOT_EMPTY_REPLACE = "values().any { it != null }"
+internal const val GET_ROW_REPLACE = "df().getRow(index)"
+internal const val GET_ROWS_ITERABLE_REPLACE = "df().getRows(indices)"
+internal const val GET_ROWS_RANGE_REPLACE = "df().getRows(indices)"
+internal const val GET_ROW_OR_NULL_REPLACE = "df().getRowOrNull(index)"
+internal const val COPY_REPLACE = "columns().toDataFrame().castUnchecked()"
+
+internal const val LISTS_TO_DATAFRAME_MIGRATION =
+    "Function moved from io to api package, and a new `header` parameter is introduced. $MESSAGE_1_1"
+
+internal const val KEY_VALUE_PROPERTY = "Deprecated in favor of NameValueProperty. $MESSAGE_1_1"
+internal const val KEY_VALUE_PROPERTY_KEY =
+    "This column will be renamed to 'name' when KeyValueProperty will be replaced with NameValueProperty. $MESSAGE_1_1"
+
+internal const val NAME_REPAIR_STRATEGY: String =
+    "NameRepairStrategy is deprecated. Name repair is now always applied via ColumnNameGenerator, consistent with other IO readers. $MESSAGE_1_1"
+
+internal const val DESC_TO_REVERSED: String =
+    "This function is deprecated and renamed to `reversed()` to better reflect its purpose. $MESSAGE_1_1"
+
+internal const val SORT_BY_COUNT_TO_SORT_BY_COUNT_DESC: String =
+    "This function is deprecated and renamed to `sortByCountDesc()` to better reflect its purpose. $MESSAGE_1_1"
+
+internal const val AGGREGATE_DSL_PATH: String =
+    "This function duplicates `pathOf()` and is deprecated in favor of it. $MESSAGE_1_1"
+internal const val AGGREGATE_DSL_PATH_REPLACE = "pathOf(*names)"
+internal const val PATH_OF_IMPORT = "org.jetbrains.kotlinx.dataframe.api.pathOf"
+
+internal const val GET_COLUMN_GROUP_OR_NULL: String =
+    "This function is the only `OrNull` variant of `getColumnGroup` and is deprecated in favor of `getColumnOrNull(name)?.asColumnGroup()`. $MESSAGE_1_1"
+internal const val GET_COLUMN_GROUP_OR_NULL_REPLACE = "this.getColumnOrNull(name)?.asColumnGroup()"
+internal const val AS_COLUMN_GROUP_IMPORT = "org.jetbrains.kotlinx.dataframe.api.asColumnGroup"
+
 // endregion
 
 // region keep across releases
 
 internal const val DEPRECATED_ACCESS_API =
     "It's recommended to migrate to the String or Extension Properties Access API https://kotlin.github.io/dataframe/apilevels.html"
+
+internal const val COLUMN_REFERENCE_CAST_TO_NOT_NULLABLE =
+    "This function is an unchecked cast and duplicates `cast()`."
+
+internal const val SET_NULLABLE =
+    "This function doesn't change the column, and the new nullability is not visible in its result type; " +
+        "use `castToNullable()` or `castToNotNullable()` directly."
+
+internal const val DEPRECATED_DATA_ROW_COLUMN_REFERENCE_GET =
+    "Accessing a DataRow by ColumnReference (row[col]) is deprecated. Prefer String or extension property access (e.g., row[\"name\"] or row.name). The reverse indexing col[row] and colAccessor.getValue(row) remains supported"
 
 internal const val IDENTITY_FUNCTION = "This overload is an identity function and can be omitted."
 
@@ -197,4 +357,8 @@ internal const val ALL_COLS_EXCEPT_REPLACE = "this.allColsExcept { other }"
 internal const val ALL_COLS_EXCEPT_REPLACE_VARARG = "this.allColsExcept { others.toColumnSet() }"
 internal const val EXCEPT_REPLACE = "this.except { other }"
 internal const val EXCEPT_REPLACE_VARARG = "this.except { others.toColumnSet() }"
+
+internal const val RENAME_INTO =
+    "'into' has been replaced with 'to', because 'rename to' is more common in English. You can keep using 'into', but we advise using 'to'."
+
 // endregion

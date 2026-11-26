@@ -1,19 +1,23 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDslDocs
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
@@ -49,7 +53,7 @@ public interface DataFrame<out T> :
          * Can be used as a "null object" in aggregation operations, operations that work on columns (select, reorder, ...)
          *
          */
-        public inline fun <reified T> emptyOf(): DataFrame<T> = createEmptyDataFrameOf(T::class).cast()
+        public inline fun <reified T> emptyOf(): DataFrame<T> = createEmptyDataFrameOf(T::class).castUnchecked()
 
         /**
          * Creates a DataFrame with empty columns (rows = 0).
@@ -68,12 +72,46 @@ public interface DataFrame<out T> :
 
     // region rows
 
+    /**
+     * Returns the total number of rows of this [DataFrame].
+     *
+     * @return The number of rows in the [DataFrame].
+     */
+    @RequiredByIntellijPlugin
     public fun rowsCount(): Int
 
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
 
     // endregion
 
+    /**
+     * Aggregates this [DataFrame] using the provided statistics
+     * inside the [AggregateDsl].
+     *
+     * Returns a new [DataRow] with the aggregated values.
+     *
+     * @include [AggregateDslDocs]
+     * {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]}
+     * {@set [AggregateDslDocs.RECEIVER] [DataFrame]}
+     * {@set [AggregateDslDocs.RESULT_TYPE] [DataRow]}
+     * {@set [AggregateDslDocs.OPERATING_COLUMNS] columns of this [DataFrame]}
+     *
+     * #### Example
+     * ```kotlin
+     * df.aggregate {
+     *   // Count rows within each group and store the result
+     *   // into a new "total" column
+     *   count() into "total"
+     *
+     *   // Compute the maximum in "age" column within each group
+     *   // and store it into a new "maxAge" column
+     *   max { age } into "maxAge"
+     * }
+     * ```
+     *
+     * @param body The aggregation logic defined using [AggregateDsl].
+     * @return A new [DataRow] with the results of the aggregation.
+     */
     @Refine
     @Interpretable("AggregateRow")
     public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
@@ -92,11 +130,14 @@ public interface DataFrame<out T> :
 
     // region get rows
 
+    @RequiredByIntellijPlugin
     public operator fun get(index: Int): DataRow<T>
 
-    public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
+    public operator fun get(indices: Iterable<Int>): DataFrame<T> =
+        columns().map { col -> col[indices] }.toDataFrame().castUnchecked()
 
-    public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
+    public operator fun get(range: IntRange): DataFrame<T> =
+        if (range == indices()) this else columns().map { col -> col[range] }.toDataFrame().castUnchecked()
 
     public operator fun get(first: IntRange, vararg ranges: IntRange): DataFrame<T> =
         getRows(headPlusArray(first, ranges).asSequence().flatMap { it.asSequence() }.asIterable())
@@ -110,7 +151,8 @@ public interface DataFrame<out T> :
 
     public operator fun plus(col: AnyBaseCol): DataFrame<T> = add(col)
 
-    public operator fun plus(cols: Iterable<AnyBaseCol>): DataFrame<T> = (columns() + cols).toDataFrame().cast()
+    public operator fun plus(cols: Iterable<AnyBaseCol>): DataFrame<T> =
+        (columns() + cols).toDataFrame().castUnchecked()
 
     // endregion
 }
@@ -124,9 +166,11 @@ public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): Lis
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public operator fun <T> DataFrame<T>.get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> =
+public operator fun <T> DataFrame<T>.get(first: ColumnReference<*>, vararg other: ColumnReference<*>): DataFrame<T> =
     select { (listOf(first) + other).toColumnSet() }
 
+@Refine
+@Interpretable("DataFrameGetColumns")
 public operator fun <T> DataFrame<T>.get(first: String, vararg other: String): DataFrame<T> =
     select { (listOf(first) + other).toColumnSet() }
 

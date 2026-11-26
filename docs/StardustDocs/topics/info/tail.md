@@ -1,0 +1,77 @@
+# tail
+
+
+<web-summary>
+Discover `tail` operation in Kotlin DataFrame.
+</web-summary>
+
+<card-summary>
+Discover `tail` operation in Kotlin DataFrame.
+</card-summary>
+
+<link-summary>
+Discover `tail` operation in Kotlin DataFrame.
+</link-summary>
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.info.TailSamples-->
+
+Returns a [`DataFrame`](DataFrame.md) containing the last `numRows` rows, five by default.
+
+**API reference**: [`tail`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/tail.html)
+
+```text
+tail(numRows: Int = 5): DataFrame
+```
+
+If `numRows` is greater than or equal to the number of rows, the whole [`DataFrame`](DataFrame.md) is returned
+as it is.
+Otherwise, each column keeps its runtime type except for nullability: a nullable column
+whose last `numRows` values contain no `null` becomes non-nullable at runtime;
+the compile-time type is not affected.
+In the examples below, the runtime type of `city` stays `String?` in `df.tail()`, whose last five cities
+include a `null`, and becomes `String` in `df.tail(2)`.
+
+When `numRows` is `0`, the result has no rows but keeps all columns:
+a column group keeps its nested columns, and a frame column keeps its schema.
+
+A negative `numRows` throws an `IllegalArgumentException`.
+
+This is equivalent to calling [`takeLast`](sliceRows.md#takelast) with the same `numRows`.
+
+**Related operations**: [`head`](head.md), [`takeLast`](sliceRows.md#takelast), [`dropLast`](sliceRows.md#droplast).
+
+### Examples
+
+<!---FUN notebook_test_tail_1-->
+
+```kotlin
+df
+```
+
+<inline-frame src="./resources/notebook_test_tail_1.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+The last five rows, by default:
+
+<!---FUN notebook_test_tail_2-->
+
+```kotlin
+df.tail()
+```
+
+<inline-frame src="./resources/notebook_test_tail_2.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+The last two rows:
+
+<!---FUN notebook_test_tail_3-->
+
+```kotlin
+df.tail(2)
+```
+
+<inline-frame src="./resources/notebook_test_tail_3.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->

@@ -24,8 +24,6 @@ internal abstract class MissingDataColumn<T> : DataColumnInternal<T> {
 
     override fun toSet() = throw UnsupportedOperationException()
 
-    override fun changeType(type: KType) = throw UnsupportedOperationException()
-
     override fun rename(newName: String) = throw UnsupportedOperationException()
 
     override fun addParent(parent: ColumnGroup<*>) = throw UnsupportedOperationException()

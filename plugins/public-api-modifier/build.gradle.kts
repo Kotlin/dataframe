@@ -1,13 +1,10 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.ktlint)
+    with(conventions.plugins.dfbuild) {
+        alias(kotlinJvm8)
+    }
 }
 
 group = "org.jetbrains.kotlinx.dataframe"
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     compileOnly(libs.kotlin.compiler)

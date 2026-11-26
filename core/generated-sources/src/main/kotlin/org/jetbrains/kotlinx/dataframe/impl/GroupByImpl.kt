@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
@@ -32,7 +33,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.values
 
 /**
- * @property df DataFrame containing [groups] column and key columns. Represents GroupBy.
+ * @property df DataFrame containing [<code>groups</code>][groups] column and key columns. Represents GroupBy.
  */
 internal class GroupByImpl<T, G>(
     val df: DataFrame<T>,
@@ -63,7 +64,7 @@ internal class GroupByImpl<T, G>(
         if (groupedColumnName == null || groupedColumnName == groups.name()) {
             df
         } else {
-            df.rename(groups).into(groupedColumnName)
+            df.rename(groups).to(groupedColumnName)
         }
 }
 

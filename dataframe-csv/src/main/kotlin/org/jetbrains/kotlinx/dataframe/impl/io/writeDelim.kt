@@ -48,7 +48,7 @@ internal fun writeDelimImpl(
         setCommentMarker(commentChar)
         setHeaderComments(*headerComments.toTypedArray())
     }.let { adjustCsvFormat(it, it) }
-        .build()
+        .get()
 
     // let the format handle the writing, only converting AnyRow and AnyFrame to JSON
     format.print(writer).use { printer ->

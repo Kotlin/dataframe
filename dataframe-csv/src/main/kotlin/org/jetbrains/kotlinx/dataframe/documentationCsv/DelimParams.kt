@@ -1,8 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.documentationCsv
 
-import io.deephaven.csv.CsvSpecs
-import org.apache.commons.csv.CSVFormat
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses
 import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
@@ -11,51 +8,68 @@ import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
 import org.jetbrains.kotlinx.dataframe.io.DefaultNullStringsContentLink
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
+import java.nio.charset.Charset
 
 /**
  * Contains both the default values of csv/tsv parameters and the parameter KDocs.
  */
-@Suppress("ktlint:standard:class-naming", "ClassName", "KDocUnresolvedReference")
+@Suppress("ktlint:standard:class-naming", "KDocUnresolvedReference")
 internal object DelimParams {
 
     /**
      * @param path The file path to read.
+     *   Use [charset\] to specify the encoding.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
-    interface PATH_READ
+    typealias PATH_READ = Nothing
 
     /**
      * @param file The file to read.
+     *   Use [charset\] to specify the encoding.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
-    interface FILE_READ
+    typealias FILE_READ = Nothing
 
     /**
      * @param url The URL from which to fetch the data.
+     *   Use [charset\] to specify the encoding.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
-    interface URL_READ
+    typealias URL_READ = Nothing
 
     /**
      * @param fileOrUrl The file path or URL to read the data from.
+     *   Use [charset\] to specify the encoding.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
-    interface FILE_OR_URL_READ
+    typealias FILE_OR_URL_READ = Nothing
 
-    /** @param inputStream Represents the file to read. */
-    interface INPUT_STREAM_READ
+    /**
+     * @param inputStream Represents the file to read.
+     *   Use [charset\] to specify the encoding.
+     */
+    typealias INPUT_STREAM_READ = Nothing
 
     /** @param text The raw data to read in the form of a [String]. */
-    interface TEXT_READ
+    typealias TEXT_READ = Nothing
 
     /** @param file The file to write to. */
-    interface FILE_WRITE
+    typealias FILE_WRITE = Nothing
 
     /** @param path The path pointing to a file to write to. */
-    interface PATH_WRITE
+    typealias PATH_WRITE = Nothing
 
     /** @param writer The [Appendable] to write to. */
-    interface WRITER_WRITE
+    typealias WRITER_WRITE = Nothing
+
+    /**
+     * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+     *   Default: `null`
+     *
+     *   If `null`, the Charset will be read from the BOM of the provided input,
+     *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
+     */
+    val CHARSET: Charset? = null
 
     /**
      * @param delimiter The field delimiter character. Default: ','.
@@ -141,12 +155,12 @@ internal object DelimParams {
 
     /**
      * @param parserOptions Optional [parsing options][ParserOptions] for columns initially read as [String].
-     *   Default, `null`.
+     *   Default: `null`.
      *
      *   Can configure locale, date format, double parsing, skipping types, etc.
      *
      *   If [parserOptions\] or any of the arguments are `null`, the global parser configuration
-     *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
+     *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.api.parser]) will be queried.
      *
      *   The only exceptions are:
      *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
@@ -207,9 +221,10 @@ internal object DelimParams {
     const val PARSE_PARALLEL: Boolean = true
 
     /**
-     * @param adjustCsvSpecs Optional extra [CsvSpecs] configuration. Default: `{ it }`.
+     * @param adjustCsvSpecs Optional extra [CsvSpecs][io.deephaven.csv.CsvSpecs] configuration. Default: `{ it }`.
      *
-     *   Before instantiating the [CsvSpecs], the [CsvSpecs.Builder] will be passed to this lambda.
+     *   Before instantiating the [CsvSpecs][io.deephaven.csv.CsvSpecs],
+     *   the [CsvSpecs.Builder][io.deephaven.csv.CsvSpecs.Builder] will be passed to this lambda.
      *   This will allow you to configure/overwrite any CSV / TSV parsing options.
      */
     val ADJUST_CSV_SPECS: AdjustCsvSpecs = { it }
@@ -248,9 +263,11 @@ internal object DelimParams {
     val HEADER_COMMENTS: List<String> = emptyList()
 
     /**
-     * @param adjustCsvFormat Optional extra [CSVFormat] configuration. Default: `{ it }`.
+     * @param adjustCsvFormat Optional extra [CSVFormat][org.apache.commons.csv.CSVFormat] configuration.
+     *   Default: `{ it }`.
      *
-     *   Before instantiating the [CSVFormat], the [CSVFormat.Builder] will be passed to this lambda.
+     *   Before instantiating the [CSVFormat][org.apache.commons.csv.CSVFormat],
+     *   the [CSVFormat.Builder][org.apache.commons.csv.CSVFormat.Builder] will be passed to this lambda.
      *   This will allow you to configure/overwrite any CSV / TSV writing options.
      */
     val ADJUST_CSV_FORMAT: AdjustCSVFormat = { it }

@@ -2,13 +2,15 @@
 
 When working with a [`DataFrame`](DataFrame.md), the most convenient and reliable way 
 to access its columns — including for operations and retrieving column values 
-in row expressions — is through *auto-generated extension properties*.
+in [row expressions](DataRow.md#row-expressions) — is through *auto-generated extension properties*.
 They are generated based on a [dataframe schema](schemas.md),
 with the name and type of properties inferred from the name and type of the corresponding columns.
 It also works for all types of hierarchical dataframes.
 
+**API reference**: [`DataSchema`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.annotations/-data-schema/index.html)
+
 > The behavior of data schema generation differs between the 
-> [Compiler Plugin](Compiler-Plugin.md) and [Kotlin Notebook](gettingStartedKotlinNotebook.md).
+> [Compiler Plugin](Compiler-Plugin.md) and [Kotlin Notebook](SetupKotlinNotebook.md).
 >
 > * In **Kotlin Notebook**, a schema is generated **only after cell execution** for 
 > `DataFrame` variables defined within that cell.
@@ -24,12 +26,19 @@ It also works for all types of hierarchical dataframes.
 Consider a simple hierarchical dataframe from
 <resource src="example.csv"></resource>.
 
-This table consists of two columns: `name`, which is a `String` column, and `info`, 
-which is a [**column group**](DataColumn.md#columngroup) containing two nested 
-[value columns](DataColumn.md#valuecolumn) — 
-`age` of type `Int`, and `height` of type `Double`.
+> Note that this is not a regular CSV file — it contains a column with embedded JSON values.
+>
+> To read such files correctly, both the [`dataframe-csv`](Modules.md#dataframe-csv)
+> and [`dataframe-json`](Modules.md#dataframe-json) modules must be included.
+> {style="note"}
 
-<table>
+This dataframe consists of two columns:
+- `name`, which is a `String` column
+- `info`, which is a [column group](DataColumn.md#columngroup) containing two nested [value columns](DataColumn.md#valuecolumn):
+    - `age` of type `Int`
+    - `height` of type `Double`
+
+<table width="705">
   <thead>
     <tr>
       <th>name</th>
@@ -66,7 +75,7 @@ val df = DataFrame.readCsv("example.csv")
 
 **After cell execution** data schema and extensions for this `DataFrame` will be generated 
 so you can use extensions for accessing columns, 
-using it in operations inside the [Column Selector DSL](ColumnSelectors.md) 
+using them in operations inside the [Column Selector DSL](ColumnSelectors.md) 
 and [DataRow API](DataRow.md):
 
 
@@ -98,6 +107,16 @@ dfRenamed.rename { firstName }.into("name")
 dfRenamed.filter { firstName == "Nikita" }
 ```
 
+> If you use any operation that changes the dataframe's schema,
+> you can use the [String API](StringApi.md) for further operations on the dataframe.
+> ```kotlin
+> df.rename { name }.into("firstName")
+>   .update("firstName").with { (it as String) ... }
+> ```
+> However, we'd recommend assigning the dataframe with a new schema to a variable, 
+> running the cell, and continuing to work with it in the next cell.
+> { style = "note" }
+
 See the [](quickstart.md) in Kotlin Notebook with basic Extension Properties API examples.
 
 </tab>
@@ -107,30 +126,33 @@ For now, if you read [`DataFrame`](DataFrame.md) from a file or URL, you need to
 You can do it quickly with [`generate..()` methods](DataSchemaGenerationMethods.md).
 
 Define schemas:
-```kotlin
-@DataSchema
-data class PersonInfo(
-    val age: Int,
-    val height: Float
-)
 
+```kotlin
+// Data schema of the "info" column group
 @DataSchema
-data class Person(
-    val info: PersonInfo,
+interface Info {
+    val age: Int
+    val height: Float
+}
+
+// Data schema of the entire DataFrame
+@DataSchema
+interface Person {
+    val info: Info
     val name: String
-)
+}
 ```
 
 Read the [`DataFrame`](DataFrame.md) from the CSV file and specify the schema with 
 [`.convertTo()`](convertTo.md) or [`cast()`](cast.md):
 
 ```kotlin
-val df = DataFrame.readCsv("example.csv").convertTo<Person>()
+val df = DataFrame.readCsv("example.csv").cast<Person>()
 ```
 
 Extensions for this `DataFrame` will be generated automatically by the plugin, 
 so you can use extensions for accessing columns, 
-using it in operations inside the [Column Selector DSL](ColumnSelectors.md)
+using them in operations inside the [Column Selector DSL](ColumnSelectors.md)
 and [DataRow API](DataRow.md).
 
 
@@ -159,7 +181,126 @@ df.rename { name }.into("firstName")
     .filter { firstName == "Nikita" }
 ```
 
-See [Compiler Plugin Example](https://github.com/Kotlin/dataframe/tree/plugin_example/examples/kotlin-dataframe-plugin-example) 
+> For some operations, in which resulting columns cannot be inferred
+> by the Compiler Plugin (for example, [`pivot`](pivot.md)),
+> extension properties can't be inferred automatically either. For such operations,
+> you can [`cast`](cast.md) to a new data schema or use the String API.
+> { style = "warning" }
+
+See the [Compiler Plugin Example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-gradle-example) 
 IDEA project with basic Extension Properties API examples.
 </tab>
 </tabs>
+
+## Properties name generation
+
+By default, each extension property is generated with a name equal to the original column name.
+
+```kotlin
+val df = dataFrameOf("size_in_inches" to listOf(..))
+df.size_in_inches
+```
+
+If the original column name cannot be used as a property name (for example, if it contains spaces 
+or has a name equal to a keyword in Kotlin), 
+it will be enclosed in backticks.
+
+```kotlin
+val df = dataFrameOf("size in inches" to listOf(..))
+df.`size in inches`
+```
+
+However, sometimes the original column name contains special symbols
+and can't be used as a property name in backticks.
+In such cases, special symbols in the auto-generated property name will be replaced.
+
+```kotlin
+val df = dataFrameOf("size\nin:inches" to listOf(..))
+df.`size in - inches`
+```
+
+> In such cases, use [**`rename`**](rename.md) to update column names, 
+> or [**`renameToCamelCase`**](rename.md#renametocamelcase) to convert all column names 
+> in a `DataFrame` to `camelCase`, which is the idiomatic and widely preferred naming style in Kotlin.
+
+If you don't want to change the actual column name, but you need a convenient accessor for this column,
+you can use the `@ColumnName` annotation in a manually declared [data schema](schemas.md). 
+It allows you to use a property name different
+from the original column name without changing the column's actual name:
+
+```kotlin
+@DataSchema
+interface Info {
+    @ColumnName("size\nin:inches")
+    val sizeInInches: Double
+}
+```
+
+```kotlin
+val df = dataFrameOf("size\nin:inches" to listOf(..)).cast<Info>()
+df.sizeInInches
+```
+
+## Custom extension properties
+
+Sometimes it is useful to define your own extension properties 
+based on a [data schema](schema.md).
+
+For example, consider a simple dataframe with two columns and the following `BranchData` schema:
+
+```kotlin
+@DataSchema
+interface BranchData {
+    val expenses: Long
+    val revenue: Long
+}
+```
+
+```kotlin
+// Read DataFrame and cast its type parameter to BranchData
+val df = DataFrame.readCsv("branchData.csv").cast<BranchData>()
+```
+
+You can define an extension property for `DataRow<BranchData>` 
+to create a convenient shortcut:
+
+```kotlin
+// Use generated extension properties to create a new one
+val DataRow<BranchData>.profit get() = revenue - expenses
+```
+
+You can then use it, for example, in [row expressions](DataRow.md#row-expressions):
+
+```kotlin
+val dfProfitable = df.filter { it.profit > 0 }
+```
+
+Note that if you change the actual schema of a dataframe 
+(by performing operations that modify its structure), 
+this extension property can no longer be used, 
+because it is tied to the specific schema.
+
+```kotlin
+df.add("name") { "branchName" }
+    // unresolved because of `add`
+    .filter { it.profit > 0 }
+```
+
+However, you can work around this by casting back to the original schema:
+
+```kotlin
+df.add("name") { "branchName" }
+    .filter { it.cast<BranchData>().profit > 0 }
+```
+
+## Troubleshooting 
+
+Sometimes you can get an exception with a message containing
+
+```plain text
+..exception in generated DataFrame extension property..
+```
+
+This may be caused by incompatible schema usage or incorrectly defined column types.
+
+See [](Data-Schemas-And-Extension-Properties-Troubleshooting.md) for more information.

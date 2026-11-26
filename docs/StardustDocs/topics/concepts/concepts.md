@@ -26,7 +26,7 @@ You can think of it like a spreadsheet or SQL table, or a dictionary of series o
 
 The handiness of this abstraction is not in the table itself but in a set of operations defined on it. 
 The Kotlin DataFrame library is an idiomatic Kotlin DSL defining such operations. 
-The process of working with dataframe is often called *data wrangling* which 
+The process of working with dataframes is often called *data wrangling*, which 
 is the process of transforming and mapping data from one "raw" data form into another format 
 that is more appropriate for analytics and visualization. 
 The goal of data wrangling is to ensure quality and useful data.
@@ -36,25 +36,26 @@ The goal of data wrangling is to ensure quality and useful data.
 * [**Hierarchical**](hierarchical.md) — the Kotlin DataFrame library provides an ability to read and present data from different sources, 
 including not only plain **CSV** but also **JSON** or **[SQL databases](readSqlDatabases.md)**.
 This is why it was designed to be hierarchical and allows nesting of columns and cells.
-* **Functional** — the data processing pipeline is organized in a chain of [`DataFrame`](DataFrame.md)  transformation operations.
-* **Immutable** — every operation returns a new instance of [`DataFrame`](DataFrame.md)  reusing underlying storage wherever it's possible.
+* **Functional** — the data processing pipeline is organized in a chain of [`DataFrame`](DataFrame.md) transformation operations.
+* **Immutable** — every operation returns a new instance of [`DataFrame`](DataFrame.md) reusing underlying storage wherever it's possible.
 * **Readable** — data transformation operations are defined in DSL close to natural language.
 * **Practical** — provides simple solutions for common problems and the ability to perform complex tasks.
-* **Minimalistic** — simple, yet powerful data model of three [column kinds](DataColumn.md#column-kinds).
-* [**Interoperable**](collectionsInterop.md) — convertable with Kotlin data classes and collections.
+* [**Interoperable**](collectionsInterop.md) — convertible with Kotlin data classes and collections.
   This also means conversion to/from other libraries' data structures is usually quite straightforward!
-  See our [examples](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples) 
-  for some conversions between DataFrame and [Apache Spark](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/spark), [Multik](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/multik), and [JetBrains Exposed](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/exposed).
+  See our [examples](https://github.com/Kotlin/dataframe/tree/master/examples/projects) 
+  for some conversions between DataFrame and [Apache Spark](https://github.com/Kotlin/dataframe/tree/master/examples/projects/kotlin-spark),
+  [Multik](https://github.com/Kotlin/dataframe/tree/master/examples/projects/multik),
+  [Hibernate](https://github.com/Kotlin/dataframe/tree/master/examples/projects/hibernate),
+  and [JetBrains Exposed](https://github.com/Kotlin/dataframe/tree/master/examples/projects/exposed).
 * **Generic** — can store objects of any type, not only numbers or strings.
 * **Typesafe** — the Kotlin DataFrame library provides a mechanism of on-the-fly [**generation of extension properties**](extensionPropertiesApi.md) 
 that correspond to the columns of a dataframe. 
 In interactive notebooks like Jupyter or Datalore, the generation runs after each cell execution. 
-In IntelliJ IDEA there's a Gradle plugin for generation properties based on CSV file or JSON file. 
-Also, we’re working on a compiler plugin that infers and transforms [`DataFrame`](DataFrame.md) schema while typing.
-You can now clone this [project with many examples](https://github.com/koperagen/df-plugin-demo) showcasing how it allows you to reliably use our most convenient extension properties API.
-The generated properties ensure you’ll never misspell column name and don’t mess up with its type, and of course nullability is also preserved.
+In IntelliJ IDEA we’re featuring a compiler plugin that infers and transforms [`DataFrame`](DataFrame.md) schema while typing.
+You can now check out this [typical data wrangling pipeline](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-gradle-example/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/plugin/Main.kt) showcasing how it allows you to reliably use our most convenient extension properties API.
+The generated properties ensure you’ll never misspell a column name and don’t mess up its type, and of course nullability is also preserved.
 * [**Polymorphic**](schemas.md) —
-  if all columns of a [`DataFrame`](DataFrame.md) instance are presented in another dataframe,
+  if all columns of a [`DataFrame`](DataFrame.md) instance are present in another dataframe,
   then the first one will be seen as a superclass for the latter. 
 This means you can define a function on an interface with some set of columns
   and then execute it safely on any [`DataFrame`](DataFrame.md) which contains this same set of columns.

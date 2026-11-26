@@ -8,9 +8,10 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
-import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -25,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 internal const val UNNAMED_COLUMN_PREFIX = "untitled"
@@ -93,7 +95,7 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
 
     override fun columns() = columns
 
-    override fun columnNames() = columns.map { it.name() }
+    override fun columnNames(): List<String> = columns.map { it.name() }
 
     override fun columnTypes() = columns.map { it.type() }
 
@@ -112,7 +114,7 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
         val receiver = GroupByReceiverImpl(this, false)
         body(receiver, receiver)
         val row = receiver.compute() ?: DataFrame.empty(1)[0]
-        return row.cast()
+        return row.castUnchecked()
     }
 
     override fun getColumnOrNull(name: String): AnyCol? =
@@ -126,9 +128,13 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
             selector = column,
         ).singleOrNull()
 
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     override fun <R> getColumnOrNull(column: ColumnReference<R>): DataColumn<R>? =
         column.resolveSingle(this, UnresolvedColumnsPolicy.Skip)?.data
 
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     override fun <R> getColumnOrNull(column: KProperty<R>): DataColumn<R>? = getColumnOrNull(column.toColumnAccessor())
 
     override fun getColumnOrNull(path: ColumnPath): AnyCol? =

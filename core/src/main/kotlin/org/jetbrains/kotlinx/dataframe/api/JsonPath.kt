@@ -1,11 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import java.io.Serializable
 
 /**
  * Simplistic JSON path implementation.
  * Supports just keys (in bracket notation), double quotes, arrays, and wildcards.
+ *
+ * For more information: {@include [DocumentationUrls.JsonPath]}
  *
  * Examples:
  * `\$["store"]["book"][*]["author"]`

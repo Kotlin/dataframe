@@ -5,15 +5,15 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
-import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.nrow
+import java.lang.reflect.Method
 import java.math.BigDecimal
-import java.math.BigInteger
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
@@ -120,25 +120,6 @@ internal fun <T> Iterable<T>.anyNull(): Boolean = any { it == null }
 
 @PublishedApi
 internal fun emptyPath(): ColumnPath = ColumnPath(emptyList())
-
-@PublishedApi
-internal fun <T : Number> KClass<T>.zeroOrNull(): T? =
-    when (this) {
-        Int::class -> 0 as T
-        Byte::class -> 0.toByte() as T
-        Short::class -> 0.toShort() as T
-        Long::class -> 0.toLong() as T
-        Double::class -> 0.toDouble() as T
-        Float::class -> 0.toFloat() as T
-        BigDecimal::class -> BigDecimal.ZERO as T
-        BigInteger::class -> BigInteger.ZERO as T
-        Number::class -> 0 as? T
-        else -> null
-    }
-
-@PublishedApi
-internal fun <T : Number> KClass<T>.zero(): T =
-    zeroOrNull() ?: throw NotImplementedError("Zero value for $this is not supported")
 
 internal fun <T> catchSilent(body: () -> T): T? =
     try {
@@ -274,7 +255,7 @@ internal inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): It
 internal fun <T> DataFrame<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<DataFrame<T>> =
     (startIndices + nrow).zipWithNext { start, endExclusive ->
         if (start == endExclusive) {
-            DataFrame.empty().cast()
+            DataFrame.empty().castUnchecked()
         } else {
             get(start until endExclusive)
         }
@@ -432,6 +413,57 @@ internal fun KCallable<*>.isGetterLike(): Boolean =
         is KProperty<*> -> isGetterLike()
         is KFunction<*> -> isGetterLike()
         else -> false
+    }
+
+/**
+ * Cached reference to the Class.isRecord() method, which exists only in Java 16+.
+ * This is cached to avoid repeated reflection lookups.
+ */
+private val isRecordMethod: Method? by lazy {
+    try {
+        Class::class.java.getMethod("isRecord")
+    } catch (e: NoSuchMethodException) {
+        // Running on JVM < 16, records don't exist
+        null
+    }
+}
+
+/**
+ * Returns `true` if this class is a Java record.
+ *
+ * This method is compatible with JVM 1.8+ by using reflection to check for the
+ * `Class.isRecord()` method which was introduced in Java 16. On older JVMs,
+ * this will always return `false`.
+ */
+internal val KClass<*>.isJavaRecord: Boolean
+    get() = try {
+        isRecordMethod?.invoke(this.java) as? Boolean ?: false
+    } catch (e: Exception) {
+        false
+    }
+
+private val getRecordComponentsMethod: Method? by lazy {
+    try {
+        Class::class.java.getMethod("getRecordComponents")
+    } catch (_: NoSuchMethodException) {
+        null
+    }
+}
+
+private val getComponentNameMethod: Method? by lazy {
+    try {
+        val recordComponentClass = Class.forName("java.lang.reflect.RecordComponent")
+        recordComponentClass.getMethod("getName")
+    } catch (_: Exception) {
+        null
+    }
+}
+
+internal val KClass<*>.recordComponentNames: Set<String>
+    get() {
+        val components = getRecordComponentsMethod?.invoke(this.java) as? Array<*> ?: return emptySet()
+        val getName = getComponentNameMethod ?: return emptySet()
+        return components.mapTo(mutableSetOf()) { getName.invoke(it) as String }
     }
 
 /** @include [KCallable.getterName] */

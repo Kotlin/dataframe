@@ -1,13 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -24,18 +27,19 @@ import kotlin.reflect.KProperty
 // region DataFrame
 
 /**
- * Groups the specified [columns\] within the [DataFrame].
+ * Groups the specified [columns\] within the [DataFrame] into
+ * [column group][ColumnGroup].
  *
- * This function does not immediately group the columns but instead select columns to group and
+ * This function does not immediately group the columns but instead selects columns to group and
  * returns a [GroupClause],
  * which serves as an intermediate step.
  * The [GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [into][GroupClause.into] and,
+ * as [into][GroupClause.into],
  * that return a new [DataFrame] with grouped columns.
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][GroupSelectingOptions].
  *
@@ -54,7 +58,7 @@ internal interface GroupDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetGroupOperationArg]}
      */
-    interface GroupSelectingOptions
+    typealias GroupSelectingOptions = Nothing
 
     /**
      * ## Group Operation Grammar
@@ -74,23 +78,23 @@ internal interface GroupDocs {
      * __`.`__[**`into`**][GroupClause.into]` { column: `[`ColumnsSelectionDsl<T>`][ColumnsSelectionDsl]`.(`[`ColumnWithPath<C>`][ColumnWithPath]`) -> `[`AnyColumnReference`][AnyColumnReference]` }`
      *
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [group][group]} */
 @ExcludeFromSources
-private interface SetGroupOperationArg
+private typealias SetGroupOperationArg = Nothing
 
 /**
  * {@include [GroupDocs]}
  * ### This Group Overload
  */
 @ExcludeFromSources
-private interface CommonGroupDocs
+private typealias CommonGroupDocs = Nothing
 
 /**
  * @include [CommonGroupDocs]
- * @include [SelectingColumns.Dsl] {@include [SetGroupOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetGroupOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.group { columnA and columnB }.into("valueCols")
@@ -103,7 +107,7 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
 
 /**
  * @include [CommonGroupDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetGroupOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetGroupOperationArg]}
  * ### Example:
  * ```kotlin
  * df.group("second").into("valueCols")
@@ -111,11 +115,12 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
  * ```
  * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to group.
  */
+@StringApiInterpretable(interpreter = "Group0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.group(vararg columns: String): GroupClause<T, Any?> = group { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.group(vararg columns: AnyColumnReference): GroupClause<T, Any?> =
+public fun <T> DataFrame<T>.group(vararg columns: ColumnReference<*>): GroupClause<T, Any?> =
     group { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -134,8 +139,8 @@ public fun <T> DataFrame<T>.group(vararg columns: KProperty<*>): GroupClause<T, 
  * It must be followed by one of the positioning methods
  * to produce a new [DataFrame] with the updated column structure.
  *
- * Use the following methods to finalize the move:
- * - [into(groupName)][GroupClause.into] – groups selected columns into a one column group.
+ * Use the following methods to finalize the grouping:
+ * - [into(groupName)][GroupClause.into] – groups selected columns into a single column group.
  * - [into { groupNameExpression }][GroupClause.into] – groups each column into a group
  * by specifying path or name.
  *
@@ -149,7 +154,7 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
 
 /**
  * Groups columns, previously selected with [group], into new or existing column groups
- * within the [DataFrame], using an [ColumnsSelectionDsl] expression to specify the target group name for each column.
+ * within the [DataFrame], using a [ColumnsSelectionDsl] expression to specify the target group name for each column.
  * The expression is applied to each selected column and determines the name of the column group
  * it will be placed into.
  *
@@ -159,7 +164,7 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example:
  * ```kotlin
@@ -171,9 +176,11 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
  * where that column should be grouped.
  * All selected columns will be moved under the groups defined by this expression.
  */
+@Refine
 @JvmName("intoString")
 @OverloadResolutionByLambdaReturnType
 @OptIn(ExperimentalTypeInference::class)
+@Interpretable("IntoStringLambda")
 public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> String): DataFrame<T> =
     df.move(columns).under { column(it).toColumnAccessor() }
 
@@ -181,13 +188,13 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  * Groups columns, previously selected with [group], into a new or existing column group
  * within the [DataFrame] by specifying its path via [ColumnsSelectionDsl] expression.
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * See [Selecting Columns][SelectingColumns].
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.Dsl]
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples:
  * ```kotlin
@@ -207,7 +214,7 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  */
 @JvmName("intoColumn")
 public fun <T, C> GroupClause<T, C>.into(
-    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
+    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> ColumnReference<*>,
 ): DataFrame<T> = df.move(columns).under(column)
 
 /**
@@ -220,7 +227,7 @@ public fun <T, C> GroupClause<T, C>.into(
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Examples:
  * ```kotlin
@@ -237,7 +244,8 @@ public fun <T, C> GroupClause<T, C>.into(column: String): DataFrame<T> = into(co
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> GroupClause<T, C>.into(column: AnyColumnGroupAccessor): DataFrame<T> = df.move(columns).under(column)
+public fun <T, C> GroupClause<T, C>.into(column: ColumnAccessor<DataRow<*>>): DataFrame<T> =
+    df.move(columns).under(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload

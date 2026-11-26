@@ -2,11 +2,11 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.deephaven.csv.CsvSpecs
 import org.apache.commons.csv.CSVFormat
-import org.jetbrains.kotlinx.dataframe.documentationCsv.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 
 /** [\["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"\]][DEFAULT_DELIM_NULL_STRINGS] */
 @ExcludeFromSources
-internal interface DefaultNullStringsContentLink
+internal typealias DefaultNullStringsContentLink = Nothing
 
 /**
  * Default strings that are considered null when reading CSV / TSV / delim files:

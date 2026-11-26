@@ -3,28 +3,36 @@
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
 <instance-profile id="d"
-                 name="Dataframe"
+                 name="DataFrame"
                  status="release"
                  start-page="Home.topic">
     <toc-element topic="Home.topic"/>
+    <toc-element topic="ApiReference.md"/>
     <toc-element topic="Guides-And-Examples.md">
         <toc-element topic="quickstart.md"/>
         <toc-element topic="migratingFromPandas.md"/>
         <toc-element topic="Kotlin-DataFrame-Features-in-Kotlin-Notebook.md">
-            <toc-element topic="Trobleshooting.md"/>
+            <toc-element topic="Troubleshooting.md" accepts-web-file-names="trobleshooting.html"/>
         </toc-element>
+        <toc-element topic="Guide-for-backend-SQL-developers.md"/>
     </toc-element>
 
-    <toc-element topic="gettingStarted.md" accepts-web-file-names="installation.html">
-        <toc-element topic="gettingStartedKotlinNotebook.md"/>
-        <toc-element topic="gettingStartedGradle.md"/>
-        <toc-element topic="gettingStartedJupyterNotebook.md"/>
-        <toc-element topic="gettingStartedDatalore.md"/>
-        <toc-element topic="gettingStartedGradleAdvanced.md"/>
+    <toc-element topic="Setup.md" accepts-web-file-names="gettingstarted">
+        <toc-element topic="SetupGradle.md" accepts-web-file-names="gettingstartedgradle.html"/>
+        <toc-element topic="SetupMaven.md"/>
+        <toc-element topic="SetupAndroid.md"/>
+        <toc-element topic="SetupKotlinToolchain.md"/>
+        <toc-element topic="SetupKotlinNotebook.md" accepts-web-file-names="gettingstartedkotlinnotebook.html"/>
+        <toc-element topic="SetupJupyter.md" accepts-web-file-names="gettingstartedjupyternotebook.html"/>
+        <toc-element topic="SetupDatalore.md" accepts-web-file-names="gettingstarteddatalore.html"/>
+        <toc-element topic="SetupCustomGradle.md" accepts-web-file-names="gettingstartedgradleadvanced.html"/>
         <toc-element topic="Modules.md"/>
+        <toc-element topic="Packaging.md"/>
     </toc-element>
     <toc-element topic="concepts.md" accepts-web-file-names="overview.html">
-        <toc-element topic="apiLevels.md"/>
+        <toc-element topic="apiLevels.md">
+            <toc-element topic="StringApi.md"/>
+        </toc-element>
         <toc-element topic="types.md">
             <toc-element topic="DataFrame.md"/>
             <toc-element topic="DataColumn.md"/>
@@ -33,24 +41,27 @@
         <toc-element topic="hierarchical.md"/>
         <toc-element topic="nanAndNa.md"/>
         <toc-element topic="numberUnification.md"/>
-        <toc-element topic="schemas.md">
-            <toc-element topic="schemasGradle.md"/>
-            <toc-element topic="schemasJupyter.md"/>
-            <toc-element topic="schemasInheritance.md"/>
-            <toc-element topic="schemasCustom.md"/>
-            <toc-element topic="schemasExternalJupyter.md"/>
-            <toc-element topic="schemasImportSqlGradle.md"/>
-            <toc-element topic="schemasImportOpenApiGradle.md"/>
-            <toc-element topic="schemasImportOpenApiJupyter.md"/>
-            <toc-element topic="DataSchemaGenerationGradle.md"/>
-        </toc-element>
+        <toc-element topic="spellingConventions.md"/>
     </toc-element>
     <toc-element topic="extensionPropertiesApi.md"/>
-    <toc-element topic="DataSchemaGenerationMethods.md"/>
-    <toc-element topic="Compiler-Plugin.md">
+    <toc-element topic="schemas.md">
+        <toc-element topic="DataSchemaGenerationMethods.md"/>
+        <toc-element topic="schemasInheritance.md"/>
+        <toc-element topic="Data-Schemas-In-Kotlin-Notebook.md"/>
+        <toc-element topic="schemasImportOpenApiJupyter.md"/>
+        <toc-element topic="Data-Schemas-And-Extension-Properties-Troubleshooting.md"/>
+        <toc-element topic="Gradle-Plugin.md">
+            <toc-element topic="schemasGradle.md"/>
+            <toc-element topic="schemasImportSqlGradle.md"/>
+            <toc-element topic="schemasImportOpenApiGradle.md"/>
+        </toc-element>
+    </toc-element>
+    <toc-element toc-title="Compiler Plugin">
+        <toc-element topic="Compiler-Plugin.md"/>
         <toc-element topic="staticInterpretation.md"/>
         <toc-element topic="dataSchema.md"/>
         <toc-element topic="compilerPluginExamples.md"/>
+        <toc-element topic="compilerPluginLimitationsAndWorkarounds.md"/>
     </toc-element>
     <toc-element topic="operations.md">
         <toc-element topic="create.md">
@@ -61,15 +72,26 @@
             <toc-element topic="read.md"/>
             <toc-element topic="readSqlDatabases.md"/>
             <toc-element topic="readSqlFromCustomDatabase.md"/>
+            <toc-element topic="readSqlTypeMapping.md">
+                <toc-element topic="readSqlTypeMapping_MariaDB.md"/>
+                <toc-element topic="readSqlTypeMapping_MySQL.md"/>
+                <toc-element topic="readSqlTypeMapping_PostgreSQL.md"/>
+                <toc-element topic="readSqlTypeMapping_MsSql.md"/>
+                <toc-element topic="readSqlTypeMapping_H2.md"/>
+                <toc-element topic="readSqlTypeMapping_SQLite.md"/>
+                <toc-element topic="readSqlTypeMapping_DuckDB.md"/>
+            </toc-element>
             <toc-element topic="write.md"/>
         </toc-element>
         <toc-element topic="info.md">
             <toc-element topic="columnsCount.md"/>
             <toc-element topic="rowsCount.md"/>
+            <toc-element topic="isEmpty.md"/>
             <toc-element topic="countDistinct.md"/>
             <toc-element topic="columnNames.md"/>
             <toc-element topic="columnTypes.md"/>
             <toc-element topic="head.md"/>
+            <toc-element topic="tail.md"/>
             <toc-element topic="schema.md"/>
             <toc-element topic="describe.md"/>
         </toc-element>
@@ -83,12 +105,13 @@
                 <toc-element topic="last.md"/>
                 <toc-element topic="minBy.md"/>
                 <toc-element topic="maxBy.md"/>
+                <toc-element topic="asSequence.md"/>
             </toc-element>
             <toc-element topic="getColumns.md">
                 <toc-element topic="columns.md"/>
                 <toc-element topic="getColumn.md"/>
             </toc-element>
-            <toc-element topic="getValues.md">
+            <toc-element toc-title="Get values">
                 <toc-element topic="values.md"/>
             </toc-element>
         </toc-element>
@@ -96,6 +119,7 @@
             <toc-element topic="add.md"/>
             <toc-element topic="adjustSchema.md"/>
             <toc-element topic="append.md"/>
+            <toc-element topic="appendNulls.md"/>
             <toc-element topic="cast.md"/>
             <toc-element topic="concat.md"/>
             <toc-element topic="convert.md"/>
@@ -124,9 +148,9 @@
             <toc-element topic="rename.md"/>
             <toc-element topic="reorder.md"/>
             <toc-element topic="replace.md"/>
+            <toc-element topic="require.md"/>
             <toc-element topic="reverse.md"/>
             <toc-element topic="select.md"/>
-            <toc-element topic="shuffle.md"/>
             <toc-element topic="sliceRows.md"/>
             <toc-element topic="sortBy.md"/>
             <toc-element topic="split.md"/>
@@ -177,11 +201,26 @@
         <toc-element topic="columnOperations.md">
             <toc-element topic="columnArithmetics.md" toc-title="Arithmetics"/>
             <toc-element topic="columnStatistics.md" toc-title="Statistics"/>
+            <toc-element topic="asIterable.md"/>
+            <toc-element topic="asSequenceColumn.md" toc-title="asSequence"/>
+            <toc-element topic="between.md"/>
+            <toc-element topic="firstOnColumn.md"/>
+            <toc-element topic="lastOnColumn.md"/>
+            <toc-element topic="singleOnColumn.md"/>
         </toc-element>
         <toc-element topic="ColumnSelectors.md"/>
+        <toc-element topic="Utils.md">
+            <toc-element topic="any.md"/>
+            <toc-element topic="all.md"/>
+            <toc-element topic="none.md"/>
+            <toc-element topic="chunked.md"/>
+            <toc-element topic="shuffle.md"/>
+        </toc-element>
         <toc-element topic="collectionsInterop.md">
             <toc-element topic="toList.md"/>
             <toc-element topic="toMap.md"/>
+            <toc-element topic="associate.md"/>
+            <toc-element topic="associateBy.md"/>
         </toc-element>
         <toc-element topic="rendering.md">
             <toc-element topic="toHTML.md"/>
@@ -189,10 +228,30 @@
             <toc-element topic="jupyterRendering.md"/>
         </toc-element>
     </toc-element>
-    <toc-element topic="Data-Sources.md" hidden="true">
-        <toc-element topic="Integrations.md" hidden="true"/>
+    <toc-element topic="Data-Sources.md">
+        <toc-element topic="JSON.md">
+            <toc-element topic="OpenAPI.md"/>
+        </toc-element>
+        <toc-element topic="CSV-TSV.md"/>
+        <toc-element topic="Excel.md"/>
+        <toc-element topic="ApacheArrow.md"/>
+        <toc-element topic="Parquet.md"/>
+        <toc-element topic="SQL.md">
+            <toc-element topic="PostgreSQL.md"/>
+            <toc-element topic="MySQL.md"/>
+            <toc-element topic="Microsoft-SQL-Server.md"/>
+            <toc-element topic="SQLite.md"/>
+            <toc-element topic="H2.md"/>
+            <toc-element topic="MariaDB.md"/>
+            <toc-element topic="DuckDB.md"/>
+            <toc-element topic="Custom-SQL-Source.md"/>
+        </toc-element>
+        <toc-element topic="Integrations.md"/>
     </toc-element>
     <toc-element topic="_shadow_resources.md" hidden="true"/>
     <toc-element topic="Support.md"/>
     <toc-element topic="FAQ.md"/>
+    <toc-element topic="MigrationTo_1_0.md">
+        <toc-element topic="Migration-From-Plugins.md"/>
+    </toc-element>
 </instance-profile>

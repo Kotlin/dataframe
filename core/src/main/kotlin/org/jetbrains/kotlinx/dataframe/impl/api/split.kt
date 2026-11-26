@@ -27,7 +27,7 @@ internal fun <T, C, R> splitImpl(
 
     val removeResult = clause.df.removeImpl(columns = clause.columns)
 
-    // As we insert multiple columns at once it's possible to encounter a name conflict within a batch of a new columns
+    // As we insert multiple columns at once it's possible to encounter a name conflict within a batch of new columns
     // that's why an old school mutable list is used here to check for name conflicts in intermediate steps of generation
     // of columns to insert
     val columnsToInsert = mutableListOf<ColumnToInsert>()
@@ -53,6 +53,13 @@ internal fun <T, C, R> splitImpl(
         }
 
         val names = columnNamesGenerator(column, columnCollectors.size)
+
+        repeat(names.size - columnCollectors.size) {
+            val collector = createDataCollector(nrow)
+            repeat(nrow) { collector.add(clause.default) }
+            columnCollectors.add(collector)
+        }
+
         val sourcePath = node.pathFromRoot()
 
         columnCollectors.forEachIndexed { i, col ->

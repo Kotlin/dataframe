@@ -1,54 +1,68 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
+public class UngroupWrongColumnKindException(public val df: DataFrame<*>, public val col: ColumnWithPath<*>) :
+    IllegalArgumentException() {
+    override val message: String =
+        "Column '${col.path.joinToString()}' cannot be ungrouped: expected a ColumnGroup but got ${col.kind()}."
+}
+
 // region DataFrame
 
 /**
- * Ungroups the specified [column groups][columns] within the [DataFrame], i.e.,
- * replaces each [ColumnGroup] with its nested columns.
+ * Ungroups the specified [<code>column groups</code>][columns] within the [<code>DataFrame</code>][DataFrame], i.e.,
+ * replaces each [<code>ColumnGroup</code>][ColumnGroup] with its nested columns.
  *
- * See [Selecting Columns][UngroupSelectingOptions].
+ * This can include nested column groups.
  *
- * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
+ * See [<code>Selecting Columns</code>][UngroupSelectingOptions].
  *
- * Reverse operation: [group].
+ * For more information: [See `ungroup` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
+ *
+ * Reverse operation: [<code>group</code>][group].
  */
 internal interface UngroupDocs {
     /**
      *
-     * ## Selecting Columns
-     * Selecting columns for various operations (including but not limited to
-     * [DataFrame.select][org.jetbrains.kotlinx.dataframe.DataFrame.select], [DataFrame.update][org.jetbrains.kotlinx.dataframe.DataFrame.update], [DataFrame.gather][org.jetbrains.kotlinx.dataframe.DataFrame.gather], and [DataFrame.fillNulls][org.jetbrains.kotlinx.dataframe.DataFrame.fillNulls])
-     * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample]
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
-     * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     *
+     * ## Selecting Columns
+     *
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * can be done in the following ways:
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * #### NOTE:
-     * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
-     * in this DSL directly with any function, they are NOT valid return types for the
-     * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
-     * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * for specifying columns type- and name-safe.
      *
-     * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -56,115 +70,122 @@ internal interface UngroupDocs {
      *
      * #### For example:
      *
-     * `df.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>ungroup</code>][org.jetbrains.kotlinx.dataframe.api.ungroup]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * `df.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>ungroup</code>][org.jetbrains.kotlinx.dataframe.api.ungroup]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * `df.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[<code>ungroup</code>][org.jetbrains.kotlinx.dataframe.api.ungroup]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
-     * #### NOTE: There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslSingle.WithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample]
-     * Select columns using their [column names][String]
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
      *
-     * #### For example:
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * `df.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]`("length", "age")`
      *
-     * ### 3. [Column references][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors.WithExample]
-     * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
-     * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]).
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
+     * <code>`df`</code>`.`[<code>ungroup</code>][org.jetbrains.kotlinx.dataframe.api.ungroup]`("length", "age")`
      *
-     * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
      *
-     * `df.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]`(length, age)`
-     *
-     * ### 4. [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample]
-     * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
-     *
-     * #### For example:
-     * ```kotlin
-     * data class Person(val length: Double, val age: Double)
-     * ```
-     *
-     * `df.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]`(Person::length, Person::age)`
      *
      */
-    interface UngroupSelectingOptions
+    typealias UngroupSelectingOptions = Nothing
 }
 
 /**
- * Ungroups the specified [column groups][columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], i.e.,
- * replaces each [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] with its nested columns.
+ * Ungroups the specified [<code>column groups</code>][columns] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], i.e.,
+ * replaces each [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] with its nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.UngroupDocs.UngroupSelectingOptions].
+ * This can include nested column groups.
  *
- * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.UngroupDocs.UngroupSelectingOptions].
  *
- * Reverse operation: [group][org.jetbrains.kotlinx.dataframe.api.group].
+ * For more information: [See `ungroup` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
+ *
+ * Reverse operation: [<code>group</code>][org.jetbrains.kotlinx.dataframe.api.group].
  * ### This Ungroup Overload
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
- * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ *
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ *
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * #### NOTE:
- * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
- * in this DSL directly with any function, they are NOT valid return types for the
- * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
- * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
- * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
  * ### Examples:
  * ```kotlin
+ * // Ungroups "groupA" and "groupB" column groups
  * df.ungroup { groupA and groupB }
- * df.ungroup { all() }
+ * // Ungroups all column groups at any depth whose name contains the "group" substring
+ * df.ungroup { colsAtAnyDepth().colGroups { it.name().contains("group") } }
  * ```
- * @param [columns] The [Columns Selector][ColumnsSelector] used to select the column groups of this [DataFrame] to ungroup.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the column groups of this [<code>DataFrame</code>][DataFrame] to ungroup.
+ * @return A new [<code>DataFrame</code>][DataFrame] with ungrouped columns.
+ * @throws IllegalArgumentException if the specified columns are not a [<code>ColumnGroup</code>][ColumnGroup].
  */
 @Refine
 @Interpretable("Ungroup0")
-public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFrame<T> =
-    move { columns.toColumnSet().colsInGroups() }
+public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFrame<T> {
+    getColumnsWithPaths(columns).forEach { col ->
+        if (!col.isColumnGroup()) {
+            throw UngroupWrongColumnKindException(this, col)
+        }
+    }
+    return move { columns.toColumnSet().colsInGroups() }
         .into { it.path.removeAt(it.path.size - 2).toPath() }
+}
 
 /**
- * Ungroups the specified [column groups][columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], i.e.,
- * replaces each [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] with its nested columns.
+ * Ungroups the specified [<code>column groups</code>][columns] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], i.e.,
+ * replaces each [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] with its nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.UngroupDocs.UngroupSelectingOptions].
+ * This can include nested column groups.
  *
- * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.UngroupDocs.UngroupSelectingOptions].
  *
- * Reverse operation: [group][org.jetbrains.kotlinx.dataframe.api.group].
+ * For more information: [See `ungroup` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
+ *
+ * Reverse operation: [<code>group</code>][org.jetbrains.kotlinx.dataframe.api.group].
  * ### This Ungroup Overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ *
+ *
+ *
+ *
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
- * `df.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]`("length", "age")`
+ * <code>`df`</code>`.`[<code>ungroup</code>][org.jetbrains.kotlinx.dataframe.api.ungroup]`("length", "age")`
  *
- * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame] to ungroup.
+ *
+ *
+ * @param [columns] The [<code>Column Names</code>][String] used to select the columns of this [<code>DataFrame</code>][DataFrame] to ungroup.
+ * @return A new [<code>DataFrame</code>][DataFrame] with ungrouped columns.
+ * @throws IllegalArgumentException if the specified columns are not a [<code>ColumnGroup</code>][ColumnGroup].
  */
+@Refine
+@StringApiInterpretable(interpreter = "Ungroup0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.ungroup(vararg columns: String): DataFrame<T> = ungroup { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.ungroup(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.ungroup(vararg columns: ColumnReference<*>): DataFrame<T> =
     ungroup { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)

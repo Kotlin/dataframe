@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.GatherDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -52,7 +53,7 @@ import kotlin.reflect.typeOf
  *
  * This operation is the reverse of [pivot].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * For more information: {@include [DocumentationUrls.Gather]}
  *
@@ -75,7 +76,7 @@ internal interface GatherDocs {
      * `\[ `__`.`__[**`cast`**][Gather.cast]**`<T>() `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`notNull`**][Gather.cast]**`() `**`]`
+     * `\[ `__`.`__[**`notNull`**][Gather.notNull]**`() `**`]`
      *
      * {@include [Indent]}
      * `\[ `__`.`__[**`where`**][Gather.where]**`  {  `**`filter: `[`RowValueFilter`][RowValueFilter]**` } `**`]`
@@ -95,23 +96,23 @@ internal interface GatherDocs {
      * {@include [Indent]}
      * `| `__`.`__[**`valuesInto`**][Gather.valuesInto]**`(`**`valueColumn: `[`String`][String]**`)`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [gather][gather]} */
 @ExcludeFromSources
-private interface SetGatherOperationArg
+private typealias SetGatherOperationArg = Nothing
 
 /**
  * {@include [GatherDocs]}
  * ### This Gather Overload
  */
 @ExcludeFromSources
-private interface CommonGatherDocs
+private typealias CommonGatherDocs = Nothing
 
 /**
  * @include [CommonGatherDocs]
- * @include [SelectingColumns.Dsl] {@include [SetGatherOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetGatherOperationArg]}
  * ### Examples
  * ```kotlin
  * // Gather `resultA` and `resultB` columns into a single "value" column,
@@ -123,7 +124,7 @@ private interface CommonGatherDocs
  * // into a single "tag" column, omitting the key column.
  * df.gather { colsOf<String>() }.valuesInto("tag")
  * ```
- * @param [selector] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to group.
+ * @param [selector] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to gather.
  */
 @Interpretable("Gather0")
 public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T, C, String, C> =
@@ -138,13 +139,14 @@ public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T
 
 /**
  * @include [CommonGatherDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetGatherOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetGatherOperationArg]}
  * ### Example
  * ```kotlin
  * df.gather("resultA", "resultB").mapKeys { it.last() }.into("series", "value")
  * ```
  * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame] to gather.
  */
+@StringApiInterpretable(interpreter = "Gather0", stringArgument = "columns", targetArgument = "selector")
 public fun <T> DataFrame<T>.gather(vararg columns: String): Gather<T, Any?, String, Any?> =
     gather { columns.toColumnSet() }
 
@@ -249,8 +251,8 @@ public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> = wher
  * ```kotlin
  * // Gather `resultA` and `resultB` columns into a single "value" column,
  * // with the "series" column containing a key.
- * // Assuming `resultA` contains `Double` values and `
- * // resultB` contains `List<Double>` values,
+ * // Assuming `resultA` contains `Double` values
+ * // and `resultB` contains `List<Double>` values,
  * // `explodeLists` will apply only to values from `resultB`,
  * // resulting in all gathered values being of type `Double`.
  * df.gather { resultA and resultB }

@@ -16,7 +16,7 @@ Submit issues [here](https://github.com/Kotlin/dataframe/issues).
       reproduce them.
     * If the bug is in behavior, then explain what behavior you've expected and what you've got.
 * When submitting a feature request:
-    * Explain why you need the feature &mdash, your use case, and your domain.
+    * Explain why you need the feature &mdash; your use case, and your domain.
     * Explaining the problem you face is more important than suggesting a solution.
       Report your issue even if you don't have any proposed solution.
     * If there is an alternative way to do what you need, show the alternative's code.
@@ -48,12 +48,13 @@ so do familiarize yourself with the following guidelines.
 * If you fix documentation:
     * If you plan extensive rewrites/additions to the docs, then please [contact the maintainers](#contacting-maintainers)
       to coordinate the work in advance.
-    * Also, we have a special simple [guide](https://github.com/Kotlin/dataframe/blob/master/docs/contributions.md) how to contribute in the documentation.
+    * Follow the [Documentation Guidelines](DOCUMENTATION_GUIDELINES.md) for the website documentation
+      (topics and code samples) and the [KDoc Guidelines](KDOC_GUIDELINES.md) for KDocs.
 
 ## PR workflow
 
 0. The contributor builds the library locally and runs all unit tests via the Gradle task 
-   `dataframe:test -Pkotlin.dataframe.debug=true` (see the ["Building"](#building) chapter).
+   `build -Pkotlin.dataframe.debug=true` (see the ["Building"](#building) chapter).
 1. The contributor submits the PR if the local build is successful and the tests are green.
 2. The reviewer puts their name in the "Reviewers" section of the proposed PR at the start of the review process.
 3. The reviewer leaves comments or marks the PR with the abbreviation "LGTM" (Looks good to me).
@@ -85,10 +86,12 @@ so do familiarize yourself with the following guidelines.
 
 ## Environment requirements
 
-* JDK >= 21 referred to by the `JAVA_HOME` environment variable.
+* A Java runtime available through `JAVA_HOME` or `PATH` is required to launch the Gradle Wrapper.
+  The build itself runs on the daemon JDK provisioned from `gradle/gradle-daemon-jvm.properties`.
 
-  * Note, any version above 21 should work in theory, but JDK 21 is the only version we test with,
-  so it is the recommended version.
+  * The daemon JDK version is controlled by `gradle-jdk` in `gradle/libs.versions.toml`.
+    After changing it (for example, from `21` to `25`), run `./gradlew updateDaemonJvm`
+    and commit the regenerated properties file.
 
 * We recommend using [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) as the IDE. This
 has the best support for Kotlin, compiler plugins, Gradle, and [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html) of course.
@@ -96,7 +99,7 @@ has the best support for Kotlin, compiler plugins, Gradle, and [Kotlin Notebook]
 * We recommend using the [Ktlint plugin](https://plugins.jetbrains.com/plugin/15057-ktlint) for [IntelliJ IDEA](https://www.jetbrains.com/idea/download/).
 It is able to read the `.editorconfig` file and apply the same formatting rules as [Ktlint](https://pinterest.github.io/ktlint/latest/) in the CI.
 
-* Check out the [KDoc Preprocessor guide](KDOC_PREPROCESSING.md) to understand how to work with
+* Check out the [KDoc Preprocessor guide](KODEX_KDOC_PREPROCESSING.md) to understand how to work with
 [KoDEx](https://github.com/Jolanrensen/KoDEx).
 
 ## Building
@@ -108,10 +111,13 @@ This library is built with Gradle.
   things up during development.
 * Make sure to pass the extra parameter `-Pkotlin.dataframe.debug=true` to enable debug mode. This flag will
   make sure some extra checks are run, which are important but too heavy for production.
-* The parameter `-PskipKodex` allows you to skip [kdoc processing](KDOC_PREPROCESSING.md),
+* The parameter `-PskipKodex` allows you to skip [kdoc processing](KODEX_KDOC_PREPROCESSING.md),
   making local publishing faster: `./gradlew publishToMavenLocal -PskipKodex`.
   This, however, publishes the library with "broken" KDocs, 
   so it's only meant for faster iterations during development.
+* The parameter `-PincludeCoreLibrariesJson` makes the build include the `libraries.json` file in the `:core` module.
+  This file allows loading dataframe-jupyter when dataframe-core is present on its own in a Kotlin Notebook.
+  Usually only done when publishing.
 
 You can import this project into IDEA, but you have to delegate the build actions
 to Gradle (in Preferences -> Build, Execution, Deployment -> Build Tools -> Gradle -> Runner)
@@ -119,5 +125,5 @@ to Gradle (in Preferences -> Build, Execution, Deployment -> Build Tools -> Grad
 ## Contacting maintainers
 
 * If something cannot be done or doesn't work conveniently &mdash; submit an [issue](#submitting-issues).
-* To attract attention to your problem, raise a question, or make a new comment, mention one of us on Github: @koperagen @Jolanrensen @zaleslaw @ileasile
-* Discussions and general inquiries &mdash; use `#datascience` channel in [KotlinLang Slack](https://kotl.in/slack).
+* To attract attention to your problem, raise a question, or make a new comment, mention one of us on GitHub: @koperagen @Jolanrensen @zaleslaw @ileasile
+* Discussions and general inquiries &mdash; use the `#datascience` channel in [KotlinLang Slack](https://kotl.in/slack).

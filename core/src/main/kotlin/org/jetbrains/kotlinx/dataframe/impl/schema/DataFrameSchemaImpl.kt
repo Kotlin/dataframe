@@ -3,24 +3,29 @@ package org.jetbrains.kotlinx.dataframe.impl.schema
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult
-import org.jetbrains.kotlinx.dataframe.schema.CompareResult.Equals
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsDerived
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsSuper
+import org.jetbrains.kotlinx.dataframe.schema.CompareResult.Matches
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.None
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT_FOR_NESTED_SCHEMAS
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchemaDoc
 import org.jetbrains.kotlinx.dataframe.schema.plus
-import kotlin.collections.forEach
 
+/**
+ * [DataFrameSchema] implementation.
+ *
+ * @include [DataFrameSchemaDoc]
+ */
 public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) : DataFrameSchema {
 
     override fun compare(other: DataFrameSchema, comparisonMode: ComparisonMode): CompareResult {
         require(other is DataFrameSchemaImpl)
-        if (this === other) return Equals
+        if (this === other) return Matches
 
-        var result: CompareResult = Equals
+        var result: CompareResult = Matches
 
         // check for each column in this schema if there is a column with the same name in the other schema
         // - if so, check those schemas for equality, taking comparisonMode into account
@@ -54,11 +59,42 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
         return result
     }
 
-    override fun equals(other: Any?): Boolean = other is DataFrameSchema && this.compare(other).isEqual()
+    /**
+     * Returns `true` if, and only if,
+     * this schema has the same columns **in the same order** as the [other schema][other].
+     * The types must also match exactly.
+     *
+     * Each column is compared by [ColumnSchema.equals], so nested schemas of
+     * [column group schemas][ColumnSchema.Group] and [frame column schemas][ColumnSchema.Frame]
+     * are compared by these same rules, recursively.
+     *
+     * Note that [equals] and [compare][DataFrameSchema.compare] behave differently:
+     * [equals] requires schemas to match exactly, including column order,
+     * while [compare][DataFrameSchema.compare] ignores column order and provides additional comparison options
+     * (see [ComparisonMode]).
+     *
+     * Use [compare][DataFrameSchema.compare] when column order does not matter or
+     * when you need additional [comparison options][ComparisonMode].
+     *
+     * @see [DataFrameSchema.compare]
+     * @see [CompareResult.matches]
+     */
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is DataFrameSchema) return false
+        if (columns.size != other.columns.size) return false
+
+        val otherColumnsIterator = other.columns.entries.iterator()
+
+        return columns.all { (name, schema) ->
+            val (otherName, otherSchema) = otherColumnsIterator.next()
+            name == otherName && schema == otherSchema
+        }
+    }
 
     override fun toString(): String = render()
 
-    override fun hashCode(): Int = columns.hashCode()
+    override fun hashCode(): Int = columns.toList().hashCode()
 }
 
 internal fun DataFrameSchemaImpl.render(): String {
@@ -73,27 +109,23 @@ internal fun Map<String, ColumnSchema>.render(indent: Int, sb: StringBuilder, in
         sb.append(indentSequence.repeat(indent))
         sb.append("$name:")
         when (columnSchema) {
-            is ColumnSchema.Group -> {
+            is ColumnSchema.Group -> if (columnSchema.schema.columns.isNotEmpty()) {
                 sb.appendLine()
                 columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
-                sb.appendLine()
             }
 
             is ColumnSchema.Frame -> {
-                sb.appendLine(" *")
-                columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
-                sb.appendLine()
-            }
-
-            is ColumnSchema.Value -> {
-                sb.append(" ${renderType(columnSchema.type)}")
-                if (i != size - 1) {
+                sb.append(" *")
+                if (columnSchema.schema.columns.isNotEmpty()) {
                     sb.appendLine()
+                    columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
                 }
             }
 
-            else -> throw NotImplementedError(columnSchema::class.toString())
+            is ColumnSchema.Value -> sb.append(" ${renderType(columnSchema.type)}")
         }
+        // the newline goes between entries; the last entry of a map never ends with one
+        if (i != size - 1) sb.appendLine()
     }
     return sb.toString()
 }

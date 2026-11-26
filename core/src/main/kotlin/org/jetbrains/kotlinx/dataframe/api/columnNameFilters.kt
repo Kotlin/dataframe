@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
@@ -62,22 +63,28 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`nameContains`**][ColumnsSelectionDsl.nameContains] */
-        public interface PlainDslNameContains
+        @ExcludeFromSources
+        public typealias PlainDslNameContains = Nothing
 
         /** __`name`__`(`[**`Starts`**][ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
-        public interface PlainDslNameStartsEndsWith
+        @ExcludeFromSources
+        public typealias PlainDslNameStartsEndsWith = Nothing
 
         /** __`.`__[**`nameContains`**][ColumnsSelectionDsl.nameContains] */
-        public interface ColumnSetNameContains
+        @ExcludeFromSources
+        public typealias ColumnSetNameContains = Nothing
 
         /** __`.name`__`(`[**`Starts`**][ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
-        public interface ColumnSetNameStartsEndsWith
+        @ExcludeFromSources
+        public typealias ColumnSetNameStartsEndsWith = Nothing
 
         /**__`.`__[**`colsNameContains`**][ColumnsSelectionDsl.colsNameContains] */
-        public interface ColumnGroupNameContains
+        @ExcludeFromSources
+        public typealias ColumnGroupNameContains = Nothing
 
         /** __`.colsName`__`(`[**`Starts`**][ColumnsSelectionDsl.colsNameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.colsNameEndsWith]`)`**`With`** */
-        public interface ColumnGroupNameStartsWith
+        @ExcludeFromSources
+        public typealias ColumnGroupNameStartsWith = Nothing
     }
 
     // region nameContains
@@ -92,6 +99,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * NOTE: For [column groups][ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
      * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]`  {  `{@get [ARGUMENT]}{@get [ARGUMENT]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
+     *
+     * For more information: {@include [DocumentationUrls.ColumnNameFilters]}
      *
      * ### Check out: [Grammar]
      *
@@ -115,18 +124,17 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith\]
      * {@set [EXTRA_PARAMS]}
      */
-    @Suppress("ClassName")
     @ExcludeFromSources
     private interface CommonNameContainsDocs {
 
         // Example to give
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
 
         // [text\] or [regex\]
-        interface ARGUMENT
+        typealias ARGUMENT = Nothing
 
         // Optional extra params.
-        interface EXTRA_PARAMS
+        typealias EXTRA_PARAMS = Nothing
     }
 
     /**
@@ -137,7 +145,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * }
      */
     @ExcludeFromSources
-    private interface NameContainsTextDocs
+    private typealias NameContainsTextDocs = Nothing
 
     /**
      * @include [NameContainsTextDocs]
@@ -206,7 +214,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     /**
      * @include [CommonNameContainsDocs]
      * @set [CommonNameContainsDocs.ARGUMENT] [regex\] */
-    private interface NameContainsRegexDocs
+    @ExcludeFromSources
+    private typealias NameContainsRegexDocs = Nothing
 
     /**
      * @include [NameContainsRegexDocs]
@@ -277,6 +286,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@get [OPERATION_NAME]}][String.{@get [OPERATION_NAME]}]`(`{@get [ARGUMENT]}{@get [ARGUMENT]}`) }`.
      *
+     * For more information: {@include [DocumentationUrls.ColumnNameFilters]}
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -302,24 +313,23 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     private interface CommonNameStartsEndsDocs {
 
         // "Starts" or "Ends"
-        interface CAPITAL_TITLE
+        typealias CAPITAL_TITLE = Nothing
 
         // "starting" or "ending"
-        interface NOUN
+        typealias NOUN = Nothing
 
         // "startsWith" or "endsWith"
-        interface OPERATION_NAME
+        typealias OPERATION_NAME = Nothing
 
         // "nameStartsWith" or "nameEndsWith"
-        interface NAME_OPERATION_NAME
+        typealias NAME_OPERATION_NAME = Nothing
 
         // "colsNameStartsWith" or "colsNameEndsWith"
-        interface COLS_NAME_OPERATION_NAME
+        typealias COLS_NAME_OPERATION_NAME = Nothing
 
         // [prefix\] or [suffix\]
-        interface ARGUMENT
-
-        interface EXAMPLE
+        typealias ARGUMENT = Nothing
+        typealias EXAMPLE = Nothing
     }
 
     // region nameStartsWith
@@ -337,7 +347,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameContains\]
      */
     @ExcludeFromSources
-    private interface CommonNameStartsWithDocs
+    private typealias CommonNameStartsWithDocs = Nothing
 
     /**
      * @include [CommonNameStartsWithDocs]
@@ -418,7 +428,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameContains\]
      */
     @ExcludeFromSources
-    private interface CommonNameEndsWithDocs
+    private typealias CommonNameEndsWithDocs = Nothing
 
     /**
      * @include [CommonNameEndsWithDocs]
@@ -437,7 +447,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("-order") }`
      */
-    @Interpretable("NameEndsWith1")
+    @Interpretable("NameEndsWith")
     public fun ColumnsSelectionDsl<*>.nameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         asSingleColumn().colsNameEndsWith(suffix, ignoreCase)
 

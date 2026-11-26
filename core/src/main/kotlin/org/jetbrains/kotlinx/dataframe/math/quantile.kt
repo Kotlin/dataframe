@@ -6,8 +6,6 @@ import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import java.math.BigDecimal
-import java.math.BigInteger
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.round
@@ -51,11 +49,6 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
                 "Unable to compute the $name for ${
                     renderType(type)
                 }. Only primitive numbers or self-comparables are supported.",
-            )
-
-        type == typeOf<BigDecimal>() || type == typeOf<BigInteger>() ->
-            throw IllegalArgumentException(
-                "Cannot calculate the $name for big numbers in DataFrame. Only primitive numbers are supported.",
             )
     }
 
@@ -109,7 +102,7 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
  * Returns -1.0 if the sequence [this] is empty.
  * Returns [Double.NaN] if `!`[skipNaN] and a NaN is encountered.
  */
-internal fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
+private fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
     p: Double,
     type: KType,
     skipNaN: Boolean,
@@ -155,6 +148,64 @@ internal fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
     if (size == 1) return 0.0
 
     return method.indexOfQuantile(p, size).toDouble()
+}
+
+/**
+ * Returns the index of the [p]-quantile in the unsorted sequence [this], selected using [method].
+ * - `-1` if empty or all `null` (or all NaN if [skipNaN])
+ * - index of the first NaN if `!`[skipNaN] and [this] contains NaN
+ * - index of the selected value else
+ *
+ * NaN values are detected at runtime when [type] could hold them,
+ * including erased types like `Comparable<Any>`, used by the `column: String` overloads.
+ */
+internal fun <T : Comparable<T & Any>?> Sequence<T>.quantileIndex(
+    p: Double,
+    type: KType,
+    skipNaN: Boolean,
+    method: QuantileEstimationMethod.Selecting,
+    name: String = "quantile",
+): Int {
+    // Whether to run the heavy check for NaNs
+    // This needs to be done for Doubles, Floats, or erased types for the String API
+    val couldContainNaN = type.withNullability(false).let {
+        it.canBeNaN ||
+            it == typeOf<Comparable<Any>>() ||
+            it == typeOf<Any>()
+    }
+
+    // propagate NaN to return if they are not to be skipped
+    if (couldContainNaN && !skipNaN) {
+        val indexOfFirstNaN = indexOfFirst { it.isNaN }
+        if (indexOfFirstNaN >= 0) return indexOfFirstNaN
+    }
+
+    // nulls are always skipped, NaNs only remain here if skipNaN
+    val indexedSequence = this.mapIndexedNotNull { i, it ->
+        if (it == null || (couldContainNaN && it.isNaN)) {
+            null
+        } else {
+            IndexedComparable(i, it)
+        }
+    }
+
+    // get the index where the quantile can be found in the sorted sequence
+    val indexEstimation = indexedSequence.quantileIndexEstimation(
+        p = p,
+        type = typeOf<IndexedComparable<Nothing>>(),
+        skipNaN = skipNaN,
+        method = method,
+        name = name,
+    )
+    if (indexEstimation < 0.0) return -1
+    require(indexEstimation == round(indexEstimation)) {
+        "$name expected a whole number index from quantileIndexEstimation but was $indexEstimation"
+    }
+
+    val result = indexedSequence.toList().quickSelect(k = indexEstimation.toInt())
+
+    // return the original unsorted index of the found result
+    return result.index
 }
 
 /**
@@ -275,7 +326,7 @@ internal fun <IndexType : Number> QuantileEstimationMethod<*, IndexType>.indexOf
 }
 
 /**
- * Select the k't "smallest" element from list [this]
+ * Select the k'th "smallest" element from list [this]
  */
 @PublishedApi
 internal fun <T : Comparable<T>> List<T>.quickSelect(k: Int): T {

@@ -6,6 +6,7 @@ import io.kotest.matchers.collections.shouldBeIn
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
+import io.kotest.matchers.string.shouldStartWith
 import io.kotest.matchers.types.instanceOf
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.serialization.json.Json
@@ -20,19 +21,25 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.alsoDebug
+import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.colsOf
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.format
+import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toMap
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -40,15 +47,21 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.io.SERIALIZATION_VERSION
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.IS_FORMATTED
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KIND
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPE
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPES
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
+import org.jetbrains.kotlinx.dataframe.impl.io.extractArrayColumn
+import org.jetbrains.kotlinx.dataframe.impl.io.extractValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
+import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils.convertToDataFrame
 import java.net.URL
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -159,7 +172,8 @@ class JsonTests {
         group.columnsCount() shouldBe 3
         group["b"].type() shouldBe typeOf<Int?>()
         group["value"].type() shouldBe typeOf<String?>()
-        group["array"].type() shouldBe typeOf<List<Int>>()
+        group["array"].type() shouldBe typeOf<List<Int>?>()
+        group["array"].values().toList() shouldBe listOf(null, null, listOf(6, 7, 8))
     }
 
     @Test
@@ -197,8 +211,8 @@ class JsonTests {
         val df = DataFrame.readJsonStr(json).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 3
-        df["a"].type() shouldBe typeOf<List<Double>>()
-        df[1]["a"] shouldBe emptyList<Int>()
+        df["a"].type() shouldBe typeOf<List<Double>?>()
+        df[1]["a"] shouldBe null
     }
 
     @Test
@@ -215,8 +229,8 @@ class JsonTests {
         val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 3
-        df["a"].type() shouldBe typeOf<List<Double>>()
-        df[1]["a"] shouldBe emptyList<Int>()
+        df["a"].type() shouldBe typeOf<List<Double>?>()
+        df[1]["a"] shouldBe null
     }
 
     @Test
@@ -479,7 +493,8 @@ class JsonTests {
         val df = dataFrameOf("a")(listOf(1, 2, 3), null)
         val text = df.toJson()
         val df1 = DataFrame.readJsonStr(text)
-        df1["a"][1] shouldBe emptyList<Int>()
+        df1["a"][1] shouldBe null
+        df1 shouldBe df
     }
 
     @Test
@@ -487,7 +502,8 @@ class JsonTests {
         val df = dataFrameOf("a")(listOf(1, 2, 3), null)
         val text = df.toJson()
         val df1 = DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS)
-        df1["a"][1] shouldBe emptyList<Int>()
+        df1["a"][1] shouldBe null
+        df1 shouldBe df
     }
 
     @Test
@@ -499,6 +515,166 @@ class JsonTests {
         json shouldContain "\"value\":1"
         val df1 = DataFrame.readJsonStr(json)
         df shouldBe df1
+    }
+
+    @Test
+    fun `serialize multi-column frame with all-null value column`() {
+        val df = dataFrameOf("time", "value", "is_forecast_row")(
+            "2026-01-01", null, true,
+            "2026-01-02", null, true,
+        )
+
+        @Language("json")
+        val expected =
+            """
+            [
+                {"time":"2026-01-01","value":null,"is_forecast_row":true},
+                {"time":"2026-01-02","value":null,"is_forecast_row":true}
+            ]
+            """.trimIndent()
+
+        Json.parseToJsonElement(df.toJson()) shouldBe Json.parseToJsonElement(expected)
+    }
+
+    @Test
+    fun `serialize multi-column frame with partially-null value column`() {
+        val df = dataFrameOf("time", "value", "is_forecast_row")(
+            "2026-01-01", null, true,
+            "2026-01-02", 1, true,
+        )
+
+        @Language("json")
+        val expected =
+            """
+            [
+                {"time":"2026-01-01","value":null,"is_forecast_row":true},
+                {"time":"2026-01-02","value":1,"is_forecast_row":true}
+            ]
+            """.trimIndent()
+
+        Json.parseToJsonElement(df.toJson()) shouldBe Json.parseToJsonElement(expected)
+    }
+
+    @Test
+    fun `serialize generated scalar value column`() {
+        @Language("json")
+        val mixedJson = """[{"label":"record"},1,2,3]"""
+        val scalarRows = DataFrame.readJsonStr(mixedJson)[1..3]
+
+        scalarRows.toJson() shouldBe "[1,2,3]"
+    }
+
+    @Test
+    fun `recognize generated value column in mixed json`() {
+        @Language("json")
+        val mixedJson = """[1,{"label":"record"},null]"""
+        val df = DataFrame.readJsonStr(mixedJson)
+
+        df.extractValueColumn() shouldBe df["value"]
+    }
+
+    @Test
+    fun `all-null value column is read as regular column`() {
+        @Language("json")
+        val mixedJson = """[{"label":"record"},0,null,null]"""
+
+        // Issue #2045
+        DataFrame.readJsonStr(mixedJson).toJson() shouldBe """[{"label":"record"},0,null,null]"""
+
+        // Even though `value` was created by `readJson`, taking a slice makes it all-null.
+        // We can no longer tell the difference between a generated 'value' and a regular column that was named 'value'
+        // So, in this case, we produce different JSON than expected
+        val scalarRows = DataFrame.readJsonStr(mixedJson)[2..3]
+
+        scalarRows.toJson() shouldBe """[{"label":null,"value":null},{"label":null,"value":null}]"""
+    }
+
+    @Test
+    fun `Issue 2035`() {
+        val df = dataFrameOf(
+            "value" to listOf<Double?>(null, null),
+            "name" to listOf("Alice", "Bob"),
+        )
+
+        df.toJson() shouldBe """[{"value":null,"name":"Alice"},{"value":null,"name":"Bob"}]"""
+    }
+
+    @Test
+    fun `serialize value1 columns according to their structure`() {
+        val businessFrame = dataFrameOf("time", "value", "value1")(
+            "2026-01-01", "business value", null,
+            "2026-01-02", "business value", null,
+        )
+
+        @Language("json")
+        val expectedBusinessJson =
+            """
+            [
+                {"time":"2026-01-01","value":"business value","value1":null},
+                {"time":"2026-01-02","value":"business value","value1":null}
+            ]
+            """.trimIndent()
+        Json.parseToJsonElement(businessFrame.toJson()) shouldBe Json.parseToJsonElement(expectedBusinessJson)
+
+        @Language("json")
+        val mixedJson = """[{"value":"record"},1,null]"""
+        val scalarRows = DataFrame.readJsonStr(mixedJson)[1..2]
+        scalarRows.toJson() shouldBe "[1,null]"
+    }
+
+    @Test
+    fun `serialize multi-column frame with all-null array column`() {
+        val df = dataFrameOf("time", "array", "is_forecast_row")(
+            "2026-01-01", null, true,
+            "2026-01-02", null, true,
+        )
+
+        @Language("json")
+        val expected =
+            """
+            [
+                {"time":"2026-01-01","array":null,"is_forecast_row":true},
+                {"time":"2026-01-02","array":null,"is_forecast_row":true}
+            ]
+            """.trimIndent()
+
+        Json.parseToJsonElement(df.toJson()) shouldBe Json.parseToJsonElement(expected)
+
+        val array1Frame = dataFrameOf("time", "array", "array1")(
+            "2026-01-01", listOf(1), null,
+            "2026-01-02", listOf(2), null,
+        )
+
+        @Language("json")
+        val expectedArray1Json =
+            """
+            [
+                {"time":"2026-01-01","array":[1],"array1":null},
+                {"time":"2026-01-02","array":[2],"array1":null}
+            ]
+            """.trimIndent()
+
+        Json.parseToJsonElement(array1Frame.toJson()) shouldBe Json.parseToJsonElement(expectedArray1Json)
+    }
+
+    @Test
+    fun `recognize non-null array1 column`() {
+        val df = dataFrameOf("array", "array1")(
+            null, listOf(1),
+            null, listOf(2),
+        )
+
+        df.extractArrayColumn() shouldBe df["array1"]
+    }
+
+    @Test
+    fun `do not treat all-null column as array column`() {
+        val df = dataFrameOf("array", "placeholder")(
+            null, null,
+            null, null,
+        )
+
+        df.toJson() shouldBe """[{"array":null,"placeholder":null},{"array":null,"placeholder":null}]"""
     }
 
     @Test
@@ -611,7 +787,7 @@ class JsonTests {
         schema shouldNotContain "Void?"
 
         group["array1"].type() shouldBe typeOf<Int?>()
-        group["array2"].type() shouldBe typeOf<List<Int>>()
+        group["array2"].type() shouldBe typeOf<List<Int>?>()
     }
 
     @Test
@@ -693,11 +869,13 @@ class JsonTests {
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 6
         val a = df["a"] as ValueColumn<*>
-        a.type() shouldBe typeOf<List<Int?>>()
+        a.type() shouldBe typeOf<List<Int?>?>()
         a[0] shouldBe listOf(1, 2, 3)
         a[1] shouldBe listOf(null)
-        a[2..5].forEach {
-            it shouldBe emptyList<Int?>()
+        a[2] shouldBe emptyList<Int?>()
+        // json `null` and missing values are read as `null`, not as an empty list
+        a[3..5].forEach {
+            it shouldBe null
         }
     }
 
@@ -801,12 +979,12 @@ class JsonTests {
 //        ⌌-------------------------------------------------------⌍
 //        |  | a:{b:{value:Int?, array:List<Int>}, c:Int?, d:Any?}|
 //        |--|----------------------------------------------------|
-//        | 0|         { b:{ value:1, array:[] }, c:null, d:null }|
+//        | 0|       { b:{ value:1, array:null }, c:null, d:null }|
 //        | 1|  { b:{ value:null, array:[1, 2, 3] }, c:2, d:null }|
-//        | 2|      { b:{ value:null, array:[] }, c:null, d:null }|
-//        | 3|      { b:{ value:null, array:[] }, c:null, d:null }|
-//        | 4|      { b:{ value:null, array:[] }, c:null, d:null }|
-//        | 5|      { b:{ value:null, array:[] }, c:null, d:null }|
+//        | 2|    { b:{ value:null, array:null }, c:null, d:null }|
+//        | 3|    { b:{ value:null, array:null }, c:null, d:null }|
+//        | 4|    { b:{ value:null, array:null }, c:null, d:null }|
+//        | 5|    { b:{ value:null, array:null }, c:null, d:null }|
 //        ⌎-------------------------------------------------------⌏
         noKeyValue.columnsCount() shouldBe 1
         noKeyValue.rowsCount() shouldBe 6
@@ -816,12 +994,12 @@ class JsonTests {
 
             it["b"].type() shouldBe typeOf<DataRow<*>>()
             it["b"]["value"].type() shouldBe typeOf<Int?>()
-            it["b"]["array"].type() shouldBe typeOf<List<Int>>()
+            it["b"]["array"].type() shouldBe typeOf<List<Int>?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe nothingType(nullable = true)
 
             it[0].let {
-                (it["b"] as DataRow<*>).toMap() shouldBe mapOf("value" to 1, "array" to emptyList<Int>())
+                (it["b"] as DataRow<*>).toMap() shouldBe mapOf("value" to 1, "array" to null)
                 it["c"] shouldBe null
                 it["d"] shouldBe null
             }
@@ -832,7 +1010,8 @@ class JsonTests {
             }
             (it as ColumnGroup<*>)[2..5].forEach {
                 it.let {
-                    (it["b"] as DataRow<*>).toMap() shouldBe mapOf("value" to null, "array" to emptyList<Int>())
+                    // json `null` and missing values are read as `null`, not as an empty list
+                    (it["b"] as DataRow<*>).toMap() shouldBe mapOf("value" to null, "array" to null)
                     it["c"] shouldBe null
                     it["d"] shouldBe null
                 }
@@ -852,12 +1031,12 @@ class JsonTests {
                     it["a"][1].let { it as AnyFrame }.alsoDebug()
                 }
 //        ⌌------------------------------⌍
-//        |  | a:[key:String, value:Any?]|
+//        |  | a:[name:String, value:Any?]|
 //        |--|---------------------------|
-//        | 0| [1 x 2] { key:b, value:1 }|
-//        | 1|                    [3 x 2]| ->  { key:c, value:2 }
-//        | 2|                    [0 x 2]|     { key:d, value:null }
-//        | 3|                    [0 x 2]|     { key:b, value:[1,2,3] }
+//        | 0| [1 x 2] { name:b, value:1 }|
+//        | 1|                    [3 x 2]| ->  { name:c, value:2 }
+//        | 2|                    [0 x 2]|     { name:d, value:null }
+//        | 3|                    [0 x 2]|     { name:b, value:[1,2,3] }
 //        | 4|                    [0 x 2]|
 //        | 5|                    [0 x 2]|
 //        ⌎------------------------------⌏
@@ -871,7 +1050,7 @@ class JsonTests {
             it[0].let {
                 it.columnsCount() shouldBe 2
                 it.rowsCount() shouldBe 1
-                it["key"].let {
+                it["name"].let {
                     it.type() shouldBe typeOf<String>()
                     it[0] shouldBe "b"
                 }
@@ -883,7 +1062,7 @@ class JsonTests {
             it[1].let {
                 it.columnsCount() shouldBe 2
                 it.rowsCount() shouldBe 3
-                it["key"].let {
+                it["name"].let {
                     it.type() shouldBe typeOf<String>()
                     it[0] shouldBe "c"
                     it[1] shouldBe "d"
@@ -898,7 +1077,7 @@ class JsonTests {
                 it.columnsCount() shouldBe 2
                 it.rowsCount() shouldBe 0
 
-                it["key"].type() shouldBe typeOf<String>()
+                it["name"].type() shouldBe typeOf<String>()
                 it["value"].type() shouldBeIn listOf(typeOf<Any?>(), typeOf<Any>()) // no data, so Any(?) ValueColumn
             }
         }
@@ -965,12 +1144,12 @@ class JsonTests {
         }
 
 //        ⌌------------------------------⌍
-//        |  | a:[key:String, value:Any?]|
+//        |  | a:[name:String, value:Any?]|
 //        |--|---------------------------|
-//        | 0| [1 x 2] { key:b, value:1 }|
-//        | 1|                    [3 x 2]| ->  { key:c, value:2 }
-//        | 2|                    [0 x 2]|     { key:d, value:null }
-//        | 3|                    [0 x 2]|     { key:b, value:[1,2,3] }
+//        | 0| [1 x 2] { name:b, value:1 }|
+//        | 1|                    [3 x 2]| ->  { name:c, value:2 }
+//        | 2|                    [0 x 2]|     { name:d, value:null }
+//        | 3|                    [0 x 2]|     { name:b, value:[1,2,3] }
 //        | 4|                    [0 x 2]|
 //        | 5|                    [0 x 2]|
 //        ⌎------------------------------⌏
@@ -983,7 +1162,7 @@ class JsonTests {
             it[0].let {
                 it.columnsCount() shouldBe 2
                 it.rowsCount() shouldBe 1
-                it["key"].let {
+                it["name"].let {
                     it.type() shouldBe typeOf<String>()
                     it[0] shouldBe "b"
                 }
@@ -995,7 +1174,7 @@ class JsonTests {
             it[1].let {
                 it.columnsCount() shouldBe 2
                 it.rowsCount() shouldBe 3
-                it["key"].let {
+                it["name"].let {
                     it.type() shouldBe typeOf<String>()
                     it[0] shouldBe "c"
                     it[1] shouldBe "d"
@@ -1011,7 +1190,7 @@ class JsonTests {
                 it.columnsCount() shouldBe 2
                 it.rowsCount() shouldBe 0
 
-                it["key"].type() shouldBe typeOf<String>()
+                it["name"].type() shouldBe typeOf<String>()
                 it["value"].type() shouldBeIn listOf(typeOf<Any?>(), typeOf<Any>()) // no data, so Any(?) ValueColumn
             }
         }
@@ -1040,6 +1219,35 @@ class JsonTests {
         val metadata = json[METADATA]!!.jsonObject
         metadata[NROW]!!.jsonPrimitive.int shouldBe 1
         metadata[NCOL]!!.jsonPrimitive.int shouldBe 4
+        metadata[IS_FORMATTED]!!.jsonPrimitive.boolean shouldBe false
+        val columns = metadata[COLUMNS]!!.jsonArray.map { it.jsonPrimitive.content }
+        columns shouldBe listOf("id", "node_id", "name", "full_name")
+
+        val decodedData = json[KOTLIN_DATAFRAME]!!.jsonArray
+        val decodedDf = DataFrame.readJsonStr(decodedData.toString())
+        decodedDf shouldBe df
+    }
+
+    @Suppress("USELESS_IS_CHECK")
+    @Test
+    fun `json with metadata flat formatted table`() {
+        @Language("json")
+        val data =
+            """
+            [{"id":3602279,"node_id":"MDEwOlJlcG9zaXRvcnkzNjAyMjc5","name":"kotlin-web-demo","full_name":"JetBrains/kotlin-web-demo"}]
+            """.trimIndent()
+        // simulating the functions used to define whether the dataframe is formatted
+        val formattedDf = DataFrame.readJsonStr(data).format().with { background(blue) }
+        val df = convertToDataFrame(formattedDf)
+        val jsonStr = df.toJsonWithMetadata(df.rowsCount(), isFormatted = formattedDf is FormattedFrame<*>).trimIndent()
+        val json = parseJsonStr(jsonStr)
+
+        json[VERSION]!!.jsonPrimitive.content shouldBe SERIALIZATION_VERSION
+
+        val metadata = json[METADATA]!!.jsonObject
+        metadata[NROW]!!.jsonPrimitive.int shouldBe 1
+        metadata[NCOL]!!.jsonPrimitive.int shouldBe 4
+        metadata[IS_FORMATTED]!!.jsonPrimitive.boolean shouldBe true
         val columns = metadata[COLUMNS]!!.jsonArray.map { it.jsonPrimitive.content }
         columns shouldBe listOf("id", "node_id", "name", "full_name")
 
@@ -1079,6 +1287,8 @@ class JsonTests {
         val df = DataFrame.readJson(testJson("repositories"))
         val jsonStr = df.toJsonWithMetadata(df.rowsCount()).trimIndent()
         val json = parseJsonStr(jsonStr)
+        json[METADATA]!!.jsonObject[IS_FORMATTED]!!.jsonPrimitive.boolean shouldBe false
+
         val row = json[KOTLIN_DATAFRAME]!!.jsonArray[0].jsonObject
 
         val contributors = row["contributors"]!!.jsonObject
@@ -1101,6 +1311,8 @@ class JsonTests {
         val nestedFrameRowLimit = 20
         val jsonStr = df.toJsonWithMetadata(df.rowsCount(), nestedFrameRowLimit).trimIndent()
         val json = parseJsonStr(jsonStr)
+        json[METADATA]!!.jsonObject[IS_FORMATTED]!!.jsonPrimitive.boolean shouldBe false
+
         val row = json[KOTLIN_DATAFRAME]!!.jsonArray[0].jsonObject
 
         val contributors = row["contributors"]!!.jsonObject
@@ -1112,6 +1324,33 @@ class JsonTests {
 
         val decodedData = contributors[DATA]!!.jsonArray
         decodedData.size shouldBe nestedFrameRowLimit
+    }
+
+    @Test
+    fun `json with metadata containing formatted nested frames`() {
+        val df = DataFrame.readJson(testJson("repositories"))
+            .convert { frameCols() }.with { it.format().with { background(blue) } }
+
+        // simulating the functions used to define whether the dataframe is formatted
+        val hasFormattedColumns = df.getColumns { colsAtAnyDepth().colsOf<FormattedFrame<*>?>() }.isNotEmpty()
+        val jsonStr = df.toJsonWithMetadata(df.rowsCount(), isFormatted = hasFormattedColumns).trimIndent()
+
+        val json = parseJsonStr(jsonStr)
+        val metadata = json[METADATA]!!.jsonObject
+        metadata[IS_FORMATTED]!!.jsonPrimitive.boolean shouldBe true
+        metadata[NCOL]!!.jsonPrimitive.int shouldBe 1
+        metadata[NROW]!!.jsonPrimitive.int shouldBe 1
+        metadata[COLUMNS]!!.jsonArray.single().jsonPrimitive.content shouldBe "contributors"
+        metadata[TYPES]!!.jsonArray.single().jsonObject.let {
+            it[KIND]!!.jsonPrimitive.content shouldBe "ValueColumn"
+            it[TYPE]!!.jsonPrimitive.content shouldStartWith FormattedFrame::class.qualifiedName!!
+        }
+
+        val row = json[KOTLIN_DATAFRAME]!!.jsonArray[0].jsonObject
+
+        // is read as value column
+        val contributors = row["contributors"]!!.jsonPrimitive.content
+        contributors shouldStartWith FormattedFrame::class.simpleName!!
     }
 
     @Test
@@ -1130,13 +1369,330 @@ class JsonTests {
     }
 
     @Test
+    fun `value and array columns are created for nameless json elements`() {
+        for (typeClashTactic in JSON.TypeClashTactic.entries) {
+            fun read(
+                @Language("json") json: String,
+            ) = DataFrame.readJsonStr(json, typeClashTactic = typeClashTactic)
+
+            read("""[1, 2, 3]""").let {
+                it.columnNames() shouldBe listOf("value")
+                it["value"].type() shouldBe typeOf<Int>()
+            }
+            read("""[[1], [2]]""").let {
+                it.columnNames() shouldBe listOf("array")
+                it["array"].type() shouldBe typeOf<List<Int>>()
+            }
+            read("""[[{ "a": 1 }], [{ "a": 2 }]]""").let {
+                it.columnNames() shouldBe listOf("array")
+                it["array"] shouldBe instanceOf<FrameColumn<*>>()
+            }
+
+            // a property keeps its own name when there's no clash
+            read("""[{ "a": [1, 2] }, { "a": [3] }]""")["a"].type() shouldBe typeOf<List<Int>>()
+            read("""[{ "a": { "b": 1 } }, { "a": { "b": 2 } }]""")["a"].let {
+                it shouldBe instanceOf<ColumnGroup<*>>()
+                (it as ColumnGroup<*>).columnNames() shouldBe listOf("b")
+            }
+        }
+
+        // a top-level clash has no property to group under, so the columns end up side by side
+        DataFrame.readJsonStr("""[1, { "label": "record" }]""").let {
+            it["value"].type() shouldBe typeOf<Int?>()
+            it["label"].type() shouldBe typeOf<String?>()
+        }
+    }
+
+    @Test
+    fun `a lone value or array column is not an unnamed column`() {
+        DataFrame.readJsonStr("""[1,2,3]""").toJson() shouldBe """[{"value":1},{"value":2},{"value":3}]"""
+        DataFrame.readJsonStr("""[[1],[2]]""").toJson() shouldBe """[{"array":[1]},{"array":[2]}]"""
+
+        // as soon as a clash gives the frame a second column, the round trip holds again
+        DataFrame.readJsonStr("""[1,{"label":"record"}]""").toJson() shouldBe """[1,{"label":"record"}]"""
+        DataFrame.readJsonStr("""[{"label":"record"},[1]]""").toJson() shouldBe """[{"label":"record"},[1]]"""
+    }
+
+    @Test
+    fun `null is not read as empty list in array column`() {
+        // https://github.com/Kotlin/dataframe/issues/2048
+        @Language("json")
+        val json = """[null, [123], []]"""
+
+        for (typeClashTactic in JSON.TypeClashTactic.entries) {
+            DataFrame.readJsonStr(json, typeClashTactic = typeClashTactic).alsoDebug().let {
+                it.columnsCount() shouldBe 1
+                it.rowsCount() shouldBe 3
+                it.getColumn(0).let {
+                    it.type() shouldBe typeOf<List<Int>?>()
+                    it[0] shouldBe null
+                    it[1] shouldBe listOf(123)
+                    it[2] shouldBe emptyList<Int>()
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `null in nested array column`() {
+        // https://github.com/Kotlin/dataframe/issues/2048
+        @Language("json")
+        val json =
+            """
+            [
+                {"a":[1,2,3]},
+                {"a":[]},
+                {"a":null},
+                {}
+            ]
+            """.trimIndent()
+
+        for (typeClashTactic in JSON.TypeClashTactic.entries) {
+            DataFrame.readJsonStr(json, typeClashTactic = typeClashTactic).alsoDebug().let {
+                it.columnsCount() shouldBe 1
+                it.rowsCount() shouldBe 4
+                it["a"].let {
+                    it.type() shouldBe typeOf<List<Int>?>()
+                    it[0] shouldBe listOf(1, 2, 3)
+                    it[1] shouldBe emptyList<Int>()
+                    it[2] shouldBe null
+                    it[3] shouldBe null
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `value column round trip keeps the other columns`() {
+        // https://github.com/Kotlin/dataframe/issues/2045
+        @Language("json")
+        val json = """[1,{"label":"record"},null]"""
+
+        val df = DataFrame.readJsonStr(json).alsoDebug()
+        df["value"].type() shouldBe typeOf<Int?>()
+        df["label"].type() shouldBe typeOf<String?>()
+
+        df.toJson() shouldBe json
+    }
+
+    @Test
+    fun `array column round trip keeps the other columns`() {
+        // https://github.com/Kotlin/dataframe/issues/2046
+        @Language("json")
+        val json = """[{"label":"record"},[123]]"""
+
+        val df = DataFrame.readJsonStr(json).alsoDebug()
+        df["array"].type() shouldBe typeOf<List<Int>?>()
+        df["array"][0] shouldBe null
+        df["label"].type() shouldBe typeOf<String?>()
+
+        df.toJson() shouldBe json
+    }
+
+    @Test
+    fun `array of objects column round trip keeps the other columns`() {
+        // https://github.com/Kotlin/dataframe/issues/2046
+        @Language("json")
+        val json = """[{"label":"record"},[{"a":123}]]"""
+
+        val df = DataFrame.readJsonStr(json).alsoDebug()
+        df["array"] shouldBe instanceOf<FrameColumn<*>>()
+
+        df.toJson() shouldBe json
+    }
+
+    @Test
+    fun `value and array column round trip`() {
+        // https://github.com/Kotlin/dataframe/issues/2045, https://github.com/Kotlin/dataframe/issues/2046
+        @Language("json")
+        val json = """[1,{"label":"record"},[123],null,[]]"""
+
+        DataFrame.readJsonStr(json).alsoDebug().toJson() shouldBe json
+
+        // the example documented in docs/StardustDocs/topics/write.md
+        @Language("json")
+        val documented = """[1,{"label":"record"},[123],null]"""
+
+        DataFrame.readJsonStr(documented).toJson() shouldBe documented
+    }
+
+    @Test
+    fun `a null record and an object of nulls only are indistinguishable`() {
+        // https://github.com/Kotlin/dataframe/issues/2045
+        // both jsons are read into the exact same DataFrame, so writing it back can only produce one of them
+        val nullRecord = DataFrame.readJsonStr("""[1,{"label":"record"},null]""").alsoDebug()
+        val objectOfNulls = DataFrame.readJsonStr("""[1,{"label":"record"},{"label":null}]""").alsoDebug()
+
+        objectOfNulls shouldBe nullRecord
+
+        // a row without any values is written back as a `null` record
+        nullRecord.toJson() shouldBe """[1,{"label":"record"},null]"""
+        objectOfNulls.toJson() shouldBe """[1,{"label":"record"},null]"""
+
+        // without a type clash there's no unnamed `value`/`array` column, so rows stay objects
+        DataFrame.readJsonStr("""[{"label":"record"},{"label":null}]""")
+            .toJson() shouldBe """[{"label":"record"},{"label":null}]"""
+    }
+
+    /**
+     * Asserts that [this] is serialized according to `docs/serialization_format.md`: every entry of
+     * `kotlin_dataframe` — and of every nested group and frame — is an object holding exactly the columns
+     * that the accompanying metadata declares.
+     */
+    private fun AnyFrame.shouldMatchSerializationFormat(): List<JsonElement> {
+        fun checkRows(rows: List<JsonElement>, declaredColumns: List<String>) {
+            rows.forEach { row ->
+                // fails right here if a row is a bare value, a bare array or `null` instead of an object
+                row.jsonObject.keys shouldBe declaredColumns.toSet()
+
+                row.jsonObject.values.forEach { cell ->
+                    val metadata = (cell as? JsonObject)?.get(METADATA)?.jsonObject ?: return@forEach
+                    val nestedColumns = metadata[COLUMNS]!!.jsonArray.map { it.jsonPrimitive.content }
+                    when (metadata[KIND]!!.jsonPrimitive.content) {
+                        ColumnKind.Group.toString() -> checkRows(listOf(cell.jsonObject[DATA]!!), nestedColumns)
+                        ColumnKind.Frame.toString() -> checkRows(cell.jsonObject[DATA]!!.jsonArray, nestedColumns)
+                    }
+                }
+            }
+        }
+
+        val json = parseJsonStr(toJsonWithMetadata(rowsCount()))
+        val data = json[KOTLIN_DATAFRAME]!!.jsonArray
+        val columns = json[METADATA]!!.jsonObject[COLUMNS]!!.jsonArray.map { it.jsonPrimitive.content }
+
+        columns shouldBe columnNames()
+        checkRows(data, columns)
+        return data
+    }
+
+    @Test
+    fun `a type clash keeps every declared column with metadata`() {
+        // https://github.com/Kotlin/dataframe/issues/2046
+        // `toJsonWithMetadata` is the Kotlin Notebook plugin's wire format (docs/serialization_format.md):
+        // unlike `toJson`, it must not collapse a row to the JSON record it was read from — the plugin renders
+        // cells by looking up `metadata.columns`, so the JSON has to mirror the dataframe structure exactly
+        DataFrame.readJsonStr("""[1,{"label":"record"},[123],null]""").let { df ->
+            df.shouldMatchSerializationFormat().toString() shouldBe
+                """[{"label":null,"value":1,"array":null},{"label":"record","value":null,"array":null},""" +
+                """{"label":null,"value":null,"array":[123]},{"label":null,"value":null,"array":null}]"""
+
+            // and `toJson` does collapse them, that's the point of the two being different
+            df.toJson() shouldBe """[1,{"label":"record"},[123],null]"""
+        }
+
+        // an `array` frame column becomes a NestedFrame, and the sibling `label` column is kept
+        DataFrame.readJsonStr("""[{"label":"record"},[{"a":123}]]""").let { df ->
+            val data = df.shouldMatchSerializationFormat()
+
+            data[0].jsonObject["label"]!!.jsonPrimitive.content shouldBe "record"
+            data[1].jsonObject["array"]!!
+                .jsonObject[DATA]!!
+                .jsonArray
+                .toString() shouldBe """[{"a":123}]"""
+
+            df.toJson() shouldBe """[{"label":"record"},[{"a":123}]]"""
+        }
+    }
+
+    @Test
+    fun `json with metadata mirrors the dataframe structure`() {
+        // a nested type clash, so the `value`/`array` columns sit inside a column group
+        DataFrame.readJsonStr("""[{"a":"text"},{"a":{"b":2}},{"a":[6,7,8]}]""").shouldMatchSerializationFormat()
+
+        // arrays of objects, so `array` is a frame column nested in a group
+        DataFrame.readJsonStr("""[{"a":"text"},{"a":[{"b":2}]}]""").shouldMatchSerializationFormat()
+
+        // a single unnamed column, and one that holds no values at all
+        DataFrame.readJsonStr("""[1,2,3]""").shouldMatchSerializationFormat()
+        DataFrame.readJsonStr("""[null,null]""").shouldMatchSerializationFormat()
+
+        // a real file with groups and frame columns several levels deep
+        DataFrame.readJson(testJson("repositories")).shouldMatchSerializationFormat()
+    }
+
+    @Test
+    fun `a null list is written as null with metadata too`() {
+        fun AnyFrame.dataWithMetadata(): String =
+            parseJsonStr(toJsonWithMetadata(rowsCount()))[KOTLIN_DATAFRAME]!!.jsonArray.toString()
+
+        val df = DataFrame.readJsonStr("""[{"a":[1]},{"a":[]},{"a":null}]""").alsoDebug()
+        df["a"].type() shouldBe typeOf<List<Int>?>()
+
+        val expected = """[{"a":[1]},{"a":[]},{"a":null}]"""
+        df.toJson() shouldBe expected
+        df.dataWithMetadata() shouldBe expected
+
+        // a user-made nullable `List` column behaves the same
+        dataFrameOf(
+            "a" to columnOf<List<Int>?>(listOf(1), emptyList(), null),
+        ).dataWithMetadata() shouldBe expected
+    }
+
+    @Test
+    fun `a column named array that holds no arrays is not an unnamed column`() {
+        // a user-made `array` column of single values must not be encoded as if it held JSON arrays
+        dataFrameOf(
+            "array" to columnOf(1, null),
+            "name" to columnOf(null, "x"),
+        ).toJson() shouldBe """[{"array":1,"name":null},{"array":null,"name":"x"}]"""
+    }
+
+    @Test
+    fun `an empty array of objects is written back as null`() {
+        // a frame column cannot hold `null`, so "no array here" and "an empty array here" are both
+        // read as an empty DataFrame and can only be written back as one of the two
+        val df = DataFrame.readJsonStr("""[{"label":"record"},[{"a":1}],[]]""").alsoDebug()
+        df["array"] shouldBe instanceOf<FrameColumn<*>>()
+
+        df.toJson() shouldBe """[{"label":"record"},[{"a":1}],null]"""
+
+        // arrays of primitives are read into a nullable `List` column, so there the two stay distinct
+        DataFrame.readJsonStr("""[{"a":[1]},{"a":[]},{"a":null}]""")
+            .toJson() shouldBe """[{"a":[1]},{"a":[]},{"a":null}]"""
+    }
+
+    @Test
+    fun `a nested type clash keeps its value and array columns`() {
+        // https://github.com/Kotlin/dataframe/issues/2045
+        // unlike a top-level clash, a clash inside a column group is written back as the group's object,
+        // so the unnamed `value`/`array` columns show up as regular properties
+        DataFrame.readJsonStr("""[{"a":"text"},{"a":{"b":2}},{"a":[6,7,8]}]""").alsoDebug().toJson() shouldBe
+            """
+            [{"a":{"b":null,"value":"text","array":null}},{"a":{"b":2,"value":null,"array":null}},{"a":{"b":null,"value":null,"array":[6,7,8]}}]
+            """.trimIndent()
+
+        // the example documented in docs/StardustDocs/topics/write.md
+        DataFrame.readJsonStr("""[{"a":"text"},{"a":[6,7,8]}]""").toJson() shouldBe
+            """[{"a":{"value":"text","array":null}},{"a":{"value":null,"array":[6,7,8]}}]"""
+    }
+
+    @Test
+    fun `user-made value and array columns of nulls only are not unnamed columns`() {
+        // https://github.com/Kotlin/dataframe/issues/2045
+        dataFrameOf(
+            "value" to columnOf<Double?>(null, null),
+            "name" to columnOf("Alice", "Bob"),
+        ).toJson() shouldBe """[{"value":null,"name":"Alice"},{"value":null,"name":"Bob"}]"""
+
+        dataFrameOf(
+            "array" to columnOf<List<Int>?>(null, null),
+            "name" to columnOf("Alice", "Bob"),
+        ).toJson() shouldBe """[{"array":null,"name":"Alice"},{"array":null,"name":"Bob"}]"""
+    }
+
+    @Test
     fun `parse invalid literal`() {
         // https://github.com/Kotlin/kotlinx.serialization/issues/2511
         @Suppress("JsonStandardCompliance")
         val json = Json.decodeFromString<JsonElement>("""[jetbrains, jetbrains-youtrack, youtrack, youtrack-api]""")
         shouldThrow<IllegalStateException> {
-            readJsonImpl(json, true, emptyList())
+            readJsonImpl(json, true, emptyList(), isLenient = false)
         }
+
+        val expected = dataFrameOf(
+            "value" to columnOf("jetbrains", "jetbrains-youtrack", "youtrack", "youtrack-api"),
+        )
+        readJsonImpl(json, true, emptyList(), isLenient = true) shouldBe expected
     }
 }
 
@@ -1145,16 +1701,6 @@ fun testResource(resourcePath: String): URL = JsonTests::class.java.classLoader.
 fun parseJsonStr(jsonStr: String): JsonObject = Json.parseToJsonElement(jsonStr).jsonObject
 
 fun testJson(jsonName: String) = testResource("$jsonName.json")
-
-/**
- * Prints dataframe to console with borders, title, column types and schema
- */
-fun <T : DataFrame<*>> T.alsoDebug(println: String? = null, rowsLimit: Int = 20): T =
-    apply {
-        println?.let { println(it) }
-        print(borders = true, title = true, columnTypes = true, valueLimit = -1, rowsLimit = rowsLimit)
-        schema().print()
-    }
 
 internal val nothingType: KType = typeOf<List<Nothing>>().arguments.first().type!!
 internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!

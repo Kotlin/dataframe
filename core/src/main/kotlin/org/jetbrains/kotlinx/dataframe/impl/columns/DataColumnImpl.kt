@@ -1,11 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
-import org.jetbrains.kotlinx.dataframe.BuildConfig
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.core.BuildConfig
 import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
+import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.kind
+import java.util.Collections
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
@@ -29,12 +32,12 @@ internal abstract class DataColumnImpl<T>(
 
             this.isPrimitiveArray ->
                 type.isPrimitiveArray &&
-                    this!!::class.qualifiedName == type.classifier?.let { (it as KClass<*>).qualifiedName }
+                    this::class.qualifiedName == type.classifier?.let { (it as KClass<*>).qualifiedName }
 
             this.isArray -> type.isArray
 
             // cannot check the precise type of array
-            else -> this!!::class.isSubclassOf(type.classifier as KClass<*>)
+            else -> this::class.isSubclassOf(type.classifier as KClass<*>)
         }
 
     init {
@@ -42,7 +45,7 @@ internal abstract class DataColumnImpl<T>(
         // This only runs with `kotlin.dataframe.debug=true` in gradle.properties.
         if (BuildConfig.DEBUG) {
             require(values.all { it matches type }) {
-                val types = values.map { if (it == null) "Nothing?" else it!!::class.simpleName }.distinct()
+                val types = values.map { if (it == null) "Nothing?" else it::class.simpleName }.distinct()
                 "Values of $kind '$name' have types '$types' which are not compatible given with column type '$type'"
             }
         }
@@ -50,10 +53,14 @@ internal abstract class DataColumnImpl<T>(
 
     protected val distinct = distinct ?: lazy { values.toSet() }
 
+    @RequiredByIntellijPlugin
     override fun name() = name
 
-    override fun values() = values
+    @RequiredByIntellijPlugin
+    // a read-only view: a downcast to MutableList can no longer mutate the column storage
+    override fun values(): List<T> = Collections.unmodifiableList(values)
 
+    @RequiredByIntellijPlugin
     override fun type() = type
 
     override fun toSet() = distinct.value
@@ -61,7 +68,7 @@ internal abstract class DataColumnImpl<T>(
     override fun contains(value: T): Boolean =
         if (distinct.isInitialized()) distinct.value.contains(value) else values.contains(value)
 
-    override fun toString() = dataFrameOf(this).toString() // "${name()}: $type"
+    override fun toString() = dataFrameOf(this).renderToString(columnTypes = true)
 
     override fun countDistinct() = toSet().size
 
@@ -75,7 +82,10 @@ internal abstract class DataColumnImpl<T>(
 
     override fun hashCode() = hashCode
 
-    override operator fun get(range: IntRange) = createWithValues(values.subList(range.first, range.last + 1))
+    override operator fun get(range: IntRange) =
+        createWithValues(
+            if (range.isEmpty()) emptyList() else values.subList(range.first, range.last + 1),
+        )
 
     protected abstract fun createWithValues(values: List<T>, hasNulls: Boolean? = null): DataColumn<T>
 }

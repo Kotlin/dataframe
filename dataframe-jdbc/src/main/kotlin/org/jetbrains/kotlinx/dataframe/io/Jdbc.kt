@@ -7,26 +7,29 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import java.io.File
 import java.io.InputStream
+import java.nio.file.Path
 
 // TODO: https://github.com/Kotlin/dataframe/issues/450
+@Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public class Jdbc :
     SupportedCodeGenerationFormat,
     SupportedDataFrameFormat {
+
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
     public override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJDBC(stream)
 
-    public override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJDBC(file)
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
+    public override fun readDataFrame(path: Path, header: List<String>): AnyFrame = DataFrame.readJDBC(path)
 
     override fun readCodeForGeneration(
         stream: InputStream,
         name: String,
         generateHelperCompanionObject: Boolean,
-    ): Code {
-        TODO("Not yet implemented")
-    }
+    ): Code = throw IllegalStateException("Jdbc.readCodeForGeneration() is not yet implemented: Issue #450")
 
-    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): Code {
-        TODO("Not yet implemented")
-    }
+    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): Code =
+        throw IllegalStateException("Jdbc.readCodeForGeneration() is not yet implemented: Issue #450")
 
     override fun acceptsExtension(ext: String): Boolean = ext == "jdbc"
 
@@ -39,6 +42,10 @@ public class Jdbc :
 }
 
 private fun DataFrame.Companion.readJDBC(stream: File): DataFrame<*> {
+    TODO("Not yet implemented")
+}
+
+private fun DataFrame.Companion.readJDBC(path: Path): DataFrame<*> {
     TODO("Not yet implemented")
 }
 

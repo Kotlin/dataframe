@@ -1,10 +1,9 @@
-@file:Suppress("ClassName")
-
 package org.jetbrains.kotlinx.dataframe.documentation
 
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.diff
 import org.jetbrains.kotlinx.dataframe.api.drop
@@ -17,73 +16,51 @@ import org.jetbrains.kotlinx.dataframe.index
 
 /**
  * ## Selecting Rows
+ *
  * Selecting rows that satisfy a "Row Condition" ([See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions))
  * can occur in the following two types of operations:
- * - Selecting entire rows ([Entire-Row Condition][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.EntireRowCondition.WithExample]), for instance in [filter], [drop], [first], and [count]
- * (using [RowFilter]).
- * - Selecting parts of rows using a `where` operation after selecting columns ([Row-Value Condition][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueCondition.WithExample]),
- * such as with [update], [gather], and [format]
- * (using [RowValueFilter]).
+ * - Selecting entire rows ([<code>Entire-Row Condition</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.EntireRowCondition.WithExample]), for instance in [<code>filter</code>][filter], [<code>drop</code>][drop], [<code>first</code>][first], and [<code>count</code>][count]
+ * (using [<code>RowFilter</code>][RowFilter]).
+ * - Selecting parts of rows using a `where` operation after selecting columns ([<code>Row-Value Condition</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueCondition.WithExample]),
+ * such as with [<code>update</code>][update], [<code>gather</code>][gather], and [<code>format</code>][format]
+ * (using [<code>RowValueFilter</code>][RowValueFilter]).
  *
- * A Row Condition is similar to a [Row Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow] but expects a [Boolean] as result.
+ * A Row Condition is similar to a [<code>Row Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow] but expects a [<code>Boolean</code>][Boolean] as result.
  */
 internal interface SelectingRows {
 
-    /*
-     * The key for a @set that will define the operation name for the examples below.
-     * Make sure to [alias][your examples].
-     */
-    interface FIRST_OPERATION
-
-    /*
-     * The key for a @set that will define the operation name for the examples below.
-     * Make sure to [alias][your examples].
-     */
-    interface SECOND_OPERATION
-
-    interface SetDefaultOperationArg
-
-    /** [Entire-Row Condition][EntireRowCondition.WithExample] */
-    interface RowConditionLink
-
-    /** Filter or find rows to operate on using a [row filter][RowFilter]. */
+    /** Filter or find rows to operate on using a [<code>row filter</code>][RowFilter]. */
     interface EntireRowCondition {
 
         /**
-         * Filter or find rows to operate on using a [row filter][org.jetbrains.kotlinx.dataframe.RowFilter].
+         * Filter or find rows to operate on using a [<code>row filter</code>][org.jetbrains.kotlinx.dataframe.RowFilter].
          *
          * For example:
          *
-         * `df.`operation` { `[index][index]`() % 2 == 0 }`
+         * `df.`operation` { `[<code>index</code>][index]`() % 2 == 0 }`
          *
-         * `df.`operation` { `[diff][diff]` { age } == 0 }`
+         * `df.`operation` { `[<code>diff</code>][diff]` { age } == 0 }`
          *
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
-    /** [Row-Value Condition][RowValueCondition.WithExample] */
-    interface RowValueConditionLink
-
-    /** Filter or find rows to operate on after [selecting columns][SelectingColumns] using a
-     * [row value filter][RowValueFilter].
+    /** Filter or find rows to operate on after [<code>selecting columns</code>][SelectingColumns] using a
+     * [<code>row value filter</code>][RowValueFilter].
      */
     interface RowValueCondition {
 
         /**
-         * Filter or find rows to operate on after [selecting columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] using a
-         * [row value filter][org.jetbrains.kotlinx.dataframe.RowValueFilter].
+         * Filter or find rows to operate on after [<code>selecting columns</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] using a
+         * [<code>row value filter</code>][org.jetbrains.kotlinx.dataframe.RowValueFilter].
          *
          * For example:
          *
          * `df.`operation` { length }.`where` { it > 10.0 }`
          *
-         * `df.`operation` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`where` { `[index][index]`() > 4 && city != "Paris" }`
+         * `df.`operation` { `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }.`where` { `[<code>index</code>][index]`() > 4 && city != "Paris" }`
          *
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 }
-
-/** [Row Condition][SelectingRows] */
-internal interface RowConditionLink

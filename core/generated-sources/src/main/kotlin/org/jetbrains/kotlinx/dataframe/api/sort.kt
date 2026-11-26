@@ -1,11 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -15,34 +17,134 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.SortFlag
 import org.jetbrains.kotlinx.dataframe.impl.api.addFlag
 import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.sortByKeyImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.DESC_TO_REVERSED
+import org.jetbrains.kotlinx.dataframe.util.SORT_BY_COUNT_TO_SORT_BY_COUNT_DESC
 import kotlin.reflect.KProperty
 
+/**
+ * A specialized [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] for selecting columns to sort rows by
+ * and specifying how each column should be sorted.
+ *
+ * The [<code>Sort DSL</code>][org.jetbrains.kotlinx.dataframe.api.SortDsl] allows selecting columns to sort rows by
+ * values in these columns.
+ * It also allows reversing the sort order for individual columns or column sets,
+ * and controlling the position of `null` values.
+ *
+ * The order in which columns are selected determines the sort priority.
+ *
+ * By default, all selected columns are sorted in the original order
+ * (ascending in [<code>sortBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.sortBy] and descending in [<code>sortByDesc</code>][org.jetbrains.kotlinx.dataframe.DataFrame.sortByDesc]).
+ * Use [<code>reversed</code>][reversed] to impose the reverse ordering for a column or column set.
+ *
+ * By default, `null` values are considered the smallest values when sorting.
+ * Use [<code>nullsLast</code>][nullsLast] to treat them as the largest values.
+ *
+ * ### Examples
+ * ```kotlin
+ * // Sort rows by "age" column values ascending
+ * df.sortBy { age }
+ * // Sort rows by "age" column values descending
+ * // and then by the ("name"/"firstName") column values ascending
+ * df.sortBy { age.reversed() and name.firstName }
+ * // Sort rows by "weight" column values ascending with nulls last
+ * df.sortBy { weight.nullsLast() }
+ * ```
+ *
+ * Sorting values can also be computed inline using [<code>expr</code>][expr].
+ * ```
+ * // Sort rows by the product of "volume" and "quantity" descending
+ * df.sortBy { expr { volume * quantity }.reversed() }
+ * ```
+ */
 public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
+
+    /**
+     * Marks the selected columns to be sorted in reversed order.
+     */
+    public fun <C> ColumnSet<C>.reversed(): ColumnSet<C> = addFlag(SortFlag.Reversed)
+
+    /**
+     * Marks the selected column to be sorted in reversed order.
+     */
+    public fun <C> SingleColumn<C>.reversed(): SingleColumn<C> = addFlag(SortFlag.Reversed).single()
+
+    /**
+     * Marks the selected column to be sorted in reversed order.
+     */
+    public fun String.reversed(): SingleColumn<Comparable<*>?> = invoke<Comparable<*>?>().reversed()
+
+    @Deprecated(
+        message = "Inside the sorting DSL, reverse() reverses the sorting order. Use reversed() instead.",
+        replaceWith = ReplaceWith("reversed()"),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun <T> DataColumn<T>.reverse(): SingleColumn<T> = reversed()
+
+    @Deprecated(DESC_TO_REVERSED, ReplaceWith("reversed()"), DeprecationLevel.WARNING)
     public fun <C> ColumnSet<C>.desc(): ColumnSet<C> = addFlag(SortFlag.Reversed)
 
+    @Deprecated(DESC_TO_REVERSED, ReplaceWith("reversed()"), DeprecationLevel.WARNING)
     public fun <C> SingleColumn<C>.desc(): SingleColumn<C> = addFlag(SortFlag.Reversed).single()
 
+    @Deprecated(DESC_TO_REVERSED, ReplaceWith("reversed()"), DeprecationLevel.WARNING)
     public fun String.desc(): SingleColumn<Comparable<*>?> = invoke<Comparable<*>>().desc()
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.desc(): SingleColumn<C> = toColumnAccessor().desc()
 
+    /**
+     * Places `null` values after non-null values when sorting in ascending order,
+     * or before non-null values when sorting in descending order by these columns.
+     *
+     * By default, `null` values are considered the smallest values when sorting.
+     * Use this method to treat them as the largest values.
+     *
+     * When [<code>flag</code>][flag] is `false`, the selected columns remain unchanged.
+     *
+     * @param flag whether `null` values should be placed last.
+     */
     public fun <C> ColumnSet<C?>.nullsLast(flag: Boolean = true): ColumnSet<C?> =
         if (flag) addFlag(SortFlag.NullsLast) else this
 
+    /**
+     * Places `null` values after non-null values when sorting in ascending order,
+     * or before non-null values when sorting in descending order by this column.
+     *
+     * By default, `null` values are considered the smallest values when sorting.
+     * Use this method to treat them as the largest values.
+     *
+     * When [<code>flag</code>][flag] is `false`, the column remains unchanged.
+     *
+     * @param flag whether `null` values should be placed last.
+     */
     public fun <C> SingleColumn<C?>.nullsLast(flag: Boolean = true): SingleColumn<C?> =
         if (flag) addFlag(SortFlag.NullsLast).single() else this
 
+    /**
+     * Places `null` values after non-null values when sorting in ascending order,
+     * or before non-null values when sorting in descending order by this column.
+     *
+     * By default, `null` values are considered the smallest values when sorting.
+     * Use this method to treat them as the largest values.
+     *
+     * When [<code>flag</code>][flag] is `false`, the default `null` ordering is used.
+     *
+     * @param flag whether `null` values should be placed last.
+     */
     public fun String.nullsLast(flag: Boolean = true): SingleColumn<Comparable<*>?> =
         invoke<Comparable<*>>().nullsLast(flag)
 
@@ -52,109 +154,153 @@ public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
 }
 
 /**
- * [SortColumnsSelector] is used to express or select multiple columns to sort by, represented by [ColumnsResolver]`<C>`,
- * using the context of [SortDsl]`<T>` as `this` and `it`.
+ * A specialized [<code>ColumnsSelector</code>][ColumnsSelector] used for selecting columns for sorting.
  *
- * So:
- * ```kotlin
- * SortDsl<T>.(it: SortDsl<T>) -> ColumnSet<C>
- * ```
+ * Provides [<code>SortDsl</code>][SortDsl] both as the receiver (`this`) and the lambda parameter (`it`), and expects
+ * a [<code>ColumnsResolver</code>][ColumnsResolver] as the return value.
+ *
+ * Enables defining the descending ordering of sort columns using [<code>reversed</code>][SortDsl.reversed]
+ * and specifying `null`s place using [<code>nullsLast</code>][SortDsl.nullsLast].
+ *
+ * See [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
  */
 public typealias SortColumnsSelector<T, C> = Selector<SortDsl<T>, ColumnsResolver<C>>
 
 // region DataColumn
 
+/**
+ * Sorts the values in this [<code>column</code>][DataColumn] in ascending order.
+ *
+ * Accepts only [<code>Comparable</code>][Comparable] values.
+ *
+ * See also
+ *   - [<code>sortDesc</code>][DataColumn.sortDesc] for sorting in descending order;
+ *   - [<code>sortWith</code>][DataColumn.sortWith] for sorting by providing a custom comparator.
+ *
+ * @return A new [<code>ValueColumn</code>][ValueColumn] containing the sorted values from the original column.
+ */
 public fun <T : Comparable<T>> DataColumn<T>.sort(): ValueColumn<T> =
     DataColumn.createValueColumn(name, values().sorted(), type, defaultValue = defaultValue())
 
+/**
+ * Sorts the values in this [<code>column</code>][DataColumn] in descending order.
+ *
+ * Accepts only [<code>Comparable</code>][Comparable] values.
+ *
+ * See also
+ *   - [<code>sort</code>][DataColumn.sort] for sorting in ascending order;
+ *   - [<code>sortWith</code>][DataColumn.sortWith] for sorting by providing a custom comparator.
+ *
+ * @return A new [<code>ValueColumn</code>][ValueColumn] containing the sorted values from the original column.
+ */
 public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> =
     DataColumn.createValueColumn(name, values().sortedDescending(), type, defaultValue = defaultValue())
 
-/**
- * ## Sort [DataColumn] With
- *
- * This function returns the sorted version of the current [ValueColumn], [FrameColumn], or [ColumnGroup] based
- * on the given [Comparator]. The [comparator] can either be given as an instance of [Comparator], or directly
+/** Returns the sorted version of the current [<code>ValueColumn</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] based
+ * on the given [<code>Comparator</code>][Comparator]. The [comparator] can either be given as an instance of [<code>Comparator</code>][Comparator], or directly
  * as a lambda.
  *
  * #### For example
  *
- * `df`[`[`][DataFrame.get]`"price"`[`]`][DataFrame.get]`.`[sortWith][sortWith]` { a, b -> a - b }`
+ * `df`[<code>`[`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.get]`"price"`[<code>`]`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.get]`.`[<code>sortWith</code>][org.jetbrains.kotlinx.dataframe.api.sortWith]` { a, b -> a - b }`
  *
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * `df.`[select][DataFrame.select]` {`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[sortWith][sortWith]`(myComparator) `[and][ColumnsSelectionDsl.and]` `[allAfter][ColumnsSelectionDsl.allAfter]`(name)`
- *
- * `}`
- *
- * @receiver The [DataColumn] to sort. This can be either a [ValueColumn], [FrameColumn], or [ColumnGroup] and will
- *   dictate the return type of the function.
- * @param [comparator] The [Comparator] to use for sorting the [DataColumn]. This can either be a [Comparator]<[T]> or
- *   a lambda of type `(`[T][T]`, `[T][T]`) -> `[Int][Int].
- * @return The sorted [DataColumn] [this] of the same type as the receiver.
- */
-private interface CommonDataColumnSortWithDocs
-
-/** ## Sort [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] With
- *
- * This function returns the sorted version of the current [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [FrameColumn][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] based
- * on the given [Comparator]. The [comparator] can either be given as an instance of [Comparator], or directly
- * as a lambda.
- *
- * #### For example
- *
- * `df`[`[`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`"price"`[`]`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]` { a, b -> a - b }`
- *
- *
- * &nbsp;&nbsp;&nbsp;&nbsp;
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
- *
- * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]`(myComparator) `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`(name)`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[<code>sortWith</code>][org.jetbrains.kotlinx.dataframe.api.sortWith]`(myComparator) `[<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[<code>allAfter</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`(name)`
  *
  * `}`
  *
- * @receiver The [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] to sort. This can be either a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [FrameColumn][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and will
+ * For more information: [See `sortWith` on the documentation website.](https://kotlin.github.io/dataframe/sortby.html#sortwith)
+ *
+ * @receiver The [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] to sort. This can be either a [<code>ValueColumn</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and will
  *   dictate the return type of the function.
- * @param [comparator] The [Comparator] to use for sorting the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]. This can either be a [Comparator]<[T]> or
- *   a lambda of type `(`[T][T]`, `[T][T]`) -> `[Int][Int].
- * @return The sorted [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] [this] of the same type as the receiver. */
+ * @param [comparator] The [<code>Comparator</code>][Comparator] to use for sorting the [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]. This can either be a [<code>Comparator</code>][Comparator]<[T]> or
+ *   a lambda of type `(`[<code>T</code>][T]`, `[<code>T</code>][T]`) -> `[<code>Int</code>][Int].
+ * @return The sorted [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] [this] of the same type as the receiver. */
 public fun <T, C : DataColumn<T>> C.sortWith(comparator: Comparator<T>): C =
     DataColumn.createByType(name, values().sortedWith(comparator), type) as C
 
-/** ## Sort [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] With
- *
- * This function returns the sorted version of the current [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [FrameColumn][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] based
- * on the given [Comparator]. The [comparator] can either be given as an instance of [Comparator], or directly
+/** Returns the sorted version of the current [<code>ValueColumn</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] based
+ * on the given [<code>Comparator</code>][Comparator]. The [comparator] can either be given as an instance of [<code>Comparator</code>][Comparator], or directly
  * as a lambda.
  *
  * #### For example
  *
- * `df`[`[`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`"price"`[`]`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]` { a, b -> a - b }`
+ * `df`[<code>`[`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.get]`"price"`[<code>`]`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.get]`.`[<code>sortWith</code>][org.jetbrains.kotlinx.dataframe.api.sortWith]` { a, b -> a - b }`
  *
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]`(myComparator) `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`(name)`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[<code>sortWith</code>][org.jetbrains.kotlinx.dataframe.api.sortWith]`(myComparator) `[<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[<code>allAfter</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`(name)`
  *
  * `}`
  *
- * @receiver The [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] to sort. This can be either a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [FrameColumn][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and will
+ * For more information: [See `sortWith` on the documentation website.](https://kotlin.github.io/dataframe/sortby.html#sortwith)
+ *
+ * @receiver The [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] to sort. This can be either a [<code>ValueColumn</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and will
  *   dictate the return type of the function.
- * @param [comparator] The [Comparator] to use for sorting the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]. This can either be a [Comparator]<[T]> or
- *   a lambda of type `(`[T][T]`, `[T][T]`) -> `[Int][Int].
- * @return The sorted [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] [this] of the same type as the receiver. */
+ * @param [comparator] The [<code>Comparator</code>][Comparator] to use for sorting the [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]. This can either be a [<code>Comparator</code>][Comparator]<[T]> or
+ *   a lambda of type `(`[<code>T</code>][T]`, `[<code>T</code>][T]`) -> `[<code>Int</code>][Int].
+ * @return The sorted [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] [this] of the same type as the receiver. */
 public fun <T, C : DataColumn<T>> C.sortWith(comparator: (T, T) -> Int): C = sortWith(Comparator(comparator))
 
 // endregion
 
 // region DataFrame
 
+/**
+ * Sorts this [<code>DataFrame</code>][DataFrame] rows by the specified [<code>columns</code>][columns] in ascending (default) or descending order.
+ *
+ * Returns a new [<code>DataFrame</code>][DataFrame] containing the same rows, sorted according to the selected columns.
+ *
+ * Select columns to sort by, adjust sorting order and `null`s position using [<code>SortDsl</code>][SortDsl].
+ *
+ * The [<code>Sort DSL</code>][org.jetbrains.kotlinx.dataframe.api.SortDsl] allows selecting columns to sort rows by
+ * values in these columns.
+ * It also allows reversing the sort order for individual columns or column sets,
+ * and controlling the position of `null` values.
+ *
+ * The order in which columns are selected determines the sort priority.
+ *
+ * By default, all selected columns are sorted in the original order
+ * (ascending in [<code>sortBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.sortBy] and descending in [<code>sortByDesc</code>][org.jetbrains.kotlinx.dataframe.DataFrame.sortByDesc]).
+ * Use [<code>reversed</code>][reversed] to impose the reverse ordering for a column or column set.
+ *
+ * By default, `null` values are considered the smallest values when sorting.
+ * Use [<code>nullsLast</code>][nullsLast] to treat them as the largest values.
+ *
+ * See [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
+ *
+ * See also
+ *   - [<code>sortByDesc</code>][DataFrame.sortByDesc] that sorts rows in descending order by default.
+ *   - [<code>sortWith</code>][DataFrame.sortWith] that sorts rows using a custom comparator.
+ *
+ * ### Examples
+ * ```kotlin
+ * // Sort rows by "age" column values ascending
+ * df.sortBy { age }
+ * // Sort rows by "age" column values descending
+ * // and then by the ("name"/"firstName") column values ascending
+ * df.sortBy { age.reversed() and name.firstName }
+ * // Sort rows by "weight" column values ascending with nulls last
+ * df.sortBy { weight.nullsLast() }
+ * ```
+ *
+ * Sorting values can also be computed inline using [<code>expr</code>][expr].
+ * ```
+ * // Sort rows by the product of "volume" and "quantity" descending
+ * df.sortBy { expr { volume * quantity }.reversed() }
+ * ```
+ *
+ * @param columns The [<code>Sort Columns Selector</code>][SortColumnsSelector] that defines which columns are used
+ *                for sorting, in which order and direction.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the original rows sorted based on the specified columns and directions.
+ */
 public fun <T, C> DataFrame<T>.sortBy(columns: SortColumnsSelector<T, C>): DataFrame<T> =
     sortByImpl(UnresolvedColumnsPolicy.Fail, columns)
 
@@ -162,20 +308,146 @@ public fun <T, C> DataFrame<T>.sortBy(columns: SortColumnsSelector<T, C>): DataF
 @AccessApiOverload
 public fun <T> DataFrame<T>.sortBy(vararg cols: ColumnReference<*>): DataFrame<T> = sortBy { cols.toColumnSet() }
 
+/**
+ * Sorts this [<code>DataFrame</code>][DataFrame] rows by the specified [<code>columns</code>][columns] in ascending order.
+ *
+ * Returns a new [<code>DataFrame</code>][DataFrame] containing the same rows, sorted according to the selected columns.
+ *
+ *
+ *
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ *
+ * The order in which columns are selected determines the sort priority.
+ *
+ * See also
+ *   - [<code>`sortBy { }`</code>][DataFrame.sortBy] overload that uses [<code>SortDsl</code>][SortDsl]
+ * for selecting columns, allowing specifying sort directions and `null`s position.
+ *   - [<code>sortByDesc</code>][DataFrame.sortByDesc] that sorts rows in descending order.
+ *   - [<code>sortWith</code>][DataFrame.sortWith] that sorts rows using a custom comparator.
+ *
+ * ### Examples
+ * ```kotlin
+ * df.sortBy("age")
+ * // Sort rows by "age" column values ascending
+ * // and then by the ("name") column values ascending
+ * df.sortBy("age", "name")
+ * ```
+ *
+ * @param cols The [<code>Column Names</code>][String] that defines which columns are used for sorting.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the original rows sorted based on the specified columns.
+ */
 public fun <T> DataFrame<T>.sortBy(vararg cols: String): DataFrame<T> = sortBy { cols.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.sortBy(vararg cols: KProperty<Comparable<*>?>): DataFrame<T> = sortBy { cols.toColumnSet() }
 
+/**
+ * Sorts the rows of this [<code>DataFrame</code>][DataFrame] using the specified row [<code>comparator</code>][comparator].
+ *
+ * Returns a new [<code>DataFrame</code>][DataFrame] containing the same rows sorted according to the provided [<code>Comparator</code>][Comparator].
+ *
+ * See also [<code>sortBy</code>][DataFrame.sortBy] and [<code>sortByDesc</code>][DataFrame.sortByDesc], which sort
+ * rows by selected columns.
+ *
+ * ### Example
+ * ```kotlin
+ * // Provide a comparator for `DataRow<Person>` that sorts
+ * // by `age` in ascending order first
+ * // and then by `salary` in descending order
+ * df.sortWith(
+ *     compareBy<DataRow<Person>> { it.age }
+ *         .thenByDescending { it.salary }
+ * )
+ * ```
+ *
+ * @param comparator The [<code>Comparator</code>][Comparator] used to determine the order of rows.
+ * @return A new [<code>DataFrame</code>][DataFrame] containing the same rows sorted according to the provided comparator.
+ */
 public fun <T> DataFrame<T>.sortWith(comparator: Comparator<DataRow<T>>): DataFrame<T> {
     val permutation = rows().sortedWith(comparator).map { it.index }
     return this[permutation]
 }
 
+/**
+ * Sorts the rows of this [<code>DataFrame</code>][DataFrame] using the specified row [<code>comparator</code>][comparator].
+ *
+ * The [<code>comparator</code>][comparator] is a comparison lambda that takes two [<code>DataRow</code>][DataRow]s and returns
+ * a negative, zero, or positive value depending on their relative order.
+ *
+ * Returns a new [<code>DataFrame</code>][DataFrame] containing the same rows sorted according to the provided comparator.
+ *
+ * See also [<code>sortBy</code>][DataFrame.sortBy] and [<code>sortByDesc</code>][DataFrame.sortByDesc], which sort
+ * rows by selected columns.
+ *
+ * ### Example
+ * ```kotlin
+ * // Sort by `age` in ascending order,
+ * // then by `salary` in ascending order
+ * df.sortWith { row1, row2 ->
+ *     when {
+ *         row1.age != row2.age -> row1.age.compareTo(row2.age)
+ *         else -> row1.salary.compareTo(row2.salary)
+ *     }
+ * }
+ * ```
+ *
+ * @param comparator A function that compares two rows and returns a negative, zero,
+ * or positive value depending on their relative order.
+ * @return A new [<code>DataFrame</code>][DataFrame] containing the same rows sorted according to the provided comparator.
+ */
 public fun <T> DataFrame<T>.sortWith(comparator: (DataRow<T>, DataRow<T>) -> Int): DataFrame<T> =
     sortWith(Comparator(comparator))
 
+/**
+ * Sorts this [<code>DataFrame</code>][DataFrame] rows by the specified [<code>columns</code>][columns] in ascending or descending (default) order.
+ *
+ * Returns a new [<code>DataFrame</code>][DataFrame] containing the same rows, sorted according to the selected columns.
+ *
+ * Select columns to sort by, adjust sorting order and `null`s position using [<code>SortDsl</code>][SortDsl].
+ *
+ * The [<code>Sort DSL</code>][org.jetbrains.kotlinx.dataframe.api.SortDsl] allows selecting columns to sort rows by
+ * values in these columns.
+ * It also allows reversing the sort order for individual columns or column sets,
+ * and controlling the position of `null` values.
+ *
+ * The order in which columns are selected determines the sort priority.
+ *
+ * By default, all selected columns are sorted in the original order
+ * (ascending in [<code>sortBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.sortBy] and descending in [<code>sortByDesc</code>][org.jetbrains.kotlinx.dataframe.DataFrame.sortByDesc]).
+ * Use [<code>reversed</code>][reversed] to impose the reverse ordering for a column or column set.
+ *
+ * By default, `null` values are considered the smallest values when sorting.
+ * Use [<code>nullsLast</code>][nullsLast] to treat them as the largest values.
+ *
+ * See [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
+ *
+ * See also
+ *   - [<code>sortBy</code>][DataFrame.sortBy] that sorts rows in ascending order by default.
+ *   - [<code>sortWith</code>][DataFrame.sortWith] that sorts rows using a custom comparator.
+ *
+ * ### Examples
+ * ```kotlin
+ * // Sort rows by "age" column values descending
+ * df.sortByDesc { age }
+ * // Sort rows by "age" column values descending
+ * // and then by the ("name"/"firstName") column values ascending
+ * df.sortByDesc { age and name.firstName.reversed() }
+ * // Sort rows by "weight" column values descending with nulls first
+ * df.sortByDesc { weight.nullsLast() }
+ * ```
+ *
+ * Sorting values can also be computed inline using [<code>expr</code>][expr].
+ * ```
+ * // Sort rows by the product of "volume" and "quantity" descending
+ * df.sortByDesc { expr { volume * quantity } }
+ * ```
+ *
+ * @param columns The [<code>Sort Columns Selector</code>][SortColumnsSelector] that defines which columns are used
+ *                for sorting, in which order and direction.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the original rows sorted based on the specified columns and directions.
+ */
 public fun <T, C> DataFrame<T>.sortByDesc(columns: SortColumnsSelector<T, C>): DataFrame<T> {
     val set = columns.toColumnSet()
     return sortByImpl { set.desc() }
@@ -186,6 +458,35 @@ public fun <T, C> DataFrame<T>.sortByDesc(columns: SortColumnsSelector<T, C>): D
 public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: KProperty<Comparable<C>?>): DataFrame<T> =
     sortByDesc { columns.toColumnSet() }
 
+/**
+ * Sorts this [<code>DataFrame</code>][DataFrame] rows by the specified [<code>columns</code>][columns] in descending order.
+ *
+ * Returns a new [<code>DataFrame</code>][DataFrame] containing the same rows, sorted according to the selected columns.
+ *
+ *
+ *
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ *
+ * The order in which columns are selected determines the sort priority.
+ *
+ * See also
+ *   - [<code>`sortByDesc { }`</code>][DataFrame.sortByDesc] overload that uses [<code>SortDsl</code>][SortDsl]
+ * for selecting columns, allowing specifying sort directions and `null`s position.
+ *   - [<code>sortBy</code>][DataFrame.sortBy] that sorts rows in ascending order.
+ *   - [<code>sortWith</code>][DataFrame.sortWith] that sorts rows using a custom comparator.
+ *
+ * ### Examples
+ * ```kotlin
+ * df.sortByDesc("age")
+ * // Sort rows by "age" column values descending
+ * // and then by the ("name") column values descending
+ * df.sortByDesc("age", "name")
+ * ```
+ *
+ * @param columns The [<code>Column Names</code>][String] that defines which columns are used for sorting.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the original rows sorted based on the specified columns.
+ */
 public fun <T> DataFrame<T>.sortByDesc(vararg columns: String): DataFrame<T> = sortByDesc { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -197,6 +498,45 @@ public fun <T> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<*>): Data
 
 // region GroupBy
 
+/**
+ * Sorts rows within each group of this [<code>GroupBy</code>][GroupBy] by the specified [<code>columns</code>][cols] in ascending order.
+ *
+ * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups,
+ * with rows sorted within each group according to the selected columns.
+ *
+ *
+ *
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ *
+ * The order in which columns are selected determines the sort priority.
+ *
+ * Don't confuse this with [<code>sortByGroup</code>][sortByGroup], [<code>sortByCountDesc</code>][sortByCountDesc], and [<code>sortByKey</code>][sortByKey], which sort key-group pairs instead.
+ *
+ * See also
+ *   - [<code>`sortBy { }`</code>][GroupBy.sortBy] overload that uses [<code>SortDsl</code>][SortDsl]
+ * for selecting columns, allowing specifying sort directions and `null`s position.
+ *   - [<code>sortByDesc</code>][GroupBy.sortByDesc] that sorts rows in descending order.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort key-group pairs by values computed for each group.
+ *   - [<code>sortByCountAsc</code>][sortByCountAsc] and [<code>sortByCountDesc</code>][sortByCountDesc] that sort key-group pairs by group size.
+ *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort key-group pairs by key values.
+ *
+ * Check out the [<code>`GroupBy grammar`</code>][Grammar].
+ *
+ * For more information: [See "`GroupBy` Transformation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#transformation)
+ *
+ * ### Examples
+ * ```kotlin
+ * gb.sortBy("age")
+ * // Sort group rows by "age" column values descending
+ * // and then by the ("name") column values descending
+ * gb.sortByDesc("age", "name")
+ * ```
+ *
+ * @param cols The [<code>Column Names</code>][String] that defines which columns are used for sorting.
+ * @return A new [<code>GroupBy</code>][GroupBy] with rows sorted within each group and the original key-group order preserved.
+ * @throws IllegalStateException if a referenced column cannot be resolved in a group.
+ */
 public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: String): GroupBy<T, G> = sortBy { cols.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -208,8 +548,106 @@ public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: ColumnReference<*>): GroupBy
 public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>): GroupBy<T, G> =
     sortBy { cols.toColumnSet() }
 
+/**
+ * Sorts rows within each group of this [<code>GroupBy</code>][GroupBy] by the specified [<code>columns</code>][selector]
+ * in ascending (default) or descending order.
+ *
+ * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups,
+ * with rows sorted within each group according to the selected columns.
+ *
+ * Don't confuse this with [<code>sortByGroup</code>][sortByGroup], [<code>sortByCountDesc</code>][sortByCountDesc], and [<code>sortByKey</code>][sortByKey], which sort key-group pairs instead.
+ *
+ * Select columns to sort by, adjust sorting order and `null`s position using [<code>SortDsl</code>][SortDsl].
+ *
+ * The [<code>Sort DSL</code>][org.jetbrains.kotlinx.dataframe.api.SortDsl] allows selecting columns to sort rows by
+ * values in these columns.
+ * It also allows reversing the sort order for individual columns or column sets,
+ * and controlling the position of `null` values.
+ *
+ * The order in which columns are selected determines the sort priority.
+ *
+ * By default, all selected columns are sorted in the original order
+ * (ascending in [<code>sortBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.sortBy] and descending in [<code>sortByDesc</code>][org.jetbrains.kotlinx.dataframe.DataFrame.sortByDesc]).
+ * Use [<code>reversed</code>][reversed] to impose the reverse ordering for a column or column set.
+ *
+ * By default, `null` values are considered the smallest values when sorting.
+ * Use [<code>nullsLast</code>][nullsLast] to treat them as the largest values.
+ *
+ * See [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
+ *
+ * See also
+ *   - [<code>sortByDesc</code>][GroupBy.sortByDesc] that sorts rows in descending order by default.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort key-group pairs by values computed for each group.
+ *   - [<code>sortByCountAsc</code>][sortByCountAsc] and [<code>sortByCountDesc</code>][sortByCountDesc] that sort key-group pairs by group size.
+ *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort key-group pairs by key values.
+ *
+ * Check out the [<code>`GroupBy grammar`</code>][Grammar].
+ *
+ * For more information: [See "`GroupBy` Transformation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#transformation)
+ *
+ * ### Examples
+ * ```kotlin
+ * // Sort group rows by "age" column values ascending
+ * gb.sortBy { age }
+ * // Sort group rows by "age" column values descending
+ * // and then by the ("name"/"firstName") column values ascending
+ * gb.sortBy { age.reversed() and name.firstName }
+ * // Sort group rows by "weight" column values ascending with nulls last
+ * gb.sortBy { weight.nullsLast() }
+ * ```
+ *
+ * Sorting values can also be computed inline using [<code>expr</code>][expr].
+ * ```
+ * // Sort rows by the product of "volume" and "quantity" descending
+ * gb.sortBy { expr { volume * quantity }.reversed() }
+ * ```
+ *
+ * @param selector The [<code>Sort Columns Selector</code>][SortColumnsSelector] that defines which columns are used
+ *                for sorting within each group, in which order and direction.
+ * @return A new [<code>GroupBy</code>][GroupBy] with rows sorted within each group and the original key-group order preserved.
+ * @throws IllegalStateException if a referenced column cannot be resolved in a group.
+ */
 public fun <T, G, C> GroupBy<T, G>.sortBy(selector: SortColumnsSelector<G, C>): GroupBy<T, G> = sortByImpl(selector)
 
+/**
+ * Sorts rows within each group of this [<code>GroupBy</code>][GroupBy] by the specified [<code>columns</code>][cols] in descending order.
+ *
+ * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups,
+ * with rows sorted within each group according to the selected columns.
+ *
+ * Don't confuse this with [<code>sortByGroup</code>][sortByGroup], [<code>sortByCountDesc</code>][sortByCountDesc], and [<code>sortByKey</code>][sortByKey], which sort key-group pairs instead.
+ *
+ *
+ *
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ *
+ * The order in which columns are selected determines the sort priority.
+ *
+ * See also
+ *   - [<code>`sortByDesc { }`</code>][GroupBy.sortByDesc] overload that uses [<code>SortDsl</code>][SortDsl]
+ * for selecting columns, allowing specifying sort directions and `null`s position.
+ *   - [<code>sortBy</code>][GroupBy.sortBy] that sorts rows in ascending order.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort key-group pairs by values computed for each group.
+ *   - [<code>sortByCountAsc</code>][sortByCountAsc] and [<code>sortByCountDesc</code>][sortByCountDesc] that sort key-group pairs by group size.
+ *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort key-group pairs by key values.
+ *
+ * Check out the [<code>`GroupBy grammar`</code>][Grammar].
+ *
+ * For more information: [See "`GroupBy` Transformation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#transformation)
+ *
+ * ### Examples
+ * ```kotlin
+ * gb.sortByDesc("age")
+ * // Sort group rows by "age" column values descending
+ * // and then by the ("name") column values descending
+ * gb.sortByDesc("age", "name")
+ * ```
+ *
+ * @param cols The [<code>Column Names</code>][String] that define which columns are used for sorting.
+ * @return A new [<code>GroupBy</code>][GroupBy] with rows sorted within each group and the original key-group order preserved.
+ * @throws IllegalStateException if a referenced column cannot be resolved in a group.
+ */
 public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: String): GroupBy<T, G> = sortByDesc { cols.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -222,6 +660,65 @@ public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: ColumnReference<*>): Gro
 public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?>): GroupBy<T, G> =
     sortByDesc { cols.toColumnSet() }
 
+/**
+ * Sorts rows within each group of this [<code>GroupBy</code>][GroupBy] by the specified [<code>columns</code>][selector]
+ * in ascending or descending (default) order.
+ *
+ * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups,
+ * with rows sorted within each group according to the selected columns.
+ *
+ * Don't confuse this with [<code>sortByGroup</code>][sortByGroup], [<code>sortByCountDesc</code>][sortByCountDesc], and [<code>sortByKey</code>][sortByKey], which sort key-group pairs instead.
+ *
+ * Select columns to sort by, adjust sorting order and `null`s position using [<code>SortDsl</code>][SortDsl].
+ *
+ * The [<code>Sort DSL</code>][org.jetbrains.kotlinx.dataframe.api.SortDsl] allows selecting columns to sort rows by
+ * values in these columns.
+ * It also allows reversing the sort order for individual columns or column sets,
+ * and controlling the position of `null` values.
+ *
+ * The order in which columns are selected determines the sort priority.
+ *
+ * By default, all selected columns are sorted in the original order
+ * (ascending in [<code>sortBy</code>][org.jetbrains.kotlinx.dataframe.DataFrame.sortBy] and descending in [<code>sortByDesc</code>][org.jetbrains.kotlinx.dataframe.DataFrame.sortByDesc]).
+ * Use [<code>reversed</code>][reversed] to impose the reverse ordering for a column or column set.
+ *
+ * By default, `null` values are considered the smallest values when sorting.
+ * Use [<code>nullsLast</code>][nullsLast] to treat them as the largest values.
+ *
+ * See [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
+ *
+ * See also
+ *   - [<code>sortBy</code>][GroupBy.sortBy] that sorts rows in ascending order by default.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort key-group pairs by values computed for each group.
+ *   - [<code>sortByCountAsc</code>][sortByCountAsc] and [<code>sortByCountDesc</code>][sortByCountDesc] that sort key-group pairs by group size.
+ *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort key-group pairs by key values.
+ *
+ * Check out the [<code>`GroupBy grammar`</code>][Grammar].
+ *
+ * For more information: [See "`GroupBy` Transformation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#transformation)
+ *
+ * ### Examples
+ * ```kotlin
+ * // Sort group rows by "age" column values descending
+ * gb.sortByDesc { age }
+ * // Sort group rows by "age" column values descending
+ * // and then by the ("name"/"firstName") column values ascending
+ * gb.sortByDesc { age and name.firstName.reversed() }
+ * // Sort group rows by "weight" column values descending with nulls first
+ * gb.sortByDesc { weight.nullsLast() }
+ * ```
+ *
+ * Sorting values can also be computed inline using [<code>expr</code>][expr].
+ * ```
+ * // Sort rows by the product of "volume" and "quantity" descending
+ * gb.sortByDesc { expr { volume * quantity } }
+ * ```
+ *
+ * @param selector The [<code>Sort Columns Selector</code>][SortColumnsSelector] that defines which columns are used
+ *                for sorting within each group, in which order and direction.
+ * @return A new [<code>GroupBy</code>][GroupBy] with rows sorted within each group and the original key-group order preserved.
+ * @throws IllegalStateException if a referenced column cannot be resolved in a group.
+ */
 public fun <T, G, C> GroupBy<T, G>.sortByDesc(selector: SortColumnsSelector<G, C>): GroupBy<T, G> {
     val set = selector.toColumnSet()
     return sortByImpl { set.desc() }
@@ -236,6 +733,38 @@ private fun <T, G, C> GroupBy<T, G>.createColumnFromGroupExpression(
         expression(group, group)
     }
 
+/**
+ * Sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by a value computed for each group
+ * using the specified [<code>expression</code>][expression] ascending.
+ *
+ * [<code>DataFrameExpression</code>][DataFrameExpression] is a lambda that receives each group as a [<code>DataFrame</code>][DataFrame], both as the receiver (`this`)
+ * and as the lambda argument (`it`), and returns the value used to order the groups.
+ *
+ * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups in the resulting order.
+ * The contents of the groups remain unchanged.
+ *
+ * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts rows within groups.
+ *
+ * See also
+ *   - [<code>sortByGroupDesc</code>][sortByGroupDesc] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] based on computed values descending.
+ *   - [<code>sortByCountAsc</code>][sortByCountAsc] and [<code>sortByCountDesc</code>][sortByCountDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the group sizes.
+ *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the key values.
+ *
+ * Check out the [<code>`GroupBy grammar`</code>][Grammar].
+ *
+ * For more information: [See "`GroupBy` Transformation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#transformation)
+ *
+ * ### Example
+ * ```kotlin
+ * // Sorts groups by the product of their size and the maximum value of the "quantity" column ascending
+ * gb.sortByGroup { group -> group.rowsCount() * group.quantity.max() }
+ * ```
+ *
+ * @param [nullsLast] Whether `null` values are considered as the largest values when sorting.
+ *      Default is `false`.
+ * @param [expression] The expression used to compute the sorting value for each group.
+ * @return A new [<code>GroupBy</code>][GroupBy] with its key-group pairs sorted by the values produced by [<code>expression</code>][expression].
+ */
 public fun <T, G, C> GroupBy<T, G>.sortByGroup(
     nullsLast: Boolean = false,
     expression: DataFrameExpression<G, C>,
@@ -244,6 +773,38 @@ public fun <T, G, C> GroupBy<T, G>.sortByGroup(
         createColumnFromGroupExpression(this, expression).nullsLast(nullsLast)
     }.asGroupBy(groups)
 
+/**
+ * Sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by a value computed for each group
+ * using the specified [<code>expression</code>][expression] descending.
+ *
+ * [<code>DataFrameExpression</code>][DataFrameExpression] is a lambda that receives each group as a [<code>DataFrame</code>][DataFrame], both as the receiver (`this`)
+ * and as the lambda argument (`it`), and returns the value used to order the groups.
+ *
+ * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups in the resulting order.
+ * The contents of the groups remain unchanged.
+ *
+ * Don't confuse this with [<code>sortByDesc</code>][GroupBy.sortByDesc] that sorts rows within groups.
+ *
+ * See also
+ *   - [<code>sortByGroup</code>][sortByGroup] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] based on computed values ascending.
+ *   - [<code>sortByCountAsc</code>][sortByCountAsc] and [<code>sortByCountDesc</code>][sortByCountDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the group sizes.
+ *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the key values.
+ *
+ * Check out the [<code>`GroupBy grammar`</code>][Grammar].
+ *
+ * For more information: [See "`GroupBy` Transformation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#transformation)
+ *
+ * ### Example
+ * ```kotlin
+ * // Sorts groups by the product of their size and the maximum value of the "quantity" column descending
+ * gb.sortByGroupDesc { group -> group.rowsCount() * group.quantity.max() }
+ * ```
+ *
+ * @param [nullsLast] Whether `null` values are considered as the largest values when sorting.
+ *      Default is `false`.
+ * @param [expression] The expression used to compute the sorting value for each group.
+ * @return A new [<code>GroupBy</code>][GroupBy] with its key-group pairs sorted by the values produced by [<code>expression</code>][expression].
+ */
 public fun <T, G, C> GroupBy<T, G>.sortByGroupDesc(
     nullsLast: Boolean = false,
     expression: DataFrameExpression<G, C>,
@@ -252,18 +813,128 @@ public fun <T, G, C> GroupBy<T, G>.sortByGroupDesc(
         createColumnFromGroupExpression(this, expression).desc().nullsLast(nullsLast)
     }.asGroupBy(groups)
 
+/**
+ * Sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the number of rows in groups ascending.
+ *
+ * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups in the resulting order.
+ * The contents of the groups remain unchanged.
+ *
+ * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts rows within groups.
+ *
+ * See also
+ *   - [<code>sortByCountDesc</code>][sortByCountDesc] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the group sizes descending.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] based on computed values.
+ *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the key values.
+ *
+ * Check out the [<code>`GroupBy grammar`</code>][Grammar].
+ *
+ * For more information: [See "`GroupBy` Transformation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#transformation)
+ *
+ * @return A new [<code>GroupBy</code>][GroupBy] with its key-group pairs sorted by the group sizes.
+ */
 public fun <T, G> GroupBy<T, G>.sortByCountAsc(): GroupBy<T, G> = sortByGroup { nrow }
 
-public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByGroupDesc { nrow }
+/**
+ * Sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the number of rows in groups descending.
+ *
+ * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups in the resulting order.
+ * The contents of the groups remain unchanged.
+ *
+ * Don't confuse this with [<code>sortByDesc</code>][GroupBy.sortByDesc] that sorts rows within groups.
+ *
+ * See also
+ *   - [<code>sortByCountAsc</code>][sortByCountAsc] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the group sizes in ascending order.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] based on computed values.
+ *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the key values.
+ *
+ * Check out the [<code>`GroupBy grammar`</code>][Grammar].
+ *
+ * For more information: [See "`GroupBy` Transformation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#transformation)
+ *
+ * @return A new [<code>GroupBy</code>][GroupBy] with its key-group pairs sorted by the group sizes.
+ */
+public fun <T, G> GroupBy<T, G>.sortByCountDesc(): GroupBy<T, G> = sortByGroupDesc { nrow }
 
-public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupBy<T, G> =
-    toDataFrame()
-        .sortBy { keys.columns().toColumnSet().desc().nullsLast(nullsLast) }
-        .asGroupBy(groups)
+/**
+ * Sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the number of rows in groups descending.
+ *
+ * Deprecated because the unsuffixed name suggests ascending order, unlike the other sort operations.
+ * Use [<code>sortByCountDesc</code>][sortByCountDesc] instead.
+ *
+ * @return A new [<code>GroupBy</code>][GroupBy] with its key-group pairs sorted by the group sizes.
+ */
+@Deprecated(SORT_BY_COUNT_TO_SORT_BY_COUNT_DESC, ReplaceWith("sortByCountDesc()"), DeprecationLevel.WARNING)
+public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByCountDesc()
 
-public fun <T, G> GroupBy<T, G>.sortByKey(nullsLast: Boolean = false): GroupBy<T, G> =
-    toDataFrame()
-        .sortBy { keys.columns().toColumnSet().nullsLast(nullsLast) }
-        .asGroupBy(groups)
+/**
+ * Sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by selected keys descending, or by all keys if [<code>selector</code>][selector] is omitted.
+ *
+ * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups in the resulting order.
+ * The contents of the groups remain unchanged.
+ *
+ * Don't confuse this with [<code>sortByDesc</code>][GroupBy.sortByDesc] that sorts rows within groups.
+ *
+ * See also
+ *   - [<code>sortByKey</code>][sortByKey] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the selected key values ascending.
+ *   - [<code>sortByCountAsc</code>][sortByCountAsc] and [<code>sortByCountDesc</code>][sortByCountDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the group sizes.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] based on computed values.
+ *
+ * Check out the [<code>`GroupBy grammar`</code>][Grammar].
+ *
+ * For more information: [See "`GroupBy` Transformation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#transformation)
+ *
+ * ### Example
+ * ```kotlin
+ * df.groupBy { city and age }.sortByKeyDesc(nullsLast = true) { city }
+ * ```
+ *
+ * @param [nullsLast] Whether `null` values are considered as the largest values when sorting.
+ *      Default is `false`.
+ * @param selector The [<code>Sort Columns Selector</code>][SortColumnsSelector] that defines which keys are used for sorting,
+ * in which order and direction. Selects all keys by default.
+ * @return A new [<code>GroupBy</code>][GroupBy] with its key-group pairs sorted by the selected keys.
+ */
+@OptIn(ExperimentalVersionOverloading::class)
+public fun <T, G> GroupBy<T, G>.sortByKeyDesc(
+    nullsLast: Boolean = false,
+    @IntroducedAt("1.0") selector: SortColumnsSelector<T, *> = { all() },
+): GroupBy<T, G> {
+    val set = selector.toColumnSet()
+    return sortByKeyImpl(nullsLast) { set.reversed() }
+}
+
+/**
+ * Sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by selected keys ascending, or by all keys if [<code>selector</code>][selector] is omitted.
+ *
+ * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups in the resulting order.
+ * The contents of the groups remain unchanged.
+ *
+ * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts rows within groups.
+ *
+ * See also
+ *   - [<code>sortByKeyDesc</code>][sortByKeyDesc] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the selected key values descending.
+ *   - [<code>sortByCountAsc</code>][sortByCountAsc] and [<code>sortByCountDesc</code>][sortByCountDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the group sizes.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] based on computed values.
+ *
+ * Check out the [<code>`GroupBy grammar`</code>][Grammar].
+ *
+ * For more information: [See "`GroupBy` Transformation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#transformation)
+ *
+ * ### Example
+ * ```kotlin
+ * df.groupBy { city and age }.sortByKey { age and city.reversed() }
+ * ```
+ *
+ * @param [nullsLast] Whether `null` values are considered as the largest values when sorting.
+ *      Default is `false`.
+ * @param selector The [<code>Sort Columns Selector</code>][SortColumnsSelector] that defines which keys are used for sorting,
+ * in which order and direction. Selects all keys by default.
+ * @return A new [<code>GroupBy</code>][GroupBy] with its key-group pairs sorted by the selected keys.
+ */
+@OptIn(ExperimentalVersionOverloading::class)
+public fun <T, G> GroupBy<T, G>.sortByKey(
+    nullsLast: Boolean = false,
+    @IntroducedAt("1.0") selector: SortColumnsSelector<T, *> = { all() },
+): GroupBy<T, G> = sortByKeyImpl(nullsLast, selector)
 
 // endregion

@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.AddDataRow
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
@@ -19,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.SortColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.SortDsl
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.indices
@@ -43,9 +43,9 @@ import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.CREATE_COLUMN
 import org.jetbrains.kotlinx.dataframe.util.GUESS_COLUMN_TYPE
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
@@ -65,7 +65,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
     infer: Infer = Infer.Nulls,
     expression: AddExpression<T, R>,
 ): DataColumn<R> {
-    val df = this as? DataFrame<T> ?: dataFrameOf(columns()).cast()
+    val df = this as? DataFrame<T> ?: dataFrameOf(columns()).castUnchecked()
     val (nullable, values) = computeValues(df, expression)
     return when (infer) {
         Infer.Nulls -> DataColumn.createByType(
@@ -154,18 +154,18 @@ internal inline fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnsResolver<C>>.t
 @JvmName("toColumnSetForPivot")
 internal fun <T, C> PivotColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> =
     toColumnSet {
-        object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), PivotDsl<T> {}
+        object : DataFrameReceiver<T>(it.df.castUnchecked(), it.unresolvedColumnsPolicy), PivotDsl<T> {}
     }
 
 @JvmName("toColumnSetForSort")
 internal fun <T, C> SortColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> =
     toColumnSet {
-        object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), SortDsl<T> {}
+        object : DataFrameReceiver<T>(it.df.castUnchecked(), it.unresolvedColumnsPolicy), SortDsl<T> {}
     }
 
 internal fun <T, C> ColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> =
     toColumnSet {
-        object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), ColumnsSelectionDsl<T> {}
+        object : DataFrameReceiver<T>(it.df.castUnchecked(), it.unresolvedColumnsPolicy), ColumnsSelectionDsl<T> {}
     }
 
 // endregion
@@ -189,18 +189,18 @@ internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
  * some conversions to unify the values if necessary.
  *
  * @param values values to create a column from
- * @param suggestedType optional suggested type for values. Default is [TypeSuggestion.Infer].
- *   See [TypeSuggestion] for more information.
- * @param defaultValue optional default value for the column used when a [ValueColumn] is created.
- * @param nullable optional hint for the column nullability, used when a [ValueColumn] is created.
+ * @param suggestedType optional suggested type for values. Default is [<code>TypeSuggestion.Infer</code>][TypeSuggestion.Infer].
+ *   See [<code>TypeSuggestion</code>][TypeSuggestion] for more information.
+ * @param defaultValue optional default value for the column used when a [<code>ValueColumn</code>][ValueColumn] is created.
+ * @param nullable optional hint for the column nullability, used when a [<code>ValueColumn</code>][ValueColumn] is created.
  * @param listifyValues if `true`, then values and nulls will be wrapped in a list if they appear among other lists.
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `[[1], [], [1, 2, 3]]`.
- *   Note: this parameter is ignored if another [Collection] is present in the values.
+ *   Note: this parameter is ignored if another [<code>Collection</code>][Collection] is present in the values.
  * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
- *   a column group will be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`.
- * @param unifyNumbers if `true`, then all numbers encountered in [values] will be converted to the smallest possible
- *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [UnifyingNumbers].
- *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [Double].
+ *   a column group will be created instead of a [<code>DataColumn</code>][DataColumn]`<`[<code>AnyCol</code>][AnyCol]`>`.
+ * @param unifyNumbers if `true`, then all numbers encountered in [<code>values</code>][values] will be converted to the smallest possible
+ *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [<code>UnifyingNumbers</code>][UnifyingNumbers].
+ *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [<code>Double</code>][Double].
  */
 @PublishedApi
 internal fun <T> createColumnGuessingType(
@@ -228,18 +228,18 @@ internal fun <T> createColumnGuessingType(
  * some conversions to unify the values if necessary.
  *
  * @param values values to create a column from
- * @param suggestedType optional suggested type for values. Default is [TypeSuggestion.Infer][org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion.Infer].
- *   See [TypeSuggestion][org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion] for more information.
- * @param defaultValue optional default value for the column used when a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] is created.
- * @param nullable optional hint for the column nullability, used when a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] is created.
+ * @param suggestedType optional suggested type for values. Default is [<code>TypeSuggestion.Infer</code>][org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion.Infer].
+ *   See [<code>TypeSuggestion</code>][org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion] for more information.
+ * @param defaultValue optional default value for the column used when a [<code>ValueColumn</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] is created.
+ * @param nullable optional hint for the column nullability, used when a [<code>ValueColumn</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] is created.
  * @param listifyValues if `true`, then values and nulls will be wrapped in a list if they appear among other lists.
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `[[1], [], [1, 2, 3]]`.
- *   Note: this parameter is ignored if another [Collection] is present in the values.
+ *   Note: this parameter is ignored if another [<code>Collection</code>][Collection] is present in the values.
  * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
- *   a column group will be created instead of a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[AnyCol][org.jetbrains.kotlinx.dataframe.AnyCol]`>`.
- * @param unifyNumbers if `true`, then all numbers encountered in [values][org.jetbrains.kotlinx.dataframe.values] will be converted to the smallest possible
- *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [UnifyingNumbers][org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers].
- *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [Double].
+ *   a column group will be created instead of a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[<code>AnyCol</code>][org.jetbrains.kotlinx.dataframe.AnyCol]`>`.
+ * @param unifyNumbers if `true`, then all numbers encountered in [<code>values</code>][org.jetbrains.kotlinx.dataframe.values] will be converted to the smallest possible
+ *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [<code>UnifyingNumbers</code>][org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers].
+ *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [<code>Double</code>][Double].
  * @param name name for the column
  */
 @PublishedApi
@@ -277,10 +277,10 @@ internal fun <T> createColumnGuessingType(
         return { value -> if (value != null && value is Number) converter(value) else value }
     }
 
-    return when (type.classifier!! as KClass<*>) {
+    return when (type.classifier?.starProjectedType) {
         // guessValueType can only return DataRow if all values are `AnyRow?`
         // or allColsMakesColGroup == true, and all values are `AnyCol`
-        DataRow::class ->
+        typeOf<AnyRow>() ->
             if (allColsMakesColGroup && values.firstOrNull() is AnyCol) {
                 val df = dataFrameOf(values as Iterable<AnyCol>)
                 DataColumn.createColumnGroup(name, df)
@@ -291,7 +291,7 @@ internal fun <T> createColumnGuessingType(
                 DataColumn.createColumnGroup(name, df)
             }.asDataColumn().cast()
 
-        DataFrame::class -> {
+        typeOf<AnyFrame>() -> {
             val frames = values.map {
                 when (it) {
                     null -> DataFrame.empty()
@@ -304,7 +304,7 @@ internal fun <T> createColumnGuessingType(
             DataColumn.createFrameColumn(name, frames).asDataColumn().cast()
         }
 
-        List::class -> {
+        typeOf<List<*>>() -> {
             val nullable = type.isMarkedNullable
             var isListOfRows: Boolean? = null
             val subType = type.arguments.first().type!! // List<T> -> T

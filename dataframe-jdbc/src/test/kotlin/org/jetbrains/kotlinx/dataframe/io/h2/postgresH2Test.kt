@@ -8,12 +8,12 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.aliasesNameColumns
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -21,8 +21,14 @@ import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.sql.Time
+import java.time.OffsetDateTime
+import java.time.OffsetTime
+import java.util.Date
 import java.util.UUID
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 private const val URL =
     "jdbc:h2:mem:test3;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH"
@@ -38,34 +44,34 @@ interface Table1 {
     val charactercol: String
     val characterncol: String
     val charcol: String
-    val datecol: java.sql.Date
+    val datecol: Date
     val doublecol: Double
-    val integercol: Int?
-    val jsoncol: String
-    val jsonbcol: String
+    val integercol: Int
+    val jsoncol: String? // no such column in the table yet: read as nulls
+    val jsonbcol: String? // no such column in the table yet: read as nulls
 }
 
 @DataSchema
 interface Table2 {
     val id: Int
-    val moneycol: String
+    val moneycol: BigDecimal
     val numericcol: BigDecimal
     val realcol: Float
     val smallintcol: Int
     val serialcol: Int
     val textcol: String?
-    val timecol: String
-    val timewithzonecol: String
-    val timestampcol: String
-    val timestampwithzonecol: String
-    val uuidcol: String
+    val timecol: Time
+    val timewithzonecol: OffsetTime
+    val timestampcol: Instant
+    val timestampwithzonecol: OffsetDateTime
+    val uuidcol: Uuid
 }
 
 @DataSchema
 interface ViewTable {
     val id: Int
     val bigintcol: Long
-    val textCol: String?
+    val textcol: String?
 }
 
 class PostgresH2Test {
@@ -123,6 +129,18 @@ class PostgresH2Test {
                 """.trimIndent()
 
             connection.createStatement().execute(createTableQuery.trimIndent())
+
+            // Table with STRUCT/ROW column to verify JDBC Types.STRUCT handling
+            @Language("SQL")
+            val createTableWithStruct =
+                """
+                CREATE TABLE IF NOT EXISTS table3 (
+                    id serial PRIMARY KEY,
+                    structCol ROW(a INT, b VARCHAR(10)) not null
+                )
+                """.trimIndent()
+
+            connection.createStatement().execute(createTableWithStruct)
 
             @Language("SQL")
             val insertData1 =
@@ -197,6 +215,17 @@ class PostgresH2Test {
                     st.executeUpdate()
                 }
             }
+
+            // Insert data into table3 with ROW/STRUCT literals
+            @Language("SQL")
+            val insertStructs =
+                """
+                INSERT INTO table3 (structCol) VALUES
+                (ROW(1, 'X')),
+                (ROW(2, 'Y')),
+                (ROW(3, 'Z'))
+                """.trimIndent()
+            connection.createStatement().execute(insertStructs)
         }
 
         @AfterClass
@@ -213,8 +242,8 @@ class PostgresH2Test {
     @Test
     fun `read from tables`() {
         val tableName1 = "table1"
-        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
-        val result = df1.filter { it[Table1::id] == 1 }
+        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>(verify = true)
+        val result = df1.filter { "id"<Int>() == 1 }
 
         result[0][0] shouldBe 1
         result[0][8] shouldBe "A"
@@ -224,7 +253,7 @@ class PostgresH2Test {
         result[0][15] shouldBe arrayOf("Hello", "World")
         result[0][16] shouldBe arrayOf(true, false, true)
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
+        val schema = DataFrameSchema.readSqlTable(connection, tableName1)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["integercol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
@@ -235,11 +264,11 @@ class PostgresH2Test {
         schema.columns["booleanarraycol"]!!.type.classifier shouldBe kotlin.Array::class
 
         val tableName2 = "table2"
-        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
-        val result2 = df2.filter { it[Table2::id] == 1 }
+        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>(verify = true)
+        val result2 = df2.filter { "id"<Int>() == 1 }
         result2[0][4] shouldBe 1001
 
-        val schema2 = DataFrame.getSchemaForSqlTable(connection, tableName2)
+        val schema2 = DataFrameSchema.readSqlTable(connection, tableName2)
         schema2.columns["id"]!!.type shouldBe typeOf<Int>()
         schema2.columns["textcol"]!!.type shouldBe typeOf<String?>()
     }
@@ -257,11 +286,11 @@ class PostgresH2Test {
             JOIN table2 t2 ON t1.id = t2.id
             """.trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<ViewTable>()
-        val result = df.filter { it[ViewTable::id] == 1 }
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<ViewTable>(verify = true)
+        val result = df.filter { "id"<Int>() == 1 }
         result[0][2] shouldBe null
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintcol"]!!.type shouldBe typeOf<Long>()
         schema.columns["textcol"]!!.type shouldBe typeOf<String?>()
@@ -271,59 +300,72 @@ class PostgresH2Test {
     fun `read from all tables`() {
         val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
 
-        val table1Df = dataframes[0].cast<Table1>()
+        val table1Df = dataframes[0].cast<Table1>(verify = true)
 
         table1Df.rowsCount() shouldBe 3
-        table1Df.filter { it[Table1::integercol] != null && it[Table1::integercol]!! > 12345 }.rowsCount() shouldBe 2
+        table1Df.filter { "integercol"<Int?>()?.let { it > 12345 } ?: false }.rowsCount() shouldBe 2
         table1Df[0][1] shouldBe 1000L
         table1Df[0][2] shouldBe 11
 
-        val table2Df = dataframes[1].cast<Table2>()
+        val table2Df = dataframes[1].cast<Table2>(verify = true)
 
         table2Df.rowsCount() shouldBe 3
         table2Df.filter {
-            it[Table2::realcol] == 12.34f
+            "realcol"<Float?>() == 12.34f
         }.rowsCount() shouldBe 3
         table2Df[0][4] shouldBe 1001
     }
 
     @Test
+    fun `read composite column from table`() {
+        val tableName3 = "table3"
+        val df3 = DataFrame.readSqlTable(connection, tableName3)
+
+        // Validate row count
+        df3.rowsCount() shouldBe 3
+
+        // Validate schema type stays as Any for STRUCT (no special mapping yet)
+        val schema3 = DataFrameSchema.readSqlTable(connection, tableName3)
+        schema3.columns["structcol"]!!.type shouldBe typeOf<Any>()
+    }
+
+    @Test
     fun `read columns of different types to check type mapping`() {
         val tableName1 = "table1"
-        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
+        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>(verify = true)
         val result = df1.select("smallintcol")
-            .add("smallintcol2") { it[Table1::smallintcol] }
+            .add("smallintcol2") { "smallintcol"<Int?>() }
         result[0][1] shouldBe 11
 
         val result1 = df1.select("bigserialcol")
-            .add("bigserialcol2") { it[Table1::bigserialcol] }
+            .add("bigserialcol2") { "bigserialcol"<Long>() }
         result1[0][1] shouldBe 1000000001L
 
         val result2 = df1.select("doublecol")
-            .add("doublecol2") { it[Table1::doublecol] }
+            .add("doublecol2") { "doublecol"<Double>() }
         result2[0][1] shouldBe 12.34
 
         val tableName2 = "table2"
-        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
+        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>(verify = true)
 
         val result4 = df2.select("numericcol")
-            .add("numericcol2") { it[Table2::numericcol] }
+            .add("numericcol2") { "numericcol"<BigDecimal>() }
         result4[0][1] shouldBe BigDecimal("12.34")
 
         val result5 = df2.select("realcol")
-            .add("realcol2") { it[Table2::realcol] }
+            .add("realcol2") { "realcol"<Float>() }
         result5[0][1] shouldBe 12.34f
 
         val result8 = df2.select("serialcol")
-            .add("serialcol2") { it[Table2::serialcol] }
+            .add("serialcol2") { "serialcol"<Int>() }
         result8[0][1] shouldBe 1000001
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
+        val schema = DataFrameSchema.readSqlTable(connection, tableName1)
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigserialcol"]!!.type shouldBe typeOf<Long>()
         schema.columns["doublecol"]!!.type shouldBe typeOf<Double>()
 
-        val schema1 = DataFrame.getSchemaForSqlTable(connection, tableName2)
+        val schema1 = DataFrameSchema.readSqlTable(connection, tableName2)
         schema1.columns["numericcol"]!!.type shouldBe typeOf<BigDecimal>()
         schema1.columns["realcol"]!!.type shouldBe typeOf<Float>()
         schema1.columns["serialcol"]!!.type shouldBe typeOf<Int>()
@@ -332,6 +374,29 @@ class PostgresH2Test {
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column`() {
+        aliasesNameColumns(connection)
+    }
+
+    @Test
+    fun `JSON column is read as ByteArray, not as the PostgreSQL text form`() {
+        try {
+            connection.createStatement().use { st ->
+                st.execute("DROP TABLE IF EXISTS json_type")
+                st.execute("CREATE TABLE json_type(jsonCol JSON)")
+                st.execute("""INSERT INTO json_type VALUES (JSON '{"k":1}')""")
+            }
+
+            val df = DataFrame.readSqlTable(connection, "json_type")
+
+            df["jsoncol"].type() shouldBe typeOf<ByteArray>()
+            (df["jsoncol"][0] as ByteArray).toString(Charsets.UTF_8) shouldBe """{"k":1}"""
+        } finally {
+            connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS json_type") }
+        }
     }
 
     @Test

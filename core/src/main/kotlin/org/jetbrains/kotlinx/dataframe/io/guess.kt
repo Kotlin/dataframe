@@ -11,12 +11,17 @@ import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.dataframe.util.DATAFRAME_READ
+import org.jetbrains.kotlinx.dataframe.util.DATAROW_READ
+import org.jetbrains.kotlinx.dataframe.util.SUPPORTED_DATAFRAME_FORMAT
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.net.URL
+import java.nio.file.Path
 import java.util.ServiceLoader
+import kotlin.io.path.extension
 import kotlin.reflect.KType
 
 public sealed interface SupportedFormat {
@@ -38,6 +43,9 @@ public sealed interface SupportedFormatSample {
     public value class DataFile(public val sampleFile: File) : SupportedFormatSample
 
     @JvmInline
+    public value class DataPath(public val samplePath: Path) : SupportedFormatSample
+
+    @JvmInline
     public value class DataUrl(public val sampleUrl: URL) : SupportedFormatSample
 
     @JvmInline
@@ -48,15 +56,27 @@ public sealed interface SupportedFormatSample {
 }
 
 /**
+ * **Deprecated:** As a result of Issue #450 and the removal of our old Gradle/KSP plugin and `DataFrame.read()`,
+ * the `SupportedDataFrameFormat` system is deprecated and will be removed in version 1.0.
+ *
  * Implement this interface to provide additional supported formats for DataFrames (such as JSON, XML, CSV, etc.).
  * A [SupportedDataFrameFormat] is read directly to a DataFrame. If specified using
  * [ImportDataSchema] or using the Gradle plugin, the read DataFrame will be used to
  * generate [DataSchema] interfaces.
  */
+@Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
 public interface SupportedDataFrameFormat : SupportedFormat {
+
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
     public fun readDataFrame(stream: InputStream, header: List<String> = emptyList()): DataFrame<*>
 
-    public fun readDataFrame(file: File, header: List<String> = emptyList()): DataFrame<*>
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
+    @Suppress("DEPRECATION_ERROR")
+    public fun readDataFrame(file: File, header: List<String> = emptyList()): DataFrame<*> =
+        readDataFrame(file.toPath(), header)
+
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
+    public fun readDataFrame(path: Path, header: List<String> = emptyList()): DataFrame<*>
 }
 
 /**
@@ -123,7 +143,7 @@ public class MethodArguments {
  */
 internal val supportedFormats: List<SupportedFormat> by lazy {
     (
-        ServiceLoader.load(SupportedDataFrameFormat::class.java).toList() +
+        ServiceLoader.load(@Suppress("DEPRECATION_ERROR") SupportedDataFrameFormat::class.java).toList() +
             ServiceLoader.load(SupportedCodeGenerationFormat::class.java).toList() +
             ServiceLoader.load(SupportedFormat::class.java).toList()
     ).distinct()
@@ -137,10 +157,10 @@ internal fun guessFormatForExtension(
 ): SupportedFormat? = formats.firstOrNull { it.acceptsExtension(ext) && (sample == null || it.acceptsSample(sample)) }
 
 internal fun guessFormat(
-    file: File,
+    path: Path,
     formats: List<SupportedFormat> = supportedFormats,
-    sample: SupportedFormatSample.DataFile? = SupportedFormatSample.DataFile(file),
-): SupportedFormat? = guessFormatForExtension(file.extension.lowercase(), formats, sample = sample)
+    sample: SupportedFormatSample.DataPath? = SupportedFormatSample.DataPath(path),
+): SupportedFormat? = guessFormatForExtension(path.extension.lowercase(), formats, sample = sample)
 
 internal fun guessFormat(
     url: URL,
@@ -203,6 +223,7 @@ internal fun readCodeForGeneration(
     }
 }
 
+@Suppress("DEPRECATION_ERROR")
 internal fun DataFrame.Companion.read(
     stream: InputStream,
     format: SupportedDataFrameFormat? = null,
@@ -222,16 +243,17 @@ internal fun DataFrame.Companion.read(
     }
 }
 
+@Suppress("DEPRECATION_ERROR")
 internal fun DataFrame.Companion.read(
-    file: File,
+    path: Path,
     format: SupportedDataFrameFormat? = null,
     header: List<String> = emptyList(),
     formats: List<SupportedDataFrameFormat> = supportedFormats.filterIsInstance<SupportedDataFrameFormat>(),
 ): ReadAnyFrame {
-    if (format != null) return format to format.readDataFrame(file, header = header)
+    if (format != null) return format to format.readDataFrame(path, header = header)
     formats.sortedBy { it.testOrder }.forEach {
         try {
-            return it to it.readDataFrame(file, header = header)
+            return it to it.readDataFrame(path, header = header)
         } catch (e: FileNotFoundException) {
             throw e
         } catch (e: Exception) {
@@ -240,26 +262,28 @@ internal fun DataFrame.Companion.read(
     throw IllegalArgumentException("Unknown file format; Tried $formats")
 }
 
+@Suppress("DEPRECATION_ERROR")
 internal data class ReadAnyFrame(val format: SupportedDataFrameFormat, val df: AnyFrame)
 
+@Suppress("DEPRECATION_ERROR")
 internal infix fun SupportedDataFrameFormat.to(df: AnyFrame) = ReadAnyFrame(this, df)
 
 internal data class GeneratedCode(val format: SupportedCodeGenerationFormat, val code: Code)
 
 internal infix fun SupportedCodeGenerationFormat.to(code: Code) = GeneratedCode(this, code)
 
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame =
-    read(
-        file = file,
-        format = guessFormat(file)?.also {
-            if (it !is SupportedDataFrameFormat) error("Format $it does not support reading dataframes")
-        } as SupportedDataFrameFormat?,
-        header = header,
-    ).df
+    read(file.toPath(), header)
 
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataRow.Companion.read(file: File, header: List<String> = emptyList()): AnyRow =
-    DataFrame.read(file, header).single()
+    DataFrame.read(file.toPath(), header).single()
 
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()): AnyFrame =
     when {
         isFile(url) -> read(urlAsFile(url), header)
@@ -277,19 +301,57 @@ public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()
         else -> throw IllegalArgumentException("Invalid protocol for url $url")
     }
 
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataRow.Companion.read(url: URL, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(url, header).single()
 
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataFrame.Companion.read(path: String, header: List<String> = emptyList()): AnyFrame =
     read(asUrl(path), header)
 
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataRow.Companion.read(path: String, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(path, header).single()
 
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun URL.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
 
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun URL.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
 
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun File.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
 
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun File.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
+
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
+public fun DataFrame.Companion.read(path: Path, header: List<String> = emptyList()): AnyFrame =
+    read(
+        path = path,
+        format = guessFormat(path)?.also {
+            if (it !is SupportedDataFrameFormat) error("Format $it does not support reading dataframes")
+        } as SupportedDataFrameFormat?,
+        header = header,
+    ).df
+
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
+public fun DataRow.Companion.read(path: Path, header: List<String> = emptyList()): AnyRow =
+    DataFrame.read(path, header).single()
+
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
+public fun Path.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
+
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
+public fun Path.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)

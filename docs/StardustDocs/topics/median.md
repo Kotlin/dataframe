@@ -4,6 +4,8 @@
 
 Computes the [median](https://en.wikipedia.org/wiki/Median) of values.
 
+**API reference**: [`median`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/median.html)
+
 This is also called the "middle" of a sorted list, the "50th [percentile](percentile.md)", or
 the 2-[quantile](https://en.wikipedia.org/wiki/Quantile).
 
@@ -17,9 +19,9 @@ In these cases, the return type is always `Double?`.
 When the number of values is even, the median is the average of the two middle values.
 
 The operation is also available for self-comparable columns
-(so columns of type `T : Comparable<T>`, like `DateTime`, `String`, etc.)
+(so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 In this case, the return type remains `T?`.
-When the number of values is even, the median is the low of the two middle values.
+When the number of values is even, the median is the lower of the two middle values.
 
 All operations on `Double`/`Float` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.
@@ -28,9 +30,9 @@ When it's set to `true`, `NaN` values are ignored.
 <!---FUN medianModes-->
 
 ```kotlin
-df.median() // median of values per every comparable column
+df.median() // median of values for every column with mutually comparable values
 df.median { age and weight } // median of all values in `age` and `weight`
-df.medianFor(skipNaN = true) { age and weight } // median of values per `age` and `weight` separately
+df.medianFor(skipNaN = true) { age and name.firstName } // median of values per `age` and `firstName` separately
 df.medianOf { (weight ?: 0) / age } // median of expression evaluated for every row
 df.medianBy { age } // DataRow where the median age lies (lower-median for an even number of values)
 ```
@@ -68,3 +70,38 @@ The following automatic type conversions are performed for the `median` operatio
 | Double -> Double                 | null                   |
 | Float -> Double                  | null                   |
 | Nothing -> Nothing               | null                   |
+
+### Big numbers
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.MedianSamples-->
+
+> `java.math.BigDecimal` and `java.math.BigInteger` are not explicitly supported.
+> They are self-comparable, so some overloads (like `df.median()`) still select a middle value
+> without interpolating it, while others (like `df.median { bigDecimalCol }`) throw at runtime.
+> Don't rely on this: compute the median manually with Kotlin standard library methods
+> and Java big number arithmetic, or [`convert`](convert.md) the column to a primitive type first.
+> {style="warning"}
+
+For a `BigDecimal` column `amount`, the exact median can be selected from the sorted values:
+
+<!---FUN medianBigNumbersManually-->
+
+```kotlin
+// exact median: the lower of the two middle values, selected from the sorted values
+val amounts = df.amount.toList().sorted()
+amounts[(amounts.size - 1) / 2]
+```
+
+<!---END-->
+
+Alternatively, [`convert`](convert.md) the column to a primitive type first —
+this interpolates the median, at the cost of precision:
+
+<!---FUN medianBigNumbersConverted-->
+
+```kotlin
+// approximate, interpolated median, computed after converting the column to `Double`
+df.convert { amount }.toDouble().median { amount }
+```
+
+<!---END-->

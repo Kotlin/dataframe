@@ -4,6 +4,13 @@ import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 
+/**
+ * Which type of visibility the marker (generated class-like code declaration)
+ * will have:
+ * - [<code>INTERNAL</code>][INTERNAL]: "internal"
+ * - [<code>IMPLICIT_PUBLIC</code>][IMPLICIT_PUBLIC]: ""
+ * - [<code>EXPLICIT_PUBLIC</code>][EXPLICIT_PUBLIC]: "public"
+ */
 public enum class MarkerVisibility {
     INTERNAL,
     IMPLICIT_PUBLIC,
@@ -16,7 +23,7 @@ public interface IsolatedMarker {
     public val visibility: MarkerVisibility
 
     /**
-     * Type parameters for in front of the function or getter/setter.
+     * Type parameters in front of the function or getter/setter.
      * Like `<T : Int>` in `val <T : Int> MyType<T>.something get() = ...`.
      */
     public val typeParameters: String
@@ -49,6 +56,8 @@ public open class Marker(
     typeParameters: List<String>,
     typeArguments: List<String>,
 ) : AbstractMarker(typeParameters, typeArguments) {
+
+    override fun toString(): String = name
 
     public val shortName: String
         get() = name.substringAfterLast(".")

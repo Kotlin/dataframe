@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.CommonReadDelimDocs
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_SPECS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ALLOW_MISSING_COLUMNS
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CHARSET
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COL_TYPES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COMPRESSION
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CSV_DELIMITER
@@ -28,10 +29,12 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.READ_LINES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
+import org.jetbrains.kotlinx.dataframe.util.READ_CSV_BINARY_COMPATIBILITY
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
+import java.nio.charset.Charset
 import java.nio.file.Path
 import kotlin.io.path.inputStream
 
@@ -48,6 +51,7 @@ public fun DataFrame.Companion.readCsv(
     path: Path,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -68,6 +72,7 @@ public fun DataFrame.Companion.readCsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -99,6 +104,7 @@ public fun DataFrame.Companion.readCsv(
     file: File,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -119,6 +125,7 @@ public fun DataFrame.Companion.readCsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -150,6 +157,7 @@ public fun DataFrame.Companion.readCsv(
     url: URL,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -170,6 +178,7 @@ public fun DataFrame.Companion.readCsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -201,6 +210,7 @@ public fun DataFrame.Companion.readCsv(
     fileOrUrl: String,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -221,6 +231,7 @@ public fun DataFrame.Companion.readCsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -254,6 +265,7 @@ public fun DataFrame.Companion.readCsv(
     inputStream: InputStream,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -274,6 +286,7 @@ public fun DataFrame.Companion.readCsv(
         inputStream = inputStream,
         delimiter = delimiter,
         header = header,
+        charset = charset,
         hasFixedWidthColumns = hasFixedWidthColumns,
         fixedColumnWidths = fixedColumnWidths,
         colTypes = colTypes,
@@ -290,3 +303,214 @@ public fun DataFrame.Companion.readCsv(
         compression = compression,
         adjustCsvSpecs = adjustCsvSpecs,
     )
+
+// region deprecations
+
+@Deprecated(READ_CSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readCsv(
+    path: Path,
+    delimiter: Char = CSV_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(path),
+): DataFrame<*> =
+    readCsv(
+        path,
+        delimiter,
+        header,
+        CHARSET,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+    )
+
+@Deprecated(READ_CSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readCsv(
+    file: File,
+    delimiter: Char = CSV_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(file),
+): DataFrame<*> =
+    readCsv(
+        file,
+        delimiter,
+        header,
+        CHARSET,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+    )
+
+@Deprecated(READ_CSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readCsv(
+    url: URL,
+    delimiter: Char = CSV_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(url),
+): DataFrame<*> =
+    readCsv(
+        url,
+        delimiter,
+        header,
+        CHARSET,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+    )
+
+@Deprecated(READ_CSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readCsv(
+    fileOrUrl: String,
+    delimiter: Char = CSV_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(fileOrUrl),
+): DataFrame<*> =
+    readCsv(
+        fileOrUrl,
+        delimiter,
+        header,
+        CHARSET,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+    )
+
+@Deprecated(READ_CSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readCsv(
+    inputStream: InputStream,
+    delimiter: Char = CSV_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = COMPRESSION,
+    adjustCsvSpecs: AdjustCsvSpecs = ADJUST_CSV_SPECS,
+): DataFrame<*> =
+    readCsv(
+        inputStream,
+        delimiter,
+        header,
+        CHARSET,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+        adjustCsvSpecs,
+    )
+
+// endregion

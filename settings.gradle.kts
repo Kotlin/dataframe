@@ -1,18 +1,21 @@
-@file:Suppress("UnstableApiUsage")
-
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
 rootProject.name = "dataframe"
 
-// treated as a separate project with its own Kotlin version, etc.
-includeBuild("plugins/keywords-generator")
+// Enables our build-settings logic convention plugins for the root project,
+// setting up all common logic and version- and convention catalogs.
+pluginManagement {
+    includeBuild("./build-settings-logic")
+}
+plugins {
+    id("dfsettings.base")
+}
 
-include("plugins:dataframe-gradle-plugin")
-include("plugins:symbol-processor")
+// Enables our build logic convention plugins for the root project,
+// so they can be applied in child projects in their build.gradle.kts files.
+includeBuild("./build-logic")
+
 include("plugins:expressions-converter")
-include("plugins:kotlin-dataframe")
 include("plugins:public-api-modifier")
-include("tests")
+include("samples")
 include("dataframe-json")
 include("dataframe-arrow")
 include("dataframe-openapi")
@@ -21,32 +24,8 @@ include("dataframe-jdbc")
 include("dataframe-csv")
 include("dataframe-jupyter")
 include("dataframe-geo")
+include("dataframe-geo-jupyter")
 include("dataframe-openapi-generator")
 include("core")
 include("dataframe-compiler-plugin-core")
-
-include("examples:idea-examples:titanic")
-include("examples:idea-examples:movies")
-include("examples:idea-examples:youtube")
-include("examples:idea-examples:json")
-include("examples:idea-examples:unsupported-data-sources")
-includeBuild("examples/kotlin-dataframe-plugin-example")
-
-val jupyterApiTCRepo: String by settings
-
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-        if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)
-    }
-}
-
-pluginManagement {
-    repositories {
-        mavenLocal()
-        gradlePluginPortal()
-    }
-}
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
-}
+include("common-test-utils")

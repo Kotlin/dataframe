@@ -4,6 +4,9 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.CorrDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -45,7 +48,7 @@ import kotlin.reflect.typeOf
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also: [Selecting Columns][SelectingOptions].
  *
@@ -57,7 +60,7 @@ internal interface CorrDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetCorrOperationArg]}
      */
-    interface SelectingOptions
+    typealias SelectingOptions = Nothing
 
     /**
      * ## Corr Operation Grammar
@@ -73,19 +76,19 @@ internal interface CorrDocs {
      * {@include [Indent]}
      *`| `__`.`__[**`withItself`**][Corr.withItself]`()`
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [corr][corr]} */
 @ExcludeFromSources
-private interface SetCorrOperationArg
+private typealias SetCorrOperationArg = Nothing
 
 /**
  * {@include [CorrDocs]}
  * ### This Corr Overload
  */
 @ExcludeFromSources
-private interface CommonCorrDocs
+private typealias CommonCorrDocs = Nothing
 
 internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typeOf<Boolean>()
 
@@ -109,7 +112,9 @@ internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typ
  *
  * See [Grammar][CorrDocs.Grammar] for more details.
  */
-public data class Corr<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>)
+public class Corr<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
+    override fun toString(): String = "Corr(df=$df, columns=$columns)"
+}
 
 /**
  * Computes the pearson correlation between all suitable columns in this [DataFrame],
@@ -127,6 +132,8 @@ public data class Corr<T, C>(internal val df: DataFrame<T>, internal val columns
  *
  * @return A square correlation matrix as a [DataFrame], where both rows and columns correspond to the original columns.
  */
+@Refine
+@Interpretable("DataFrameCorr")
 public fun <T> DataFrame<T>.corr(): DataFrame<T> =
     corr {
         colsAtAnyDepth().filter { it.isSuitableForCorr() }
@@ -134,7 +141,7 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
 
 /**
  * {@include [CommonCorrDocs]}
- * @include [SelectingColumns.Dsl] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetCorrOperationArg]}
  *
  * The function is available for numeric- and [Boolean] columns.
  * [Boolean] values are converted into 1 for true and 0 for false.
@@ -154,11 +161,12 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
  * of this [DataFrame] to compute a correlation.
  * @return A [Corr] intermediate object with the selected columns.
  */
+@Interpretable("Corr0")
 public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> = Corr(this, columns)
 
 /**
  * {@include [CommonCorrDocs]}
- * @include [SelectingColumns.ColumnNames] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetCorrOperationArg]}
  *
  * The function is available for numeric- and [Boolean] columns.
  * [Boolean] values are converted into 1 for true and 0 for false.
@@ -178,6 +186,7 @@ public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> 
  * of this [DataFrame] to compute a correlation.
  * @return A [Corr] intermediate object with the selected columns.
  */
+@StringApiInterpretable(interpreter = "Corr0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.corr(vararg columns: String): Corr<T, Any?> = corr { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -198,24 +207,25 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T,
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also: [Selecting Columns][SelectingOptions].
  *
  * For more information, see: {@include [DocumentationUrls.Corr]}
  */
-internal interface CorrWithDocs
+@ExcludeFromSources
+internal typealias CorrWithDocs = Nothing
 
 /**
  * {@include [CorrWithDocs]}
  * ### This Corr With Overload
  */
 @ExcludeFromSources
-private interface CommonCorrWithDocs
+private typealias CommonCorrWithDocs = Nothing
 
 /**
  * {@include [CommonCorrWithDocs]}
- * @include [SelectingColumns.Dsl] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetCorrOperationArg]}
  *
  * ### Examples
  * ```kotlin
@@ -230,11 +240,13 @@ private interface CommonCorrWithDocs
  * from this [DataFrame] to compute correlations against the initially selected columns.
  * @return A [DataFrame] containing the resulting correlation matrix.
  */
+@Refine
+@Interpretable("CorrWith")
 public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataFrame<T> = corrImpl(otherColumns)
 
 /**
  * {@include [CommonCorrWithDocs]}
- * @include [SelectingColumns.ColumnNames] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetCorrOperationArg]}
  *
  * ### Examples
  * ```kotlin
@@ -249,6 +261,8 @@ public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataF
  * from this [DataFrame] to compute correlations against the initially selected columns.
  * @return A [DataFrame] containing the resulting correlation matrix.
  */
+@Refine
+@StringApiInterpretable(interpreter = "CorrWith", stringArgument = "otherColumns", targetArgument = "otherColumns")
 public fun <T, C> Corr<T, C>.with(vararg otherColumns: String): DataFrame<T> = with { otherColumns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -275,6 +289,8 @@ public fun <T, C, R> Corr<T, C>.with(vararg otherColumns: ColumnReference<R>): D
  *
  * @return A [DataFrame] containing the pairwise correlation matrix.
  */
+@Refine
+@Interpretable("CorrWithItself")
 public fun <T, C> Corr<T, C>.withItself(): DataFrame<T> = with(columns)
 
 // endregion

@@ -1,17 +1,15 @@
 plugins {
+    with(conventions.plugins.dfbuild) {
+        alias(kotlinJvm8)
+        alias(dokka)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
-        alias(ktlint)
         alias(publisher)
         alias(binary.compatibility.validator)
     }
 }
 
 group = "org.jetbrains.kotlinx"
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     api(projects.core)
@@ -21,11 +19,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeOpenApi"
         artifactId = project.name
-        description = "OpenAPI support for Kotlin Dataframe"
+        description = "Kotlin DataFrame: OpenAPI support"
         packageName = artifactId
     }
-}
-
-kotlin {
-    explicitApi()
 }

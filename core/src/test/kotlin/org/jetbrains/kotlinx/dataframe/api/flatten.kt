@@ -35,7 +35,7 @@ class FlattenTests {
 
         // String API
         grouped.flatten("d") shouldBe df
-        val castedGroupedDF = grouped.cast<Grouped>()
+        val castedGroupedDF = grouped.castUnchecked<Grouped>()
 
         // KProperties API
         castedGroupedDF.flatten(Grouped::d) shouldBe df
@@ -72,7 +72,7 @@ class FlattenTests {
         val grouped = df
             .group("a", "b").into("e")
             .group("e", "c").into("f")
-            .rename { "f"["e"] }.into("a")
+            .rename { "f"["e"] }.to("a")
         val flattened = grouped.flatten { "f"["a"] }
         flattened.getColumnGroup("f").columnNames() shouldBe listOf("a", "b", "c")
         flattened.ungroup("f") shouldBe df

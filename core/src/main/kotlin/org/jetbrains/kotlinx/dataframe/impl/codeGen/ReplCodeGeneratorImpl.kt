@@ -15,14 +15,19 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.codeGen.TypeCastGenerator
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.superclasses
 import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
+import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
 
@@ -59,17 +64,17 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                 ?.takeIf { it.findAnnotation<DataSchema>() != null }
                 ?.let { registeredMarkers[it] ?: MarkersExtractor.get(it) }
             if (currentMarker != null) {
-                // we need to make sure that the property's marker type is open in order to let derived data frames be assignable to it
+                // we need to make sure that the property's marker type is open in order to let derived dataframes be assignable to it
                 if (currentMarker.isOpen) {
                     val columnSchema = currentMarker.schema
-                    // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual data frame type
-                    if (wasProcessedBefore || columnSchema == targetSchema) {
-                        // property scheme is valid for current data frame, but we should also check that all compatible open markers are implemented by it
+                    // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual dataframe type
+                    if (wasProcessedBefore || columnSchema.compare(targetSchema).matches()) {
+                        // property schema is valid for the current dataframe, but we should also check that all compatible open markers are implemented by it
                         val requiredBaseMarkers = registeredMarkers.values.filterRequiredForSchema(columnSchema)
                         if (requiredBaseMarkers.any() && requiredBaseMarkers.all { currentMarker.implements(it) }) {
                             return CodeWithTypeCastGenerator.EMPTY
                         }
-                        // use current marker scheme as a target for generation of new marker interface, so that available properties won't change
+                        // use the current marker schema as a target for generation of new marker interface, so that available properties won't change
                         targetSchema = columnSchema
                     }
                 }
@@ -116,8 +121,34 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         result.newMarkers.forEach {
             generatedMarkers[it.name] = it
         }
-        return result.code
+
+        val optIns = buildList {
+            if (schema.hasExperimentalInstant()) add("kotlin.time.ExperimentalTime::class")
+            if (schema.hasExperimentalUuid()) add("kotlin.uuid.ExperimentalUuidApi::class")
+        }.takeIf { it.isNotEmpty() }
+            ?.joinToString(prefix = "@file:OptIn(", separator = ", ", postfix = ")")
+
+        return if (optIns != null) {
+            result.code.copy(
+                declarations = optIns + "\n" + result.code.declarations,
+            )
+        } else {
+            result.code
+        }
     }
+
+    private fun DataFrameSchema.hasColumnOfType(type: KType): Boolean =
+        columns.values.any { column ->
+            when (column) {
+                is ColumnSchema.Frame -> column.schema.hasColumnOfType(type)
+                is ColumnSchema.Group -> column.schema.hasColumnOfType(type)
+                is ColumnSchema.Value -> column.type.isSubtypeOf(type)
+            }
+        }
+
+    private fun DataFrameSchema.hasExperimentalInstant(): Boolean = hasColumnOfType(typeOf<Instant?>())
+
+    private fun DataFrameSchema.hasExperimentalUuid(): Boolean = hasColumnOfType(typeOf<Uuid?>())
 
     override fun process(markerClass: KClass<*>): Code {
         val newMarkers = mutableListOf<Marker>()
@@ -138,7 +169,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                 if (baseClassNames == tempBaseClassNames) {
                     val newBaseMarkers = baseClasses.map { resolve(it) }
                     val newMarker = Marker(
-                        name = clazz.qualifiedName!!,
+                        name = clazz.quotedQualifiedNameOrNull()!!,
                         isOpen = temp.isOpen,
                         fields = temp.fields,
                         superMarkers = newBaseMarkers,

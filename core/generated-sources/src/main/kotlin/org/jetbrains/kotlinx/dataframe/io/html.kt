@@ -5,11 +5,15 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.CellAttributes
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
-import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
+import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
+import org.jetbrains.kotlinx.dataframe.api.HeaderColFormatter
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
+import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
+import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
@@ -23,6 +27,7 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
+import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -34,6 +39,8 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.dataframe.util.DISPLAY_CONFIGURATION
+import org.jetbrains.kotlinx.dataframe.util.DISPLAY_CONFIGURATION_COPY
 import org.jetbrains.kotlinx.dataframe.util.TO_HTML
 import org.jetbrains.kotlinx.dataframe.util.TO_HTML_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.TO_STANDALONE_HTML
@@ -64,6 +71,7 @@ internal data class ColumnDataForJs(
     val nested: List<ColumnDataForJs>,
     val rightAlign: Boolean,
     val values: List<CellContent>,
+    val headerStyle: String?,
 )
 
 internal val formatter = DataFrameFormatter(
@@ -94,7 +102,8 @@ internal fun getResourceText(resource: String, vararg replacement: Pair<String, 
 
 internal fun ColumnDataForJs.renderHeader(): String {
     val tooltip = "${column.name}: ${renderType(column.type())}"
-    return "<span title=\"$tooltip\">${column.name()}</span>"
+    val styleAttr = if (headerStyle != null) " style=\"$headerStyle\"" else ""
+    return "<span title=\"$tooltip\"$styleAttr>${column.name()}</span>"
 }
 
 internal fun tableJs(
@@ -160,7 +169,11 @@ internal fun AnyFrame.toHtmlData(
     val scripts = mutableListOf<String>()
     val queue = LinkedList<RenderingQueueItem>()
 
-    fun AnyFrame.columnToJs(col: AnyCol, rowsLimit: Int?, configuration: DisplayConfiguration): ColumnDataForJs {
+    fun AnyFrame.columnToJs(
+        col: ColumnWithPath<*>,
+        rowsLimit: Int?,
+        configuration: DisplayConfiguration,
+    ): ColumnDataForJs {
         val values = if (rowsLimit != null) rows().take(rowsLimit) else rows()
         val scale = if (col.isNumber()) col.asNumbers().scale() else 1
         val format = if (scale > 0) {
@@ -169,31 +182,90 @@ internal fun AnyFrame.toHtmlData(
             RendererDecimalFormat.of("%e")
         }
         val renderConfig = configuration.copy(decimalFormat = format)
-        val contents = values.map {
-            val value = it[col]
-            val content = value.toDataFrameLikeOrNull()
-            if (content != null) {
-                val df = content.df()
+        val contents = values.map { row ->
+            val value = col[row]
+            val dfLikeContent = value.toDataFrameLikeOrNull()
+            if (dfLikeContent != null) {
+                val df = dfLikeContent.df()
                 if (df.isEmpty()) {
                     HtmlContent("", null)
                 } else {
                     val id = nextTableId()
-                    queue.add(RenderingQueueItem(df, id, content.configuration(defaultConfiguration)))
+                    queue += RenderingQueueItem(df, id, dfLikeContent.configuration(defaultConfiguration))
                     DataFrameReference(id, df.size)
                 }
             } else {
-                val html =
-                    formatter.format(downsizeBufferedImageIfNeeded(value, renderConfig), cellRenderer, renderConfig)
-                val style = renderConfig.cellFormatter
-                    ?.invoke(FormattingDSL, it, col)
+                val html = formatter.format(
+                    value = downsizeBufferedImageIfNeeded(value, renderConfig),
+                    renderer = cellRenderer,
+                    configuration = renderConfig,
+                )
+
+                val formatter = renderConfig.cellFormatter
+                    ?: return@map HtmlContent(html, null)
+
+                // ask formatter for all attributes defined for this cell or any of its parents (outer column groups)
+                val parentCols = col.path.indices
+                    .map { i -> col.path.take(i + 1) }
+                    .dropLast(1)
+                    .map { ColumnWithPath(this@columnToJs[it], it) }
+                val parentAttributes = parentCols
+                    .map { formatter(FormattingDsl, row, it) }
+                    .reduceOrNull(CellAttributes?::and)
+
+                val cellAttributes = formatter(FormattingDsl, row, col)
+
+                val style = (parentAttributes and cellAttributes)
                     ?.attributes()
                     ?.ifEmpty { null }
-                    ?.joinToString(";") { "${it.first}:${it.second}" }
+                    ?.flatMap {
+                        if (it.first == "color") {
+                            // override all --text-color* variables that
+                            // are used to color text of .numbers, .null, etc., inside DataFrame
+                            listOf(
+                                it,
+                                "--text-color" to "${it.second} !important",
+                                "--text-color-dark" to "${it.second} !important",
+                                "--text-color-pale" to "${it.second} !important",
+                                "--text-color-medium" to "${it.second} !important",
+                            )
+                        } else {
+                            listOf(it)
+                        }
+                    }
+                    ?.toMap() // removing duplicate keys, allowing only the final one to be applied
+                    ?.entries
+                    ?.joinToString(";") { "${it.key}:${it.value}" }
                 HtmlContent(html, style)
             }
         }
+        val headerStyle = run {
+            val hf = configuration.headerFormatter
+            if (hf == null) {
+                null
+            } else {
+                // collect attributes from parents
+                val parentCols = col.path.indices
+                    .map { i -> col.path.take(i + 1) }
+                    .dropLast(1)
+                    .map { ColumnWithPath(this@columnToJs[it], it) }
+                val parentAttributes = parentCols
+                    .map { hf(FormattingDsl, it) }
+                    .reduceOrNull(CellAttributes?::and)
+                val selfAttributes = hf(FormattingDsl, col)
+                val attrs = parentAttributes and selfAttributes
+                attrs
+                    ?.attributes()
+                    ?.ifEmpty { null }
+                    ?.toMap()
+                    ?.entries
+                    ?.joinToString(";") { "${it.key}:${it.value}" }
+            }
+        }
         val nested = if (col is ColumnGroup<*>) {
-            col.columns().map { col.columnToJs(it, rowsLimit, configuration) }
+            col.columns().map { childCol ->
+                this@columnToJs.columnToJs(childCol.addParentPath(col.path), rowsLimit, configuration)
+            }
         } else {
             emptyList()
         }
@@ -202,15 +274,18 @@ internal fun AnyFrame.toHtmlData(
             nested = nested,
             rightAlign = col.isSubtypeOf<Number?>(),
             values = contents,
+            headerStyle = headerStyle,
         )
     }
 
     val rootId = nextTableId()
-    queue.add(RenderingQueueItem(this, rootId, defaultConfiguration))
+    queue += RenderingQueueItem(this, rootId, defaultConfiguration)
     while (!queue.isEmpty()) {
         val (nextDf, nextId, configuration) = queue.pop()
         val rowsLimit = if (nextId == rootId) configuration.rowsLimit else configuration.nestedRowsLimit
-        val preparedColumns = nextDf.columns().map { nextDf.columnToJs(it, rowsLimit, configuration) }
+        val preparedColumns = nextDf.columns().map {
+            nextDf.columnToJs(it.addPath(), rowsLimit, configuration)
+        }
         val js = tableJs(preparedColumns, nextId, rootId, nextDf.nrow)
         scripts.add(js)
     }
@@ -229,7 +304,7 @@ private fun Any?.toDataFrameLikeOrNull(): DataFrameLike? =
     when (this) {
         is AnyFrame -> {
             object : DataFrameLike {
-                override fun configuration(default: DisplayConfiguration) = default
+                override fun configuration(default: DisplayConfiguration) = default.copy(cellFormatter = null)
 
                 override fun df(): AnyFrame = this@toDataFrameLikeOrNull
             }
@@ -270,8 +345,13 @@ private fun downsizeBufferedImageIfNeeded(value: Any?, renderConfig: DisplayConf
     }
 
 /**
- * Renders [this] [DataFrame] as static HTML (meaning no JS is used).
- * CSS rendering is enabled by default but can be turned off using [includeCss]
+ * Renders [<code>this</code>][this] [<code>DataFrame</code>][DataFrame] as static HTML (meaning no JS is used).
+ * CSS rendering is enabled by default but can be turned off using [<code>includeCss</code>][includeCss]
+ *
+ * __IMPORTANT:__ If JavaScript is enabled, the table inside the returned [<code>DataFrameHtmlData</code>][DataFrameHtmlData] will be HIDDEN when rendered.
+ * This is done so this function can be used as a fallback mechanism for [<code>AnyFrame.toHtmlData</code>][AnyFrame.toHtmlData], which
+ * requires JavaScript to be displayed.
+ * Call `.copy(script = "")` on the returned [<code>DataFrameHtmlData</code>][DataFrameHtmlData] to remove this hiding/fallback mechanism.
  *
  * @param configuration optional configuration for rendering
  * @param cellRenderer optional cell renderer for rendering
@@ -443,7 +523,7 @@ private fun Set<Border>.toClass(): String =
     }
 
 /**
- * Wrapper class which contains a nullable [ColumnWithPath] and a set of [Border]s.
+ * Wrapper class which contains a nullable [<code>ColumnWithPath</code>][ColumnWithPath] and a set of [<code>Border</code>][Border]s.
  * (Empty cells can have borders too)
  */
 private data class ColumnWithPathWithBorder<T>(
@@ -470,9 +550,9 @@ internal fun BaseColumn<*>.maxWidth(): Int =
     }
 
 /**
- * Given a [DataFrame], this function returns a depth-first "matrix" containing all columns
+ * Given a [<code>DataFrame</code>][DataFrame], this function returns a depth-first "matrix" containing all columns
  * laid out in such a way that they can be used to render the header of a table. The
- * [ColumnWithPathWithBorder.columnWithPath] is `null` when nothing should be rendered in that cell.
+ * [<code>ColumnWithPathWithBorder.columnWithPath</code>][ColumnWithPathWithBorder.columnWithPath] is `null` when nothing should be rendered in that cell.
  * Borders are included too, also for `null` cells.
  *
  * For example:
@@ -543,13 +623,30 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
 ): DataFrameHtmlData = toStandaloneHtml(configuration, cellRenderer, getFooter)
 
 /**
- * By default, cell content is formatted as text
- * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+ * Returns a [<code>DataFrameHtmlData</code>][DataFrameHtmlData] with CSS- and script definitions for DataFrame.
  *
- * The [DataFrameHtmlData] be saved as an *.html file and displayed in the browser.
+ * To change the formatting of certain cells or columns in the dataframe,
+ * use [<code>DataFrame.format</code>][DataFrame.format].
+ *
+ * Use [<code>toHtml</code>][toHtml] if you don't need the [<code>DataFrameHtmlData</code>][DataFrameHtmlData] to include CSS- and script definitions.
+ *
+ * The [<code>DataFrameHtmlData</code>][DataFrameHtmlData] can be saved as an *.html file and displayed in the browser.
  * If you save it as a file and find it in the project tree,
- * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA will automatically reload the file content when it's updated
- * @return DataFrameHtmlData with table script and css definitions
+ * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure)
+ * feature of IntelliJ IDEA will automatically reload the file content when it's updated.
+ *
+ * By default, cell content is formatted as text
+ * Use [<code>RenderedContent.media</code>][RenderedContent.media] or [<code>IMG</code>][IMG], [<code>IFRAME</code>][IFRAME] if you need custom HTML inside a cell.
+ *
+ * __NOTE:__ In Kotlin Notebook, output [<code>DataFrame</code>][DataFrame] directly, or use [<code>toHtml</code>][toHtml],
+ * as that environment already has CSS- and script definitions for DataFrame.
+ * Using [<code>toStandaloneHtml</code>][toStandaloneHtml] might produce unexpected results.
+ *
+ * @param [configuration] The [<code>DisplayConfiguration</code>][DisplayConfiguration] to use. Default: [<code>DisplayConfiguration.DEFAULT</code>][DisplayConfiguration.DEFAULT].
+ * @param [cellRenderer] Mostly for internal usage, use [<code>DefaultCellRenderer</code>][DefaultCellRenderer] if unsure.
+ * @param [getFooter] Allows you to specify how to render the footer text beneath the dataframe.
+ *   Default: `"DataFrame [rows x cols]"`
+ * @see toHtml
  */
 public fun <T> DataFrame<T>.toStandaloneHtml(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
@@ -558,9 +655,23 @@ public fun <T> DataFrame<T>.toStandaloneHtml(
 ): DataFrameHtmlData = toHtml(configuration, cellRenderer, getFooter).withTableDefinitions()
 
 /**
+ * Returns a [<code>DataFrameHtmlData</code>][DataFrameHtmlData] without additional definitions.
+ * Can be rendered in Jupyter kernel (Kotlin Notebook) environments or other environments that already have
+ * CSS- and script definitions for DataFrame.
+ *
+ * To change the formatting of certain cells or columns in the dataframe,
+ * use [<code>DataFrame.format</code>][DataFrame.format].
+ *
+ * Use [<code>toStandaloneHtml</code>][toStandaloneHtml] if you need the [<code>DataFrameHtmlData</code>][DataFrameHtmlData] to include CSS- and script definitions.
+ *
  * By default, cell content is formatted as text
- * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
- * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
+ * Use [<code>RenderedContent.media</code>][RenderedContent.media] or [<code>IMG</code>][IMG], [<code>IFRAME</code>][IFRAME] if you need custom HTML inside a cell.
+ *
+ * @param [configuration] The [<code>DisplayConfiguration</code>][DisplayConfiguration] to use. Default: [<code>DisplayConfiguration.DEFAULT</code>][DisplayConfiguration.DEFAULT].
+ * @param [cellRenderer] Mostly for internal usage, use [<code>DefaultCellRenderer</code>][DefaultCellRenderer] if unsure.
+ * @param [getFooter] Allows you to specify how to render the footer text beneath the dataframe.
+ *   Default: `"DataFrame [rows x cols]"`
+ * @see toStandaloneHtml
  */
 public fun <T> DataFrame<T>.toHtml(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
@@ -597,8 +708,10 @@ public fun <T> DataFrame<T>.toHtml(
 }
 
 /**
- * Container for HTML page data in the form of a String
- * Can be used to compose rendered dataframe tables with additional HTML elements
+ * Container for HTML data, often containing a dataframe table.
+ *
+ * It can be used to compose rendered dataframe tables with additional HTML elements,
+ * or to simply print the HTML or write it to file.
  */
 public class DataFrameHtmlData(
     @Language("css") public val style: String = "",
@@ -676,7 +789,7 @@ public class DataFrameHtmlData(
 
     /**
      * Opens a new tab in your default browser.
-     * Consider [writeHtml] with the [HTML file auto-reload](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA if you want to experiment with the output and run program multiple times
+     * Consider [<code>writeHtml</code>][writeHtml] with the [HTML file auto-reload](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA if you want to experiment with the output and run program multiple times
      */
     public fun openInBrowser() {
         val file = File.createTempFile("df_rendering", ".html")
@@ -735,16 +848,22 @@ public class DataFrameHtmlData(
 }
 
 /**
+ * A collection of settings for rendering dataframes as HTML tables or native
+ * Kotlin Notebook table output.
+ *
  * @param rowsLimit null to disable rows limit
- * @param cellContentLimit -1 to disable content trimming
+ * @param cellContentLimit null to disable content trimming
  * @param enableFallbackStaticTables true to add additional pure HTML table that will be visible only if JS  is disabled;
  * For example hosting *.ipynb files with outputs on GitHub
+ * @param cellFormatter Optional cell formatter applied to data cells during HTML rendering.
+ * @param headerFormatter Optional header formatter applied to column headers; supports inheritance for nested column groups.
  */
 public data class DisplayConfiguration(
     var rowsLimit: Int? = 20,
     var nestedRowsLimit: Int? = 5,
-    var cellContentLimit: Int = 40,
+    var cellContentLimit: Int? = 40,
     var cellFormatter: RowColFormatter<*, *>? = null,
+    var headerFormatter: HeaderColFormatter<*>? = null,
     var decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
     var isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
     internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
@@ -755,6 +874,98 @@ public data class DisplayConfiguration(
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
     }
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = DISPLAY_CONFIGURATION,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public constructor(
+        rowsLimit: Int? = 20,
+        nestedRowsLimit: Int? = 5,
+        cellContentLimit: Int = 40,
+        cellFormatter: RowColFormatter<*, *>? = null,
+        headerFormatter: HeaderColFormatter<*>? = null,
+        decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
+        isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
+        localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
+        useDarkColorScheme: Boolean = false,
+        enableFallbackStaticTables: Boolean = true,
+        downsizeBufferedImage: Boolean = true,
+    ) : this(
+        rowsLimit = rowsLimit,
+        nestedRowsLimit = nestedRowsLimit,
+        cellContentLimit = cellContentLimit,
+        cellFormatter = cellFormatter,
+        headerFormatter = headerFormatter,
+        decimalFormat = decimalFormat,
+        isolatedOutputs = isolatedOutputs,
+        localTesting = localTesting,
+        useDarkColorScheme = useDarkColorScheme,
+        enableFallbackStaticTables = enableFallbackStaticTables,
+        downsizeBufferedImage = downsizeBufferedImage,
+    )
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = DISPLAY_CONFIGURATION,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public constructor(
+        rowsLimit: Int? = 20,
+        nestedRowsLimit: Int? = 5,
+        cellContentLimit: Int = 40,
+        cellFormatter: RowColFormatter<*, *>? = null,
+        decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
+        isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
+        localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
+        useDarkColorScheme: Boolean = false,
+        enableFallbackStaticTables: Boolean = true,
+        downsizeBufferedImage: Boolean = true,
+    ) : this(
+        rowsLimit = rowsLimit,
+        nestedRowsLimit = nestedRowsLimit,
+        cellContentLimit = cellContentLimit,
+        cellFormatter = cellFormatter,
+        headerFormatter = null,
+        decimalFormat = decimalFormat,
+        isolatedOutputs = isolatedOutputs,
+        localTesting = localTesting,
+        useDarkColorScheme = useDarkColorScheme,
+        enableFallbackStaticTables = enableFallbackStaticTables,
+        downsizeBufferedImage = downsizeBufferedImage,
+    )
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = DISPLAY_CONFIGURATION_COPY,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public fun copy(
+        rowsLimit: Int? = this.rowsLimit,
+        nestedRowsLimit: Int? = this.nestedRowsLimit,
+        cellContentLimit: Int = this.cellContentLimit ?: Int.MAX_VALUE,
+        cellFormatter: RowColFormatter<*, *>? = this.cellFormatter,
+        decimalFormat: RendererDecimalFormat = this.decimalFormat,
+        isolatedOutputs: Boolean = this.isolatedOutputs,
+        localTesting: Boolean = this.localTesting,
+        useDarkColorScheme: Boolean = this.useDarkColorScheme,
+        enableFallbackStaticTables: Boolean = this.enableFallbackStaticTables,
+        downsizeBufferedImage: Boolean = this.downsizeBufferedImage,
+    ): DisplayConfiguration =
+        DisplayConfiguration(
+            rowsLimit = rowsLimit,
+            nestedRowsLimit = nestedRowsLimit,
+            cellContentLimit = cellContentLimit,
+            cellFormatter = cellFormatter,
+            headerFormatter = null,
+            decimalFormat = decimalFormat,
+            isolatedOutputs = isolatedOutputs,
+            localTesting = localTesting,
+            useDarkColorScheme = useDarkColorScheme,
+            enableFallbackStaticTables = enableFallbackStaticTables,
+            downsizeBufferedImage = downsizeBufferedImage,
+        )
 
     /** DSL accessor. */
     public operator fun invoke(block: DisplayConfiguration.() -> Unit): DisplayConfiguration = apply(block)
@@ -825,7 +1036,7 @@ internal class DataFrameFormatter(
         }
 
     internal fun truncate(str: String, limit: Int): RenderedContent =
-        if (limit in 1 until str.length) {
+        if (limit in 1..<str.length) {
             val ellipsis = "...".ellipsis(str)
             if (limit < 4) {
                 ellipsis
@@ -844,7 +1055,7 @@ internal class DataFrameFormatter(
 
             result.isFormatted || result.isTruncated -> {
                 val tooltip = result.fullContent?.escapeHTML() ?: ""
-                return "<span class=\"$formattedClass\" title=\"$tooltip\">${result.truncatedContent}</span>"
+                "<span class=\"$formattedClass\" title=\"$tooltip\">${result.truncatedContent}</span>"
             }
 
             else -> result.truncatedContent
@@ -870,11 +1081,21 @@ internal class DataFrameFormatter(
             if (content.isFormatted) isFormatted = true
         }
 
-        fun result() = RenderedContent(sb.toString(), len, if (isTruncated) "" else null, isFormatted)
+        fun result() =
+            RenderedContent(
+                truncatedContent = sb.toString(),
+                textLength = len,
+                fullContent = if (isTruncated) "" else null,
+                isFormatted = isFormatted,
+            )
     }
 
     private fun render(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): RenderedContent? {
-        val limit = configuration.cellContentLimit
+        val limit = configuration.cellContentLimit ?: Int.MAX_VALUE
+        require(limit >= 0) {
+            "DisplayConfiguration.cellContentLimit must be non-negative but was $limit. " +
+                "Set it to `null` if you want to disable the limit."
+        }
 
         fun renderList(values: List<*>, prefix: String, postfix: String): RenderedContent {
             val sb = Builder()
@@ -885,10 +1106,11 @@ internal class DataFrameFormatter(
                 }
 
                 fun addEllipsis() {
-                    if (limit == sb.len + "..".length + postfix.length) {
-                        sb += "..".addCss(structuralClass)
-                    } else {
-                        sb += "...".addCss(structuralClass)
+                    sb += when (limit) {
+                        sb.len + "..".length + postfix.length ->
+                            "..".addCss(structuralClass)
+
+                        else -> "...".addCss(structuralClass)
                     }
                     sb.isTruncated = true
                 }
@@ -911,7 +1133,7 @@ internal class DataFrameFormatter(
                     }
 
                     else -> limit - sb.len - ", ...".length - postfix.length
-                }
+                }.coerceAtLeast(0)
 
                 val rendered = render(values[index], renderer, configuration.copy(cellContentLimit = valueLimit))
                 if (rendered == null || (rendered.textLength == 3 && rendered.isTruncated)) {
@@ -972,9 +1194,12 @@ internal class DataFrameFormatter(
                         null
                     }
                 } else {
-                    val renderedValue =
-                        render(value.second, renderer, configuration.copy(cellContentLimit = limit - key.length))
-                            ?: "...".addCss(structuralClass)
+                    val renderedValue = render(
+                        value = value.second,
+                        renderer = renderer,
+                        configuration = configuration.copy(cellContentLimit = limit - key.length),
+                    )
+                        ?: "...".addCss(structuralClass)
                     key.addCss(structuralClass) + renderedValue
                 }
             }
@@ -997,7 +1222,7 @@ internal class DataFrameFormatter(
 
             else -> renderer.content(value, configuration)
         }
-        if (result != null && result.textLength > configuration.cellContentLimit) return null
+        if (result != null && configuration.cellContentLimit?.let { result.textLength > it } == true) return null
         return result
     }
 }

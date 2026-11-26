@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
-import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 
 /**
  * Class representing generated code declarations for a [Marker].
@@ -61,18 +61,22 @@ public fun interface TypeCastGenerator {
     public object Empty : TypeCastGenerator by (TypeCastGenerator { it })
 
     /**
-     * [TypeCastGenerator] that uses the [cast] functions of the DataFrame API.
+     * [TypeCastGenerator] that uses the [castUnchecked] functions of the DataFrame API.
      *
-     * NOTE: This generator assumes there's a `.cast<>()` function available that can be called on your
+     * The generated cast doesn't verify the data against the schema: the schema is generated from the data itself.
+     *
+     * NOTE: This generator assumes there's a `.castUnchecked<>()` function available that can be called on your
      * specific [Expression]. It will cause runtime errors when there isn't one.
      */
     public class DataFrameApi private constructor(public val types: Array<out String>) : TypeCastGenerator {
         override fun addCastTo(expression: Expression): Code =
             if (types.isEmpty()) {
-                "$expression.cast()"
+                "$expression.castUnchecked()"
             } else {
-                "$expression.cast<${types.joinToString()}>()"
+                "$expression.castUnchecked<${types.joinToString()}>()"
             }
+
+        override fun toString(): String = addCastTo($$"$var$")
 
         public companion object {
             public operator fun invoke(vararg types: String): TypeCastGenerator = DataFrameApi(types)

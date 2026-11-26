@@ -2,8 +2,10 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns [`DataFrame`](DataFrame.md) which contains all columns from the original [`DataFrame`](DataFrame.md) followed by newly added columns. 
-Original [`DataFrame`](DataFrame.md) is not modified.
+Returns a [`DataFrame`](DataFrame.md) that contains all columns from the original [`DataFrame`](DataFrame.md), followed by the newly added columns.
+The original [`DataFrame`](DataFrame.md) is not modified.
+
+**API reference**: [`add`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/add.html)
 
 `add` appends columns to the end of the dataframe by default.
 If you want to add a single column to a specific position in the dataframe, use [insert](insert.md).
@@ -37,9 +39,9 @@ df.add("year of birth") { 2021 - "age"<Int>() }
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.add.html" width="100%"/>
 <!---END-->
 
-See [row expressions](DataRow.md#row-expressions)
+See [row expressions](DataRow.md#row-expressions).
 
-You can use the `newValue()` function to access value that was already calculated for the preceding row.
+You can use the `newValue()` function to access the value that was already calculated for the preceding row.
 It is helpful for recurrent computations:
 
 <!---FUN addRecurrent-->
@@ -79,10 +81,10 @@ columnMapping = column into columnName
 
 ```kotlin
 df.add {
-    "year of birth" from 2021 - age
-    age gt 18 into "is adult"
+    "year of birth" from { 2021 - age }
+    expr { age > 18 } into "is adult"
     "details" {
-        name.lastName.length() into "last name length"
+        name.lastName.map { it.length } into "last name length"
         "full name" from { name.firstName + " " + name.lastName }
     }
 }
@@ -93,10 +95,10 @@ df.add {
 
 ```kotlin
 df.add {
-    "year of birth" from 2021 - "age"<Int>()
-    "age"<Int>() gt 18 into "is adult"
+    "year of birth" from { 2021 - "age"<Int>() }
+    expr { "age"<Int>() > 18 } into "is adult"
     "details" {
-        "name"["lastName"]<String>().length() into "last name length"
+        "name"["lastName"]<String>().map { it.length } into "last name length"
         "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
     }
 }
@@ -130,7 +132,7 @@ Use the following approach to add multiple columns by calling the given API only
 val personWithCityInfo = df.add {
     val cityInfo = city.map { queryCityInfo(it) }
     "cityInfo" {
-        cityInfo.map { it.location } into CityInfo::location
+        cityInfo.map { it.location } into "location"
         cityInfo.map { it.population } into "population"
     }
 }
@@ -143,13 +145,14 @@ val personWithCityInfo = df.add {
 val personWithCityInfo = df.add {
     val cityInfo = "city"<String?>().map { queryCityInfo(it) }
     "cityInfo" {
-        cityInfo.map { it.location } into CityInfo::location
+        cityInfo.map { it.location } into "location"
         cityInfo.map { it.population } into "population"
     }
 }
 ```
 
 </tab></tabs>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addCalculated.html" width="100%"/>
 <!---END-->
 
 ## Add existing column to [`DataFrame`](DataFrame.md)
@@ -159,7 +162,7 @@ val personWithCityInfo = df.add {
 ```kotlin
 val score by columnOf(4, 3, 5, 2, 1, 3, 5)
 
-df.add(score)
+df.addAll(score)
 df + score
 ```
 
@@ -171,7 +174,7 @@ df + score
 <!---FUN addDataFrames-->
 
 ```kotlin
-df.add(df1, df2)
+df.addAll(df1, df2)
 ```
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html" width="100%"/>
@@ -180,7 +183,7 @@ df.add(df1, df2)
 ## addId
 
 Adds a column with sequential values 0, 1, 2,...
-The new column will be added in the beginning of the column list
+The new column will be added at the beginning of the column list
 and will become the first column in [`DataFrame`](DataFrame.md).
 
 ```

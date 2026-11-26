@@ -12,10 +12,10 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
- * Calculates the standard deviation from [this] with optional delta degrees of freedom.
+ * Calculates the standard deviation from [<code>this</code>][this] with optional delta degrees of freedom.
  *
  * @param ddof delta degrees of freedom, the bias-correction of std.
- *   Default is [ddofDefault], so `ddof = 1`, the "unbiased sample standard deviation", but alternatively,
+ *   Default is [<code>ddofDefault</code>][ddofDefault], so `ddof = 1`, the "unbiased sample standard deviation", but alternatively,
  *   the "population standard deviation", so `ddof = 0`, can be used.
  */
 @Suppress("UNCHECKED_CAST")
@@ -66,10 +66,10 @@ internal fun Sequence<Double>.std(skipNaN: Boolean = skipNaNDefault, ddof: Int =
     calculateBasicStatsOrNull(skipNaN)?.std(ddof) ?: Double.NaN
 
 /**
- * Calculates the standard deviation from a [BasicStats] with optional delta degrees of freedom.
+ * Calculates the standard deviation from a [<code>BasicStats</code>][BasicStats] with optional delta degrees of freedom.
  *
  * @param ddof delta degrees of freedom, the bias-correction of std.
- *   Default is [ddofDefault], so `ddof = 1`, the "unbiased sample standard deviation", but alternatively,
+ *   Default is [<code>ddofDefault</code>][ddofDefault], so `ddof = 1`, the "unbiased sample standard deviation", but alternatively,
  *   the "population standard deviation", so `ddof = 0`, can be used.
  */
 internal fun BasicStats.std(ddof: Int): Double =

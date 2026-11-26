@@ -10,7 +10,7 @@ import org.locationtech.jts.geom.Geometry
  * @receiver The collection of geometries for which to compute the bounds.
  * @return The minimal envelope that encompasses all geometries in the collection.
  */
-fun Iterable<Geometry>.computeBounds(): Envelope {
+public fun Iterable<Geometry>.computeBounds(): Envelope {
     val bounds = Envelope()
     forEach { geometry -> bounds.expandToInclude(geometry.envelopeInternal) }
     return bounds

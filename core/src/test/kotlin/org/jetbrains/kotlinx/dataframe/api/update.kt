@@ -1,8 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.size
 import org.junit.Test
 
@@ -78,5 +82,26 @@ class UpdateTests {
         df.fillNA(SchemaA::i).with { 42 }
 
         df.fillNA(SchemaB::i).with { 42 }
+    }
+
+    @Test
+    fun `update Nothing columns`() {
+        val emptyDf = dataFrameOf("a" to DataColumn.empty())
+        emptyDf["a"].type() shouldBe nothingType
+
+        emptyDf.update { "a"<Nothing>() }.with { error("should not happen") }
+            .schema() shouldBe emptyDf.schema()
+
+        val nullFilledDf = dataFrameOf("a" to columnOf(null))
+        nullFilledDf["a"].type() shouldBe nullableNothingType
+
+        // can only update with null
+        nullFilledDf.update { "a"<Nothing?>() }.with { null }
+            .schema() shouldBe nullFilledDf.schema()
+
+        // or 'Nothing', aka, return early/throw exception
+        shouldThrow<IllegalStateException> {
+            nullFilledDf.update { "a"<Nothing?>() }.with { error("Nothing") }
+        }.cause!!.message shouldBe "Nothing"
     }
 }

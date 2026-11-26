@@ -5,6 +5,7 @@ import ch.randelshofer.fastdoubleparser.NumberFormatSymbols
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import java.nio.charset.Charset
 import java.text.DecimalFormatSymbols
@@ -240,7 +241,7 @@ public class FastDoubleParser(private val parserOptions: ParserOptions? = null) 
     /**
      * Here we store all possible decimal format symbols of all locales on the system.
      * These will be used as fallbacks for the selected locale.
-     * They are only added by [withFallback] if they don't interfere with symbols already in the provided [locale]
+     * They are only added by `withFallback` if they don't interfere with symbols already in the provided [locale]
      * (so ',' is not added as grouping separator if '.' is already the locale's decimal separator).
      */
     internal companion object {

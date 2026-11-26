@@ -6,8 +6,6 @@ import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import java.math.BigDecimal
-import java.math.BigInteger
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.round
@@ -18,13 +16,13 @@ import kotlin.reflect.typeOf
 /**
  * Returns the p-quantile: the k'th q-quantile, where p = k/q.
  *
- * When [method] is a [QuantileEstimationMethod.Selecting] method,
- * [this] can be a sequence with any self-comparable type.
+ * When [<code>method</code>][method] is a [<code>QuantileEstimationMethod.Selecting</code>][QuantileEstimationMethod.Selecting] method,
+ * [<code>this</code>][this] can be a sequence with any self-comparable type.
  * The returned value will be selected from the sequence.
  *
- * Otherwise, when [method] is a [QuantileEstimationMethod.Interpolating] method,
- * [this] can only be a sequence with primitive number types.
- * The returned value will be [Double].
+ * Otherwise, when [<code>method</code>][method] is a [<code>QuantileEstimationMethod.Interpolating</code>][QuantileEstimationMethod.Interpolating] method,
+ * [<code>this</code>][this] can only be a sequence with primitive number types.
+ * The returned value will be [<code>Double</code>][Double].
  *
  * Nulls are not allowed. If NaN is among the values, it will be returned.
  *
@@ -51,11 +49,6 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
                 "Unable to compute the $name for ${
                     renderType(type)
                 }. Only primitive numbers or self-comparables are supported.",
-            )
-
-        type == typeOf<BigDecimal>() || type == typeOf<BigInteger>() ->
-            throw IllegalArgumentException(
-                "Cannot calculate the $name for big numbers in DataFrame. Only primitive numbers are supported.",
             )
     }
 
@@ -102,14 +95,14 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
 }
 
 /**
- * Returns the index `i` of the [p]-quantile: the k'th q-quantile, where p = k/q.
+ * Returns the index `i` of the [<code>p</code>][p]-quantile: the k'th q-quantile, where p = k/q.
  *
- * The returned index `i` is either exactly or approaching the index of the quantile in the sequence [this]
+ * The returned index `i` is either exactly or approaching the index of the quantile in the sequence [<code>this</code>][this]
  * (when it's sorted and NaN's removed).
- * Returns -1.0 if the sequence [this] is empty.
- * Returns [Double.NaN] if `!`[skipNaN] and a NaN is encountered.
+ * Returns -1.0 if the sequence [<code>this</code>][this] is empty.
+ * Returns [<code>Double.NaN</code>][Double.NaN] if `!`[<code>skipNaN</code>][skipNaN] and a NaN is encountered.
  */
-internal fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
+private fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
     p: Double,
     type: KType,
     skipNaN: Boolean,
@@ -158,15 +151,73 @@ internal fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
 }
 
 /**
+ * Returns the index of the [<code>p</code>][p]-quantile in the unsorted sequence [<code>this</code>][this], selected using [<code>method</code>][method].
+ * - `-1` if empty or all `null` (or all NaN if [<code>skipNaN</code>][skipNaN])
+ * - index of the first NaN if `!`[<code>skipNaN</code>][skipNaN] and [<code>this</code>][this] contains NaN
+ * - index of the selected value else
+ *
+ * NaN values are detected at runtime when [<code>type</code>][type] could hold them,
+ * including erased types like `Comparable<Any>`, used by the `column: String` overloads.
+ */
+internal fun <T : Comparable<T & Any>?> Sequence<T>.quantileIndex(
+    p: Double,
+    type: KType,
+    skipNaN: Boolean,
+    method: QuantileEstimationMethod.Selecting,
+    name: String = "quantile",
+): Int {
+    // Whether to run the heavy check for NaNs
+    // This needs to be done for Doubles, Floats, or erased types for the String API
+    val couldContainNaN = type.withNullability(false).let {
+        it.canBeNaN ||
+            it == typeOf<Comparable<Any>>() ||
+            it == typeOf<Any>()
+    }
+
+    // propagate NaN to return if they are not to be skipped
+    if (couldContainNaN && !skipNaN) {
+        val indexOfFirstNaN = indexOfFirst { it.isNaN }
+        if (indexOfFirstNaN >= 0) return indexOfFirstNaN
+    }
+
+    // nulls are always skipped, NaNs only remain here if skipNaN
+    val indexedSequence = this.mapIndexedNotNull { i, it ->
+        if (it == null || (couldContainNaN && it.isNaN)) {
+            null
+        } else {
+            IndexedComparable(i, it)
+        }
+    }
+
+    // get the index where the quantile can be found in the sorted sequence
+    val indexEstimation = indexedSequence.quantileIndexEstimation(
+        p = p,
+        type = typeOf<IndexedComparable<Nothing>>(),
+        skipNaN = skipNaN,
+        method = method,
+        name = name,
+    )
+    if (indexEstimation < 0.0) return -1
+    require(indexEstimation == round(indexEstimation)) {
+        "$name expected a whole number index from quantileIndexEstimation but was $indexEstimation"
+    }
+
+    val result = indexedSequence.toList().quickSelect(k = indexEstimation.toInt())
+
+    // return the original unsorted index of the found result
+    return result.index
+}
+
+/**
  * Inspired by Hyndman and Fan (1996) Sample Quantiles in Statistical Packages. The American Statistician, 50, 361-365.
  * DOI:10.1080/00031305.1996.10473566
  *
  * and https://commons.apache.org/proper/commons-statistics/commons-statistics-descriptive/javadocs/api-1.1/org/apache/commons/statistics/descriptive/Quantile.EstimationMethod.html
  *
- * They are split in [Selecting] (where [oneBasedIndexOfQuantile] gives an exact index of the quantile in a sorted list of type [Int])
- * and [Interpolating] (where [oneBasedIndexOfQuantile] gives an approximation for that index of type [Double]).
- * For the [Selecting], the [Value] type can thus be any self-comparable type, but for [Interpolating],
- * [Value] can only be of type [Double], because it needs to perform calculations on the values.
+ * They are split in [<code>Selecting</code>][Selecting] (where [<code>oneBasedIndexOfQuantile</code>][oneBasedIndexOfQuantile] gives an exact index of the quantile in a sorted list of type [<code>Int</code>][Int])
+ * and [<code>Interpolating</code>][Interpolating] (where [<code>oneBasedIndexOfQuantile</code>][oneBasedIndexOfQuantile] gives an approximation for that index of type [<code>Double</code>][Double]).
+ * For the [<code>Selecting</code>][Selecting], the [<code>Value</code>][Value] type can thus be any self-comparable type, but for [<code>Interpolating</code>][Interpolating],
+ * [<code>Value</code>][Value] can only be of type [<code>Double</code>][Double], because it needs to perform calculations on the values.
  *
  * TODO https://github.com/Kotlin/dataframe/issues/1121
  *   - add R2, R4, R5, R6, R9
@@ -175,8 +226,8 @@ internal fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
 internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, Index : Number> {
 
     /**
-     * Gives the (1-based) index of the [p]-quantile for a distribution of size [count].
-     * If the result `h` is a whole number, the `h`'th smallest of the [count] values is the quantile estimate.
+     * Gives the (1-based) index of the [<code>p</code>][p]-quantile for a distribution of size [<code>count</code>][count].
+     * If the result `h` is a whole number, the `h`'th smallest of the [<code>count</code>][count] values is the quantile estimate.
      * If not, `h` is an estimation of the index of the p-quantile. Rounding or interpolation needs to occur to get
      * the actual quantile estimate.
      */
@@ -217,7 +268,7 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
     // TODO add R2, R4, R5, R6, R9 https://github.com/Kotlin/dataframe/issues/1121
     sealed interface Interpolating : QuantileEstimationMethod<Double, Double> {
 
-        /** Linear interpolation of the modes for the order statistics for the uniform distribution on [0, 1]. */
+        /** Linear interpolation of the modes for the order statistics for the uniform distribution on [<code>0, 1</code>][0, 1]. */
         data object R7 : Interpolating, PieceWiseLinear {
             override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double =
                 ((count - 1.0) * p + 1.0)
@@ -275,7 +326,7 @@ internal fun <IndexType : Number> QuantileEstimationMethod<*, IndexType>.indexOf
 }
 
 /**
- * Select the k't "smallest" element from list [this]
+ * Select the k'th "smallest" element from list [<code>this</code>][this]
  */
 @PublishedApi
 internal fun <T : Comparable<T>> List<T>.quickSelect(k: Int): T {

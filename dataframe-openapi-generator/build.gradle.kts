@@ -1,25 +1,18 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
+    with(conventions.plugins.dfbuild) {
+        alias(kotlinJvm8)
+        alias(dokka)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
-//        alias(kover)
-        alias(ktlint)
         alias(binary.compatibility.validator)
     }
 }
 
 group = "org.jetbrains.kotlinx"
-
-val jupyterApiTCRepo: String by project
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)
-}
 
 dependencies {
     api(projects.core)
@@ -34,7 +27,7 @@ dependencies {
         exclude("jakarta.validation")
     }
 
-    testApi(projects.dataframeJupyter)
+    testImplementation(projects.dataframeJupyter)
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
@@ -46,16 +39,12 @@ kotlinPublications {
     publication {
         publicationName = "dataframeOpenApi"
         artifactId = project.name
-        description = "OpenAPI code generation support for Kotlin Dataframe"
+        description = "Kotlin DataFrame: OpenAPI code generation support"
         packageName = artifactId
     }
 }
 
-kotlin {
-    explicitApi()
-}
-
-// uses jupyter for testing, so requires java 11 for that
+// uses jupyter for testing, so requires Java 11 for that
 tasks.compileTestKotlin {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_11

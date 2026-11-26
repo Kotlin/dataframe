@@ -1,7 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -13,9 +16,8 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import java.net.URL
-import java.time.LocalDateTime
-import java.time.LocalTime
 import kotlin.reflect.KType
+import kotlin.reflect.KVariance
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
@@ -53,6 +55,7 @@ internal fun renderType(column: ColumnSchema) =
         else -> throw NotImplementedError()
     }
 
+@RequiredByIntellijPlugin
 internal fun renderType(type: KType?): String {
     return when (type?.classifier) {
         null -> "*"
@@ -62,8 +65,6 @@ internal fun renderType(type: KType?): String {
         else -> {
             val fullName = type.jvmErasure.qualifiedName ?: return type.toString()
             val name = when {
-                // catching cases like `typeOf<Array<Int>>().jvmErasure.qualifiedName == "IntArray"`
-                // https://github.com/Kotlin/dataframe/issues/678
                 type.isSubtypeOf(typeOf<Array<*>>()) ->
                     "Array"
 
@@ -71,10 +72,13 @@ internal fun renderType(type: KType?): String {
                     fullName.removePrefix("java.net.")
 
                 type.classifier in listOf(LocalDateTime::class, LocalTime::class) ->
-                    fullName.removePrefix("java.time.")
+                    fullName.removePrefix("kotlinx.datetime.")
 
                 fullName.startsWith("kotlin.collections.") ->
                     fullName.removePrefix("kotlin.collections.")
+
+                fullName.startsWith("kotlin.time.") ->
+                    fullName.removePrefix("kotlin.time.")
 
                 fullName.startsWith("kotlin.") ->
                     fullName.removePrefix("kotlin.")
@@ -89,7 +93,12 @@ internal fun renderType(type: KType?): String {
                 append(name)
                 if (type.arguments.isNotEmpty()) {
                     val arguments = type.arguments.joinToString {
-                        renderType(it.type)
+                        when (it.variance) {
+                            null -> "*"
+                            KVariance.INVARIANT -> renderType(it.type)
+                            KVariance.IN -> "in ${renderType(it.type)}"
+                            KVariance.OUT -> "out ${renderType(it.type)}"
+                        }
                     }
                     append("<$arguments>")
                 }

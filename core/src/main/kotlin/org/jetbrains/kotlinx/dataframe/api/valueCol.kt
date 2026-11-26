@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -13,7 +12,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -65,13 +66,16 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`valueCol`**][ColumnsSelectionDsl.valueCol] */
-        public interface PlainDslName
+        @ExcludeFromSources
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`valueCol`**][ColumnsSelectionDsl.valueCol] */
-        public interface ColumnSetName
+        @ExcludeFromSources
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`valueCol`**][ColumnsSelectionDsl.valueCol] */
-        public interface ColumnGroupName
+        @ExcludeFromSources
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -88,6 +92,8 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * an accessor for a value column inside a [ColumnGroup].
      * {@include [LineBreak]}
      * {@get [CommonValueColDocs.NOTE]}
+     *
+     * For more information: {@include [DocumentationUrls.ValueCol]}
      *
      * ### Check out: [Grammar]
      *
@@ -117,34 +123,35 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCol\]
      * @see [ColumnsSelectionDsl.col\]
      */
+    @ExcludeFromSources
     private interface CommonValueColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
 
         /**
          * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.RECEIVER]}`[valueCol][valueCol]`({@get [CommonValueColDocs.ARG]}) \}`
          */
-        interface SingleExample
+        typealias SingleExample = Nothing
 
         /**
          * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.RECEIVER]}`[valueCol][valueCol]`({@get [CommonValueColDocs.ARG]}) \}`
          *
          * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.RECEIVER]}`[valueCol][valueCol]`<`[String][String]`>({@get [CommonValueColDocs.ARG]}) \}`
          */
-        interface DoubleExample
+        typealias DoubleExample = Nothing
 
         // Receiver argument for the example(s)
-        interface RECEIVER
+        typealias RECEIVER = Nothing
 
         // Argument for the example(s)
-        interface ARG
+        typealias ARG = Nothing
 
         // Optional note
-        interface NOTE
+        typealias NOTE = Nothing
 
         /** @param [C\] The type of the value column. */
-        interface ValueColumnTypeParam
+        typealias ValueColumnTypeParam = Nothing
     }
 
     // region reference
@@ -153,10 +160,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonValueColDocs]
      * {@set [CommonValueColDocs.ARG] valueColumnA}
      * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.SingleExample]}}
-     * @param [col\] The [ColumnAccessor] pointing to the value column.
+     * @param [valueCol\] The [ColumnAccessor] pointing to the value column.
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
-    private interface ValueColReferenceDocs
+    @ExcludeFromSources
+    private typealias ValueColReferenceDocs = Nothing
 
     /**
      * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.RECEIVER]}
@@ -181,7 +189,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      */
-    public fun <C> AnyColumnGroupAccessor.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
+    public fun <C> ColumnAccessor<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     /**
@@ -214,7 +222,8 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.DoubleExample]}}
      * @param [name\] The name of the value column.
      */
-    private interface ValueColNameDocs
+    @ExcludeFromSources
+    private typealias ValueColNameDocs = Nothing
 
     /**
      * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER]}
@@ -253,13 +262,13 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
+    public fun ColumnAccessor<DataRow<*>>.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
-    public fun <C> AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<C> =
+    public fun <C> ColumnAccessor<DataRow<*>>.valueCol(name: String): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     /**
@@ -318,7 +327,8 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.DoubleExample]}}
      * @param [path\] The path to the value column.
      */
-    private interface ValueColPathDocs
+    @ExcludeFromSources
+    private typealias ValueColPathDocs = Nothing
 
     /**
      * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER]}
@@ -357,13 +367,13 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
+    public fun ColumnAccessor<DataRow<*>>.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
-    public fun <C> AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<C> =
+    public fun <C> ColumnAccessor<DataRow<*>>.valueCol(path: ColumnPath): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     /**
@@ -423,7 +433,8 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @param [property\] The [KProperty] reference to the value column.
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
-    private interface ValueColKPropertyDocs
+    @ExcludeFromSources
+    private typealias ValueColKPropertyDocs = Nothing
 
     /**
      * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER]}
@@ -445,7 +456,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.valueCol(property: KProperty<C>): ColumnAccessor<C> =
+    public fun <C> ColumnAccessor<DataRow<*>>.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**
@@ -483,7 +494,8 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @param [index\] The index of the value column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
-    private interface ValueColIndexDocs
+    @ExcludeFromSources
+    private typealias ValueColIndexDocs = Nothing
 
     /**
      * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
@@ -571,7 +583,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
 
 /**
  * Checks the validity of this [SingleColumn],
- * by adding a check to see it's a [ValueColumn] (so, a [SingleColumn]<*>)
+ * by adding a check to see if it's a [ValueColumn] (so, a [SingleColumn]<*>)
  * and throwing an [IllegalArgumentException] if it's not.
  */
 internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =

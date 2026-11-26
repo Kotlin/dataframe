@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -26,6 +27,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.columns.AddDataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.withNullability
@@ -92,7 +94,7 @@ private fun <C, R> ColumnGroup<C>.replaceRowsIf(
         .map { if (condition(it)) from[it.index] else it }
         .toColumn(name)
         .asColumnGroup()
-        .cast()
+        .castUnchecked()
 
 internal fun <T, C> DataColumn<C>.updateImpl(
     df: DataFrame<T>,
@@ -101,34 +103,44 @@ internal fun <T, C> DataColumn<C>.updateImpl(
 ): DataColumn<C> {
     val collector = createDataCollector<C>(size, type)
     val src = this
-    if (filter == null) {
-        df.indices().forEach { rowIndex ->
-            val row = AddDataRowImpl(rowIndex, df, collector.values)
-            collector.add(expression(row, src, src[rowIndex]))
+    try {
+        if (filter == null) {
+            df.indices().forEach { rowIndex ->
+                val row = AddDataRowImpl(rowIndex, df, collector.values)
+                collector.add(expression(row, src, src[rowIndex]))
+            }
+        } else {
+            df.indices().forEach { rowIndex ->
+                val row = AddDataRowImpl(rowIndex, df, collector.values)
+                val currentValue = row[src]
+                val newValue =
+                    if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
+                collector.add(newValue)
+            }
         }
-    } else {
-        df.indices().forEach { rowIndex ->
-            val row = AddDataRowImpl(rowIndex, df, collector.values)
-            val currentValue = row[src]
-            val newValue =
-                if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
-            collector.add(newValue)
-        }
+        return collector.toColumn(src.name).cast()
+    } catch (e: Throwable) {
+        throw IllegalStateException("Could not update column '${src.name}': ${e.message}", e)
     }
-    return collector.toColumn(src.name).cast()
 }
 
 /**
- * Replaces all values in column asserting that new values are compatible with current column kind
+ * Replaces all values in the column asserting that new values are compatible with the current column kind.
+ *
+ * For a [<code>FrameColumn</code>][FrameColumn], `null` values are replaced by empty dataframes with the column's schema.
  */
 internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> =
     when (this) {
         is FrameColumn<*> -> {
-            values.forEach {
-                require(it is AnyFrame) { "Can not add value '$it' to FrameColumn" }
+            val frameSchema by schema
+            val groups = values.map {
+                when (it) {
+                    null -> DataFrame.empty(frameSchema)
+                    is AnyFrame -> it
+                    else -> throw IllegalArgumentException("Can not add value '$it' to FrameColumn")
+                }
             }
-            val groups = (values as List<AnyFrame>)
-            DataColumn.createFrameColumn(name, groups) as DataColumn<T>
+            DataColumn.createFrameColumn(name, groups, schema.takeIf { groups.all { it.nrow == 0 } }) as DataColumn<T>
         }
 
         is ColumnGroup<*> -> {

@@ -4,13 +4,17 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -19,9 +23,9 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 /**
- * ## Cols Of Kind [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * ## Cols Of Kind [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
- * See [Grammar] for all functions in this interface.
+ * See [<code>Grammar</code>][Grammar] for all functions in this interface.
  */
 public interface ColsOfKindColumnsSelectionDsl {
 
@@ -31,65 +35,65 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[<code>`ColumnSet`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnGroup: `[<code>`SingleColumn`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>`DataRow`</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
+     *  `condition: `[<code>`ColumnFilter`</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `kind: `[`ColumnKind`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind]
-     *
-     *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [**`colsOfKind`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[`kind`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  `kind: `[<code>`ColumnKind`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind]
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called directly in the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
-     *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsOfKind`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[`kind`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  [<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     *  ### What can be called on a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *  [<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsOfKind`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[`kind`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### What can be called on a [<code>Column Group (reference)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [<code>`columnGroup`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
@@ -99,96 +103,51 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      *
      */
-    public interface Grammar {
-
-        /** [**`colsOfKind`**][ColumnsSelectionDsl.colGroups] */
-        public interface PlainDslName
-
-        /** __`.`__[**`colsOfKind`**][ColumnsSelectionDsl.colGroups] */
-        public interface ColumnSetName
-
-        /** __`.`__[**`colsOfKind`**][ColumnsSelectionDsl.colGroups] */
-        public interface ColumnGroupName
-    }
+    public interface Grammar
 
     /**
      * ## Cols Of Kind
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
+     * [<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [<code>APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
-     * ### Check out: [Grammar]
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[<code>Value</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[<code>Frame</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][DataFrame.select]`  {  `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Group][ColumnKind.Group]`) }`
+     *  `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[<code>Group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`) }`
      *
-     *  `df.`[select][DataFrame.select]` { "myColGroup".`[colsOfKind][String.colsOfKind]`(`[Frame][ColumnKind.Frame]`) }`
-     *
-     * #### Examples for this overload:
-     *
-     *
-     *
-     * @param [filter] An optional [predicate][ColumnFilter] to filter the columns of given kind(s) by.
-     * @param [kind] The [kind][ColumnKind] of columns to include.
-     * @param [others] Other optional [kinds][ColumnKind] of columns to include.
-     * @return A [ColumnSet] of columns of the given kind(s).
-     * @see [ColumnsSelectionDsl.valueCols]
-     * @see [ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups]
-     * @see [ColumnsSelectionDsl.cols]
-     */
-    private interface CommonColsOfKindDocs {
-
-        /** Example argument */
-        interface EXAMPLE
-    }
-
-    /**
-     * ## Cols Of Kind
-     * Creates a subset of columns from [this] that are of the given kind(s).
-     *
-     * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
-     *
-     * This function operates solely on columns at the top-level.
-     *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`) }`
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colsOfKind][kotlin.String.colsOfKind]`(`[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
+     *  `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[<code>colsOfKind</code>][kotlin.String.colsOfKind]`(`[<code>Frame</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[colsOfKind][ColumnSet.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>cols</code>][ColumnsSelectionDsl.cols]` { it.`[<code>name</code>][ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") }.`[<code>colsOfKind</code>][ColumnSet.colsOfKind]`(`[<code>Value</code>][ColumnKind.Value]`, `[<code>Frame</code>][ColumnKind.Frame]`) }`
      *
      * `// NOTE: This can be shortened to just:`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOfKind</code>][ColumnsSelectionDsl.colsOfKind]`(`[<code>Value</code>][ColumnKind.Value]`, `[<code>Frame</code>][ColumnKind.Frame]`) { it.`[<code>name</code>][ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
-     * @param [kind] The [kind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @param [others] Other optional [kinds][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
+     * @param [filter] An optional [<code>predicate</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
+     * @param [kind] The [<code>kind</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
+     * @param [others] Other optional [<code>kinds</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("ColumnSetColsOfKind")
     public fun ColumnSet<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
-        filter: ColumnFilter<*> = { true },
+        filter: (ColumnWithPath<*>) -> Boolean = { true },
     ): ColumnSet<*> =
         columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
@@ -200,37 +159,40 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [<code>APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[<code>Value</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[<code>Frame</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`) }`
+     *  `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[<code>Group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`) }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colsOfKind][kotlin.String.colsOfKind]`(`[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
+     *  `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[<code>colsOfKind</code>][kotlin.String.colsOfKind]`(`[<code>Frame</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOfKind</code>][ColumnsSelectionDsl.colsOfKind]`(`[<code>Value</code>][ColumnKind.Value]`, `[<code>Frame</code>][ColumnKind.Frame]`) { it.`[<code>name</code>][ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
-     * @param [kind] The [kind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @param [others] Other optional [kinds][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
+     * @param [filter] An optional [<code>predicate</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
+     * @param [kind] The [<code>kind</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
+     * @param [others] Other optional [<code>kinds</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("DslColsOfKind")
     public fun ColumnsSelectionDsl<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
-        filter: ColumnFilter<*> = { true },
+        filter: (ColumnWithPath<*>) -> Boolean = { true },
     ): ColumnSet<*> =
         asSingleColumn().columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
@@ -242,37 +204,40 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [<code>APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[<code>Value</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[<code>Frame</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`) }`
+     *  `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[<code>Group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`) }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colsOfKind][kotlin.String.colsOfKind]`(`[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
+     *  `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[<code>colsOfKind</code>][kotlin.String.colsOfKind]`(`[<code>Frame</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOfKind][SingleColumn.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
+     * `df.`[<code>select</code>][DataFrame.select]` { myColumnGroup.`[<code>colsOfKind</code>][SingleColumn.colsOfKind]`(`[<code>Value</code>][ColumnKind.Value]`, `[<code>Frame</code>][ColumnKind.Frame]`) }`
      *
-     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
-     * @param [kind] The [kind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @param [others] Other optional [kinds][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
+     * @param [filter] An optional [<code>predicate</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
+     * @param [kind] The [<code>kind</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
+     * @param [others] Other optional [<code>kinds</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("SingleColumnColsOfKind")
     public fun SingleColumn<DataRow<*>>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
-        filter: ColumnFilter<*> = { true },
+        filter: (ColumnWithPath<*>) -> Boolean = { true },
     ): ColumnSet<*> =
         this.ensureIsColumnGroup().columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
@@ -284,37 +249,40 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [<code>APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[<code>Value</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[<code>Frame</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`) }`
+     *  `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[<code>Group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`) }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colsOfKind][kotlin.String.colsOfKind]`(`[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
+     *  `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[<code>colsOfKind</code>][kotlin.String.colsOfKind]`(`[<code>Frame</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOfKind][SingleColumn.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>colsOfKind</code>][SingleColumn.colsOfKind]`(`[<code>Value</code>][ColumnKind.Value]`, `[<code>Frame</code>][ColumnKind.Frame]`) }`
      *
-     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
-     * @param [kind] The [kind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @param [others] Other optional [kinds][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
+     * @param [filter] An optional [<code>predicate</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
+     * @param [kind] The [<code>kind</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
+     * @param [others] Other optional [<code>kinds</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("StringColsOfKind")
     public fun String.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
-        filter: ColumnFilter<*> = { true },
+        filter: (ColumnWithPath<*>) -> Boolean = { true },
     ): ColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     /**
@@ -322,28 +290,30 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [<code>APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[<code>Value</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[<code>Frame</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`) }`
+     *  `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[<code>Group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`) }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colsOfKind][kotlin.String.colsOfKind]`(`[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
+     *  `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[<code>colsOfKind</code>][kotlin.String.colsOfKind]`(`[<code>Frame</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOfKind][KProperty.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
+     * `df.`[<code>select</code>][DataFrame.select]` { Type::myColumnGroup.`[<code>colsOfKind</code>][KProperty.colsOfKind]`(`[<code>Value</code>][ColumnKind.Value]`, `[<code>Frame</code>][ColumnKind.Frame]`) }`
      *
-     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
-     * @param [kind] The [kind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @param [others] Other optional [kinds][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
+     * @param [filter] An optional [<code>predicate</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
+     * @param [kind] The [<code>kind</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
+     * @param [others] Other optional [<code>kinds</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -354,7 +324,7 @@ public interface ColsOfKindColumnsSelectionDsl {
     public fun KProperty<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
-        filter: ColumnFilter<*> = { true },
+        filter: (ColumnWithPath<*>) -> Boolean = { true },
     ): ColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     /**
@@ -362,37 +332,40 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [<code>APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Value][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[<code>Value</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]`, `[<code>Frame</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[Group][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`) }`
+     *  `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOfKind</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]`(`[<code>Group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group]`) }`
      *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[colsOfKind][kotlin.String.colsOfKind]`(`[Frame][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
+     *  `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[<code>colsOfKind</code>][kotlin.String.colsOfKind]`(`[<code>Frame</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame]`) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsOfKind][ColumnPath.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>colsOfKind</code>][ColumnPath.colsOfKind]`(`[<code>Value</code>][ColumnKind.Value]`, `[<code>Frame</code>][ColumnKind.Frame]`) }`
      *
-     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
-     * @param [kind] The [kind][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @param [others] Other optional [kinds][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
+     * @param [filter] An optional [<code>predicate</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] to filter the columns of given kind(s) by.
+     * @param [kind] The [<code>kind</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
+     * @param [others] Other optional [<code>kinds</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnKind] of columns to include.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns of the given kind(s).
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("ColumnPathColsOfKind")
     public fun ColumnPath.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
-        filter: ColumnFilter<*> = { true },
+        filter: (ColumnWithPath<*>) -> Boolean = { true },
     ): ColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     // endregion
@@ -402,7 +375,7 @@ public interface ColsOfKindColumnsSelectionDsl {
  * Returns a TransformableColumnSet containing the columns of given kind(s) that satisfy the given filter.
  *
  * @param filter The filter function to apply on each column. Must accept a ColumnWithPath object and return a Boolean.
- * @return A [TransformableColumnSet] containing the columns of given kinds that satisfy the filter.
+ * @return A [<code>TransformableColumnSet</code>][TransformableColumnSet] containing the columns of given kinds that satisfy the filter.
  */
 internal inline fun ColumnsResolver<*>.columnsOfKindInternal(
     kinds: Set<ColumnKind>,

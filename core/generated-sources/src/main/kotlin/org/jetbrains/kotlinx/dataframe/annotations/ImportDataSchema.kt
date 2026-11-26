@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
-import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
+import org.jetbrains.kotlinx.dataframe.api.NameValueProperty
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
@@ -14,9 +14,9 @@ import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
  *
  * @param name name of the generated interface
  * @param path URL or relative path to data.
- * If a path starts with protocol (http, https, ftp, jdbc), it's considered a URL.
+ * If a path starts with a protocol (http, https, ftp, jdbc), it's considered a URL.
  * Otherwise, it's treated as a relative path.
- * By default, it will be resolved relatively to project dir, i.e. File(projectDir, path)
+ * By default, it will be resolved relative to project dir, i.e. File(projectDir, path)
  * You can configure it by passing `dataframe.resolutionDir` option to preprocessor,
  * see https://kotlinlang.org/docs/ksp-quickstart.html#pass-options-to-processors
  * @param visibility visibility of the generated interface.
@@ -56,9 +56,9 @@ public annotation class CsvOptions(public val delimiter: Char)
  * An annotation class that represents options for JDBC connection.
  *
  * @property [user] The username for the JDBC connection. Default value is an empty string.
- * If [extractCredFromEnv] is true, the [user] value will be interpreted as key for system environment variable.
+ * If [<code>extractCredFromEnv</code>][extractCredFromEnv] is true, the [<code>user</code>][user] value will be interpreted as key for system environment variable.
  * @property [password] The password for the JDBC connection. Default value is an empty string.
- * If [extractCredFromEnv] is true, the [password] value will be interpreted as key for system environment variable.
+ * If [<code>extractCredFromEnv</code>][extractCredFromEnv] is true, the [<code>password</code>][password] value will be interpreted as key for system environment variable.
  * @property [extractCredFromEnv] Whether to extract the JDBC credentials from environment variables. Default value is false.
  * @property [tableName] The name of the table for the JDBC connection. Default value is an empty string.
  * @property [sqlQuery] The SQL query to be executed in the JDBC connection. Default value is an empty string.
@@ -74,18 +74,18 @@ public annotation class JdbcOptions(
 public annotation class JsonOptions(
     /**
      * Allows the choice of how to handle type clashes when reading a JSON file.
-     * Must be either [JsonOptions.TypeClashTactics.ARRAY_AND_VALUE_COLUMNS] or [JsonOptions.TypeClashTactics.ANY_COLUMNS]
-     * */
+     * Must be either [<code>JsonOptions.TypeClashTactics.ARRAY_AND_VALUE_COLUMNS</code>][JsonOptions.TypeClashTactics.ARRAY_AND_VALUE_COLUMNS] or [<code>JsonOptions.TypeClashTactics.ANY_COLUMNS</code>][JsonOptions.TypeClashTactics.ANY_COLUMNS]
+     */
     public val typeClashTactic: String = TypeClashTactics.ARRAY_AND_VALUE_COLUMNS,
     /**
-     * List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+     * List of [<code>JsonPath</code>][JsonPath]s where instead of a [<code>ColumnGroup</code>][ColumnGroup], a [<code>FrameColumn</code>][FrameColumn]<[<code>NameValueProperty</code>][NameValueProperty]>
      *     will be created.
      *
      * Example:
      * `["""$["store"]["book"][*]["author"]"""]`
      */
     public val keyValuePaths: Array<String> = [],
-    /** Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default. */
+    /** Whether to [<code>unify the numbers that are read</code>][UnifyingNumbers]. `true` by default. */
     public val unifyNumbers: Boolean = true,
 ) {
     public object TypeClashTactics {

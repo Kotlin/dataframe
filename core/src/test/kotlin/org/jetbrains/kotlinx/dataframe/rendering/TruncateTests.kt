@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.rendering
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 
@@ -18,6 +19,19 @@ class TruncateTests : RenderingTestsBase() {
     @Test
     fun `no truncate`() {
         "123".truncate(3) shouldBe "123"
+    }
+
+    @Test
+    fun `unlimited truncate`() {
+        val longValue = "123456789".repeat(10)
+        longValue.truncate(null) shouldBe longValue
+    }
+
+    @Test
+    fun `negative truncate limit throws`() {
+        shouldThrow<IllegalArgumentException> {
+            "123456789".truncate(-1)
+        }
     }
 
     @Test

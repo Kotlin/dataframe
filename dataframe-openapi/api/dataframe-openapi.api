@@ -1,10 +1,18 @@
-public abstract interface class org/jetbrains/kotlinx/dataframe/io/AdditionalProperty : org/jetbrains/kotlinx/dataframe/api/KeyValueProperty {
+public abstract interface class org/jetbrains/kotlinx/dataframe/io/AdditionalProperty : org/jetbrains/kotlinx/dataframe/api/NameValueProperty {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/AdditionalProperty$Companion;
-	public abstract fun getKey ()Ljava/lang/String;
+	public abstract fun getName ()Ljava/lang/String;
 	public abstract fun getValue ()Ljava/lang/Object;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/AdditionalProperty$Companion {
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/AdditionalPropertyKt {
+	public static final fun AdditionalProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun AdditionalProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun NullableAdditionalProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableAdditionalProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun getKey (Lorg/jetbrains/kotlinx/dataframe/io/AdditionalProperty;)Ljava/lang/String;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/ConvertDataRowsWithOpenApiKt {

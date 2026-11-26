@@ -1,5 +1,3 @@
-@file:ExcludeFromSources
-
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
@@ -57,39 +55,44 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *  {@get [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]}
      * }
      */
-    @Suppress("ClassName")
     public interface DslGrammarTemplate {
 
         // region parts
 
         // Can be set to nothing to disable the definitions part
-        public interface DEFINITIONS_PART
+        @ExcludeFromSources
+        public typealias DEFINITIONS_PART = Nothing
 
         // Can be set to nothing to disable the plain dsl part
-        public interface PLAIN_DSL_PART
+        @ExcludeFromSources
+        public typealias PLAIN_DSL_PART = Nothing
 
         // Can be set to nothing to disable the column set part
-        public interface COLUMN_SET_PART
+        @ExcludeFromSources
+        public typealias COLUMN_SET_PART = Nothing
 
         // Can be set to nothing to disable the column group part
-        public interface COLUMN_GROUP_PART
-
+        @ExcludeFromSources
+        public typealias COLUMN_GROUP_PART = Nothing
         // endregion
 
         // region Template arguments
 
         // What to put in definitions part aside from the default part.
-        public interface DEFINITIONS
+        @ExcludeFromSources
+        public typealias DEFINITIONS = Nothing
 
         // What to put in the plain dsl part. Does not need indents.
-        public interface PLAIN_DSL_FUNCTIONS
+        @ExcludeFromSources
+        public typealias PLAIN_DSL_FUNCTIONS = Nothing
 
         // What to put in the column set part. Needs indents.
-        public interface COLUMN_SET_FUNCTIONS
+        @ExcludeFromSources
+        public typealias COLUMN_SET_FUNCTIONS = Nothing
 
         // What to put in the column group part. Needs indents.
-        public interface COLUMN_GROUP_FUNCTIONS
-
+        @ExcludeFromSources
+        public typealias COLUMN_GROUP_FUNCTIONS = Nothing
         // endregion
 
         // region Definitions for at the top of the template
@@ -97,153 +100,174 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         /**
          * `columnGroupReference: `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
-        public interface ColumnGroupNoSingleColumnDef
+        public typealias ColumnGroupNoSingleColumnDef = Nothing
 
         /** `colSelector: `[`ColumnSelector`][ColumnSelector] */
-        public interface ColumnSelectorDef
+        public typealias ColumnSelectorDef = Nothing
 
         /** `colsSelector: `[`ColumnsSelector`][ColumnsSelector] */
-        public interface ColumnsSelectorDef
+        public typealias ColumnsSelectorDef = Nothing
 
         /**
          * `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
-        public interface ColumnDef
+        public typealias ColumnDef = Nothing
 
         /**
          * `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
-        public interface ColumnGroupDef
+        public typealias ColumnGroupDef = Nothing
 
         /** `columnNoAccessor: `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] */
-        public interface ColumnNoAccessorDef
+        public typealias ColumnNoAccessorDef = Nothing
 
         /** `columnOrSet: `{@include [ColumnRef]}`  |  `{@include [ColumnSetRef]} */
-        public interface ColumnOrColumnSetDef
+        public typealias ColumnOrColumnSetDef = Nothing
 
         /** `columnSet: `[`ColumnSet`][ColumnSet]`<*>` */
-        public interface ColumnSetDef
+        public typealias ColumnSetDef = Nothing
 
         /** `columnsResolver: `[`ColumnsResolver`][ColumnsResolver] */
-        public interface ColumnsResolverDef
+        public typealias ColumnsResolverDef = Nothing
 
         /** `condition: `[`ColumnFilter`][ColumnFilter] */
-        public interface ConditionDef
+        public typealias ConditionDef = Nothing
 
         /** `expression: `{@include [ColumnExpressionLink]} */
-        public interface ColumnExpressionDef
+        public typealias ColumnExpressionDef = Nothing
 
         /** `ignoreCase: `[`Boolean`][Boolean] */
-        public interface IgnoreCaseDef
+        public typealias IgnoreCaseDef = Nothing
 
         /** `index: `[`Int`][Int] */
-        public interface IndexDef
+        public typealias IndexDef = Nothing
 
         /** `indexRange: `[`IntRange`][IntRange] */
-        public interface IndexRangeDef
+        public typealias IndexRangeDef = Nothing
 
         /** `infer: `[`Infer`][org.jetbrains.kotlinx.dataframe.api.Infer] */
-        public interface InferDef
+        public typealias InferDef = Nothing
 
         /** `kind: `[`ColumnKind`][ColumnKind] */
-        public interface ColumnKindDef
+        public typealias ColumnKindDef = Nothing
 
         /** `kType: `[`KType`][kotlin.reflect.KType] */
-        public interface KTypeDef
+        public typealias KTypeDef = Nothing
 
         /** `name: `[`String`][String] */
-        public interface NameDef
+        public typealias NameDef = Nothing
 
         /** `number: `[`Int`][Int] */
-        public interface NumberDef
+        public typealias NumberDef = Nothing
 
         /** `regex: `[`Regex`][Regex] */
-        public interface RegexDef
+        public typealias RegexDef = Nothing
 
         /**
          * `singleColumn: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
          */
-        public interface SingleColumnDef
+        public typealias SingleColumnDef = Nothing
 
         /** `T: Column type` */
-        public interface ColumnTypeDef
+        public typealias ColumnTypeDef = Nothing
 
         /** `text: `[`String`][String] */
-        public interface TextDef
-
+        public typealias TextDef = Nothing
         // endregion
 
         // region References to the definitions
 
         /** [`columnGroupReference`][ColumnGroupNoSingleColumnDef] */
-        public interface ColumnGroupNoSingleColumnRef
+        @ExcludeFromSources
+        public typealias ColumnGroupNoSingleColumnRef = Nothing
 
         /** [`colSelector`][ColumnSelectorDef] */
-        public interface ColumnSelectorRef
+        @ExcludeFromSources
+        public typealias ColumnSelectorRef = Nothing
 
         /** [`colsSelector`][ColumnsSelectorDef] */
-        public interface ColumnsSelectorRef
+        @ExcludeFromSources
+        public typealias ColumnsSelectorRef = Nothing
 
         /** [`column`][ColumnDef] */
-        public interface ColumnRef
+        @ExcludeFromSources
+        public typealias ColumnRef = Nothing
 
         /** [`columnGroup`][ColumnGroupDef] */
-        public interface ColumnGroupRef
+        @ExcludeFromSources
+        public typealias ColumnGroupRef = Nothing
 
         /** [`columnNoAccessor`][ColumnNoAccessorDef] */
-        public interface ColumnNoAccessorRef
+        @ExcludeFromSources
+        public typealias ColumnNoAccessorRef = Nothing
 
         /** [`columnOrSet`][ColumnOrColumnSetDef] */
-        public interface ColumnOrColumnSetRef
+        @ExcludeFromSources
+        public typealias ColumnOrColumnSetRef = Nothing
 
         /** [`columnSet`][ColumnSetDef] */
-        public interface ColumnSetRef
+        @ExcludeFromSources
+        public typealias ColumnSetRef = Nothing
 
         /** [`columnsResolver`][ColumnsResolverDef] */
-        public interface ColumnsResolverRef
+        @ExcludeFromSources
+        public typealias ColumnsResolverRef = Nothing
 
         /** [`condition`][ConditionDef] */
-        public interface ConditionRef
+        @ExcludeFromSources
+        public typealias ConditionRef = Nothing
 
         /** [`expression`][ColumnExpressionDef] */
-        public interface ColumnExpressionRef
+        @ExcludeFromSources
+        public typealias ColumnExpressionRef = Nothing
 
         /** [`ignoreCase`][IgnoreCaseDef] */
-        public interface IgnoreCaseRef
+        @ExcludeFromSources
+        public typealias IgnoreCaseRef = Nothing
 
         /** [`index`][IndexDef] */
-        public interface IndexRef
+        @ExcludeFromSources
+        public typealias IndexRef = Nothing
 
         /** [`indexRange`][IndexRangeDef] */
-        public interface IndexRangeRef
+        @ExcludeFromSources
+        public typealias IndexRangeRef = Nothing
 
         /** [`infer`][InferDef] */
-        public interface InferRef
+        @ExcludeFromSources
+        public typealias InferRef = Nothing
 
         /** [`kind`][ColumnKindDef] */
-        public interface ColumnKindRef
+        @ExcludeFromSources
+        public typealias ColumnKindRef = Nothing
 
         /** [`kType`][KTypeDef] */
-        public interface KTypeRef
+        @ExcludeFromSources
+        public typealias KTypeRef = Nothing
 
         /** [`name`][NameDef] */
-        public interface NameRef
+        @ExcludeFromSources
+        public typealias NameRef = Nothing
 
         /** [`number`][NumberDef] */
-        public interface NumberRef
+        @ExcludeFromSources
+        public typealias NumberRef = Nothing
 
         /** [`regex`][RegexDef] */
-        public interface RegexRef
+        @ExcludeFromSources
+        public typealias RegexRef = Nothing
 
         /** [`singleColumn`][SingleColumnDef] */
-        public interface SingleColumnRef
+        @ExcludeFromSources
+        public typealias SingleColumnRef = Nothing
 
         /** [`T`][ColumnTypeDef] */
-        public interface ColumnTypeRef
+        @ExcludeFromSources
+        public typealias ColumnTypeRef = Nothing
 
         /** [`text`][TextDef] */
-        public interface TextRef
-
+        @ExcludeFromSources
+        public typealias TextRef = Nothing
         // endregion
     }
 
@@ -280,12 +304,13 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      * {@comment Our example function has no Plain DSL part, so we set it to nothing. No need to set PlainDslFunctionsArg.}
      * {@set [DslGrammarTemplate.PLAIN_DSL_PART]}
      */
+    @ExcludeFromSources
     public interface UsageTemplateExample {
 
         /** __`.`__[**`example`**][ColumnsSelectionDsl.first] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsExample`**][ColumnsSelectionDsl.first] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 }

@@ -4,13 +4,18 @@
 
 Computes the [minimum / maximum](https://en.wikipedia.org/wiki/Maximum_and_minimum) of values.
 
+**API reference**: [`min`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/min.html), [`max`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/max.html)
+
 `null` values in the input are ignored.
 The operations either throw an exception when the input is empty (after filtering `null` or `NaN` values),
 or they return `null` when using the `-orNull` overloads.
 
 They are available for self-comparable columns
-(so columns of type `T : Comparable<T>`, like `DateTime`, `String`, `Int`, etc.)
+(so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 which includes all primitive number columns, but no mix of different number types.
+Unlike [`sum`](sum.md), [`mean`](mean.md), [`std`](std.md), and [`cumSum`](cumSum.md),
+`min` and `max` only compare values instead of computing with them,
+so `java.math.BigDecimal` and `java.math.BigInteger` columns are supported as well.
 
 All operations on `Double`/`Float` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.
@@ -19,9 +24,9 @@ When it's set to `true`, `NaN` values are ignored.
 <!---FUN minmaxModes-->
 
 ```kotlin
-df.min() // min of values per every comparable column
+df.min() // min of values for every comparable column with mutually comparable values
 df.min { age and weight } // min of all values in `age` and `weight`
-df.minFor(skipNaN = true) { age and weight } // min of values per `age` and `weight` separately
+df.minFor(skipNaN = true) { age and name.firstName } // min of values per `age` and `firstName` separately
 df.minOf { (weight ?: 0) / age } // min of expression evaluated for every row
 df.minBy { age } // DataRow with minimal `age`
 ```

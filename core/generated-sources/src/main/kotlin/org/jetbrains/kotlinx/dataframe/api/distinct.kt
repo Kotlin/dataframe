@@ -1,15 +1,19 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
 import org.jetbrains.kotlinx.dataframe.indices
@@ -19,59 +23,51 @@ import kotlin.reflect.KProperty
 // region DataFrame
 
 /**
- * ## The Distinct Operation
+ * Removes duplicated rows based on all columns.
  *
- * It removes duplicated rows based on all columns.
+ * The [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order
+ * as they were in the original [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * __NOTE:__ The rows in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order as they were in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * See also [<code>distinctBy</code>][org.jetbrains.kotlinx.dataframe.api.distinctBy] that removes duplicated rows based on the specified columns
+ * and keeps all the columns in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  *
  *
- * @return A new DataFrame containing only distinct rows.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
- * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
- * .
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
+ * For more information: [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html) [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
+ *
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] containing only distinct rows.
  */
 public fun <T> DataFrame<T>.distinct(): DataFrame<T> = distinctBy { all() }
 
 /**
- * ## The Distinct Operation
+ * Selects the specified columns and keeps only distinct rows based on these selected columns.
  *
- * It removes duplicated rows based on the specified columns.
+ * The [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order
+ * as they were in the original [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * __NOTE:__ The rows in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order as they were in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * See also [<code>distinctBy</code>][org.jetbrains.kotlinx.dataframe.api.distinctBy] that removes duplicated rows based on the specified columns
+ * and keeps all the columns in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * @param [columns][org.jetbrains.kotlinx.dataframe.columns]
- * The names of the columns to consider for evaluating distinct rows.
  *
- * @return A new DataFrame containing only distinct rows.
  *
- * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
- * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
- * .
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
+ *
+ * For more information: [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html) [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
+ *
+ * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select columns
+ * that will be included in the resulting [<code>DataFrame</code>][DataFrame] and considered for evaluating distinct rows.
+ * @return A new [<code>DataFrame</code>][DataFrame] containing only selected columns and distinct rows.
  */
 @Refine
 @Interpretable("Distinct0")
 public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFrame<T> = select(columns).distinct()
 
-/**
- * ## The Distinct Operation
- *
- * It removes duplicated rows based on the specified columns.
- *
- * __NOTE:__ The rows in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order as they were in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
- *
- * @param [columns][org.jetbrains.kotlinx.dataframe.columns]
- * The names of the columns to consider for evaluating distinct rows.
- *
- * @return A new DataFrame containing only distinct rows.
- *
- * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
- * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
- * .
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> =
@@ -81,119 +77,92 @@ public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T>
     }
 
 /**
- * ## The Distinct Operation
+ * Selects the specified columns and keeps only distinct rows based on these selected columns.
  *
- * It removes duplicated rows based on the specified columns.
+ * The [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order
+ * as they were in the original [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * __NOTE:__ The rows in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order as they were in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * See also [<code>distinctBy</code>][org.jetbrains.kotlinx.dataframe.api.distinctBy] that removes duplicated rows based on the specified columns
+ * and keeps all the columns in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * @param [columns][org.jetbrains.kotlinx.dataframe.columns]
- * The names of the columns to consider for evaluating distinct rows.
  *
- * @return A new DataFrame containing only distinct rows.
  *
- * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
- * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
- * .
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
+ *
+ * For more information: [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html) [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
+ *
+ * @param [columns] The names of the columns to select
+ * and to consider for evaluating distinct rows.
+ * @return A new [<code>DataFrame</code>][DataFrame] containing only selected columns and distinct rows.
  */
+@Refine
+@StringApiInterpretable(interpreter = "Distinct0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = distinct { columns.toColumnSet() }
 
-/**
- * ## The Distinct Operation
- *
- * It removes duplicated rows based on the specified columns.
- *
- * __NOTE:__ The rows in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order as they were in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
- *
- * @param [columns][org.jetbrains.kotlinx.dataframe.columns]
- * The names of the columns to consider for evaluating distinct rows.
- *
- * @return A new DataFrame containing only distinct rows.
- *
- * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
- * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
- * .
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.distinct(vararg columns: ColumnReference<*>): DataFrame<T> =
     distinct { columns.toColumnSet() }
 
-/**
- * ## The Distinct Operation
- *
- * It removes duplicated rows based on the specified columns.
- *
- * __NOTE:__ The rows in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order as they were in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
- *
- * @param [columns][org.jetbrains.kotlinx.dataframe.columns]
- * The names of the columns to consider for evaluating distinct rows.
- *
- * @return A new DataFrame containing only distinct rows.
- *
- * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
- * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
- * .
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinctBy(vararg columns: KProperty<*>): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
 
 /**
- * ## The Distinct Operation
+ * Removes duplicated rows based on the specified columns.
  *
- * It removes duplicated rows based on the specified columns.
+ * The [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order
+ * as they were in the original [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * __NOTE:__ The rows in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order as they were in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * See also [<code>distinct</code>][distinct] that selects the specified columns
+ * (if the columns are not specified, selects all columns)
+ * and keeps only distinct rows based on these selected columns.
  *
- * @param [columns][org.jetbrains.kotlinx.dataframe.columns]
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
+ *
+ * For more information: [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html) [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
+ *
+ * @param [columns]
  * The names of the columns to consider for evaluating distinct rows.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] containing only distinct rows.
  *
- * @return A new DataFrame containing only distinct rows.
- *
- * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
- * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
- * .
  */
 public fun <T> DataFrame<T>.distinctBy(vararg columns: String): DataFrame<T> = distinctBy { columns.toColumnSet() }
 
-/**
- * ## The Distinct Operation
- *
- * It removes duplicated rows based on the specified columns.
- *
- * __NOTE:__ The rows in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order as they were in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
- *
- * @param [columns][org.jetbrains.kotlinx.dataframe.columns]
- * The names of the columns to consider for evaluating distinct rows.
- *
- * @return A new DataFrame containing only distinct rows.
- *
- * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
- * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
- * .
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.distinctBy(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.distinctBy(vararg columns: ColumnReference<*>): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
 
 /**
- * ## The Distinct Operation
+ * Removes duplicated rows based on the specified columns.
  *
- * It removes duplicated rows based on the specified columns.
+ * The [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order
+ * as they were in the original [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * __NOTE:__ The rows in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] are in the same order as they were in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * See also [<code>distinct</code>][distinct] that selects the specified columns
+ * (if the columns are not specified, selects all columns)
+ * and keeps only distinct rows based on these selected columns.
  *
- * @param [columns][org.jetbrains.kotlinx.dataframe.columns]
- * The names of the columns to consider for evaluating distinct rows.
  *
- * @return A new DataFrame containing only distinct rows.
  *
- * @see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
- * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
- * .
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
+ *
+ * For more information: [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html) [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
+ *
+ * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select columns
+ * that will be considered for evaluating distinct rows.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] containing only distinct rows.
+ *
  */
 public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataFrame<T> {
     val cols = get(columns)
@@ -206,25 +175,23 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
 // region ColumnsSelectionDsl
 
 /**
- * ##### Distinct [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * Distinct [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * See [Grammar] for all functions in this interface.
+ * See [<code>Grammar</code>][Grammar] for all functions in this interface.
  */
 public interface DistinctColumnsSelectionDsl {
 
     /**
-     * ## Distinct Grammar
-     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[<code>`ColumnSet`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      *
      *
@@ -233,14 +200,14 @@ public interface DistinctColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *  [<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`distinct`**][org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.distinct]**`()`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`distinct`**</code>][org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.distinct]**`()`**
      *
      *
      *
@@ -251,30 +218,26 @@ public interface DistinctColumnsSelectionDsl {
      *
      *
      */
-    public interface Grammar {
-
-        /** __`.`__[**`distinct`**][ColumnsSelectionDsl.distinct] */
-        public interface ColumnSetName
-    }
+    public interface Grammar
 
     /**
-     * ## Distinct
-     * Returns a new [ColumnSet] from [this] [ColumnSet] containing only distinct columns (by path).
+     * Returns a new [<code>ColumnSet</code>][ColumnSet] from [<code>this</code>][this] [<code>ColumnSet</code>][ColumnSet] containing only distinct columns (by path).
      * This is useful when you've selected the same column multiple times but only want it once.
      *
-     * NOTE: This doesn't solve [DuplicateColumnNamesException] if you've selected two columns with the same name.
-     * For this, you'll need to [rename][ColumnsSelectionDsl.named] one of the columns.
+     * This doesn't solve [<code>DuplicateColumnNamesException</code>][DuplicateColumnNamesException] if you've selected two columns with the same name.
+     * For this, you'll need to [<code>rename</code>][ColumnsSelectionDsl.named] one of the columns.
      *
-     * ### Check out: [Grammar]
+     * For more information: [See `distinct` in the Columns Selection DSL on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#distinct)
      *
-     * #### For Example:
-     * `df.`[select][DataFrame.select]` { (`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() `[and][ColumnsSelectionDsl.and]` age).`[distinct][ColumnSet.distinct]`() }`
+     * See also [<code>Grammar</code>][Grammar], [<code>named</code>][ColumnsSelectionDsl.named], [<code>simplify</code>][ColumnsSelectionDsl.simplify].
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[distinct][ColumnSet.distinct]`() }`
+     * ### Examples
+     * ```kotlin
+     * df.select { (colsOf<Int>() and age).distinct() }
+     * df.select { colsAtAnyDepth().nameStartsWith("order").distinct() }
+     * ```
      *
-     * @return A new [ColumnSet] containing only distinct columns (by path).
-     * @see ColumnsSelectionDsl.named
-     * @see ColumnsSelectionDsl.simplify
+     * @return A new [<code>ColumnSet</code>][ColumnSet] containing only distinct columns (by path).
      */
     public fun <C> ColumnSet<C>.distinct(): ColumnSet<C> = DistinctColumnSet(this)
 }

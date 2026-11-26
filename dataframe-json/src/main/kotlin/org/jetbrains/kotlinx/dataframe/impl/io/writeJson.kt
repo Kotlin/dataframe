@@ -19,9 +19,11 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.indices
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isList
-import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -29,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.IS_FORMATTED
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KIND
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
@@ -37,6 +40,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPE
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPES
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
+import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.io.ARRAY_COLUMN_NAME
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.CustomEncoder
@@ -52,7 +56,7 @@ import java.io.IOException
 
 // See docs/serialization_format.md for a description of
 // serialization versions and format.
-internal const val SERIALIZATION_VERSION = "2.1.1"
+internal const val SERIALIZATION_VERSION = "2.2.0"
 
 internal object SerializationKeys {
     const val DATA = "data"
@@ -65,6 +69,7 @@ internal object SerializationKeys {
     const val KOTLIN_DATAFRAME = "kotlin_dataframe"
     const val TYPE = "type"
     const val TYPES = "types"
+    const val IS_FORMATTED = "is_formatted"
 }
 
 private val valueTypes =
@@ -172,10 +177,11 @@ internal fun encodeValue(col: AnyCol, index: Int, customEncoders: List<CustomEnc
     return when {
         matchingEncoder != null -> matchingEncoder.encode(col[index])
 
+        // a `null` list is not an empty one, just like in `encodeRow`
         col.isList() -> col[index]?.let { list ->
             val values = (list as List<*>).map { convert(it) }
             JsonArray(values)
-        } ?: JsonArray(emptyList())
+        } ?: JsonPrimitive(null)
 
         col.typeClass in valueTypes -> convert(col[index])
 
@@ -196,10 +202,12 @@ internal class DataframeConvertableEncoder(
                 rowLimit,
                 encoders,
             )
+            val isFormatted = input is FormattedFrame<*>
             buildJsonObject {
                 put(DATA, data)
                 putJsonObject(METADATA) {
                     put(KIND, JsonPrimitive(CellKind.DataFrameConvertable.toString()))
+                    put(IS_FORMATTED, JsonPrimitive(isFormatted))
                 }
             }
         } ?: JsonPrimitive(null)
@@ -245,30 +253,19 @@ private fun createJsonTypeDescriptor(columnSchema: ColumnSchema): JsonObject =
         },
     )
 
+/**
+ * Unlike [encodeFrame], this is the wire format of the Kotlin Notebook plugin, described in
+ * `docs/serialization_format.md`: every row has to be an object with one entry per column of [frame].
+ * So the unnamed `value`/`array` columns are encoded as regular columns here, instead of as the JSON record
+ * they were read from.
+ */
 internal fun encodeFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int? = null,
     customEncoders: List<CustomEncoder> = emptyList(),
 ): JsonArray {
-    val valueColumn = frame.extractValueColumn()
-    val arrayColumn = frame.extractArrayColumn()
-
-    val arraysAreFrames = arrayColumn?.kind() == ColumnKind.Frame
-
     val data = frame.indices().map { rowIndex ->
-        valueColumn?.get(rowIndex)
-            ?: arrayColumn?.get(rowIndex)?.let {
-                if (arraysAreFrames) {
-                    encodeFrameWithMetadata(
-                        it as AnyFrame,
-                        rowLimit,
-                        customEncoders,
-                    )
-                } else {
-                    null
-                }
-            }
-            ?: encodeRowWithMetadata(frame, rowIndex, rowLimit, customEncoders)
+        encodeRowWithMetadata(frame, rowIndex, rowLimit, customEncoders)
     }
 
     return buildJsonArray { addAll(data.map { convert(it) }) }
@@ -277,106 +274,114 @@ internal fun encodeFrameWithMetadata(
 internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
     val allColumns = columns()
 
-    return allColumns.filter { it.name.startsWith(VALUE_COLUMN_NAME) }
+    return allColumns
+        .filter { it.name.startsWith(VALUE_COLUMN_NAME) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }
-        ?.let { valueCol ->
-            // check that value in this column is not null only when other values are null
-            if (valueCol.kind() != ColumnKind.Value) {
-                null
-            } else {
-                // check that value in this column is not null only when other values are null
-                val isValidValueColumn = rows().all { row ->
-                    if (valueCol[row] != null) {
-                        allColumns.all { col ->
-                            if (col.name != valueCol.name) {
-                                col[row] == null
-                            } else {
-                                true
-                            }
-                        }
-                    } else {
-                        true
-                    }
-                }
-                if (isValidValueColumn) {
-                    valueCol
-                } else {
-                    null
-                }
+        ?.takeIf { it.kind() == ColumnKind.Value }
+        // 'readJson' cannot have created an all-null 'value' column, consider it a regular one
+        ?.takeIf { it.holdsAnyValue() }
+        ?.takeUnless { valueCol ->
+            val otherCols = allColumns - valueCol
+            // A column is not considered a valid value column if any non-null value is joined
+            // with another value of another column in the same row.
+            val isInvalidValueColumn = indices().any { row ->
+                valueCol.holdsValueAt(row) && otherCols.any { it.holdsValueAt(row) }
             }
+
+            isInvalidValueColumn
         }
 }
 
-// If there is only 1 column, then `isValidValueColumn` always true.
+// If there is only 1 column, then `isValidValueColumn` is always true.
 // But at the same time, we shouldn't treat dataFrameOf("value")(1,2,3) like an unnamed column
 // because it was created by the user.
 internal val AnyFrame.isPossibleToFindUnnamedColumns: Boolean
     get() = columns().size != 1
 
+// An unnamed `value`/`array` column always holds at least one value, as it's only created for
+// records that actually hold a value or an array.
+// A column of `null`s only was created by the user, like dataFrameOf("value" to listOf(null, null)).
+private fun AnyCol.holdsAnyValue(): Boolean = indices.any { holdsValueAt(it) }
+
 internal fun AnyFrame.extractArrayColumn(): DataColumn<*>? {
     val allColumns = columns()
 
-    return columns().filter { it.name.startsWith(ARRAY_COLUMN_NAME) }
+    return allColumns
+        .filter { it.name.startsWith(ARRAY_COLUMN_NAME) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }
-        ?.let { arrayCol ->
-            if (arrayCol.kind() == ColumnKind.Group) {
-                null
-            } else {
-                // check that value in this column is not null only when other values are null
-                val isValidArrayColumn = rows().all { row ->
-                    if (arrayCol[row] != null) {
-                        allColumns.all { col ->
-                            if (col.name != arrayCol.name) {
-                                col[row] == null
-                            } else {
-                                true
-                            }
-                        }
-                    } else {
-                        true
-                    }
-                }
-                if (isValidArrayColumn) {
-                    arrayCol
-                } else {
-                    null
-                }
+        // 'readJson' stores arrays either as a `List` value column or as a frame column
+        ?.takeIf { it.kind() == ColumnKind.Frame || it.isList() }
+        // 'readJson' cannot have created an all-null 'array' column, consider it a regular one
+        ?.takeIf { it.holdsAnyValue() }
+        ?.takeUnless { arrayCol ->
+            val otherCols = allColumns - arrayCol
+            // It's not an 'array' column if any of the arrays it holds sits next to
+            // a value in one of the other columns.
+            val isInvalidArrayColumn = indices().any { row ->
+                arrayCol.holdsValueAt(row) && otherCols.any { it.holdsValueAt(row) }
             }
+
+            isInvalidArrayColumn
         }
 }
 
+/**
+ * Encodes each row of [frame] as the JSON record it was read from: the value of the unnamed "value" column,
+ * else the array of the unnamed "array" column, else an object of the remaining columns,
+ * else — when the row holds no values at all — `null`.
+ */
 internal fun encodeFrame(frame: AnyFrame): JsonArray {
     val valueColumn = frame.extractValueColumn()
     val arrayColumn = frame.extractArrayColumn()
 
     val arraysAreFrames = arrayColumn?.kind() == ColumnKind.Frame
 
+    // the unnamed `value`/`array` columns encode the record itself, all other columns encode it as an object
+    val objectColumns = frame.columns().filter { it.name != valueColumn?.name && it.name != arrayColumn?.name }
+    val hasUnnamedColumns = objectColumns.size != frame.columnsCount()
+    val objectFrame = dataFrameOf(objectColumns)
+
     val data = frame.indices().map { rowIndex ->
         when {
-            valueColumn != null -> valueColumn[rowIndex]
+            valueColumn?.holdsValueAt(rowIndex) == true -> valueColumn[rowIndex]
 
-            arrayColumn != null -> arrayColumn[rowIndex]?.let {
+            arrayColumn?.holdsValueAt(rowIndex) == true ->
                 if (arraysAreFrames) {
-                    encodeFrame(it as AnyFrame)
+                    encodeFrame(arrayColumn[rowIndex] as AnyFrame)
                 } else {
-                    null
+                    JsonArray((arrayColumn[rowIndex] as List<*>).map { convert(it) })
                 }
-            }
 
-            else -> encodeRow(frame, rowIndex)
+            // a record that's neither a single value nor an array is encoded as an object,
+            // unless it holds no values at all; then the record was `null` itself
+            hasUnnamedColumns && objectColumns.none { it.holdsValueAt(rowIndex) } -> null
+
+            else -> encodeRow(objectFrame, rowIndex)
         }
     }
 
     return buildJsonArray { addAll(data.map { convert(it) }) }
 }
 
+/**
+ * Whether the value of this column at [rowIndex] carries any data;
+ * empty [FrameColumn] values and [ColumnGroup] rows filled with `null`s carry none.
+ */
+private fun AnyCol.holdsValueAt(rowIndex: Int): Boolean =
+    when (this) {
+        is ColumnGroup<*> -> columns().any { it.holdsValueAt(rowIndex) }
+        is FrameColumn<*> -> !this[rowIndex].isEmpty()
+        else -> this[rowIndex] != null
+    }
+
 internal fun encodeDataFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int,
     nestedRowLimit: Int? = null,
     customEncoders: List<CustomEncoder> = emptyList(),
+    isFormatted: Boolean = false,
 ): JsonObject =
     buildJsonObject {
         put(VERSION, JsonPrimitive(SERIALIZATION_VERSION))
@@ -391,6 +396,7 @@ internal fun encodeDataFrameWithMetadata(
             }
             put(NROW, JsonPrimitive(frame.rowsCount()))
             put(NCOL, JsonPrimitive(frame.columnsCount()))
+            put(IS_FORMATTED, JsonPrimitive(isFormatted))
         }
         put(
             KOTLIN_DATAFRAME,
@@ -403,11 +409,12 @@ internal fun encodeDataFrameWithMetadata(
     }
 
 @OptIn(ExperimentalSerializationApi::class)
-internal fun encodeFrameNoDynamicNestedTables(df: AnyFrame, limit: Int): JsonObject =
+internal fun encodeFrameNoDynamicNestedTables(df: AnyFrame, limit: Int, isFormatted: Boolean): JsonObject =
     buildJsonObject {
         put(NROW, df.rowsCount())
         put(NCOL, df.columnsCount())
         putJsonArray(COLUMNS) { addAll(df.columnNames()) }
+        put(IS_FORMATTED, JsonPrimitive(isFormatted))
         put(
             KOTLIN_DATAFRAME,
             encodeFrame(df.take(limit)),

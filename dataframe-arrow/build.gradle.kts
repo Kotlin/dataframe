@@ -1,18 +1,15 @@
 plugins {
+    with(conventions.plugins.dfbuild) {
+        alias(kotlinJvm8)
+        alias(dokka)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
-//        alias(kover)
-        alias(ktlint)
         alias(binary.compatibility.validator)
     }
 }
 
 group = "org.jetbrains.kotlinx"
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     api(projects.core)
@@ -20,29 +17,28 @@ dependencies {
     implementation(libs.arrow.vector)
     implementation(libs.arrow.format)
     implementation(libs.arrow.memory)
+    implementation(libs.arrow.dataset)
     implementation(libs.commonsCompress)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlin.datetimeJvm)
 
     testImplementation(libs.junit)
+    testImplementation(projects.dataframeJson)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
     testImplementation(libs.arrow.c.data)
     testImplementation(libs.duckdb.jdbc)
+    testImplementation(projects.commonTestUtils)
 }
 
 kotlinPublications {
     publication {
         publicationName = "dataframeArrow"
         artifactId = project.name
-        description = "Apache Arrow support for Kotlin Dataframe"
+        description = "Kotlin DataFrame: Apache Arrow and Parquet support"
         packageName = artifactId
     }
-}
-
-kotlin {
-    explicitApi()
 }
 
 tasks.test {

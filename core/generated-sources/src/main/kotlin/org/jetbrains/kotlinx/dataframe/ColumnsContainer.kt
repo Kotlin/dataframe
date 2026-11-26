@@ -1,10 +1,12 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -16,9 +18,9 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /**
- * Provides access to [columns][DataColumn].
+ * Provides access to [<code>columns</code>][DataColumn].
  *
- * Base interface for [DataFrame] and [ColumnSelectionDsl]
+ * Base interface for [<code>DataFrame</code>][DataFrame] and [<code>ColumnSelectionDsl</code>][ColumnSelectionDsl]
  *
  * @param T Schema marker. Used to resolve generated extension properties for typed column access.
  */
@@ -26,8 +28,10 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     // region columns
 
-    public fun columns(): List<AnyCol>
+    @RequiredByIntellijPlugin
+    public fun columns(): List<DataColumn<*>>
 
+    @RequiredByIntellijPlugin
     public fun columnsCount(): Int
 
     public fun containsColumn(name: String): Boolean
@@ -40,9 +44,9 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     // region getColumnOrNull
 
-    public fun getColumnOrNull(name: String): AnyCol?
+    public fun getColumnOrNull(name: String): DataColumn<*>?
 
-    public fun getColumnOrNull(index: Int): AnyCol?
+    public fun getColumnOrNull(index: Int): DataColumn<*>?
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -52,7 +56,7 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
     @AccessApiOverload
     public fun <R> getColumnOrNull(column: KProperty<R>): DataColumn<R>?
 
-    public fun getColumnOrNull(path: ColumnPath): AnyCol?
+    public fun getColumnOrNull(path: ColumnPath): DataColumn<*>?
 
     public fun <R> getColumnOrNull(column: ColumnSelector<T, R>): DataColumn<R>?
 
@@ -60,9 +64,9 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     // region get
 
-    public override operator fun get(columnName: String): AnyCol = getColumn(columnName)
+    public override operator fun get(columnName: String): DataColumn<*> = getColumn(columnName)
 
-    public operator fun get(columnPath: ColumnPath): AnyCol = getColumn(columnPath)
+    public operator fun get(columnPath: ColumnPath): DataColumn<*> = getColumn(columnPath)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -95,7 +99,7 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> =
-        get(column.columnName).asColumnGroup().cast()
+        get(column.columnName).asColumnGroup().castUnchecked()
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload

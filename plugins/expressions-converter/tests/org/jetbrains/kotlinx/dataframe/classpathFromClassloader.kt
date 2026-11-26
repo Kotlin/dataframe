@@ -250,7 +250,7 @@ private fun allRelatedClassLoaders(
     return try {
         val arrayOfClassLoaders = getParentClassLoaders(clsLoader)
         // TODO: PluginClassLoader uses filtering (mustBeLoadedByPlatform), consider using the same logic, if possible
-        // (untill proper compiling from classloader instead of classpath is implemented)
+        // (until proper compiling from classloader instead of classpath is implemented)
         arrayOfClassLoaders.asSequence().flatMap { allRelatedClassLoaders(it, visited) } + clsLoader
     } catch (e: Throwable) {
         sequenceOf(clsLoader)

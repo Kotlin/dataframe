@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.percentileFor
 import org.jetbrains.kotlinx.dataframe.api.percentileOf
 import org.jetbrains.kotlinx.dataframe.api.percentileOrNull
 import org.jetbrains.kotlinx.dataframe.api.rowPercentileOf
+import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.junit.Test
 import kotlin.experimental.ExperimentalTypeInference
@@ -225,33 +226,37 @@ class PercentileTests {
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `dataframe percentile`() {
         val df = dataFrameOf(
-            "a", "b", "c",
+            "a", "b", "c", "d",
         )(
-            1, 2f, 3.0,
-            4, 5f, 6.0,
-            7, 8f, 9.0,
+            1, 2f, 3.0, 1.toBigInteger(),
+            4, 5f, 6.0, 2.toBigInteger(),
+            7, 8f, 9.0, 4.toBigInteger(),
         )
 
         // Get row with percentile values for each column
         val percentiles50 = df.percentile(50.0)
-        percentiles50["a"] shouldBe 4
-        percentiles50["b"] shouldBe 5f
+        percentiles50["a"] shouldBe 4.0
+        percentiles50["b"] shouldBe 5.0
         percentiles50["c"] shouldBe 6.0
+        percentiles50["d"] shouldBe 2.toBigInteger() // not interpolated!
 
         val percentiles25 = df.percentile(25.0)
         percentiles25["a"] shouldBe 1.5000000000000002
-        percentiles25["b"] shouldBe 2.5f
+        percentiles25["b"] shouldBe 2.5
         percentiles25["c"] shouldBe 3.5
+        percentiles25["d"] shouldBe 1.toBigInteger() // not interpolated!
 
         val percentiles75 = df.percentile(75.0)
         percentiles75["a"] shouldBe 6.5
-        percentiles75["b"] shouldBe 7.5f
+        percentiles75["b"] shouldBe 7.5
         percentiles75["c"] shouldBe 8.5
+        percentiles75["d"] shouldBe 2.toBigInteger() // not interpolated!
 
         // Test percentile for specific columns
-        val percentileFor50 = df.percentileFor(50.0, "a", "c")
-        percentileFor50["a"] shouldBe 4
+        val percentileFor50 = df.percentileFor(50.0, "a", "c", "d")
+        percentileFor50["a"] shouldBe 4.0
         percentileFor50["c"] shouldBe 6.0
+        percentileFor50["d"] shouldBe 2.toBigInteger() // not interpolated!
     }
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
@@ -299,5 +304,36 @@ class PercentileTests {
         val doubleWithNaN = columnOf(5.0, 2.0, Double.NaN, 1.0, 9.0)
         doubleWithNaN.percentile(50.0).shouldBeNaN() // Percentile functions should return NaN if any value is NaN
         doubleWithNaN.percentile(50.0, skipNaN = true) shouldBe 3.5 // With skipNaN=true, NaN values should be ignored
+    }
+
+    @Test
+    fun `percentileBy selects the first NaN if skipNaN is false`() {
+        val col = columnOf(5.0, 2.0, Double.NaN, 1.0, 9.0)
+        val df = dataFrameOf("v", "g")(
+            5.0, 1,
+            2.0, 1,
+            Double.NaN, 1,
+            1.0, 1,
+            9.0, 1,
+        )
+
+        col.percentileBy(50.0) { it }.shouldBeNaN()
+        col.percentileByOrNull(50.0) { it }!!.shouldBeNaN()
+        (df.percentileBy(50.0) { "v"<Double>() }["v"] as Double).shouldBeNaN()
+        (df.percentileBy(50.0, "v")["v"] as Double).shouldBeNaN()
+        (df.percentileByOrNull(50.0, "v")!!["v"] as Double).shouldBeNaN()
+        (df.groupBy("g").percentileBy(50.0, "v").values()["v"][0] as Double).shouldBeNaN()
+
+        // With skipNaN=true, NaN values should be ignored
+        col.percentileBy(100.0, skipNaN = true) { it } shouldBe 9.0
+        df.percentileBy(100.0, skipNaN = true) { "v"<Double>() }["v"] shouldBe 9.0
+        df.percentileBy(100.0, "v", skipNaN = true)["v"] shouldBe 9.0
+    }
+
+    // Issue #2175
+    @Test
+    fun `column percentileBy result is null`() {
+        val col = columnOf(1, null)
+        col.percentileBy(50.0) { it ?: 0 } shouldBe null
     }
 }

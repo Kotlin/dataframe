@@ -6,11 +6,12 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldContain
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -36,6 +37,8 @@ import java.util.Locale
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
+import java.time.LocalDate as JavaLocalDate
+import kotlin.time.Instant as StdlibInstant
 
 //  can be enabled for showing logs for these tests
 private const val SHOW_LOGS = false
@@ -95,7 +98,7 @@ class DelimCsvTsvTests {
 
     @Test
     fun readCsv() {
-        val df = DataFrame.read(simpleCsv)
+        val df = DataFrame.readCsv(simpleCsv)
 
         df.columnsCount() shouldBe 11
         df.rowsCount() shouldBe 5
@@ -107,6 +110,36 @@ class DelimCsvTsvTests {
         df["time"].type() shouldBe typeOf<LocalDateTime>()
 
         df.print(columnTypes = true, borders = true, title = true)
+    }
+
+    @Test
+    fun `readCsv different charset`() {
+        val df = DataFrame.readCsv(simpleCsv)
+
+        DataFrame.readCsv(simpleCsvUtf16le) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16le, charset = Charsets.UTF_16LE) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16le, charset = Charsets.UTF_16BE) shouldNotBe df
+        DataFrame.readCsv(simpleCsvUtf16le, charset = Charsets.UTF_8) shouldNotBe df
+    }
+
+    @Test
+    fun `readCsv gz compressed different charset`() {
+        val df = DataFrame.readCsv(simpleCsv)
+
+        DataFrame.readCsv(simpleCsvUtf16leGz) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16leGz, charset = Charsets.UTF_16LE) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16leGz, charset = Charsets.UTF_16BE) shouldNotBe df
+        DataFrame.readCsv(simpleCsvUtf16leGz, charset = Charsets.UTF_8) shouldNotBe df
+    }
+
+    @Test
+    fun `readCsv zip compressed different charset`() {
+        val df = DataFrame.readCsv(simpleCsv)
+
+        DataFrame.readCsv(simpleCsvUtf16leZip) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16leZip, charset = Charsets.UTF_16LE) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16leZip, charset = Charsets.UTF_16BE) shouldNotBe df
+        DataFrame.readCsv(simpleCsvUtf16leZip, charset = Charsets.UTF_8) shouldNotBe df
     }
 
     @Test
@@ -295,8 +328,8 @@ class DelimCsvTsvTests {
     }
 
     @Test
-    fun `guess tsv`() {
-        val df = DataFrame.read(testResource("abc.tsv"))
+    fun `read tsv`() {
+        val df = DataFrame.readTsv(testResource("abc.tsv"))
         df.columnsCount() shouldBe 3
         df.rowsCount() shouldBe 2
     }
@@ -322,15 +355,15 @@ class DelimCsvTsvTests {
     fun `check integrity of example data`() {
         shouldThrow<IllegalStateException> {
             // cannot read file with blank line at the start
-            DataFrame.readCsv("../data/jetbrains repositories.csv")
+            DataFrame.readCsv(csvWithLeadingBlankLine)
         }
         shouldThrow<IllegalStateException> {
             // ignoreEmptyLines only ignores intermediate empty lines
-            DataFrame.readCsv("../data/jetbrains repositories.csv", ignoreEmptyLines = true)
+            DataFrame.readCsv(csvWithLeadingBlankLine, ignoreEmptyLines = true)
         }
 
         val df = DataFrame.readCsv(
-            "../data/jetbrains repositories.csv",
+            csvWithLeadingBlankLine,
             skipLines = 1, // we need to skip the empty lines manually
         )
         df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
@@ -493,13 +526,13 @@ class DelimCsvTsvTests {
             text = frenchCsv,
             delimiter = ';',
             parserOptions = ParserOptions(
-                dateTimePattern = "dd/MM/yyyy",
-                locale = Locale.FRENCH,
+                dateTime = DateTimeParserOptions.Java(locale = Locale.FRENCH)
+                    .withPattern("dd/MM/yyyy"),
             ),
         )
 
         frenchDf["price"].type() shouldBe typeOf<Double?>()
-        frenchDf["date"].type() shouldBe typeOf<LocalDate?>()
+        frenchDf["date"].type() shouldBe typeOf<JavaLocalDate?>()
 
         @Language("csv")
         val dutchCsv =
@@ -771,8 +804,8 @@ class DelimCsvTsvTests {
         // use DFs parsers by default for datetime-like columns
         val df1 = DataFrame.readCsvStr(csvContent)
         df1["with_timezone_offset"].let {
-            it.type() shouldBe typeOf<Instant>()
-            it[0] shouldBe Instant.parse("2024-12-12T13:00:00+01:00")
+            it.type() shouldBe typeOf<StdlibInstant>()
+            it[0] shouldBe StdlibInstant.parse("2024-12-12T13:00:00+01:00")
         }
         df1["without_timezone_offset"].let {
             it.type() shouldBe typeOf<LocalDateTime>()
@@ -797,6 +830,27 @@ class DelimCsvTsvTests {
     }
 
     @Test
+    fun `test parsing kotlin-time-Instant`() {
+        @Language("csv")
+        val csvContent =
+            """
+            with_timezone_offset,without_timezone_offset
+            2024-12-12T13:00:00+01:00,2024-12-12T13:00:00
+            """.trimIndent()
+
+        DataFrame.parser.parseExperimentalInstant = true
+
+        // use DFs parsers by default for datetime-like columns
+        val df1 = DataFrame.readCsvStr(csvContent)
+        df1["with_timezone_offset"].let {
+            it.type() shouldBe typeOf<StdlibInstant>()
+            it[0] shouldBe StdlibInstant.parse("2024-12-12T13:00:00+01:00")
+        }
+
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
     fun `json dependency test`() {
         val df = dataFrameOf("firstName", "lastName")(
             "John", "Doe",
@@ -812,9 +866,26 @@ class DelimCsvTsvTests {
             """.trimIndent()
     }
 
+    @Test
+    fun `incorrect colTypes exception`() {
+        shouldThrow<IllegalStateException> {
+            DataFrame.readCsvStr(
+                """
+                a
+                abc
+                """.trimIndent(),
+                colTypes = mapOf("a" to ColType.Int),
+            )
+        }.message!!.shouldContain("Check `colTypes`")
+    }
+
     companion object {
         private val irisDataset = testCsv("irisDataset")
         private val simpleCsv = testCsv("testCSV")
+        private val csvWithLeadingBlankLine = testResource("jetbrains repositories.csv")
+        private val simpleCsvUtf16le = testCsv("testCSV-utf-16-le-bom")
+        private val simpleCsvUtf16leGz = testResource("testCSV-utf16le-bom.csv.gz")
+        private val simpleCsvUtf16leZip = testResource("testCSV-utf-16-le-bom.zip")
         private val simpleCsvZip = testResource("testCSV.zip")
         private val twoCsvsZip = testResource("two csvs.zip")
         private val simpleCsvGz = testResource("testCSV.csv.gz")

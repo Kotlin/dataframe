@@ -1,10 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -13,9 +15,9 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 /**
- * ## Range of Columns [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * ## Range of Columns [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
- * See [Grammar] for all functions in this interface.
+ * See [<code>Grammar</code>][Grammar] for all functions in this interface.
  */
 public interface ColumnRangeColumnsSelectionDsl {
 
@@ -25,25 +27,25 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `column: `[<code>`ColumnAccessor`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[**`..`**][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
+     *  [<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[<code>**`..`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo]` `[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
      *
      *
      *
@@ -55,28 +57,26 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      *
      */
-    public interface Grammar {
-
-        /** [**`..`**][ColumnsSelectionDsl.rangeTo] */
-        public interface PlainDslName
-    }
+    public interface Grammar
 
     /**
      * ## Range of Columns
-     * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
+     * Creates a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`"fromColumn"`[`..`][String.rangeTo]`"toColumn"`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`"fromColumn"`[<code>`..`</code>][String.rangeTo]`"toColumn"`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
      * @throws [IllegalArgumentException] if the columns have different parents or the end column is before the
      *   start column.
      * @see [ColumnsSelectionDsl.allBefore]
@@ -90,20 +90,22 @@ public interface ColumnRangeColumnsSelectionDsl {
 
     /**
      * ## Range of Columns
-     * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
+     * Creates a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`"fromColumn"`[`..`][String.rangeTo]`Type::toColumn`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`"fromColumn"`[<code>`..`</code>][String.rangeTo]`Type::toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
      * @throws [IllegalArgumentException] if the columns have different parents or the end column is before the
      *   start column.
      * @see [ColumnsSelectionDsl.allBefore]
@@ -119,20 +121,22 @@ public interface ColumnRangeColumnsSelectionDsl {
 
     /**
      * ## Range of Columns
-     * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
+     * Creates a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`"fromColumn"`[`..`][String.rangeTo]`toColumn`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`"fromColumn"`[<code>`..`</code>][String.rangeTo]`toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
      * @throws [IllegalArgumentException] if the columns have different parents or the end column is before the
      *   start column.
      * @see [ColumnsSelectionDsl.allBefore]
@@ -141,25 +145,27 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
-    public operator fun String.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+    public operator fun String.rangeTo(endInclusive: ColumnReference<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
     /**
      * ## Range of Columns
-     * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
+     * Creates a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`Type::fromColumn`[`..`][KProperty.rangeTo]`"toColumn"`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`Type::fromColumn`[<code>`..`</code>][KProperty.rangeTo]`"toColumn"`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
      * @throws [IllegalArgumentException] if the columns have different parents or the end column is before the
      *   start column.
      * @see [ColumnsSelectionDsl.allBefore]
@@ -175,20 +181,22 @@ public interface ColumnRangeColumnsSelectionDsl {
 
     /**
      * ## Range of Columns
-     * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
+     * Creates a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`Type::fromColumn`[`..`][KProperty.rangeTo]`Type::toColumn`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`Type::fromColumn`[<code>`..`</code>][KProperty.rangeTo]`Type::toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
      * @throws [IllegalArgumentException] if the columns have different parents or the end column is before the
      *   start column.
      * @see [ColumnsSelectionDsl.allBefore]
@@ -204,20 +212,22 @@ public interface ColumnRangeColumnsSelectionDsl {
 
     /**
      * ## Range of Columns
-     * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
+     * Creates a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`Type::fromColumn`[`..`][KProperty.rangeTo]`toColumn`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`Type::fromColumn`[<code>`..`</code>][KProperty.rangeTo]`toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
      * @throws [IllegalArgumentException] if the columns have different parents or the end column is before the
      *   start column.
      * @see [ColumnsSelectionDsl.allBefore]
@@ -228,25 +238,27 @@ public interface ColumnRangeColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun KProperty<*>.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+    public operator fun KProperty<*>.rangeTo(endInclusive: ColumnReference<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
     /**
      * ## Range of Columns
-     * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
+     * Creates a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`fromColumn`[`..`][ColumnReference.rangeTo]`"toColumn"`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`fromColumn`[<code>`..`</code>][ColumnReference.rangeTo]`"toColumn"`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
      * @throws [IllegalArgumentException] if the columns have different parents or the end column is before the
      *   start column.
      * @see [ColumnsSelectionDsl.allBefore]
@@ -255,25 +267,27 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
-    public operator fun AnyColumnReference.rangeTo(endInclusive: String): ColumnSet<*> =
+    public operator fun ColumnReference<*>.rangeTo(endInclusive: String): ColumnSet<*> =
         rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * ## Range of Columns
-     * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
+     * Creates a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`fromColumn`[`..`][ColumnReference.rangeTo]`Type::toColumn`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`fromColumn`[<code>`..`</code>][ColumnReference.rangeTo]`Type::toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
      * @throws [IllegalArgumentException] if the columns have different parents or the end column is before the
      *   start column.
      * @see [ColumnsSelectionDsl.allBefore]
@@ -282,25 +296,27 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
-    public operator fun AnyColumnReference.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
+    public operator fun ColumnReference<*>.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * ## Range of Columns
-     * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
+     * Creates a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`fromColumn`[`..`][ColumnReference.rangeTo]`toColumn`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`fromColumn`[<code>`..`</code>][ColumnReference.rangeTo]`toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] to [endInclusive].
      * @throws [IllegalArgumentException] if the columns have different parents or the end column is before the
      *   start column.
      * @see [ColumnsSelectionDsl.allBefore]
@@ -310,7 +326,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      */
     @Interpretable("ColumnRange")
-    public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+    public operator fun ColumnReference<*>.rangeTo(endInclusive: ColumnReference<*>): ColumnSet<*> =
         createColumnSet { context ->
             val startPath = this@rangeTo.resolveSingle(context)!!.path
             val endPath = endInclusive.resolveSingle(context)!!.path

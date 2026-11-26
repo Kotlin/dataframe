@@ -1,13 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import org.apache.commons.io.ByteOrderMark
 import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.util.IS_URL
 import org.jetbrains.kotlinx.dataframe.util.IS_URL_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.IS_URL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.LISTS_TO_DATAFRAME_MIGRATION
 import java.io.File
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -15,10 +16,10 @@ import java.net.URI
 import java.net.URL
 
 /**
- * Opens a stream to [url] to create a [DataFrame] from it.
+ * Opens a stream to [<code>url</code>][url] to create a [<code>DataFrame</code>][DataFrame] from it.
  * If the URL is a file URL, the file is read directly.
  * If the URL is an HTTP URL, it's also read directly, but if the server returns an error code,
- * the error response is read and parsed as [DataFrame] too.
+ * the error response is read and parsed as [<code>DataFrame</code>][DataFrame] too.
  *
  * Public so it may be used in other modules.
  */
@@ -45,48 +46,13 @@ public fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFram
     }
 }
 
-/**
- * Converts a list of lists into a [DataFrame].
- *
- * By default, treats the first inner list as a header (column names), and the remaining lists as rows.
- * If [containsColumns] is `true`, interprets each inner list as a column,
- * where the first element is used as the column name, and the remaining elements as values.
- *
- * @param T The type of elements contained in the nested lists.
- * @param containsColumns If `true`, treats each nested list as a column with its first element as the column name.
- *                        Otherwise, the first list is treated as the header.
- *                        Defaults to `false`.
- * @return A [DataFrame] containing the data from the nested list structure.
- *         Returns an empty [DataFrame] if the input is empty or invalid.
- */
+@Deprecated(
+    LISTS_TO_DATAFRAME_MIGRATION,
+    ReplaceWith("this.toDataFrame(header = null, containsColumns)", "org.jetbrains.kotlinx.dataframe.api.toDataFrame"),
+    level = DeprecationLevel.WARNING,
+)
 public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyFrame =
-    when {
-        containsColumns -> {
-            mapNotNull {
-                if (it.isEmpty()) return@mapNotNull null
-                val name = it[0].toString()
-                val values = it.drop(1)
-                createColumnGuessingType(name, values)
-            }.toDataFrame()
-        }
-
-        isEmpty() -> DataFrame.Empty
-
-        else -> {
-            val header = get(0).map { it.toString() }
-            val data = drop(1)
-            header.mapIndexed { colIndex, name ->
-                val values = data.map { row ->
-                    if (row.size <= colIndex) {
-                        null
-                    } else {
-                        row[colIndex]
-                    }
-                }
-                createColumnGuessingType(name, values)
-            }.toDataFrame()
-        }
-    }
+    toDataFrame(header = null, containsColumns)
 
 @Deprecated(
     message = IS_URL,
@@ -106,7 +72,7 @@ public fun urlAsFile(url: URL): File = File(url.toURI())
 public fun isProtocolSupported(url: URL): Boolean = url.protocol in setOf("http", "https", "ftp")
 
 /**
- * Converts a file path or URL [String] to a [URL].
+ * Converts a file path or URL [<code>String</code>][String] to a [<code>URL</code>][URL].
  * If the path is a file path, the file is checked for existence and not being a directory.
  */
 public fun asUrl(fileOrUrl: String): URL =
@@ -123,5 +89,12 @@ public fun asUrl(fileOrUrl: String): URL =
 public fun InputStream.skippingBomCharacters(): InputStream =
     BOMInputStream.builder()
         .setInputStream(this)
+        .setByteOrderMarks(
+            ByteOrderMark.UTF_8,
+            ByteOrderMark.UTF_16LE,
+            ByteOrderMark.UTF_16BE,
+            ByteOrderMark.UTF_32LE,
+            ByteOrderMark.UTF_32BE,
+        )
         .setInclude(false)
         .get()

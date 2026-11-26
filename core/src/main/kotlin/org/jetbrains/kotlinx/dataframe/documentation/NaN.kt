@@ -4,7 +4,13 @@ import org.jetbrains.kotlinx.dataframe.api.dropNaNs
 import org.jetbrains.kotlinx.dataframe.api.fillNaNs
 
 /**
+ * {@comment
+ *    NaN KDoc-topic.
+ *    Link to it with `@include [NaNLink]`.
+ * }
+ *
  * ## `NaN`
+ *
  * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
  * in cases where a mathematical operation is undefined, such as dividing by zero.
  *
@@ -13,6 +19,10 @@ import org.jetbrains.kotlinx.dataframe.api.fillNaNs
  *
  * For more information: {@include [DocumentationUrls.NanAndNa.NaN]}
  *
- * @see NA
+ * @see [NA]
  */
-internal interface NaN
+internal typealias NaN = Nothing
+
+/** [`NaN`][NaN] */
+@ExcludeFromSources
+internal typealias NaNLink = Nothing

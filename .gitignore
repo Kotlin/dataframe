@@ -4,7 +4,15 @@
 !.idea/runConfigurations/*.xml
 !.idea/externalDependencies.xml
 !.idea/vcs.xml
+!.idea/icon.png
 .gradle
 .kotlin
 build
 .ipynb_checkpoints
+local.properties
+
+# macOS
+.DS_Store
+/examples/notebooks/quickstart/jb_repos.xlsx
+/.claude/
+/.junie/

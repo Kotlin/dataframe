@@ -1,16 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
-import org.jetbrains.kotlinx.dataframe.annotations.CandidateForRemoval
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
@@ -18,21 +17,30 @@ import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.GET_ROWS_ITERABLE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.GET_ROWS_RANGE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.GET_ROW_OR_NULL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.GET_ROW_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.IS_EMPTY_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.IS_NOT_EMPTY_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-@CandidateForRemoval
-public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(IS_EMPTY_REPLACE), DeprecationLevel.WARNING)
+public fun DataRow<*>.isEmpty(): Boolean = owner.columns().all { it[index] == null }
 
-@CandidateForRemoval
-public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
+@Suppress("DEPRECATION_ERROR")
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(IS_NOT_EMPTY_REPLACE), DeprecationLevel.WARNING)
+public fun DataRow<*>.isNotEmpty(): Boolean = !isEmpty()
 
-public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
+public inline fun <reified R> DataRow<*>.valuesOf(): List<R> = values().filterIsInstance<R>()
 
 // region DataSchema
 @DataSchema
-public data class NameValuePair<V>(val name: String, val value: V)
+@RequiredByIntellijPlugin
+public data class NameValuePair<V>(override val name: String, override val value: V) : NameValueProperty<V>
 
 // Without these overloads row.transpose().name or row.map { name } won't resolve
 public val ColumnsContainer<NameValuePair<*>>.name: DataColumn<String>
@@ -53,70 +61,59 @@ public val DataRow<NameValuePair<*>>.value: Any?
 
 // endregion
 
-public inline fun <reified R> AnyRow.namedValuesOf(): List<NameValuePair<R>> =
+public inline fun <reified R> DataRow<*>.namedValuesOf(): List<NameValuePair<R>> =
     values().zip(columnNames()).filter { it.first is R }.map { NameValuePair(it.second, it.first as R) }
 
-public fun AnyRow.namedValues(): List<NameValuePair<Any?>> =
+@RequiredByIntellijPlugin
+public fun DataRow<*>.namedValues(): List<NameValuePair<Any?>> =
     values().zip(columnNames()) { value, name -> NameValuePair(name, value) }
 
 // region getValue
 
-public fun <T> AnyRow.getValue(columnName: String): T = get(columnName) as T
+public fun <T> DataRow<*>.getValue(columnName: String): T = get(columnName) as T
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> AnyRow.getValue(column: ColumnReference<T>): T = get(column)
+public fun <T> DataRow<*>.getValue(column: ColumnReference<T>): T = get(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> AnyRow.getValue(column: KProperty<T>): T = get(column)
+public fun <T> DataRow<*>.getValue(column: KProperty<T>): T = get(column)
 
-public fun <T> AnyRow.getValueOrNull(columnName: String): T? = getOrNull(columnName) as T?
+public fun <T> DataRow<*>.getValueOrNull(columnName: String): T? = getOrNull(columnName) as T?
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<T>(column.columnName)
+public fun <T> DataRow<*>.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<T>(column.columnName)
 
 // endregion
 
 // region contains
 
-public fun AnyRow.containsKey(columnName: String): Boolean = owner.containsColumn(columnName)
+public fun DataRow<*>.containsKey(columnName: String): Boolean = owner.containsColumn(columnName)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun AnyRow.containsKey(column: AnyColumnReference): Boolean = owner.containsColumn(column)
+public fun DataRow<*>.containsKey(column: ColumnReference<*>): Boolean = owner.containsColumn(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun AnyRow.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
+public fun DataRow<*>.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
 
-public operator fun AnyRow.contains(column: AnyColumnReference): Boolean = containsKey(column)
+public operator fun DataRow<*>.contains(column: ColumnReference<*>): Boolean = containsKey(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey(column)
+public operator fun DataRow<*>.contains(column: KProperty<*>): Boolean = containsKey(column)
 
 // endregion
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  *
- * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
- */
-internal interface DiffDocs
-
-/**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
- * @return null for the first row; difference between expression computed for current and previous row for the following rows
- */
-internal interface DiffOrNullDocs
-
-/**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
- *
- * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
+ * @return [firstRowResult] for the first row; difference between expression computed for current and previous row for the following rows
  */
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
@@ -125,9 +122,11 @@ public inline fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExp
         ?: firstRowResult
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  *
- * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
+ * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
+ *
+ * @return [firstRowResult] for the first row; difference between expression computed for current and previous row for the following rows
  */
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
@@ -137,25 +136,31 @@ public inline fun <T> DataRow<T>.diff(firstRowResult: Int, expression: RowExpres
         ?: firstRowResult
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  *
- * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
+ * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
+ *
+ * @return [firstRowResult] for the first row; difference between expression computed for current and previous row for the following rows
  */
 public inline fun <T> DataRow<T>.diff(firstRowResult: Long, expression: RowExpression<T, Long>): Long =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  *
- * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
+ * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
+ *
+ * @return [firstRowResult] for the first row; difference between expression computed for current and previous row for the following rows
  */
 public inline fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpression<T, Float>): Float =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
+ *
+ * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
@@ -165,7 +170,9 @@ public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Double>
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
+ *
+ * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
@@ -173,7 +180,9 @@ public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Int>): 
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
+ *
+ * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
@@ -181,48 +190,70 @@ public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Long>):
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
+ *
+ * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
 public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Float>): Float? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
-public fun AnyRow.columnsCount(): Int = df().ncol
+@RequiredByIntellijPlugin
+public fun DataRow<*>.columnsCount(): Int = df().ncol
 
-public fun AnyRow.columnNames(): List<String> = df().columnNames()
+public fun DataRow<*>.columnNames(): List<String> = df().columnNames()
 
-public fun AnyRow.columnTypes(): List<KType> = df().columnTypes()
+public fun DataRow<*>.columnTypes(): List<KType> = df().columnTypes()
 
-@CandidateForRemoval
+@Suppress("DEPRECATION_ERROR")
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROW_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataRow<T>.getRow(index: Int): DataRow<T> = getRowOrNull(index)!!
 
-@CandidateForRemoval
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROWS_ITERABLE_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataRow<T>.getRows(indices: Iterable<Int>): DataFrame<T> = df().getRows(indices)
 
-@CandidateForRemoval
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROWS_RANGE_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataRow<T>.getRows(indices: IntRange): DataFrame<T> = df().getRows(indices)
 
-@CandidateForRemoval
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROW_OR_NULL_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataRow<T>.getRowOrNull(index: Int): DataRow<T>? {
     val df = df()
     return if (index >= 0 && index < df.nrow) df[index] else null
 }
 
+/**
+ * Returns the previous [<code>row</code>][DataRow] in the [<code>DataFrame</code>][DataFrame] relative to the current row.
+ * If the current row is the first row in the [<code>DataFrame</code>][DataFrame], it returns `null`.
+ *
+ * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
+ *
+ * @return The previous [<code>DataRow</code>][DataRow] if it exists, or `null` if the current row is the first in the [<code>DataFrame</code>][DataFrame].
+ */
 public fun <T> DataRow<T>.prev(): DataRow<T>? {
     val index = index()
     return if (index > 0) df()[index - 1] else null
 }
 
+/**
+ * Returns the next [<code>row</code>][DataRow] in the [<code>DataFrame</code>][DataFrame] relative to the current row.
+ * If the current row is the last row in the [<code>DataFrame</code>][DataFrame], it returns `null`.
+ *
+ * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
+ *
+ * @return The next [<code>DataRow</code>][DataRow] if it exists, or `null` if the current row is the last in the [<code>DataFrame</code>][DataFrame].
+ */
 public fun <T> DataRow<T>.next(): DataRow<T>? {
     val index = index()
     val df = df()
     return if (index < df.nrow - 1) df[index + 1] else null
 }
 
+@Suppress("DEPRECATION_ERROR")
 public fun <T> DataRow<T>.relative(relativeIndices: Iterable<Int>): DataFrame<T> =
     getRows(relativeIndices.mapNotNull { (index + it).let { if (it >= 0 && it < df().rowsCount()) it else null } })
 
+@Suppress("DEPRECATION_ERROR")
 public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> =
     getRows(
         (relativeIndices.first + index).coerceIn(df().indices)..(relativeIndices.last + index).coerceIn(df().indices),

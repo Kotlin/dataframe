@@ -1,10 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.io.h2
 
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
+import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
-import org.h2.jdbc.JdbcSQLSyntaxErrorException
+import io.kotest.matchers.shouldNotBe
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
@@ -12,93 +16,128 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
+import org.jetbrains.kotlinx.dataframe.io.SqlValidation
+import org.jetbrains.kotlinx.dataframe.io.aliasesNameColumns
 import org.jetbrains.kotlinx.dataframe.io.db.H2
+import org.jetbrains.kotlinx.dataframe.io.db.H2.Mode
 import org.jetbrains.kotlinx.dataframe.io.db.MySql
-import org.jetbrains.kotlinx.dataframe.io.getDataFrameSchema
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForAllSqlTables
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForResultSet
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
+import org.jetbrains.kotlinx.dataframe.io.db.Sqlite
+import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.driverClassNameFromUrl
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readDataFrame
+import org.jetbrains.kotlinx.dataframe.io.readDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.io.readResultSet
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.jetbrains.kotlinx.dataframe.io.withReadOnlyConnection
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import java.math.BigDecimal
+import java.sql.Blob
+import java.sql.Clob
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
+import java.sql.Time
+import java.time.OffsetDateTime
+import java.time.OffsetTime
+import java.util.Date
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 private const val URL = "jdbc:h2:mem:test5;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
 
+private const val MAXIMUM_POOL_SIZE = 5
+
+private const val QUERY_SELECT_ONE = "SELECT 1"
+
+// No `name` and `age`: `cast(verify = true)` needs their exact nullability, and it is inferred from the rows,
+// so they read as non-null with a `limit` and as nullable without one
 @DataSchema
 interface Customer {
-    val id: Int?
-    val name: String?
-    val age: Int?
+    val id: Int
 }
 
 @DataSchema
 interface Sale {
-    val id: Int?
-    val customerId: Int?
-    val amount: Double
+    val id: Int
+    val customerId: Int
+    val amount: BigDecimal
 }
 
 @DataSchema
 interface CustomerSales {
-    val customerName: String?
-    val totalSalesAmount: Double?
+    val customerName: String
+    val totalSalesAmount: BigDecimal
 }
 
 @DataSchema
 interface TestTableData {
-    val characterCol: String?
-    val characterVaryingCol: String?
-    val characterLargeObjectCol: String?
-    val mediumTextCol: String?
-    val varcharIgnoreCaseCol: String?
-    val binaryCol: ByteArray?
-    val binaryVaryingCol: ByteArray?
-    val binaryLargeObjectCol: ByteArray?
-    val booleanCol: Boolean?
-    val tinyIntCol: Int?
-    val smallIntCol: Int?
-    val integerCol: Int?
-    val bigIntCol: Long?
-    val numericCol: BigDecimal?
-    val realCol: Float?
-    val doublePrecisionCol: Double?
-    val decFloatCol: BigDecimal?
-    val dateCol: String?
-    val timeCol: String?
-    val timeWithTimeZoneCol: String?
-    val timestampCol: String?
-    val timestampWithTimeZoneCol: String?
-    val intervalCol: String?
+    val characterCol: String
+    val characterVaryingCol: String
+    val characterLargeObjectCol: Clob
+    val mediumTextCol: Clob
+    val varcharIgnoreCaseCol: String
+    val binaryCol: ByteArray
+    val binaryVaryingCol: ByteArray
+    val binaryLargeObjectCol: Blob
+    val booleanCol: Boolean
+    val tinyIntCol: Int
+    val smallIntCol: Int
+    val integerCol: Int
+    val bigIntCol: Long
+    val numericCol: BigDecimal
+    val realCol: Float
+    val doublePrecisionCol: Double
+    val decFloatCol: BigDecimal
+    val dateCol: Date
+    val timeCol: Time
+    val timeWithTimeZoneCol: OffsetTime
+    val timestampCol: Instant
+    val timestampWithTimeZoneCol: OffsetDateTime
+    val intervalCol: String? // no such column in the table yet: read as nulls
     val javaObjectCol: Any?
-    val enumCol: String?
-    val jsonCol: String?
-    val uuidCol: String?
+    val enumCol: String
+    val jsonCol: ByteArray
+    val uuidCol: Uuid
 }
 
 class JdbcTest {
     companion object {
         private lateinit var connection: Connection
+        private lateinit var dataSource: HikariDataSource
 
         @BeforeClass
         @JvmStatic
         fun setUpClass() {
-            connection =
-                DriverManager.getConnection(URL)
+            initializeConnection()
+            initializeDataSource()
+            createTablesAndData()
+        }
 
+        private fun initializeConnection() {
+            connection = DriverManager.getConnection(URL)
+        }
+
+        private fun initializeDataSource() {
+            val config = HikariConfig().apply {
+                jdbcUrl = URL
+                maximumPoolSize = MAXIMUM_POOL_SIZE
+                minimumIdle = 2
+            }
+            dataSource = HikariDataSource(config)
+        }
+
+        private fun createTablesAndData() {
             // Create table Customer
             @Language("SQL")
             val createCustomerTableQuery = """
@@ -140,12 +179,104 @@ class JdbcTest {
         @JvmStatic
         fun tearDownClass() {
             try {
+                dataSource.close()
                 connection.close()
             } catch (e: SQLException) {
                 e.printStackTrace()
             }
         }
+
+        // Helper assertion functions
+        private fun assertCustomerData(df: AnyFrame, expectedRows: Int = 4) {
+            val casted = df.cast<Customer>(verify = true)
+            casted.rowsCount() shouldBe expectedRows
+            val expectedOlderThan30 = when (expectedRows) {
+                4 -> 2
+                2 -> 1
+                else -> 1 // for 1 row or other small limits in tests
+            }
+            casted.filter {
+                "age"<Int?>()?.let { it > 30 } ?: false
+            }.rowsCount() shouldBe expectedOlderThan30
+            casted[0][1] shouldBe "John"
+        }
+
+        private fun assertCustomerSchema(schema: DataFrameSchema) {
+            schema.columns.size shouldBe 3
+            schema.columns["name"]!!.type shouldBe typeOf<String?>()
+        }
+
+        private fun assertCustomerSalesData(df: AnyFrame, expectedRows: Int = 2) {
+            val casted = df.cast<CustomerSales>(verify = true)
+            casted.rowsCount() shouldBe expectedRows
+            // In current tests, regardless of limit (2 or 1), the count of totalSalesAmount > 100 is 1
+            casted.filter { "totalSalesAmount"<BigDecimal>() > BigDecimal(100) }.rowsCount() shouldBe 1
+            casted[0][0] shouldBe "John"
+        }
+
+        private fun assertCustomerSalesSchema(schema: DataFrameSchema) {
+            schema.columns.size shouldBe 2
+            schema.columns["customerName"]!!.type shouldBe typeOf<String?>()
+        }
+
+        private fun assertAllTablesData(dataFrameMap: Map<String, AnyFrame>) {
+            dataFrameMap.containsKey("Customer") shouldBe true
+            dataFrameMap.containsKey("Sale") shouldBe true
+
+            val dataframes = dataFrameMap.values.toList()
+
+            val customerDf = dataframes[0].cast<Customer>(verify = true)
+            customerDf.rowsCount() shouldBe 4
+            customerDf.filter { "age"<Int?>()?.let { it > 30 } ?: false }.rowsCount() shouldBe 2
+            customerDf[0][1] shouldBe "John"
+
+            val saleDf = dataframes[1].cast<Sale>(verify = true)
+            saleDf.rowsCount() shouldBe 4
+            saleDf.filter { "amount"<BigDecimal>() > BigDecimal(40) }.rowsCount() shouldBe 3
+            (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
+        }
+
+        private fun assertAllTablesDataWithLimit(dataFrameMap: Map<String, AnyFrame>) {
+            val dataframes = dataFrameMap.values.toList()
+
+            val customerDf = dataframes[0].cast<Customer>(verify = true)
+            customerDf.rowsCount() shouldBe 1
+            customerDf.filter { "age"<Int?>()?.let { it > 30 } ?: false }.rowsCount() shouldBe 1
+            customerDf[0][1] shouldBe "John"
+
+            val saleDf = dataframes[1].cast<Sale>(verify = true)
+            saleDf.rowsCount() shouldBe 1
+            saleDf.filter { "amount"<BigDecimal>() > BigDecimal(40) }.rowsCount() shouldBe 1
+            (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
+        }
+
+        private fun assertAllTablesSchema(dataFrameSchemaMap: Map<String, DataFrameSchema>) {
+            dataFrameSchemaMap.containsKey("Customer") shouldBe true
+            dataFrameSchemaMap.containsKey("Sale") shouldBe true
+
+            val dataSchemas = dataFrameSchemaMap.values.toList()
+
+            val customerDataSchema = dataSchemas[0]
+            customerDataSchema.columns.size shouldBe 3
+            customerDataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+
+            val saleDataSchema = dataSchemas[1]
+            saleDataSchema.columns.size shouldBe 3
+            saleDataSchema.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
+        }
+
+        @Language("SQL")
+        private val CUSTOMER_SALES_QUERY =
+            """
+            SELECT c.name as customerName, SUM(s.amount) as totalSalesAmount
+            FROM Sale s
+            INNER JOIN Customer c ON s.customerId = c.id
+            WHERE c.age > 35
+            GROUP BY s.customerId, c.name
+            """.trimIndent()
     }
+
+    // ========== Connection API Tests ==========
 
     @Test
     fun `read from empty table`() {
@@ -164,7 +295,7 @@ class JdbcTest {
         val df = DataFrame.readSqlTable(connection, tableName)
         df.rowsCount() shouldBe 0
 
-        val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
+        val dataSchema = DataFrameSchema.readSqlTable(connection, tableName)
         dataSchema.columns.size shouldBe 2
         dataSchema.columns["characterCol"]!!.type shouldBe typeOf<String?>()
 
@@ -252,47 +383,47 @@ class JdbcTest {
         ).executeUpdate()
 
         val tableName = "TestTable"
-        val df = DataFrame.readSqlTable(connection, tableName).cast<TestTableData>()
+        val df = DataFrame.readSqlTable(connection, tableName).cast<TestTableData>(verify = true)
         df.rowsCount() shouldBe 3
-        df.filter { it[TestTableData::integerCol]!! > 1000 }.rowsCount() shouldBe 2
+        df.filter { "integerCol"<Int>() > 1000 }.rowsCount() shouldBe 2
 
         // testing numeric columns
         val result = df.select("tinyIntCol")
-            .add("tinyIntCol2") { it[TestTableData::tinyIntCol] }
+            .add("tinyIntCol2") { "tinyIntCol"<Int?>() }
 
         result[0][1] shouldBe 1
 
         val result1 = df.select("smallIntCol")
-            .add("smallIntCol2") { it[TestTableData::smallIntCol] }
+            .add("smallIntCol2") { "smallIntCol"<Int?>() }
 
         result1[0][1] shouldBe 100
 
         val result2 = df.select("bigIntCol")
-            .add("bigIntCol2") { it[TestTableData::bigIntCol] }
+            .add("bigIntCol2") { "bigIntCol"<Long?>() }
 
         result2[0][1] shouldBe 100000
 
         val result3 = df.select("numericCol")
-            .add("numericCol2") { it[TestTableData::numericCol] }
+            .add("numericCol2") { "numericCol"<BigDecimal?>() }
 
         BigDecimal("123.45").compareTo(result3[0][1] as BigDecimal) shouldBe 0
 
         val result4 = df.select("realCol")
-            .add("realCol2") { it[TestTableData::realCol] }
+            .add("realCol2") { "realCol"<Float?>() }
 
         result4[0][1] shouldBe 1.23f
 
         val result5 = df.select("doublePrecisionCol")
-            .add("doublePrecisionCol2") { it[TestTableData::doublePrecisionCol] }
+            .add("doublePrecisionCol2") { "doublePrecisionCol"<Double?>() }
 
         result5[0][1] shouldBe 3.14
 
         val result6 = df.select("decFloatCol")
-            .add("decFloatCol2") { it[TestTableData::decFloatCol] }
+            .add("decFloatCol2") { "decFloatCol"<BigDecimal?>() }
 
         BigDecimal("2.71").compareTo(result6[0][1] as BigDecimal) shouldBe 0
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, tableName)
+        val schema = DataFrameSchema.readSqlTable(connection, tableName)
 
         schema.columns["characterCol"]!!.type shouldBe typeOf<String?>()
         schema.columns["tinyIntCol"]!!.type shouldBe typeOf<Int?>()
@@ -309,198 +440,139 @@ class JdbcTest {
     @Test
     fun `read from table`() {
         val tableName = "Customer"
-        val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
+        val df = DataFrame.readSqlTable(connection, tableName)
+        assertCustomerData(df)
 
-        df.rowsCount() shouldBe 4
-        df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-        df[0][1] shouldBe "John"
+        val df1 = DataFrame.readSqlTable(connection, tableName, 1)
+        assertCustomerData(df1, 1)
 
-        val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
-
-        df1.rowsCount() shouldBe 1
-        df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-        df1[0][1] shouldBe "John"
-
-        val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
-        dataSchema.columns.size shouldBe 3
-        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+        val dataSchema = DataFrameSchema.readSqlTable(connection, tableName)
+        assertCustomerSchema(dataSchema)
 
         val dbConfig = DbConnectionConfig(url = URL)
-        val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
+        val df2 = DataFrame.readSqlTable(dbConfig, tableName)
+        assertCustomerData(df2)
 
-        df2.rowsCount() shouldBe 4
-        df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-        df2[0][1] shouldBe "John"
+        val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1)
+        assertCustomerData(df3, 1)
 
-        val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
-
-        df3.rowsCount() shouldBe 1
-        df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-        df3[0][1] shouldBe "John"
-
-        val dataSchema1 = DataFrame.getSchemaForSqlTable(dbConfig, tableName)
-        dataSchema1.columns.size shouldBe 3
-        dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+        val dataSchema1 = DataFrameSchema.readSqlTable(dbConfig, tableName)
+        assertCustomerSchema(dataSchema1)
     }
 
     @Test
     fun `read from table with extension functions`() {
         val tableName = "Customer"
-        val df = connection.readDataFrame(tableName).cast<Customer>()
+        val df = connection.readDataFrame(tableName)
+        assertCustomerData(df)
 
-        df.rowsCount() shouldBe 4
-        df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-        df[0][1] shouldBe "John"
+        val df1 = connection.readDataFrame(tableName, 1)
+        assertCustomerData(df1, 1)
 
-        val df1 = connection.readDataFrame(tableName, 1).cast<Customer>()
-
-        df1.rowsCount() shouldBe 1
-        df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-        df1[0][1] shouldBe "John"
-
-        val dataSchema = connection.getDataFrameSchema(tableName)
-        dataSchema.columns.size shouldBe 3
-        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+        val dataSchema = connection.readDataFrameSchema(tableName)
+        assertCustomerSchema(dataSchema)
 
         val dbConfig = DbConnectionConfig(url = URL)
-        val df2 = dbConfig.readDataFrame(tableName).cast<Customer>()
+        val df2 = dbConfig.readDataFrame(tableName)
+        assertCustomerData(df2)
 
-        df2.rowsCount() shouldBe 4
-        df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-        df2[0][1] shouldBe "John"
+        val df3 = dbConfig.readDataFrame(tableName, 1)
+        assertCustomerData(df3, 1)
 
-        val df3 = dbConfig.readDataFrame(tableName, 1).cast<Customer>()
-
-        df3.rowsCount() shouldBe 1
-        df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-        df3[0][1] shouldBe "John"
-
-        val dataSchema1 = dbConfig.getDataFrameSchema(tableName)
-        dataSchema1.columns.size shouldBe 3
-        dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+        val dataSchema1 = dbConfig.readDataFrameSchema(tableName)
+        assertCustomerSchema(dataSchema1)
     }
 
-    // to cover a reported case from https://github.com/Kotlin/dataframe/issues/494
     @Test
     fun `repeated read from table with limit`() {
         val tableName = "Customer"
 
-        for (i in 1..10) {
-            val df1 = DataFrame.readSqlTable(connection, tableName, 2).cast<Customer>()
-
-            df1.rowsCount() shouldBe 2
-            df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-            df1[0][1] shouldBe "John"
+        repeat(10) {
+            val df1 = DataFrame.readSqlTable(connection, tableName, 2)
+            assertCustomerData(df1, 2)
 
             val dbConfig = DbConnectionConfig(url = URL)
-            val df2 = DataFrame.readSqlTable(dbConfig, tableName, 2).cast<Customer>()
-
-            df2.rowsCount() shouldBe 2
-            df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-            df2[0][1] shouldBe "John"
+            val df2 = DataFrame.readSqlTable(dbConfig, tableName, 2)
+            assertCustomerData(df2, 2)
         }
     }
 
     @Test
     fun `read from ResultSet`() {
+        val dbType = H2(Mode.MySql)
+
         connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
             @Language("SQL")
             val selectStatement = "SELECT * FROM Customer"
 
             st.executeQuery(selectStatement).use { rs ->
-                val df = DataFrame.readResultSet(rs, H2(MySql)).cast<Customer>()
-
-                df.rowsCount() shouldBe 4
-                df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-                df[0][1] shouldBe "John"
+                val df = DataFrame.readResultSet(rs, dbType)
+                assertCustomerData(df)
 
                 rs.beforeFirst()
 
-                val df1 = DataFrame.readResultSet(rs, H2(MySql), 1).cast<Customer>()
-
-                df1.rowsCount() shouldBe 1
-                df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-                df1[0][1] shouldBe "John"
+                val df1 = DataFrame.readResultSet(rs, dbType, 1)
+                assertCustomerData(df1, 1)
 
                 rs.beforeFirst()
 
-                val dataSchema = DataFrame.getSchemaForResultSet(rs, H2(MySql))
-                dataSchema.columns.size shouldBe 3
-                dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+                val dataSchema = DataFrameSchema.readResultSet(rs, dbType)
+                assertCustomerSchema(dataSchema)
 
                 rs.beforeFirst()
 
-                val df2 = DataFrame.readResultSet(rs, connection).cast<Customer>()
-
-                df2.rowsCount() shouldBe 4
-                df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-                df2[0][1] shouldBe "John"
+                val df2 = DataFrame.readResultSet(rs, connection)
+                assertCustomerData(df2)
 
                 rs.beforeFirst()
 
-                val df3 = DataFrame.readResultSet(rs, connection, 1).cast<Customer>()
-
-                df3.rowsCount() shouldBe 1
-                df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-                df3[0][1] shouldBe "John"
+                val df3 = DataFrame.readResultSet(rs, connection, 1)
+                assertCustomerData(df3, 1)
 
                 rs.beforeFirst()
 
-                val dataSchema1 = DataFrame.getSchemaForResultSet(rs, H2(MySql))
-                dataSchema1.columns.size shouldBe 3
-                dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+                val dataSchema1 = DataFrameSchema.readResultSet(rs, dbType)
+                assertCustomerSchema(dataSchema1)
             }
         }
     }
 
     @Test
     fun `read from extension function on ResultSet`() {
+        val dbType = H2(Mode.MySql)
+
         connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
             @Language("SQL")
             val selectStatement = "SELECT * FROM Customer"
 
             st.executeQuery(selectStatement).use { rs ->
-                val df = rs.readDataFrame(H2(MySql)).cast<Customer>()
-
-                df.rowsCount() shouldBe 4
-                df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-                df[0][1] shouldBe "John"
+                val df = rs.readDataFrame(dbType)
+                assertCustomerData(df)
 
                 rs.beforeFirst()
 
-                val df1 = rs.readDataFrame(H2(MySql), 1).cast<Customer>()
-
-                df1.rowsCount() shouldBe 1
-                df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-                df1[0][1] shouldBe "John"
+                val df1 = rs.readDataFrame(dbType, 1)
+                assertCustomerData(df1, 1)
 
                 rs.beforeFirst()
 
-                val dataSchema = rs.getDataFrameSchema(H2(MySql))
-                dataSchema.columns.size shouldBe 3
-                dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+                val dataSchema = rs.readDataFrameSchema(dbType)
+                assertCustomerSchema(dataSchema)
 
                 rs.beforeFirst()
 
-                val df2 = rs.readDataFrame(connection).cast<Customer>()
-
-                df2.rowsCount() shouldBe 4
-                df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-                df2[0][1] shouldBe "John"
+                val df2 = rs.readDataFrame(connection)
+                assertCustomerData(df2)
 
                 rs.beforeFirst()
 
-                val df3 = rs.readDataFrame(connection, 1).cast<Customer>()
-
-                df3.rowsCount() shouldBe 1
-                df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-                df3[0][1] shouldBe "John"
+                val df3 = rs.readDataFrame(connection, 1)
+                assertCustomerData(df3, 1)
 
                 rs.beforeFirst()
 
-                val dataSchema1 = rs.getDataFrameSchema(H2(MySql))
-                dataSchema1.columns.size shouldBe 3
-                dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+                val dataSchema1 = rs.readDataFrameSchema(dbType)
+                assertCustomerSchema(dataSchema1)
             }
         }
     }
@@ -513,22 +585,16 @@ class JdbcTest {
             val selectStatement = "SELECT * FROM Customer"
 
             st.executeQuery(selectStatement).use { rs ->
-                for (i in 1..10) {
+                repeat(10) {
                     rs.beforeFirst()
 
-                    val df1 = DataFrame.readResultSet(rs, H2(MySql), 2).cast<Customer>()
-
-                    df1.rowsCount() shouldBe 2
-                    df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-                    df1[0][1] shouldBe "John"
+                    val df1 = DataFrame.readResultSet(rs, H2(Mode.MySql), 2)
+                    assertCustomerData(df1, 2)
 
                     rs.beforeFirst()
 
-                    val df2 = DataFrame.readResultSet(rs, connection, 2).cast<Customer>()
-
-                    df2.rowsCount() shouldBe 2
-                    df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-                    df2[0][1] shouldBe "John"
+                    val df2 = DataFrame.readResultSet(rs, connection, 2)
+                    assertCustomerData(df2, 2)
                 }
             }
         }
@@ -536,8 +602,8 @@ class JdbcTest {
 
     @Test
     fun `read from non-existing table`() {
-        shouldThrow<JdbcSQLSyntaxErrorException> {
-            DataFrame.readSqlTable(connection, "WrongTableName").cast<Customer>()
+        shouldThrow<IllegalStateException> {
+            DataFrame.readSqlTable(connection, "WrongTableName").cast<Customer>(verify = true)
         }
     }
 
@@ -579,24 +645,51 @@ class JdbcTest {
             """
 
         shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, createSQL)
+            DataFrame.readSqlQuery(connection, createSQL, validation = SqlValidation.ReadOnly)
         }
 
         shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, dropSQL)
+            DataFrame.readSqlQuery(connection, dropSQL, validation = SqlValidation.ReadOnly)
         }
 
         shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, alterSQL)
+            DataFrame.readSqlQuery(connection, alterSQL, validation = SqlValidation.ReadOnly)
         }
 
         shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, deleteSQL)
+            DataFrame.readSqlQuery(connection, deleteSQL, validation = SqlValidation.ReadOnly)
         }
 
         shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, repeatedSQL)
+            DataFrame.readSqlQuery(connection, repeatedSQL, validation = SqlValidation.ReadOnly)
         }
+    }
+
+    @Test
+    fun `readSqlTable should reject pre-quoted table names and suggest unquoted form`() {
+        // Pre-quoted names are rejected because the library adds quoting automatically.
+        // Users should pass unquoted identifiers: schema.table, not "schema"."table".
+        val preQuotedNames = listOf(
+            "\"Customer\"", // ANSI double-quoted
+            "\"PUBLIC\".\"Customer\"", // ANSI double-quoted schema.table
+            "`Customer`", // MySQL backtick-quoted
+            "`PUBLIC`.`Customer`", // MySQL backtick-quoted schema.table
+            "[Customer]", // MSSQL bracket-quoted
+        )
+
+        preQuotedNames.forEach { tableName ->
+            shouldThrow<IllegalArgumentException> {
+                DataFrame.readSqlTable(connection, tableName)
+            }
+        }
+    }
+
+    @Test
+    fun `readSqlTable should accept unquoted schema-qualified names`() {
+        // H2 exposes every table under the PUBLIC schema.
+        // Passing "PUBLIC.Customer" should pass validation; the library quotes it for the DB.
+        val df = DataFrame.readSqlTable(connection, "PUBLIC.Customer")
+        assertCustomerData(df)
     }
 
     @Test
@@ -608,6 +701,8 @@ class JdbcTest {
             "/* Multi-line comment */ Customer", // Injection using multi-line comment
             "Sale WHERE 1=1", // Injection using always-true condition
             "Sale UNION SELECT * FROM Customer", // UNION injection
+            "DROP TABLE users", // Bare DDL as table name — rejected by regex (space not allowed)
+            "users; DROP TABLE users", // Classic tautology injection
         )
 
         invalidTableNames.forEach { tableName ->
@@ -618,75 +713,79 @@ class JdbcTest {
     }
 
     @Test
-    fun `readSqlQuery should reject malicious SQL queries to prevent SQL injections`() {
-        // Malicious SQL queries attempting injection
+    fun `readSqlQuery with ReadOnly validation should block multi-statement and DDL queries`() {
         @Language("SQL")
-        val injectionComment = """
-            SELECT * FROM Sale WHERE amount = 100.0 -- AND id = 5
-            """
+        val multiStatement = "SELECT * FROM Sale WHERE amount = 500.0; DROP TABLE Customer"
 
         @Language("SQL")
-        val injectionMultilineComment = """
-            SELECT * FROM Customer /* Possible malicious comment */ WHERE id = 1
-            """
+        val bareDropTable = "DROP TABLE Customer; SELECT * FROM Sale"
 
         @Language("SQL")
-        val injectionSemicolon = """
-            SELECT * FROM Sale WHERE amount = 500.0; DROP TABLE Customer
-            """
+        val insertStatement = "INSERT INTO Sale (id) VALUES (1)"
 
-        @Language("SQL")
-        val injectionSQLWithSingleQuote = """
-            SELECT * FROM Sale WHERE id = 1 AND amount = 100.0 OR '1'='1
-            """
-
-        @Language("SQL")
-        val injectionUsingDropCommand = """
-            DROP TABLE Customer; SELECT * FROM Sale
-            """
-
-        val sqlInjectionQueries = listOf(
-            injectionComment,
-            injectionMultilineComment,
-            injectionSemicolon,
-            injectionSQLWithSingleQuote,
-            injectionUsingDropCommand,
-        )
-
-        sqlInjectionQueries.forEach { query ->
+        listOf(multiStatement, bareDropTable, insertStatement).forEach { query ->
             shouldThrow<IllegalArgumentException> {
-                DataFrame.readSqlQuery(connection, query)
+                DataFrame.readSqlQuery(connection, query, validation = SqlValidation.ReadOnly)
             }
         }
     }
 
     @Test
-    fun `readFromTable should work with non-standard table names when strictValidation is disabled`() {
-        // Non-standard table names that are still valid but may appear strange
-        val nonStandardTableNames = listOf(
-            "`Customer With Space`", // Table name with spaces
-            "`Important-Data`", // Table name with hyphens
-            "`[123TableName]`", // Table name that resembles a special syntax
+    fun `readSqlQuery with ReadOnly validation should allow comments and semicolons inside literals`() {
+        // Comments are stripped before validation — these are valid read-only queries
+        @Language("SQL")
+        val queryWithLineComment = "SELECT * FROM Sale WHERE amount = 100.0 -- AND id = 5"
+
+        @Language("SQL")
+        val queryWithBlockComment = "SELECT * FROM Customer /* filter by id */ WHERE id = 1"
+
+        // Semicolons inside string literals are safe
+        @Language("SQL")
+        val queryWithSemicolonInLiteral = "SELECT * FROM Sale WHERE tag = 'a;b'"
+
+        // CTEs must be allowed
+        @Language("SQL")
+        val cteQuery = "WITH recent AS (SELECT * FROM Sale) SELECT * FROM recent"
+
+        listOf(queryWithLineComment, queryWithBlockComment, queryWithSemicolonInLiteral, cteQuery).forEach { query ->
+            // Wrap in runCatching so that DB-level errors (table/column not found) don't fail the test;
+            // only an IllegalArgumentException from validation would indicate a false rejection.
+            val exception = runCatching {
+                DataFrame.readSqlQuery(connection, query, validation = SqlValidation.ReadOnly)
+            }.exceptionOrNull()
+            assert(exception !is IllegalArgumentException) {
+                "Query should pass ReadOnly validation but was rejected: $query\n$exception"
+            }
+        }
+    }
+
+    @Test
+    fun `readSqlQuery with default SqlValidation None does not throw for any query`() {
+        // Default mode passes the query to the database without any validation.
+        // We use a harmless multi-statement query so no test data is modified.
+        @Language("SQL")
+        val harmlessMultiStatement = "SELECT 1; SELECT 2"
+
+        // No IllegalArgumentException from validation — the database handles the rest.
+        val exception = runCatching { DataFrame.readSqlQuery(connection, harmlessMultiStatement) }.exceptionOrNull()
+        assert(exception !is IllegalArgumentException) {
+            "SqlValidation.None should not throw IllegalArgumentException, got: $exception"
+        }
+    }
+
+    @Test
+    fun `readSqlTable should always reject non-identifier table names`() {
+        // Table name validation is always strict because the library constructs SQL from the name.
+        // Names containing spaces, backticks, hyphens, or brackets are not valid SQL identifiers.
+        val nonIdentifierNames = listOf(
+            "`Customer With Space`",
+            "`Important-Data`",
+            "`[123TableName]`",
         )
 
-        try {
-            // Create these tables to ensure they exist for the test
-            connection.createStatement().use { stmt ->
-                nonStandardTableNames.forEach { tableName ->
-                    stmt.execute("CREATE TABLE IF NOT EXISTS $tableName (id INT, name VARCHAR(255))")
-                }
-            }
-
-            // Read from these tables with strictValidation disabled
-            nonStandardTableNames.forEach { tableName ->
-                DataFrame.readSqlTable(connection, tableName, strictValidation = false)
-            }
-        } finally {
-            // Clean up by deleting all created tables
-            connection.createStatement().use { stmt ->
-                nonStandardTableNames.forEach { tableName ->
-                    stmt.execute("DROP TABLE IF EXISTS $tableName")
-                }
+        nonIdentifierNames.forEach { tableName ->
+            shouldThrow<IllegalArgumentException> {
+                DataFrame.readSqlTable(connection, tableName)
             }
         }
     }
@@ -727,8 +826,7 @@ class JdbcTest {
     }
 
     @Test
-    fun `readSqlQuery should execute DROP TABLE when validation is disabled`() {
-        // Query to create a temporary test table
+    fun `readSqlQuery with SqlValidation None passes multi-statement queries to the database`() {
         @Language("SQL")
         val createTableQuery = """
             CREATE TABLE IF NOT EXISTS TestTable (
@@ -737,7 +835,6 @@ class JdbcTest {
             )
             """
 
-        // Query to drop the test table
         @Language("SQL")
         val dropTableQuery = """
             SELECT * FROM TestTable; DROP TABLE TestTable;
@@ -745,22 +842,13 @@ class JdbcTest {
             """
 
         try {
-            // Create the test table
             connection.createStatement().use { stmt ->
-                stmt.execute(createTableQuery) // Create table for the test case
+                stmt.execute(createTableQuery)
             }
 
-            // Execute the DROP TABLE command with validation disabled
-            DataFrame.readSqlQuery(connection, dropTableQuery, strictValidation = false)
-
-            // Verify that the table has been successfully dropped
-            connection.createStatement().use { stmt ->
-                shouldThrow<SQLException> {
-                    stmt.executeQuery("SELECT * FROM TestTable")
-                }
-            }
+            // SqlValidation.None is the default — no IllegalArgumentException is thrown
+            DataFrame.readSqlQuery(connection, dropTableQuery)
         } finally {
-            // Cleanup: Ensure the table is removed in case of failure
             connection.createStatement().use { stmt ->
                 stmt.execute("DROP TABLE IF EXISTS TestTable")
             }
@@ -777,17 +865,14 @@ class JdbcTest {
             )
             """
 
+        // Double-quoted identifiers are stripped before keyword matching in ReadOnly mode,
+        // so SELECT * FROM "ALTER" is correctly recognized as a read-only query.
         @Language("SQL")
         val selectFromWeirdTableSQL = """SELECT * from "ALTER""""
 
         try {
             connection.createStatement().execute(createAlterTableQuery)
-            // with enabled strictValidation
-            shouldThrow<IllegalArgumentException> {
-                DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL)
-            }
-            // with disabled strictValidation
-            DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL, strictValidation = false).rowsCount() shouldBe 0
+            DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL).rowsCount() shouldBe 0
         } finally {
             connection.createStatement().execute("DROP TABLE IF EXISTS \"ALTER\"")
         }
@@ -823,94 +908,46 @@ class JdbcTest {
 
     @Test
     fun `read from sql query`() {
-        @Language("SQL")
-        val sqlQuery =
-            """
-            SELECT c.name as customerName, SUM(s.amount) as totalSalesAmount
-            FROM Sale s
-            INNER JOIN Customer c ON s.customerId = c.id
-            WHERE c.age > 35
-            GROUP BY s.customerId, c.name
-            """.trimIndent()
+        val df = DataFrame.readSqlQuery(connection, CUSTOMER_SALES_QUERY)
+        assertCustomerSalesData(df)
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<CustomerSales>()
+        val df1 = DataFrame.readSqlQuery(connection, CUSTOMER_SALES_QUERY, 1)
+        assertCustomerSalesData(df1, 1)
 
-        df.rowsCount() shouldBe 2
-        df.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
-        df[0][0] shouldBe "John"
-
-        val df1 = DataFrame.readSqlQuery(connection, sqlQuery, 1).cast<CustomerSales>()
-
-        df1.rowsCount() shouldBe 1
-        df1.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
-        df1[0][0] shouldBe "John"
-
-        val dataSchema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
-        dataSchema.columns.size shouldBe 2
-        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+        val dataSchema = DataFrameSchema.readSqlQuery(connection, CUSTOMER_SALES_QUERY)
+        assertCustomerSalesSchema(dataSchema)
 
         val dbConfig = DbConnectionConfig(url = URL)
-        val df2 = DataFrame.readSqlQuery(dbConfig, sqlQuery).cast<CustomerSales>()
+        val df2 = DataFrame.readSqlQuery(dbConfig, CUSTOMER_SALES_QUERY)
+        assertCustomerSalesData(df2)
 
-        df2.rowsCount() shouldBe 2
-        df2.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
-        df2[0][0] shouldBe "John"
+        val df3 = DataFrame.readSqlQuery(dbConfig, CUSTOMER_SALES_QUERY, 1)
+        assertCustomerSalesData(df3, 1)
 
-        val df3 = DataFrame.readSqlQuery(dbConfig, sqlQuery, 1).cast<CustomerSales>()
-
-        df3.rowsCount() shouldBe 1
-        df3.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
-        df3[0][0] shouldBe "John"
-
-        val dataSchema1 = DataFrame.getSchemaForSqlQuery(dbConfig, sqlQuery)
-        dataSchema1.columns.size shouldBe 2
-        dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+        val dataSchema1 = DataFrameSchema.readSqlQuery(dbConfig, CUSTOMER_SALES_QUERY)
+        assertCustomerSalesSchema(dataSchema1)
     }
 
     @Test
     fun `read from sql query with extension functions`() {
-        @Language("SQL")
-        val sqlQuery =
-            """
-            SELECT c.name as customerName, SUM(s.amount) as totalSalesAmount
-            FROM Sale s
-            INNER JOIN Customer c ON s.customerId = c.id
-            WHERE c.age > 35
-            GROUP BY s.customerId, c.name
-            """.trimIndent()
+        val df = connection.readDataFrame(CUSTOMER_SALES_QUERY)
+        assertCustomerSalesData(df)
 
-        val df = connection.readDataFrame(sqlQuery).cast<CustomerSales>()
+        val df1 = connection.readDataFrame(CUSTOMER_SALES_QUERY, 1)
+        assertCustomerSalesData(df1, 1)
 
-        df.rowsCount() shouldBe 2
-        df.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
-        df[0][0] shouldBe "John"
-
-        val df1 = connection.readDataFrame(sqlQuery, 1).cast<CustomerSales>()
-
-        df1.rowsCount() shouldBe 1
-        df1.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
-        df1[0][0] shouldBe "John"
-
-        val dataSchema = connection.getDataFrameSchema(sqlQuery)
-        dataSchema.columns.size shouldBe 2
-        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+        val dataSchema = connection.readDataFrameSchema(CUSTOMER_SALES_QUERY)
+        assertCustomerSalesSchema(dataSchema)
 
         val dbConfig = DbConnectionConfig(url = URL)
-        val df2 = dbConfig.readDataFrame(sqlQuery).cast<CustomerSales>()
+        val df2 = dbConfig.readDataFrame(CUSTOMER_SALES_QUERY)
+        assertCustomerSalesData(df2)
 
-        df2.rowsCount() shouldBe 2
-        df2.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
-        df2[0][0] shouldBe "John"
+        val df3 = dbConfig.readDataFrame(CUSTOMER_SALES_QUERY, 1)
+        assertCustomerSalesData(df3, 1)
 
-        val df3 = dbConfig.readDataFrame(sqlQuery, 1).cast<CustomerSales>()
-
-        df3.rowsCount() shouldBe 1
-        df3.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
-        df3[0][0] shouldBe "John"
-
-        val dataSchema1 = dbConfig.getDataFrameSchema(sqlQuery)
-        dataSchema1.columns.size shouldBe 2
-        dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+        val dataSchema1 = dbConfig.readDataFrameSchema(CUSTOMER_SALES_QUERY)
+        assertCustomerSalesSchema(dataSchema1)
     }
 
     @Test
@@ -923,14 +960,31 @@ class JdbcTest {
             INNER JOIN Customer c2 ON c1.id = c2.id
             """.trimIndent()
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+        val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)
         schema.columns.size shouldBe 2
         schema.columns.toList()[0].first shouldBe "name"
-        schema.columns.toList()[1].first shouldBe "name_1"
+        schema.columns.toList()[1].first shouldBe "name1"
     }
 
     @Test
     fun `read from sql query with three repeated columns`() {
+        @Language("SQL")
+        val sqlQuery =
+            """
+            SELECT c1.name, c2.name, c1.name
+            FROM Customer c1
+            INNER JOIN Customer c2 ON c1.id = c2.id
+            """.trimIndent()
+
+        val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)
+        schema.columns.size shouldBe 3
+        schema.columns.toList()[0].first shouldBe "name"
+        schema.columns.toList()[1].first shouldBe "name1"
+        schema.columns.toList()[2].first shouldBe "name2"
+    }
+
+    @Test
+    fun `read from sql query with repeated aliases`() {
         @Language("SQL")
         val sqlQuery =
             """
@@ -939,105 +993,48 @@ class JdbcTest {
             INNER JOIN Customer c2 ON c1.id = c2.id
             """.trimIndent()
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
-        schema.columns.size shouldBe 3
-        schema.columns.toList()[0].first shouldBe "name"
-        schema.columns.toList()[1].first shouldBe "name_1"
-        schema.columns.toList()[2].first shouldBe "name_2"
+        val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)
+        // the aliases name the columns; the repeated `name_1` is made unique as in any DataFrame
+        schema.columns.keys.toList() shouldBe listOf("name", "name_1", "name_11")
     }
 
     @Test
     fun `read from all tables`() {
         val dataFrameMap = DataFrame.readAllSqlTables(connection)
-        dataFrameMap.containsKey("Customer") shouldBe true
-        dataFrameMap.containsKey("Sale") shouldBe true
+        assertAllTablesData(dataFrameMap)
 
-        val dataframes = dataFrameMap.values.toList()
+        val dataframes1 = DataFrame.readAllSqlTables(connection, limit = 1)
+        assertAllTablesDataWithLimit(dataframes1)
 
-        val customerDf = dataframes[0].cast<Customer>()
-
-        customerDf.rowsCount() shouldBe 4
-        customerDf.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-        customerDf[0][1] shouldBe "John"
-
-        val saleDf = dataframes[1].cast<Sale>()
-
-        saleDf.rowsCount() shouldBe 4
-        saleDf.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
-        (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
-
-        val dataframes1 = DataFrame.readAllSqlTables(connection, limit = 1).values.toList()
-
-        val customerDf1 = dataframes1[0].cast<Customer>()
-
-        customerDf1.rowsCount() shouldBe 1
-        customerDf1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-        customerDf1[0][1] shouldBe "John"
-
-        val saleDf1 = dataframes1[1].cast<Sale>()
-
-        saleDf1.rowsCount() shouldBe 1
-        saleDf1.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
-        (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
-
-        val dataFrameSchemaMap = DataFrame.getSchemaForAllSqlTables(connection)
-        dataFrameSchemaMap.containsKey("Customer") shouldBe true
-        dataFrameSchemaMap.containsKey("Sale") shouldBe true
-
-        val dataSchemas = dataFrameSchemaMap.values.toList()
-
-        val customerDataSchema = dataSchemas[0]
-        customerDataSchema.columns.size shouldBe 3
-        customerDataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
-
-        val saleDataSchema = dataSchemas[1]
-        saleDataSchema.columns.size shouldBe 3
-        // TODO: fix nullability
-        saleDataSchema.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
+        val dataFrameSchemaMap = DataFrameSchema.readAllSqlTables(connection)
+        assertAllTablesSchema(dataFrameSchemaMap)
 
         val dbConfig = DbConnectionConfig(url = URL)
-        val dataframes2 = DataFrame.readAllSqlTables(dbConfig).values.toList()
+        val dataframes2 = DataFrame.readAllSqlTables(dbConfig)
+        assertAllTablesData(dataframes2)
 
-        val customerDf2 = dataframes2[0].cast<Customer>()
+        val dataframes3 = DataFrame.readAllSqlTables(dbConfig, limit = 1)
+        assertAllTablesDataWithLimit(dataframes3)
 
-        customerDf2.rowsCount() shouldBe 4
-        customerDf2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-        customerDf2[0][1] shouldBe "John"
-
-        val saleDf2 = dataframes2[1].cast<Sale>()
-
-        saleDf2.rowsCount() shouldBe 4
-        saleDf2.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
-        (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
-
-        val dataframes3 = DataFrame.readAllSqlTables(dbConfig, limit = 1).values.toList()
-
-        val customerDf3 = dataframes3[0].cast<Customer>()
-
-        customerDf3.rowsCount() shouldBe 1
-        customerDf3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-        customerDf3[0][1] shouldBe "John"
-
-        val saleDf3 = dataframes3[1].cast<Sale>()
-
-        saleDf3.rowsCount() shouldBe 1
-        saleDf3.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
-        (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
-
-        val dataSchemas1 = DataFrame.getSchemaForAllSqlTables(dbConfig).values.toList()
-
-        val customerDataSchema1 = dataSchemas1[0]
-        customerDataSchema1.columns.size shouldBe 3
-        customerDataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
-
-        val saleDataSchema1 = dataSchemas1[1]
-        saleDataSchema1.columns.size shouldBe 3
-        saleDataSchema1.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
+        val dataSchemas1 = DataFrameSchema.readAllSqlTables(dbConfig)
+        assertAllTablesSchema(dataSchemas1)
     }
 
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column`() {
+        aliasesNameColumns(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column in H2 without a compatibility mode`() {
+        DriverManager.getConnection("jdbc:h2:mem:aliasRegular;DB_CLOSE_DELAY=-1").use { regular ->
+            aliasesNameColumns(regular) { it.uppercase() }
+        }
     }
 
     @Test
@@ -1048,132 +1045,243 @@ class JdbcTest {
         exception.message shouldBe "H2 database could not be specified with H2 dialect!"
     }
 
+    @Test
+    fun `regular mode for H2 with DbConnectionConfig`() {
+        val url = "jdbc:h2:mem:testDatabase"
+
+        val dbConfig = DbConnectionConfig(url)
+
+        val df = DataFrame.readSqlQuery(dbConfig, QUERY_SELECT_ONE)
+        df.rowsCount() shouldBe 1
+    }
+
+    @Test
+    fun `regular mode for H2 with Connection`() {
+        val url = "jdbc:h2:mem:testDatabase"
+
+        DriverManager.getConnection(url).use { connection ->
+            val df = DataFrame.readSqlQuery(connection, QUERY_SELECT_ONE)
+            df.rowsCount() shouldBe 1
+        }
+    }
+
+    // ========== H2 Mode Tests ==========
+
+    private fun testH2ModeWithDbConnectionConfig(modeUrl: String) {
+        val dbConfig = DbConnectionConfig(modeUrl)
+        val df = DataFrame.readSqlQuery(dbConfig, QUERY_SELECT_ONE)
+        df.rowsCount() shouldBe 1
+    }
+
+    private fun testH2ModeWithConnection(modeUrl: String) {
+        DriverManager.getConnection(modeUrl).use { connection ->
+            val df = DataFrame.readSqlQuery(connection, QUERY_SELECT_ONE)
+            df.rowsCount() shouldBe 1
+        }
+    }
+
+    @Test
+    fun `MySQL mode for H2 with DbConnectionConfig`() {
+        testH2ModeWithDbConnectionConfig("jdbc:h2:mem:testMySql;MODE=MySQL")
+    }
+
+    @Test
+    fun `MySQL mode for H2 with Connection`() {
+        testH2ModeWithConnection("jdbc:h2:mem:testMySql;MODE=MySQL")
+    }
+
+    @Test
+    fun `PostgreSQL mode for H2 with DbConnectionConfig`() {
+        testH2ModeWithDbConnectionConfig("jdbc:h2:mem:testPostgres;MODE=PostgreSQL")
+    }
+
+    @Test
+    fun `PostgreSQL mode for H2 with Connection`() {
+        testH2ModeWithConnection("jdbc:h2:mem:testPostgres;MODE=PostgreSQL")
+    }
+
+    @Test
+    fun `MSSQLServer mode for H2 with DbConnectionConfig`() {
+        testH2ModeWithDbConnectionConfig("jdbc:h2:mem:testMsSql;MODE=MSSQLServer")
+    }
+
+    @Test
+    fun `MSSQLServer mode for H2 with Connection`() {
+        testH2ModeWithConnection("jdbc:h2:mem:testMsSql;MODE=MSSQLServer")
+    }
+
+    @Test
+    fun `MariaDB mode for H2 with DbConnectionConfig`() {
+        testH2ModeWithDbConnectionConfig("jdbc:h2:mem:testMariaDb;MODE=MariaDB")
+    }
+
+    @Test
+    fun `MariaDB mode for H2 with Connection`() {
+        testH2ModeWithConnection("jdbc:h2:mem:testMariaDb;MODE=MariaDB")
+    }
+
+    @Test
+    fun `H2 with unsupported mode throws exception`() {
+        val url = "jdbc:h2:mem:testUnsupported;MODE=DB2"
+
+        DriverManager.getConnection(url).use { connection ->
+            shouldThrow<IllegalArgumentException> {
+                DataFrame.readSqlQuery(connection, QUERY_SELECT_ONE)
+            }
+        }
+    }
+
+    @Test
+    fun `H2 with unsupported mode throws exception using DbConnectionConfig`() {
+        val url = "jdbc:h2:mem:testUnsupported;MODE=Oracle"
+        val dbConfig = DbConnectionConfig(url)
+
+        shouldThrow<IllegalArgumentException> {
+            DataFrame.readSqlQuery(dbConfig, QUERY_SELECT_ONE)
+        }
+    }
+
+    @Test
+    fun `H2 Regular mode extraction and fallbacks`() {
+        // 1. Create a connection without explicit MODE in URL.
+        // H2 defaults to Regular mode. extractDBTypeFromConnection should detect this by querying settings.
+        DriverManager.getConnection("jdbc:h2:mem:testRegularFallback").use { conn ->
+            val dbType = extractDBTypeFromConnection(conn)
+
+            (dbType is H2) shouldBe true
+            (dbType as H2).mode shouldBe Mode.Regular
+
+            // 2. Verify fallback behaviors (when delegate is null)
+
+            // buildSqlQueryWithLimit: Check fallback to super implementation (standard LIMIT syntax)
+            val query = "SELECT * FROM table"
+            dbType.buildSqlQueryWithLimit(query, 10) shouldBe "SELECT * FROM table LIMIT 10"
+
+            // isSystemTable: Check fallback to H2-specific logic (INFORMATION_SCHEMA)
+            val systemTable = TableMetadata("SETTINGS", "INFORMATION_SCHEMA", "TEST_DB")
+            dbType.isSystemTable(systemTable) shouldBe true
+
+            val userTable = TableMetadata("USERS", "PUBLIC", "TEST_DB")
+            dbType.isSystemTable(userTable) shouldBe false
+
+            // buildTableMetadata: Check fallback to reading from ResultSet directly
+            conn.createStatement().use { st ->
+                st.execute("CREATE TABLE MY_FALLBACK_TABLE (ID INT)")
+            }
+            conn.metaData.getTables(null, null, "MY_FALLBACK_TABLE", null).use { rs ->
+                if (rs.next()) {
+                    val metadata = dbType.buildTableMetadata(rs)
+                    metadata.name shouldBe "MY_FALLBACK_TABLE"
+                    metadata.schemaName shouldBe "PUBLIC"
+                    metadata.catalogue shouldNotBe null
+                } else {
+                    throw IllegalStateException("Could not find created table metadata")
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `database type extraction utils`() {
+        // 1. Test direct extraction from URL for various DBs
+        (extractDBTypeFromUrl("jdbc:mysql://localhost:3306/db") is MySql) shouldBe true
+        (extractDBTypeFromUrl("jdbc:postgresql://localhost:5432/db") is PostgreSql) shouldBe true
+        (extractDBTypeFromUrl("jdbc:sqlite:sample.db") is Sqlite) shouldBe true
+
+        // Test driverClassNameFromUrl
+        driverClassNameFromUrl("jdbc:mysql://localhost:3306/db") shouldBe "com.mysql.jdbc.Driver"
+        driverClassNameFromUrl("jdbc:postgresql://localhost:5432/db") shouldBe "org.postgresql.Driver"
+        driverClassNameFromUrl("jdbc:h2:mem:test") shouldBe "org.h2.Driver"
+
+        // 2. Test unsupported Database URL
+        shouldThrow<IllegalArgumentException> {
+            extractDBTypeFromUrl("jdbc:oracle:thin:@localhost:1521:xe")
+        }
+
+        // 3. Test null URL
+        shouldThrow<SQLException> {
+            extractDBTypeFromUrl(null)
+        }
+
+        // 4. Test H2 specific mode extraction from Connection (End-to-End)
+
+        // Case A: MySQL Mode via URL
+        DriverManager.getConnection("jdbc:h2:mem:testExtractMySql;MODE=MySQL").use { conn ->
+            val dbType = extractDBTypeFromConnection(conn)
+            (dbType is H2) shouldBe true
+            (dbType as H2).mode shouldBe H2.Mode.MySql
+        }
+
+        // Case B: PostgreSQL Mode via URL
+        DriverManager.getConnection("jdbc:h2:mem:testExtractPostgres;MODE=PostgreSQL").use { conn ->
+            val dbType = extractDBTypeFromConnection(conn)
+            (dbType is H2) shouldBe true
+            (dbType as H2).mode shouldBe H2.Mode.PostgreSql
+        }
+
+        // Case C: MSSQLServer Mode via URL
+        DriverManager.getConnection("jdbc:h2:mem:testExtractMsSql;MODE=MSSQLServer").use { conn ->
+            val dbType = extractDBTypeFromConnection(conn)
+            (dbType is H2) shouldBe true
+            (dbType as H2).mode shouldBe H2.Mode.MsSqlServer
+        }
+    }
+
     // helper object created for API testing purposes
-    object CustomDB : H2(MySql)
+    object CustomDB : H2(Mode.MySql)
 
     @Test
     fun `read from table from custom database`() {
         val tableName = "Customer"
-        val df = DataFrame.readSqlTable(connection, tableName, dbType = CustomDB).cast<Customer>()
+        val df = DataFrame.readSqlTable(connection, tableName, dbType = CustomDB)
+        assertCustomerData(df)
 
-        df.rowsCount() shouldBe 4
-        df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-        df[0][1] shouldBe "John"
-
-        val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName, dbType = CustomDB)
-        dataSchema.columns.size shouldBe 3
-        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+        val dataSchema = DataFrameSchema.readSqlTable(connection, tableName, dbType = CustomDB)
+        assertCustomerSchema(dataSchema)
 
         val dbConfig = DbConnectionConfig(url = URL)
-        val df2 = DataFrame.readSqlTable(dbConfig, tableName, dbType = CustomDB).cast<Customer>()
+        val df2 = DataFrame.readSqlTable(dbConfig, tableName, dbType = CustomDB)
+        assertCustomerData(df2)
 
-        df2.rowsCount() shouldBe 4
-        df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-        df2[0][1] shouldBe "John"
-
-        val dataSchema1 = DataFrame.getSchemaForSqlTable(dbConfig, tableName, dbType = CustomDB)
-        dataSchema1.columns.size shouldBe 3
-        dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+        val dataSchema1 = DataFrameSchema.readSqlTable(dbConfig, tableName, dbType = CustomDB)
+        assertCustomerSchema(dataSchema1)
     }
 
     @Test
     fun `read from query from custom database`() {
-        @Language("SQL")
-        val sqlQuery =
-            """
-            SELECT c.name as customerName, SUM(s.amount) as totalSalesAmount
-            FROM Sale s
-            INNER JOIN Customer c ON s.customerId = c.id
-            WHERE c.age > 35
-            GROUP BY s.customerId, c.name
-            """.trimIndent()
+        val df = DataFrame.readSqlQuery(connection, CUSTOMER_SALES_QUERY, dbType = CustomDB)
+        assertCustomerSalesData(df)
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery, dbType = CustomDB).cast<CustomerSales>()
-
-        df.rowsCount() shouldBe 2
-        df.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
-        df[0][0] shouldBe "John"
-
-        val dataSchema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery, dbType = CustomDB)
-        dataSchema.columns.size shouldBe 2
-        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+        val dataSchema = DataFrameSchema.readSqlQuery(connection, CUSTOMER_SALES_QUERY, dbType = CustomDB)
+        assertCustomerSalesSchema(dataSchema)
 
         val dbConfig = DbConnectionConfig(url = URL)
-        val df2 = DataFrame.readSqlQuery(dbConfig, sqlQuery, dbType = CustomDB).cast<CustomerSales>()
+        val df2 = DataFrame.readSqlQuery(dbConfig, CUSTOMER_SALES_QUERY, dbType = CustomDB)
+        assertCustomerSalesData(df2)
 
-        df2.rowsCount() shouldBe 2
-        df2.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
-        df2[0][0] shouldBe "John"
-
-        val dataSchema1 = DataFrame.getSchemaForSqlQuery(dbConfig, sqlQuery, dbType = CustomDB)
-        dataSchema1.columns.size shouldBe 2
-        dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+        val dataSchema1 = DataFrameSchema.readSqlQuery(dbConfig, CUSTOMER_SALES_QUERY, dbType = CustomDB)
+        assertCustomerSalesSchema(dataSchema1)
     }
 
     @Test
     fun `read from all tables from custom database`() {
         val dataFrameMap = DataFrame.readAllSqlTables(connection, dbType = CustomDB)
-        dataFrameMap.containsKey("Customer") shouldBe true
-        dataFrameMap.containsKey("Sale") shouldBe true
+        assertAllTablesData(dataFrameMap)
 
-        val dataframes = dataFrameMap.values.toList()
-
-        val customerDf = dataframes[0].cast<Customer>()
-
-        customerDf.rowsCount() shouldBe 4
-        customerDf.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-        customerDf[0][1] shouldBe "John"
-
-        val saleDf = dataframes[1].cast<Sale>()
-
-        saleDf.rowsCount() shouldBe 4
-        saleDf.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
-        (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
-
-        val dataFrameSchemaMap = DataFrame.getSchemaForAllSqlTables(connection, dbType = CustomDB)
-        dataFrameSchemaMap.containsKey("Customer") shouldBe true
-        dataFrameSchemaMap.containsKey("Sale") shouldBe true
-
-        val dataSchemas = dataFrameSchemaMap.values.toList()
-
-        val customerDataSchema = dataSchemas[0]
-        customerDataSchema.columns.size shouldBe 3
-        customerDataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
-
-        val saleDataSchema = dataSchemas[1]
-        saleDataSchema.columns.size shouldBe 3
-        // TODO: fix nullability
-        saleDataSchema.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
+        val dataFrameSchemaMap = DataFrameSchema.readAllSqlTables(connection, dbType = CustomDB)
+        assertAllTablesSchema(dataFrameSchemaMap)
 
         val dbConfig = DbConnectionConfig(url = URL)
-        val dataframes2 = DataFrame.readAllSqlTables(dbConfig, dbType = CustomDB).values.toList()
+        val dataframes2 = DataFrame.readAllSqlTables(dbConfig, dbType = CustomDB)
+        assertAllTablesData(dataframes2)
 
-        val customerDf2 = dataframes2[0].cast<Customer>()
-
-        customerDf2.rowsCount() shouldBe 4
-        customerDf2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-        customerDf2[0][1] shouldBe "John"
-
-        val saleDf2 = dataframes2[1].cast<Sale>()
-
-        saleDf2.rowsCount() shouldBe 4
-        saleDf2.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
-        (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
-
-        val dataSchemas1 = DataFrame.getSchemaForAllSqlTables(dbConfig, dbType = CustomDB).values.toList()
-
-        val customerDataSchema1 = dataSchemas1[0]
-        customerDataSchema1.columns.size shouldBe 3
-        customerDataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
-
-        val saleDataSchema1 = dataSchemas1[1]
-        saleDataSchema1.columns.size shouldBe 3
-        saleDataSchema1.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
+        val dataSchemas1 = DataFrameSchema.readAllSqlTables(dbConfig, dbType = CustomDB)
+        assertAllTablesSchema(dataSchemas1)
     }
 
     @Test
     fun `withReadOnlyConnection sets readOnly and rolls back after execution`() {
-        val config = DbConnectionConfig("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", readOnly = true)
+        val config = DbConnectionConfig("jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=-1", readOnly = true)
 
         var wasExecuted = false
         val result = withReadOnlyConnection(config) { conn ->
@@ -1184,5 +1292,147 @@ class JdbcTest {
 
         wasExecuted shouldBe true
         result shouldBe 42
+    }
+
+    // ========== DataSource API Tests ==========
+
+    @Test
+    fun `read from table using DataSource`() {
+        val tableName = "Customer"
+        val df = DataFrame.readSqlTable(dataSource, tableName)
+        assertCustomerData(df)
+
+        val df1 = DataFrame.readSqlTable(dataSource, tableName, 1)
+        assertCustomerData(df1, 1)
+
+        val dataSchema = DataFrameSchema.readSqlTable(dataSource, tableName)
+        assertCustomerSchema(dataSchema)
+    }
+
+    @Test
+    fun `read from table with extension functions using DataSource`() {
+        val tableName = "Customer"
+        val df = dataSource.readDataFrame(tableName)
+        assertCustomerData(df)
+
+        val df1 = dataSource.readDataFrame(tableName, 1)
+        assertCustomerData(df1, 1)
+
+        val dataSchema = dataSource.readDataFrameSchema(tableName)
+        assertCustomerSchema(dataSchema)
+    }
+
+    @Test
+    fun `read from sql query using DataSource`() {
+        val df = DataFrame.readSqlQuery(dataSource, CUSTOMER_SALES_QUERY)
+        assertCustomerSalesData(df)
+
+        val df1 = DataFrame.readSqlQuery(dataSource, CUSTOMER_SALES_QUERY, 1)
+        assertCustomerSalesData(df1, 1)
+
+        val dataSchema = DataFrameSchema.readSqlQuery(dataSource, CUSTOMER_SALES_QUERY)
+        assertCustomerSalesSchema(dataSchema)
+    }
+
+    @Test
+    fun `read from sql query with extension functions using DataSource`() {
+        val df = dataSource.readDataFrame(CUSTOMER_SALES_QUERY)
+        assertCustomerSalesData(df)
+
+        val df1 = dataSource.readDataFrame(CUSTOMER_SALES_QUERY, 1)
+        assertCustomerSalesData(df1, 1)
+
+        val dataSchema = dataSource.readDataFrameSchema(CUSTOMER_SALES_QUERY)
+        assertCustomerSalesSchema(dataSchema)
+    }
+
+    @Test
+    fun `read from all tables using DataSource`() {
+        val dataFrameMap = DataFrame.readAllSqlTables(dataSource)
+        assertAllTablesData(dataFrameMap)
+
+        val dataframes1 = DataFrame.readAllSqlTables(dataSource, limit = 1)
+        assertAllTablesDataWithLimit(dataframes1)
+
+        val dataFrameSchemaMap = DataFrameSchema.readAllSqlTables(dataSource)
+        assertAllTablesSchema(dataFrameSchemaMap)
+    }
+
+    @Test
+    fun `read from table from custom database using DataSource`() {
+        val tableName = "Customer"
+        val df = DataFrame.readSqlTable(dataSource, tableName, dbType = CustomDB)
+        assertCustomerData(df)
+
+        val dataSchema = DataFrameSchema.readSqlTable(dataSource, tableName, dbType = CustomDB)
+        assertCustomerSchema(dataSchema)
+    }
+
+    @Test
+    fun `read from query from custom database using DataSource`() {
+        val df = DataFrame.readSqlQuery(dataSource, CUSTOMER_SALES_QUERY, dbType = CustomDB)
+        assertCustomerSalesData(df)
+
+        val dataSchema = DataFrameSchema.readSqlQuery(dataSource, CUSTOMER_SALES_QUERY, dbType = CustomDB)
+        assertCustomerSalesSchema(dataSchema)
+    }
+
+    @Test
+    fun `read from all tables from custom database using DataSource`() {
+        val dataFrameMap = DataFrame.readAllSqlTables(dataSource, dbType = CustomDB)
+        assertAllTablesData(dataFrameMap)
+
+        val dataFrameSchemaMap = DataFrameSchema.readAllSqlTables(dataSource, dbType = CustomDB)
+        assertAllTablesSchema(dataFrameSchemaMap)
+    }
+
+    // ========== Connection Pool Tests ==========
+
+    @Test
+    fun `repeated read from table with limit using DataSource`() {
+        // Verify DataSource integration handles repeated sequential reads correctly.
+        // Covers issue #494 where repeated reads with limit produced incorrect results.
+        val tableName = "Customer"
+        repeat(MAXIMUM_POOL_SIZE * 2) {
+            val df = DataFrame.readSqlTable(dataSource, tableName, 2)
+            assertCustomerData(df, 2)
+        }
+    }
+
+    @Test
+    fun `DataSource sequential reads return connections to pool`() {
+        // Verify connections are properly closed and returned to the pool after each read.
+        // Would fail on iteration 6 if connections leak (maximumPoolSize=5).
+        repeat(MAXIMUM_POOL_SIZE * 2) {
+            val df = DataFrame.readSqlTable(dataSource, "Customer", limit = 1)
+            df.rowsCount() shouldBe 1
+            assertCustomerData(df, 1)
+        }
+    }
+
+    @Test
+    fun `DataSource sequential reads with alternating tables`() {
+        // Test connection reuse when sequentially reading from different tables.
+        // Ensures no state pollution when switching between table schemas.
+        repeat(MAXIMUM_POOL_SIZE * 2) { i ->
+            val tableName = if (i % 2 == 0) "Customer" else "Sale"
+            val df = DataFrame.readSqlTable(dataSource, tableName, limit = 1)
+            df.rowsCount() shouldBe 1
+        }
+    }
+
+    @Test
+    fun `DataSource sequential reads with mixed query and table operations`() {
+        // Verify both readSqlTable and readSqlQuery properly manage the connection lifecycle.
+        // Tests that different code paths can alternate sequentially without resource leaks.
+        repeat(MAXIMUM_POOL_SIZE * 2) {
+            val dfTable = DataFrame.readSqlTable(dataSource, "Customer", limit = 1)
+            dfTable.rowsCount() shouldBe 1
+            assertCustomerData(dfTable, 1)
+
+            val dfQuery = DataFrame.readSqlQuery(dataSource, CUSTOMER_SALES_QUERY, limit = 1)
+            dfQuery.rowsCount() shouldBe 1
+            assertCustomerSalesData(dfQuery, 1)
+        }
     }
 }

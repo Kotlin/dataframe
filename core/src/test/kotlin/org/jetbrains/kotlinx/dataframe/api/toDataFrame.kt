@@ -1,7 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
@@ -15,9 +17,14 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
+import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.math.BigDecimal
@@ -28,17 +35,18 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
 class CreateDataFrameTests {
+    open class CreateDataFrameData {
+        private val a = 1
+        protected val b = 2
+        internal val c = 3
+
+        @Suppress("RedundantVisibilityModifier")
+        public val d = 4
+    }
 
     @Test
     fun `visibility test`() {
-        class Data {
-            private val a = 1
-            protected val b = 2
-            internal val c = 3
-            public val d = 4
-        }
-
-        listOf(Data()).toDataFrame() shouldBe dataFrameOf("d")(4)
+        listOf(CreateDataFrameData()).toDataFrame() shouldBe dataFrameOf("d")(4)
     }
 
     @Test
@@ -156,15 +164,61 @@ class CreateDataFrameTests {
         df.a[0].v shouldBe 7
 
         val df2 = data.toDataFrame {
-            preserve(B::row)
-            properties { preserve(DataFrame::class) }
+            properties {
+                preserve(B::row)
+            }
         }
-        df2.frame.kind shouldBe ColumnKind.Value
-        df2.frame.type shouldBe typeOf<DataFrame<A>>()
+
         df2["row"].kind shouldBe ColumnKind.Value
         df2["row"].type shouldBe typeOf<DataRow<A>>()
         df2.list.kind shouldBe ColumnKind.Frame
         df2.a.kind() shouldBe ColumnKind.Group
+
+        shouldThrow<IllegalArgumentException> {
+            data.toDataFrame {
+                properties {
+                    preserve(DataFrame::class)
+                }
+            }
+        }.message!! shouldContain "If you used `preserve(DataFrame::class)`, please remove it"
+    }
+
+    class ExcludeTestData(val s: String, val data: NestedData)
+
+    class NestedData(val i: Int, val nestedStr: String)
+
+    @Test
+    fun `preserve T test`() {
+        val data = listOf(
+            ExcludeTestData("test", NestedData(42, "nested")),
+            ExcludeTestData("test2", NestedData(43, "nested2")),
+        )
+
+        val res = data.toDataFrame {
+            properties(maxDepth = 2) {
+                preserve<NestedData>()
+            }
+        }
+
+        res.schema() shouldBe data.toDataFrame(maxDepth = 0).schema()
+    }
+
+    class NestedExcludeClasses(val s: String, val list1: List<String>)
+
+    class ExcludeClasses(val i: Int, val list: List<Int>, val nested: NestedExcludeClasses)
+
+    @Test
+    fun `exclude classes`() {
+        val list = listOf(
+            ExcludeClasses(1, listOf(1, 2, 3), NestedExcludeClasses("str", listOf("foo", "bar"))),
+        )
+        val df = list.toDataFrame {
+            properties(maxDepth = 2) {
+                exclude(List::class)
+            }
+        }
+
+        df shouldBe list.toDataFrame(maxDepth = 2).remove { "list" and "nested"["list1"] }
     }
 
     enum class DummyEnum { A }
@@ -193,28 +247,27 @@ class CreateDataFrameTests {
         val df = listOf(Entry(1, Child())).toDataFrame(maxDepth = 100)
         df.rowsCount() shouldBe 1
 
-        val childCol = df[Entry::child]
-        childCol.kind() shouldBe ColumnKind.Group
-        childCol.asColumnGroup().columnsCount() shouldBe 0
+        val childCol = df["child"]
+        childCol.kind() shouldBe ColumnKind.Value
     }
+
+    class Child2(val s: String)
+
+    @DataSchema
+    class Child1(val child: Child2)
+
+    @DataSchema
+    class Entry(val a: Int, val child: Child1)
 
     @Test
     fun `convert child schemas`() {
-        class Child2(val s: String)
-
-        @DataSchema
-        class Child1(val child: Child2)
-
-        @DataSchema
-        class Entry(val a: Int, val child: Child1)
-
         val df = listOf(Entry(1, Child1(Child2("s")))).toDataFrame()
         df.rowsCount() shouldBe 1
 
-        val child1 = df[Entry::child]
+        val child1 = df["child"]
         child1.kind shouldBe ColumnKind.Group
 
-        val child2 = child1.asColumnGroup()[Child1::child]
+        val child2 = child1.asColumnGroup()["child"]
         child2.kind shouldBe ColumnKind.Value
     }
 
@@ -238,6 +291,29 @@ class CreateDataFrameTests {
         value["data"].type() shouldBe typeOf<List<Int?>>()
     }
 
+    // TODO(#2133): `KType.replace` drops the `?` of a type parameter use
+    @Ignore("toDataFrame drops the `?` of `V?` inside `List<V?>`")
+    @Test
+    fun `nullable type parameter inside a property type keeps its nullability`() {
+        class ListBox<V>(val items: List<V?>)
+
+        val df = listOf(ListBox<Int>(listOf(1, null))).toDataFrame()
+
+        // `items` is `List<V?>`, so for `ListBox<Int>` it is `List<Int?>`.
+        df["items"].type() shouldBe typeOf<List<Int?>>()
+    }
+
+    // TODO(#2133): `KType.replace` drops the `?` of a type parameter use
+    @Ignore("toDataFrame drops the `?` of `V?` inside `List<V?>`")
+    @Test
+    fun `nullable type parameter inside a property type keeps its nullability with maxDepth`() {
+        class ListBox<V>(val items: List<V?>)
+
+        val df = listOf(ListBox<Int>(listOf(1, null))).toDataFrame(maxDepth = 10)
+
+        df["items"].type() shouldBe typeOf<List<Int?>>()
+    }
+
     @Suppress("unused")
     @Test
     fun treatErasedGenericAsAny() {
@@ -249,9 +325,9 @@ class CreateDataFrameTests {
 
         val df = functions.toDataFrame(maxDepth = 2)
 
-        val col = df.getColumnGroup(DeserializedContainerSource::incompatibility)
-        col[IncompatibleVersionErrorData<*>::actual].type() shouldBe typeOf<Any>()
-        col[IncompatibleVersionErrorData<*>::expected].type() shouldBe typeOf<Any>()
+        val col = df.getColumnGroup("incompatibility")
+        col["actual"].type() shouldBe typeOf<Any>()
+        col["expected"].type() shouldBe typeOf<Any>()
     }
 
     interface Named {
@@ -404,6 +480,18 @@ class CreateDataFrameTests {
         val df = maps.toDataFrame()
         df.columnNames() shouldBe listOf("value")
         df["value"].toList() shouldBe maps
+    }
+
+    @Test
+    fun `should convert iterables of maps representing rows to DataFrame with value columns`() {
+        val maps: Iterable<Map<String, *>> = listOf(mapOf("a" to 1, "b" to true), mapOf("c" to 2, "d" to false))
+        val df = maps.toDataFrame()
+        df["a"][0] shouldBe 1
+        df["b"][0] shouldBe true
+        df["c"][1] shouldBe 2
+        df["d"][1] shouldBe false
+        df.columns().all { it.type().isMarkedNullable } shouldBe true
+        df["a"].type() shouldBe typeOf<Int?>()
     }
 
     class NoPublicPropsClass(private val a: Int, private val b: String)
@@ -612,5 +700,472 @@ class CreateDataFrameTests {
         val files = listOf(File("data.csv"))
         val df = files.toDataFrame(columnName = "files")
         df["files"][0] shouldBe File("data.csv")
+    }
+
+    class MyEmptyDeclaration
+
+    class TestItem(val name: String, val containingDeclaration: MyEmptyDeclaration, val test: Int)
+
+    @Test
+    fun `preserve empty interface consistency`() {
+        val df = listOf(MyEmptyDeclaration(), MyEmptyDeclaration()).toDataFrame()
+        df["value"].type() shouldBe typeOf<MyEmptyDeclaration>()
+    }
+
+    @Test
+    fun `preserve nested empty interface consistency`() {
+        val df = List(10) {
+            TestItem(
+                "Test1",
+                MyEmptyDeclaration(),
+                123,
+            )
+        }.toDataFrame(maxDepth = 2)
+
+        df["containingDeclaration"].type() shouldBe typeOf<MyEmptyDeclaration>()
+    }
+
+    @Test
+    fun `preserve value type consistency`() {
+        val list = listOf(mapOf("a" to 1))
+        val df = list.toDataFrame(maxDepth = 1)
+        df["value"].type() shouldBe typeOf<Map<String, Int>>()
+    }
+
+    class MapContainer(val map: Map<String, Int>)
+
+    @Test
+    fun `preserve nested value type consistency`() {
+        val list = listOf(MapContainer(mapOf("a" to 1)))
+        val df = list.toDataFrame(maxDepth = 2)
+        df["map"].type() shouldBe typeOf<Map<String, Int>>()
+    }
+
+    @Test
+    fun `parsing row-major lines into structured dataframe`() {
+        // I think finding data in such format will be rare, so we need an optional header parameter.
+        val lines = buildList {
+            addAll(listOf("stamp", "header", "data"))
+            repeat(33) { row ->
+                add("stamp $row")
+                add("header $row")
+                add("data $row")
+            }
+        }
+
+        val df = lines.chunked(3).toDataFrame(header = null)
+
+        df.columnNames() shouldBe listOf("stamp", "header", "data")
+        df.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
+        df.rowsCount() shouldBe 33
+        df[0].values() shouldBe listOf("stamp 0", "header 0", "data 0")
+    }
+
+    @Test
+    fun `parsing srt lines into structured dataframe`() {
+        // *.srt subtitle file format
+        val lines = buildList {
+            repeat(33) { row ->
+                add("stamp $row")
+                add("header $row")
+                add("data $row")
+                add("\n")
+            }
+        }
+
+        val df = lines.chunked(4).map { it.dropLast(1) }.toDataFrame(header = listOf("stamp", "header", "data"))
+
+        df.columnNames() shouldBe listOf("stamp", "header", "data")
+        df.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
+        df.rowsCount() shouldBe 33
+        df[0].values() shouldBe listOf("stamp 0", "header 0", "data 0")
+
+        // Different approach. I think the dropLast one is better
+        lines.chunked(4)
+            .toDataFrame(header = listOf("stamp", "header", "data", "whitespace"))
+            .remove("whitespace") shouldBe df
+    }
+
+    @Test
+    fun `parsing column-major lines into structured dataframe`() {
+        val lines = buildList {
+            repeat(4) { col ->
+                repeat(5) { row ->
+                    add("data$col $row")
+                }
+                add("\n")
+            }
+        }
+
+        val header = List(4) { "col $it" }
+        val df = lines
+            .chunked(6)
+            .map { it.dropLast(1) }
+            .toDataFrame(header = header, containsColumns = true)
+        df.columnNames() shouldBe header
+        df.columnTypes() shouldBe List(4) { typeOf<String>() }
+        df["col 0"].values() shouldBe listOf("data0 0", "data0 1", "data0 2", "data0 3", "data0 4")
+    }
+
+    @Test
+    fun `parsing column-major lines with header into structured dataframe`() {
+        val lines = buildList {
+            repeat(4) { col ->
+                add("col $col")
+                repeat(5) { row ->
+                    add("data$col $row")
+                }
+                add("\n")
+            }
+        }
+
+        val header = List(4) { "col $it" }
+        val df = lines
+            .chunked(7)
+            .map { it.dropLast(1) }
+            .toDataFrame(header = null, containsColumns = true)
+        df.columnNames() shouldBe header
+        df.columnTypes() shouldBe List(4) { typeOf<String>() }
+        df["col 0"].values() shouldBe listOf("data0 0", "data0 1", "data0 2", "data0 3", "data0 4")
+    }
+
+    @Test
+    fun `toDataFrameFromPairs groups columns by path and makes duplicate top-level names unique`() {
+        val c1 = DataColumn.createValueColumn("ignored1", listOf(1, 2), typeOf<Int>())
+        val c2 = DataColumn.createValueColumn("ignored2", listOf(3, 4), typeOf<Int>())
+        val pairs: List<Pair<ColumnPath, DataColumn<Int>>> = listOf(
+            ColumnPath("a") to c1,
+            ColumnPath("a") to c2,
+            pathOf("b", "x") to c1,
+            pathOf("b", "y") to c2,
+            ColumnPath("b") to c1,
+            pathOf("c", "d", "x") to c2,
+        )
+        val df = pairs.toDataFrameFromPairs<Unit>()
+
+        df.columnNames() shouldBe listOf("a", "a1", "b", "b1", "c")
+        df["a"].kind shouldBe ColumnKind.Value
+        df["a1"].kind shouldBe ColumnKind.Value
+        df["b"].kind shouldBe ColumnKind.Group
+        df["b1"].kind shouldBe ColumnKind.Value
+        df["c"].kind shouldBe ColumnKind.Group
+
+        df["a"].toList() shouldBe listOf(1, 2)
+        df["a1"].toList() shouldBe listOf(3, 4)
+        df["b1"].toList() shouldBe listOf(1, 2)
+
+        val group = df["b"].asColumnGroup()
+        group.columnNames() shouldBe listOf("x", "y")
+        group["x"].toList() shouldBe listOf(1, 2)
+        group["y"].toList() shouldBe listOf(3, 4)
+
+        // a three-segment path nests one group per segment except the last, which names the column
+        val d = df["c"].asColumnGroup()["d"]
+        d.kind shouldBe ColumnKind.Group
+        d.asColumnGroup()["x"].toList() shouldBe listOf(3, 4)
+    }
+
+    @Test
+    fun `toDataFrameFromPairs renames a group that comes after a column with the same name`() {
+        val c1 = DataColumn.createValueColumn("ignored1", listOf(1, 2), typeOf<Int>())
+        val c2 = DataColumn.createValueColumn("ignored2", listOf(3, 4), typeOf<Int>())
+        val pairs: List<Pair<ColumnPath, DataColumn<Int>>> = listOf(
+            ColumnPath("b") to c1,
+            pathOf("b", "x") to c2,
+        )
+        val df = pairs.toDataFrameFromPairs<Unit>()
+
+        df.columnNames() shouldBe listOf("b", "b1")
+        df["b"].kind shouldBe ColumnKind.Value
+        df["b"].toList() shouldBe listOf(1, 2)
+        df["b1"].kind shouldBe ColumnKind.Group
+        df["b1"].asColumnGroup()["x"].toList() shouldBe listOf(3, 4)
+    }
+
+    @Test
+    fun `toDataFrameFromPairs makes duplicate names unique inside groups too`() {
+        val c1 = DataColumn.createValueColumn("ignored1", listOf(1, 2), typeOf<Int>())
+        val pairs: List<Pair<ColumnPath, DataColumn<Int>>> = listOf(
+            pathOf("g", "x") to c1,
+            pathOf("g", "x") to c1,
+        )
+        val df = pairs.toDataFrameFromPairs<Unit>()
+
+        df.columnNames() shouldBe listOf("g")
+        val g = df["g"].asColumnGroup()
+        g.columnNames() shouldBe listOf("x", "x1")
+        g["x"].toList() shouldBe listOf(1, 2)
+        g["x1"].toList() shouldBe listOf(1, 2)
+    }
+
+    @Test
+    fun `toDataFrameFromPairs from String to Iterable infers value column types`() {
+        val pairs = listOf(
+            "a" to listOf(1, 2),
+            "b" to listOf("x", "y"),
+        )
+        val df = pairs.toDataFrameFromPairs()
+
+        df.columnNames() shouldBe listOf("a", "b")
+        df["a"].type() shouldBe typeOf<Int>()
+        df["b"].type() shouldBe typeOf<String>()
+        df["a"].toList() shouldBe listOf(1, 2)
+        df["b"].toList() shouldBe listOf("x", "y")
+    }
+
+    @Test
+    fun `toDataFrameFromPairs from ColumnPath to Iterable nests column groups`() {
+        val pairs = listOf(
+            pathOf("g", "x") to listOf(1, 2),
+            ColumnPath("top") to listOf("a", "b"),
+        )
+        val df = pairs.toDataFrameFromPairs()
+
+        df.columnNames() shouldBe listOf("g", "top")
+        df["g"].kind shouldBe ColumnKind.Group
+        df["top"].kind shouldBe ColumnKind.Value
+        df["g"].asColumnGroup()["x"].toList() shouldBe listOf(1, 2)
+        df["top"].toList() shouldBe listOf("a", "b")
+    }
+
+    data class Level3(val z: Int)
+
+    data class Level2(val y: Int, val level3: Level3)
+
+    data class Level1(val x: Int, val level2: Level2)
+
+    @Test
+    fun `maxDepth limits how deep object properties are expanded`() {
+        val list = listOf(Level1(1, Level2(2, Level3(3))))
+
+        val df0 = list.toDataFrame(maxDepth = 0)
+        df0["level2"].kind shouldBe ColumnKind.Value
+
+        val df1 = list.toDataFrame(maxDepth = 1)
+        df1["level2"].kind shouldBe ColumnKind.Group
+        val level2 = df1["level2"].asColumnGroup()
+        level2.columnNames() shouldBe listOf("y", "level3")
+        level2["level3"].kind shouldBe ColumnKind.Value
+
+        val df2 = list.toDataFrame(maxDepth = 2)
+        val level3 = df2["level2"].asColumnGroup()["level3"]
+        level3.kind shouldBe ColumnKind.Group
+        level3.asColumnGroup()["z"].toList() shouldBe listOf(3)
+    }
+
+    data class ListItem(val z: Int)
+
+    data class ListHolder(val items: List<ListItem>)
+
+    @Test
+    fun `lists of objects become frame columns only when maxDepth reaches them`() {
+        val list = listOf(ListHolder(listOf(ListItem(1), ListItem(2))))
+
+        val df0 = list.toDataFrame(maxDepth = 0)
+        df0["items"].kind shouldBe ColumnKind.Value
+        df0["items"].type() shouldBe typeOf<List<ListItem>>()
+
+        val df1 = list.toDataFrame(maxDepth = 1)
+        df1["items"].kind shouldBe ColumnKind.Frame
+        val frame = df1["items"][0] as DataFrame<*>
+        frame.columnNames() shouldBe listOf("z")
+        frame["z"].toList() shouldBe listOf(1, 2)
+    }
+
+    @Test
+    fun `rows of the same DataFrame keep their new order when converted back to a DataFrame`() {
+        val df = dataFrameOf("a")(1, 2)
+        val rows: List<DataRow<*>> = listOf(df[1], df[0])
+        val restored = rows.toDataFrame()
+        restored["a"].toList() shouldBe listOf(2, 1)
+    }
+
+    @Test
+    fun `rows from different DataFrames are stacked in list order`() {
+        val df1 = dataFrameOf("a")(1, 2)
+        val df2 = dataFrameOf("a")(3)
+        val rows: List<DataRow<*>> = listOf(df1[0], df2[0])
+        val res = rows.toDataFrame()
+        res["a"].toList() shouldBe listOf(1, 3)
+    }
+
+    @Test
+    fun `rows from DataFrames with different columns union the columns and fill gaps with nulls`() {
+        val df1 = dataFrameOf("a")(1)
+        val df2 = dataFrameOf("b")(5)
+        val rows: List<DataRow<*>> = listOf(df1[0], df2[0])
+        val res = rows.toDataFrame()
+        res.columnNames() shouldBe listOf("a", "b")
+        res["a"].toList() shouldBe listOf(1, null)
+        res["b"].toList() shouldBe listOf(null, 5)
+    }
+
+    @Test
+    fun `map of column names to values produces one column per entry`() {
+        val map: Map<String, Iterable<Any?>> = mapOf(
+            "name" to listOf("Alice", "Bob"),
+            "age" to listOf(15, 20),
+        )
+        val df = map.toDataFrame()
+        df.columnNames() shouldBe listOf("name", "age")
+        df["name"].toList() shouldBe listOf("Alice", "Bob")
+        df["age"].toList() shouldBe listOf(15, 20)
+    }
+
+    @Test
+    fun `map of ColumnPath to values nests column groups for paths longer than one`() {
+        val map: Map<ColumnPath, Iterable<Any?>> = mapOf(
+            pathOf("g", "x") to listOf(1, 2),
+            ColumnPath("top") to listOf("a", "b"),
+        )
+        val df = map.toDataFrame()
+        df.columnNames() shouldBe listOf("g", "top")
+        df["g"].kind shouldBe ColumnKind.Group
+        df["g"].asColumnGroup()["x"].toList() shouldBe listOf(1, 2)
+        df["top"].toList() shouldBe listOf("a", "b")
+    }
+
+    @Test
+    fun `iterable of maps with different keys unions the keys and fills missing values with nulls`() {
+        val maps: List<Map<String, Any?>> = listOf(
+            mapOf("a" to 1, "shared" to "x"),
+            mapOf("b" to 2, "shared" to "y"),
+        )
+        val df = maps.toDataFrame()
+        df.columnNames() shouldBe listOf("a", "shared", "b")
+        df["a"].toList() shouldBe listOf(1, null)
+        df["b"].toList() shouldBe listOf(null, 2)
+        df["shared"].toList() shouldBe listOf("x", "y")
+    }
+
+    @Test
+    fun `should convert iterables of object arrays to DataFrame with value column`() {
+        val arrays: List<Array<Int>> = listOf(arrayOf(1, 2), arrayOf(3, 4))
+        val df = arrays.toDataFrame()
+        df.columnNames() shouldBe listOf("value")
+        df["value"].type() shouldBe typeOf<Array<Int>>()
+        df["value"].toList() shouldBe arrays
+    }
+
+    @Test
+    fun `empty iterable of maps converts to an empty DataFrame`() {
+        val df = emptyList<Map<String, Any?>>().toDataFrame()
+        df.columnsCount() shouldBe 0
+        df.rowsCount() shouldBe 0
+    }
+
+    data class Excluded(val y: Int)
+
+    data class ExcludedHolder(val excluded: Excluded, val z: Int)
+
+    data class ExcludeRoot(
+        val x: Int,
+        val excluded: Excluded,
+        val list: List<Excluded>,
+        val holder: ExcludedHolder,
+    )
+
+    @Test
+    fun `exclude of a class skips properties of exactly that type at any depth but not lists of it`() {
+        val root = ExcludeRoot(1, Excluded(2), listOf(Excluded(3)), ExcludedHolder(Excluded(4), 5))
+        val df = listOf(root).toDataFrame {
+            properties(maxDepth = 2) { exclude(Excluded::class) }
+        }
+
+        // the `excluded` property is skipped, the `List<Excluded>` one is not
+        df.columnNames() shouldBe listOf("x", "list", "holder")
+        df["list"].kind shouldBe ColumnKind.Frame
+        (df["list"][0] as DataFrame<*>)["y"].toList() shouldBe listOf(3)
+        // one level deeper the property of the excluded type is skipped as well
+        df["holder"].asColumnGroup().columnNames() shouldBe listOf("z")
+    }
+
+    open class ExcludedBase(val y: Int)
+
+    class ExcludedSub(y: Int) : ExcludedBase(y)
+
+    data class ExcludedSubHolder(val sub: ExcludedSub)
+
+    @Test
+    fun `exclude of a class keeps a property typed as its subclass`() {
+        val df = listOf(ExcludedSubHolder(ExcludedSub(1))).toDataFrame {
+            properties(maxDepth = 2) { exclude(ExcludedBase::class) }
+        }
+
+        df.columnNames() shouldBe listOf("sub")
+        df["sub"].asColumnGroup()["y"].toList() shouldBe listOf(1)
+    }
+
+    @Test
+    fun `iterable of columns with duplicate names throws DuplicateColumnNamesException`() {
+        val columns: List<BaseColumn<*>> = listOf(columnOf(1, 2).named("a"), columnOf(3, 4).named("a"))
+        shouldThrow<DuplicateColumnNamesException> { columns.toDataFrame() }
+    }
+
+    @Test
+    fun `iterable of columns of different sizes throws UnequalColumnSizesException`() {
+        val columns: List<BaseColumn<*>> = listOf(columnOf(1, 2).named("a"), columnOf(3, 4, 5).named("b"))
+        shouldThrow<UnequalColumnSizesException> { columns.toDataFrame() }
+    }
+
+    @Test
+    fun `iterable of columns names a column with an empty name untitled`() {
+        val columns: List<BaseColumn<*>> = listOf(columnOf(1, 2).named("a"), columnOf(3, 4))
+        columns.toDataFrame().columnNames() shouldBe listOf("a", "untitled")
+    }
+
+    @Test
+    fun `toDataFrameFromPairs throws UnequalColumnSizesException for columns of different sizes`() {
+        val columns: List<Pair<ColumnPath, BaseColumn<*>>> = listOf(
+            pathOf("a") to columnOf(1, 2),
+            pathOf("b") to columnOf(1, 2, 3),
+        )
+        shouldThrow<UnequalColumnSizesException> { columns.toDataFrameFromPairs<Unit>() }
+
+        val pathsToValues = listOf(pathOf("a") to listOf(1, 2), pathOf("b") to listOf(1, 2, 3))
+        shouldThrow<UnequalColumnSizesException> { pathsToValues.toDataFrameFromPairs() }
+
+        val namesToValues = listOf("a" to listOf(1, 2), "b" to listOf(1, 2, 3))
+        shouldThrow<UnequalColumnSizesException> { namesToValues.toDataFrameFromPairs() }
+    }
+
+    @Test
+    fun `toDataFrameFromPairs names a column with an empty name in the path untitled`() {
+        listOf(pathOf("") to listOf(1, 2)).toDataFrameFromPairs().columnNames() shouldBe listOf("untitled")
+        listOf("" to listOf(1, 2)).toDataFrameFromPairs().columnNames() shouldBe listOf("untitled")
+
+        val nested = listOf(
+            pathOf("person", "") to listOf(1, 2),
+            pathOf("person", "age") to listOf(30, 40),
+        ).toDataFrameFromPairs()
+        nested["person"].asColumnGroup().columnNames() shouldBe listOf("untitled", "age")
+    }
+
+    @Test
+    fun `maps of columns with different numbers of values throw UnequalColumnSizesException`() {
+        val byName: Map<String, Iterable<Any?>> = mapOf("a" to listOf(1, 2), "b" to listOf(1, 2, 3))
+        shouldThrow<UnequalColumnSizesException> { byName.toDataFrame() }
+
+        val byPath: Map<ColumnPath, Iterable<Any?>> = mapOf(
+            pathOf("a") to listOf(1, 2),
+            pathOf("g", "b") to listOf(1, 2, 3),
+        )
+        shouldThrow<UnequalColumnSizesException> { byPath.toDataFrame() }
+    }
+
+    @Test
+    fun `expr creates a column with an empty name that into puts under a name or at a path`() {
+        var exprName: String? = null
+        val df = listOf(1, 2).toDataFrame {
+            val column = expr { it * 10 }
+            exprName = column.name()
+            column into "tens"
+            expr { it + 1 } into pathOf("g", "next")
+        }
+
+        exprName shouldBe ""
+        df.columnNames() shouldBe listOf("tens", "g")
+        df["tens"].toList() shouldBe listOf(10, 20)
+        df["g"].asColumnGroup()["next"].toList() shouldBe listOf(2, 3)
     }
 }

@@ -1,22 +1,27 @@
+import dfbuild.kodex.kodexAwareComponentToPublish
+
 plugins {
+    with(conventions.plugins.dfbuild) {
+        alias(kotlinJvm8)
+        alias(kodex)
+        alias(dokka)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
-//        alias(kover)
-        alias(ktlint)
         alias(binary.compatibility.validator)
     }
 }
 
 group = "org.jetbrains.kotlinx"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     api(projects.core)
     api(libs.poi)
+    constraints {
+        api(libs.log4j.api) {
+            because("log4j-api < 2.25.5 is flagged by CVE scanners (MapMessage JSON); transitive via poi")
+        }
+    }
 
     // for writing DataFrame/DataRow -> JSON in Excel cells
     // can safely be excluded when writing only flat dataframes
@@ -31,17 +36,22 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
+    testImplementation(projects.commonTestUtils)
 }
 
 kotlinPublications {
     publication {
         publicationName = "dataframeExcel"
         artifactId = project.name
-        description = "Excel support for Kotlin Dataframe"
+        description = "Kotlin DataFrame: Excel (XLS/XLSX) support"
         packageName = artifactId
+        // publishes the KoDEx-processed jars, see `dfbuild.kodex`
+        composeOf { from(kodexAwareComponentToPublish()) }
     }
 }
 
-kotlin {
-    explicitApi()
+/*
+tasks.processKDocsMain {
+    dependsOn(project(projects.core.path).tasks.assemble)
 }
+*/

@@ -1,23 +1,30 @@
+import dfbuild.kodex.kodexAwareComponentToPublish
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    with(conventions.plugins.dfbuild) {
+        alias(kotlinJvm8)
+        alias(kodex)
+        alias(dokka)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
-        alias(jupyter.api)
-        alias(ktlint)
-        alias(dataframe)
-        alias(ksp)
     }
 }
 
 group = "org.jetbrains.kotlinx"
 
 repositories {
-    // geo repository should come before Maven Central
-    maven("https://repo.osgeo.org/repository/release")
+    // osgeo repository should come before Maven Central
+    maven(url = "https://repo.osgeo.org/repository/release")
     mavenCentral()
     mavenLocal()
+}
+
+kotlin.sourceSets {
+    main {
+        kotlin.srcDir("src/generated-dataschema-accessors/main/kotlin/")
+    }
 }
 
 // https://stackoverflow.com/questions/26993105/i-get-an-error-downloading-javax-media-jai-core1-1-3-from-maven-central
@@ -26,25 +33,38 @@ fun ExternalModuleDependency.excludeJaiCore() = exclude("javax.media", "jai_core
 
 dependencies {
     api(projects.core)
-    implementation(projects.dataframeJupyter)
 
-    implementation(libs.geotools.main) { excludeJaiCore() }
+    // Geotools
+    // `api` scope for everything whose types appear in our public API, so that consumers can use it
+    // without declaring GeoTools themselves (#1920):
+    //  - gt-api holds `CoordinateReferenceSystem` (GeoDataFrame.crs, applyCrs, DEFAULT_CRS, AnyFrame.toGeo)
+    //  - gt-main holds `ReferencedEnvelope` (bounds) and `SimpleFeatureCollection` (to/from SimpleFeatureCollection)
+    //  - gt-referencing holds `CRS`, which is not in our signatures but which consumers need to build a CRS at all
+    api(libs.geotools.api) { excludeJaiCore() }
+    api(libs.geotools.main) { excludeJaiCore() }
+    api(libs.geotools.referencing) { excludeJaiCore() }
+    // used internally only; `implementation` still puts them on the consumer's runtime classpath
     implementation(libs.geotools.shapefile) { excludeJaiCore() }
     implementation(libs.geotools.geojson) { excludeJaiCore() }
-    implementation(libs.geotools.referencing) { excludeJaiCore() }
     implementation(libs.geotools.epsg.hsql) { excludeJaiCore() }
 
+    // JAI
     implementation(libs.jai.core)
 
-    implementation(libs.jts.core)
+    // JTS
+    // `Geometry` and friends are the geometry model of WithGeometry and the jts/ helpers
+    api(libs.jts.core)
     implementation(libs.jts.io.common)
 
+    // Ktor
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
 
     testImplementation(kotlin("test"))
+    testImplementation(projects.dataframeJson)
+    testImplementation(projects.commonTestUtils)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -54,14 +74,12 @@ tasks.withType<KotlinCompile>().configureEach {
 kotlinPublications {
     publication {
         publicationName = "dataframeGeo"
-        artifactId = "dataframe-geo"
-        description = "GeoDataFrame API"
+        artifactId = project.name
+        description = "Kotlin DataFrame: GeoDataFrame API"
         packageName = artifactId
+        // publishes the KoDEx-processed jars, see `dfbuild.kodex`
+        composeOf { from(kodexAwareComponentToPublish()) }
     }
-}
-
-tasks.processJupyterApiResources {
-    libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.IntegrationGeo")
 }
 
 tasks.test {

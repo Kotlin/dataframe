@@ -3,13 +3,13 @@ package org.jetbrains.kotlinx.dataframe.io.local
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Ignore
 import org.junit.Test
 import java.sql.DriverManager
@@ -24,15 +24,19 @@ private const val PASSWORD = "pass"
 @DataSchema
 interface ActorKDF {
     val id: Int
-    val firstName: String?
-    val lastName: String?
-    val gender: String?
+
+    @ColumnName("first_name")
+    val firstName: String
+
+    @ColumnName("last_name")
+    val lastName: String
+    val gender: String
 }
 
 @DataSchema
 interface RankedMoviesWithGenres {
-    val name: String?
-    val year: Int?
+    val name: String
+    val year: Int
     val rank: Float?
     val genres: String?
 }
@@ -51,11 +55,11 @@ class ImdbTestTest {
         val tableName = "actors"
 
         DriverManager.getConnection(URL, props).use { connection ->
-            val df = DataFrame.readSqlTable(connection, tableName, 100).cast<ActorKDF>()
-            val result = df.filter { it[ActorKDF::id] in 11..19 }
+            val df = DataFrame.readSqlTable(connection, tableName, 100).cast<ActorKDF>(verify = true)
+            val result = df.filter { "id"<Int>() in 11..19 }
             result[0][1] shouldBe "Víctor"
 
-            val schema = DataFrame.getSchemaForSqlTable(connection, tableName)
+            val schema = DataFrameSchema.readSqlTable(connection, tableName)
             schema.columns["id"]!!.type shouldBe typeOf<Int>()
             schema.columns["first_name"]!!.type shouldBe typeOf<String?>()
         }
@@ -72,11 +76,11 @@ class ImdbTestTest {
         val imdbTableName = "imdb.actors"
 
         DriverManager.getConnection(URL2, props).use { connection ->
-            val df = DataFrame.readSqlTable(connection, imdbTableName, 100).cast<ActorKDF>()
-            val result = df.filter { it[ActorKDF::id] in 11..19 }
+            val df = DataFrame.readSqlTable(connection, imdbTableName, 100).cast<ActorKDF>(verify = true)
+            val result = df.filter { "id"<Int>() in 11..19 }
             result[0][1] shouldBe "Víctor"
 
-            val schema = DataFrame.getSchemaForSqlTable(connection, imdbTableName)
+            val schema = DataFrameSchema.readSqlTable(connection, imdbTableName)
             schema.columns["id"]!!.type shouldBe typeOf<Int>()
             schema.columns["first_name"]!!.type shouldBe typeOf<String?>()
         }
@@ -104,12 +108,12 @@ class ImdbTestTest {
         // for gradle or as classes under the hood in KNB
 
         DriverManager.getConnection(URL, props).use { connection ->
-            val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<RankedMoviesWithGenres>()
+            val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<RankedMoviesWithGenres>(verify = true)
             val result =
-                df.filter { it[RankedMoviesWithGenres::year] != null && it[RankedMoviesWithGenres::year]!! > 2000 }
+                df.filter { "year"<Int?>()?.let { it > 2000 } ?: false }
             result[0][1] shouldBe 2003
 
-            val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+            val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)
             schema.columns["name"]!!.type shouldBe typeOf<String?>()
             schema.columns["year"]!!.type shouldBe typeOf<Int?>()
         }

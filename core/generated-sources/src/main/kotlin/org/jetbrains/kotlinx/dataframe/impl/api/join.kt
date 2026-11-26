@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
+import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -105,12 +106,12 @@ internal fun <A, B> DataFrame<A>.joinImpl(
             leftCol.path to allRightJoinColumns[colNumber].path
         }.toMap()
 
-    // compute pairs of join key to row index from right data frame
+    // compute pairs of join key to row index from right dataframe
     val rightJoinKeyToIndex = other
         .indices()
         .map { index -> allRightJoinColumns.map { it.data[index] } to index }
 
-    // group row indices by key from right data frame
+    // group row indices by key from right dataframe
     val groupedRight = when (joinType) {
         JoinType.Exclude -> rightJoinKeyToIndex.associate { it.first to emptyList() }
         else -> rightJoinKeyToIndex.groupBy({ it.first }) { it.second }
@@ -118,7 +119,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
 
     var outputRowsCount = 0
 
-    // for every row index from left data frame compute a list of matched indices from right data frame
+    // for every row index from left dataframe compute a list of matched indices from right dataframe
     val leftToRightMapping = indices.map { leftIndex ->
         val leftKey = allLeftJoinColumns.map { it.data[leftIndex] }
         val rightIndices = groupedRight[leftKey]
@@ -126,13 +127,13 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         rightIndices
     }
 
-    // for every row index in right data frame store a flag indicating whether this row was matched by some row in left data frame
+    // for every row index in right dataframe store a flag indicating whether this row was matched by some row in left dataframe
     val rightMatched = BooleanArray(other.nrow) { false }
 
-    // number of rows in right data frame that were not matched by any row in left data frame. Used for correct allocation of an output array
+    // number of rows in right dataframe that were not matched by any row in left dataframe. Used for correct allocation of an output array
     var rightUnmatchedCount = other.nrow
 
-    // compute matched indices from right data frame and number of rows in output data frame
+    // compute matched indices from right dataframe and number of rows in output dataframe
     if (joinType.allowLeftNulls) {
         leftToRightMapping.forEach { rightIndices ->
             rightIndices?.forEach { i ->
@@ -232,7 +233,14 @@ internal fun <A, B> DataFrame<A>.joinImpl(
                 type = srcColumn.type.withNullability(hasNulls),
             )
 
-            ColumnKind.Frame -> DataColumn.createFrameColumn(srcColumn.name, columnValues.asList() as List<AnyFrame>)
+            ColumnKind.Frame -> {
+                // rows without a match on the other side have no dataframe, so they get
+                // an empty dataframe with the schema of the source column instead of null
+                val frameSchema = srcColumn.asAnyFrameColumn().schema
+                val emptyFrame by lazy { DataFrame.empty(frameSchema.value) }
+                val groups = columnValues.map { (it as AnyFrame?) ?: emptyFrame }
+                DataColumn.createFrameColumn(srcColumn.name, groups, frameSchema)
+            }
 
             ColumnKind.Group -> error("Unexpected ColumnGroup at path ${srcColumn.path}")
         }

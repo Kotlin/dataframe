@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.asClue
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.junit.Test
@@ -27,8 +28,8 @@ class RenameTests : ColumnsSelectionDslTests() {
             4, 5, 6,
         )
 
-        simpleDf.rename { all() }.into { it.name + "_renamed" } shouldBe renamedDf
-        simpleDf.rename { all() }.into("a_renamed", "b_renamed", "c_renamed") shouldBe renamedDf
+        simpleDf.rename { all() }.to { it.name + "_renamed" } shouldBe renamedDf
+        simpleDf.rename { all() }.to("a_renamed", "b_renamed", "c_renamed") shouldBe renamedDf
     }
 
     @Test
@@ -54,7 +55,7 @@ class RenameTests : ColumnsSelectionDslTests() {
 
         groupedDf
             .rename { "group" and "group"["a"] }
-            .into { it.name + "_renamed" } shouldBe renamedDf
+            .to { it.name + "_renamed" } shouldBe renamedDf
     }
 
     @Test
@@ -66,7 +67,7 @@ class RenameTests : ColumnsSelectionDslTests() {
 
         groupedDf
             .rename { colsAtAnyDepth() }
-            .into { it.name + "_renamed" } shouldBe renamedDf
+            .to { it.name + "_renamed" } shouldBe renamedDf
     }
 
     @Test
@@ -80,7 +81,7 @@ class RenameTests : ColumnsSelectionDslTests() {
 
         doubleGroupedDf
             .rename { colsAtAnyDepth() }
-            .into { it.name + "_renamed" } shouldBe renamedDf
+            .to { it.name + "_renamed" } shouldBe renamedDf
     }
 
     interface Person2 {
@@ -155,6 +156,40 @@ class RenameTests : ColumnsSelectionDslTests() {
             df.select { col("age") named col("age2") },
             df.select { col("age") into col("age2") },
         ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun `col by index named`() {
+        val df = dataFrameOf(
+            "col0" to columnOf(1, 4),
+            "col1" to columnOf(2, 5),
+            "col2" to columnOf(3, 6),
+        )
+
+        listOf(
+            df.select { col(0) and (col(1) named "renamed") and col(2) },
+            df.select { col(0) and (col(1) into "renamed") and col(2) },
+            df.select { col(0) and (col<Int>(1) named "renamed") and col(2) },
+            df.select { col(0) and (col<Int>(1) into "renamed") and col(2) },
+        ).shouldAllBeEqual()
+
+        val result = df.select { col(0) and (col(1) named "renamed") and col(2) }
+        result.columnNames() shouldBe listOf("col0", "renamed", "col2")
+        result["renamed"].toList() shouldBe listOf(2, 5)
+    }
+
+    @Test
+    fun `col by index named with convert`() {
+        val df = dataFrameOf(
+            "a" to columnOf(1, 4),
+            "b" to columnOf(2, 5),
+            "c" to columnOf(3, 6),
+        )
+
+        val result = df.convert { col<Int>(0) named "newA" }.with { it * 10 }
+
+        result.columnNames() shouldBe listOf("newA", "b", "c")
+        result["newA"].toList() shouldBe listOf(10, 40)
     }
 }
 

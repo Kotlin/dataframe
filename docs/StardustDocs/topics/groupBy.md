@@ -1,39 +1,98 @@
 [//]: # (title: groupBy)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples-->
 
 Splits the rows of [`DataFrame`](DataFrame.md) into groups using one or several columns as grouping keys.
+
+**API reference**: [`groupBy`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/group-by.html), [`GroupBy`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/-group-by/index.html)
+
+The `groupBy` function returns a `GroupBy` object. 
+A `GroupBy` is a dataframe-like structure that contains one or more key columns and a `group` [`FrameColumn`](DataColumn.md#framecolumn).
+Key columns contain all unique combinations of key values, and the `group` [`FrameColumn`](DataColumn.md#framecolumn) 
+contains the corresponding groups of rows (each represented as a [`DataFrame`](DataFrame.md)).
+Each row in a `GroupBy` corresponds to a keys/group combination.
 
 ```text
 groupBy(moveToTop = true) { columns }
       [ transformations ]
-      reducer | aggregator | pivot
+      reducer | aggregator | pivot | mapper
 
-transformations = [ .sortByCount() | .sortByCountAsc() | .sortBy { columns } | .sortByDesc { columns } ]
+transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression } | .sortByCountAsc() | .sortByCountDesc() | .sortByKey [ { columns } ] | .sortByKeyDesc [ { columns } ] | .sortBy { columns } | .sortByDesc { columns } ]
                   [ .updateGroups { frameExpression } ]
+                  [ .filter { rowExpression } ]
                   [ .add(column) { rowExpression } ]
     
-reducer = .minBy { column } | .maxBy { column } | .first [ { rowCondition } ] | .last [ { rowCondition } ] 
+reducer = .minBy { column } | .maxBy { column } | .medianBy { rowExpression } | .percentileBy(percentile) { rowExpression } | .first [ { rowCondition } ] | .last [ { rowCondition } ] 
           .concat() | .into([column]) [{ rowExpression }] | .values { valueColumns } 
 
-aggregator = .count() | .concat() | .into([column]) [{ rowExpression }] | .values { valueColumns } | .aggregate { aggregations } | .<stat> [ { columns } ]
+aggregator = .count() | .countDistinct() | .concat() | .concatWithKeys() | .toDataFrame() | .into([column]) [{ rowExpression }] | .values { valueColumns } | .aggregate { aggregations } | .<stat> [ { columns } ]
+
+mapper = .map { GroupWithKey -> value } | .mapToRows { GroupWithKey -> DataRow? } | .mapToFrames { GroupWithKey -> DataFrame }
 
 pivot = .pivot { columns }
       [ .default(defaultValue) ]
-         pivotReducer | pivotAggregator  
+         pivotReducer | pivotAggregator
 ```
 
-See [column selectors](ColumnSelectors.md) for how to select the columns for this operation,
-[groupBy transformations](#transformation), [groupBy aggregations](#aggregation), and [pivot+groupBy](pivot.md#pivot-groupby).
+See [`column selectors`](ColumnSelectors.md) for how to select the columns for this operation,
+[`groupBy transformations`](#transformation), [`groupBy reducing`](#reducing), [`groupBy aggregations`](#aggregation), [`groupBy mapping`](#mapping),
+and [`pivot+groupBy`](pivot.md#pivot-groupby).
 
-<!---FUN groupBy-->
+<!---FUN groupByDf-->
+
+```kotlin
+df
+```
+
+<inline-frame src="./resources/groupByDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN groupByDfGrouped-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.groupBy { name }
-df.groupBy { city and name.lastName }
+df.groupBy { isHappy }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByDfGrouped.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN groupByTwoColumns-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { name.firstName and isHappy }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy { "name"["firstName"]<String>() and "isHappy" }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByTwoColumns.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN groupByNewColumn-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
 df.groupBy { age / 10 named "ageDecade" }
 ```
 
@@ -41,14 +100,14 @@ df.groupBy { age / 10 named "ageDecade" }
 <tab title="Strings">
 
 ```kotlin
-df.groupBy("name")
-df.groupBy { "city" and "name"["lastName"] }
 df.groupBy { "age"<Int>() / 10 named "ageDecade" }
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupBy.html" width="100%"/>
+<inline-frame src="./resources/groupByNewColumn.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
+
 
 Grouping columns can be created inplace:
 
@@ -64,100 +123,837 @@ df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLe
 <tab title="Strings">
 
 ```kotlin
-df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
+df.groupBy {
+    expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named
+        "nameLength"
+}
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByExpr.html" width="100%"/>
+<inline-frame src="./resources/groupByExpr.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
-With optional `moveToTop` parameter you can choose whether to make a selected *nested column* a top-level column:  
+
+With the optional ` moveToTop ` parameter, you can choose whether to make a selected *nested column* a top-level column:  
 
 <!---FUN groupByMoveToTop-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
-df.groupBy(moveToTop = true) { name.lastName }
+df.groupBy(moveToTop = true) { name.firstName }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByMoveToTop.html" width="100%"/>
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy(moveToTop = true) { "name"["firstName"]<String>() }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByMoveToTop.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
+
 
 or to keep it inside a `ColumnGroup`:
 
 <!---FUN groupByMoveToTopFalse-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
-df.groupBy(moveToTop = false) { name.lastName }
+df.groupBy(moveToTop = false) { name.firstName }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByMoveToTopFalse.html" width="100%"/>
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy(moveToTop = false) { "name"["firstName"]<String>() }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByMoveToTopFalse.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 Returns `GroupBy` object.
 
 ## Transformation
 
-`GroupBy DataFrame` is a [`DataFrame`](DataFrame.md) with one chosen [`FrameColumn`](DataColumn.md#framecolumn) containing data groups.
+A `GroupBy` can be transformed into a new `GroupBy` using one of the following methods:
 
-It supports the following operations:
-* [`add`](add.md)
-* [`sortBy`](sortBy.md)
-* [`map`](map.md)
-* [`pivot`](pivot.md#pivot-groupby)
-* [`concat`](concat.md)
+* `sortByGroup` / `sortByGroupDesc` — sorts the **order of groups** (and their corresponding keys) by values computed with a `DataFrameExpression` applied to each group;
+* `sortByCountAsc` / `sortByCountDesc` — sorts the **order of groups** (and their corresponding keys) by the number of rows they contain; `sortByCountAsc` sorts in ascending order, `sortByCountDesc` — in descending order;
+* `sortByKey` / `sortByKeyDesc` — sorts the **order of groups**
+  (and their corresponding keys) by the grouping key values;
+* [`sortBy`](sortBy.md) / [`sortByDesc`](sortBy.md#sortbydesc) — sorts the **order of rows within each group** by one or more column values, preserving the order of groups and their corresponding keys;
+* `updateGroups` — transforms each group into a new one using the provided transforming function;
+* [`filter`](filter.md) — filters out keys and corresponding groups that
+do not satisfy the given key-group predicate;
+* [`add`](add.md) — adds a new column to each group.
 
-Any [`DataFrame`](DataFrame.md) with `FrameColumn` can be reinterpreted as `GroupBy DataFrame`:
+Any [`DataFrame`](DataFrame.md) with [FrameColumn](DataColumn.md#framecolumn) can be reinterpreted as a `GroupBy`:
 
 <!---FUN dataFrameToGroupBy-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
-val key by columnOf(1, 2) // create int column with name "key"
-val data by columnOf(df[0..3], df[4..6]) // create frame column with name "data"
-val df = dataFrameOf(key, data) // create dataframe with two columns
+val df = dataFrameOf(
+    "key" to columnOf(1, 2),
+    "data" to columnOf(df[0..3], df[4..6]),
+) // create dataframe with two columns
 
 df.asGroupBy { data } // convert dataframe to GroupBy by interpreting 'data' column as groups
 ```
 
-<!---END-->
-
-And any [`GroupBy DataFrame`](groupBy.md#transformation) can be reinterpreted as [`DataFrame`](DataFrame.md) with `FrameColumn`:
-
-<!---FUN groupByToFrame-->
+</tab>
+<tab title="Strings">
 
 ```kotlin
-df.groupBy { city }.toDataFrame()
+val df = dataFrameOf(
+    "key" to columnOf(1, 2),
+    "data" to columnOf(df[0..3], df[4..6]),
+) // create dataframe with two columns
+
+df.asGroupBy("data") // convert dataframe to GroupBy by interpreting 'data' column as groups
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByToFrame.html" width="100%"/>
+</tab></tabs>
 <!---END-->
 
-Use [`concat`](concat.md) to union all data groups of `GroupBy` into original [`DataFrame`](DataFrame.md) preserving new order of rows produced by grouping:
-
-<!---FUN concatGroupBy-->
+### Examples of transformation
+#### sortByGroup {collapsible="true"}
+<!---FUN sortByGroupOnGroupBy-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
-df.groupBy { name }.concat()
+df.groupBy { isHappy }.sortByGroup { mean { age } }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatGroupBy.html" width="100%"/>
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").sortByGroup { mean("age") }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/sortByGroupOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+#### sortByCountDesc {collapsible="true"}
+<!---FUN sortByCountDescOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { age }.sortByCountDesc()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("age").sortByCountDesc()
+```
+
+</tab></tabs>
+<inline-frame src="./resources/sortByCountDescOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+Sorts groups by size in descending order; for ascending order, use `sortByCountAsc()`.
+
+#### sortByKey {collapsible="true"}
+<!---FUN sortByKeyOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { age }.sortByKey()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("age").sortByKey()
+```
+
+</tab></tabs>
+<inline-frame src="./resources/sortByKeyOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN sortBySelectedKeysOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city and age }.sortByKey { age and city.reversed() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city", "age").sortByKey { "age"<Int>() and "city"<String?>().reversed() }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/sortBySelectedKeysOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN sortBySelectedKeysDescOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city and age }.sortByKeyDesc(nullsLast = true) { city }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city", "age").sortByKeyDesc(nullsLast = true) { "city"<String?>() }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/sortBySelectedKeysDescOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+
+#### sortBy {collapsible="true"}
+<!---FUN sortByOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.sortBy { age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").sortBy("age")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/sortByOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+#### updateGroups {collapsible="true"}
+<!---FUN updateGroupsOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.updateGroups { sortByDesc { age }.take(2) }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").updateGroups { sortByDesc("age").take(2) }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/updateGroupsOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+#### filter {collapsible="true"}
+<!---FUN filterOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.filter { group.median { age } > 20 }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").filter { group.median { "age"<Int>() } > 20 }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/filterOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+#### add {collapsible="true"}
+<!---FUN addOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.add("isAdult") { age >= 18 }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").add("isAdult") { "age"<Int>() >= 18 }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/addOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+## Reducing
+
+A `GroupBy` can be reduced into a [`DataFrame`](DataFrame.md). 
+It means that each group in this `GroupBy` is collapsed into a single representative row,
+and these rows are concatenated into a new [`DataFrame`](DataFrame.md).
+
+Reducing is a specific case of aggregation.
+
+This mechanism includes two steps.
+
+### Step 1: use a reducing function to make a single row from each group
+To perform a reducing operation, use the following functions:
+* [`first`](first.md) / [`last`](last.md) – to get the first / last [row](DataRow.md) 
+(optionally, the first or last one that satisfies a predicate) of each group.
+
+* [`minBy`](minBy.md) / [`maxBy`](maxBy.md) – to get from each group the row with the smallest / largest result 
+of the [`row expression`](DataRow.md#row-expressions) supplied to the function.
+
+* [`medianBy`](median.md) / [`percentileBy`](percentile.md) – to get the row at the position closest to the estimated 
+median/percentile index of the [`row expression`](DataRow.md#row-expressions)'s results calculated on rows within each group.
+
+These functions return an instance of `ReducedGroupBy`, which is a class serving as a transitional step
+between performing a reduction on groups and specifying how the resulting reduced rows (either original or transformed)
+should be represented in a new [`DataFrame`](DataFrame.md).
+
+#### Examples of reducing
+##### df.groupBy
+<!---FUN groupByDfGroupedReducing-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByDfGroupedReducing.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+##### first {collapsible="true"}
+<!---FUN groupByFirst-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.first { age == 30 }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").first { it["age"] == 30 }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByFirst.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+##### last {collapsible="true"}
+<!---FUN groupByLast-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.last { weight == null }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").last { it["weight"] == null }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByLast.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+##### minBy {collapsible="true"}
+<!---FUN groupByMinBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.minBy { weight }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").minBy("weight")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByMinBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+##### maxBy {collapsible="true"}
+<!---FUN groupByMaxBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.maxBy { age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").maxBy("age")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByMaxBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+##### medianBy {collapsible="true"}
+<!---FUN groupByMedianBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.medianBy { weight }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").medianBy("weight")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByMedianBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+##### percentileBy {collapsible="true"}
+<!---FUN groupByPercentileBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.percentileBy(25.0) { weight }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").percentileBy(25.0, "weight")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByPercentileBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+### Step 2: transform the result to a [`DataFrame`](DataFrame.md)
+A `ReducedGroupBy` can be transformed into a [`DataFrame`](DataFrame.md) using the following functions:
+* [`concat`](concat.md) – to concatenate all reduced rows into a single [`DataFrame`](DataFrame.md).
+* [`values`](values.md) – to create a [`DataFrame`](DataFrame.md) that contains the values from the reduced rows in the selected columns. 
+* `into` – to add a new [`column`](DataColumn.md) to the resulting [`DataFrame`](DataFrame.md) with values computed with 
+a [`row expression`](DataRow.md#row-expressions) on each row, or a new [`column group`](DataColumn.md) containing each group reduced to a single row.
+
+Each method returns a new [`DataFrame`](DataFrame.md) that includes the grouping key columns, containing all unique grouping key values 
+(or value combinations for multiple keys) along with their corresponding reduced rows.
+
+#### Examples of transforming
+##### concat {collapsible="true"}
+
+<!---FUN groupByConcat-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.minBy { age }.concat()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").minBy("age").concat()
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByConcat.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+
+##### values {collapsible="true"}
+
+<!---FUN groupByValues-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.minBy { age }.values { name and age and city }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").minBy("age").values("name", "age", "city")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByValues.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+##### into {collapsible="true"}
+
+<!---FUN groupByInto-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.minBy { age }.into("youngest") { name }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").minBy("age").into("youngest") { getColumnGroup("name") }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByInto.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+Passing only the column name, without an expression, stores the whole reduced row in a new
+[`column group`](DataColumn.md#columngroup). The reduced row keeps all the original columns, the grouping keys included.
+
+<!---FUN groupByIntoColumnGroup-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.minBy { age }.into("youngest")
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").minBy("age").into("youngest")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByIntoColumnGroup.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 ## Aggregation
 
-To compute one or several [statistics](summaryStatistics.md) per every group of `GroupBy` use `aggregate` function. 
-Its body will be executed for every data group and has a receiver of type [`DataFrame`](DataFrame.md) that represents current data group being aggregated.
-To add a new column to the resulting [`DataFrame`](DataFrame.md), pass the name of new column to infix function `into`:
+A `GroupBy` can be directly transformed into a new [`DataFrame`](DataFrame.md) by applying one or more aggregation operations to its groups.
 
-<!---FUN groupByAggregations-->
+Aggregation is a generalization of [`reducing`](groupBy.md#reducing).
+
+The following aggregation methods are available:
+* [`concat`](concat.md) — concatenates all [`rows`](DataRow.md) from all groups into a single [`DataFrame`](DataFrame.md), 
+without preserving grouping keys.
+* [`toDataFrame`](createDataFrame.md#todataframe) — returns this `GroupBy` as a [`DataFrame`](DataFrame.md) 
+with the grouping keys and corresponding groups in [FrameColumn](DataColumn.md#framecolumn).
+* `concatWithKeys` — a variant of [`concat`](concat.md) 
+that also includes grouping keys that were not present in the original [`DataFrame`](DataFrame.md).
+* `into` — creates a new [`column`](DataColumn.md) containing a list of values computed with a `RowExpression` for each group, 
+or a new [FrameColumn](DataColumn.md#framecolumn) containing the groups themselves.
+* [`values`](values.md) — collects all column values for every group without aggregation. 
+For a [ValueColumn](DataColumn.md#valuecolumn) of type `T` it will gather group values into lists of type `List<T>`.
+For a [ColumnGroup](DataColumn.md#columngroup) it will gather group values into a [`DataFrame`](DataFrame.md) 
+and convert that [ColumnGroup](DataColumn.md#columngroup) into a [FrameColumn](DataColumn.md#framecolumn).
+* [`count`](count.md) — creates a [`DataFrame`](DataFrame.md) containing the grouping key columns 
+and an additional [`column`](DataColumn.md) with the number of rows in each corresponding group.
+* [`countDistinct`](countDistinct.md) — creates a [`DataFrame`](DataFrame.md) containing the grouping key columns 
+and an additional [`column`](DataColumn.md) with the number of distinct rows in each corresponding group.
+* `aggregate` — performs a set of custom aggregations using `AggregateDsl`, 
+allowing you to compute one or more [statistics](summaryStatistics.md) per every group of `GroupBy`. 
+The body of this function will be executed for every data group and has a receiver of type [`DataFrame`](DataFrame.md) 
+that represents the current data group being aggregated. 
+To add a new column to the resulting [`DataFrame`](DataFrame.md), pass the name of the new column to infix function `into`.
+
+Each of these methods returns a new DataFrame that includes the grouping key columns (except for [`concat`](concat.md)) 
+along with the columns of values aggregated from the corresponding groups.
+
+### Examples of aggregation
+#### concat on GroupBy {collapsible="true"}
+[`concat`](concat.md) can be used to union all data groups of `GroupBy` into the original [`DataFrame`](DataFrame.md) 
+preserving the new order of rows produced by grouping:
+
+<!---FUN concatOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.concat()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").concat()
+```
+
+</tab></tabs>
+<inline-frame src="./resources/concatOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+#### toDataFrame on GroupBy {collapsible="true"}
+Any `GroupBy` can be reinterpreted as [`DataFrame`](DataFrame.md) with [FrameColumn](DataColumn.md#framecolumn):
+
+<!---FUN toDfOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.toDataFrame()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").toDataFrame()
+```
+
+</tab></tabs>
+<inline-frame src="./resources/toDfOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+#### concatWithKeys on GroupBy {collapsible="true"}
+<!---FUN concatWithKeysOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { expr { age >= 18 } named "isAdult" }.concatWithKeys()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy { expr { "age"<Int>() >= 18 } named "isAdult" }.concatWithKeys()
+```
+
+</tab></tabs>
+<inline-frame src="./resources/concatWithKeysOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+#### into on GroupBy {collapsible="true"}
+<!---FUN intoOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.into("ages") { age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").into("ages") { "age"<Int>() }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/intoOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+#### values on GroupBy {collapsible="true"}
+##### all columns
+<!---FUN valuesOnGroupByAllColumns-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// Collect the values of all columns except the grouping keys
+// from all rows of each group into lists
+df.groupBy { isHappy }.values()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// Collect the values of all columns except the grouping keys
+// from all rows of each group into lists
+df.groupBy("isHappy").values()
+```
+
+</tab></tabs>
+<inline-frame src="./resources/valuesOnGroupByAllColumns.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+##### selected columns
+<!---FUN valuesOnGroupBySelectedColumns-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// Collect the "name" and "age" values of all rows of each group into lists
+df.groupBy { isHappy }.values { name and age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// Collect the "name" and "age" values of all rows of each group into lists
+df.groupBy("isHappy").values("name", "age")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/valuesOnGroupBySelectedColumns.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+##### rename columns
+<!---FUN valuesOnGroupByRenameColumns-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// Collect the "age" column values of all rows of each group into a list,
+// and store it in a new "ages" column
+df.groupBy { isHappy }.values { age into "ages" }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// Collect the "age" column values of all rows of each group into a list,
+// and store it in a new "ages" column
+df.groupBy("isHappy").values { "age" into "ages" }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/valuesOnGroupByRenameColumns.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+#### count on GroupBy {collapsible="true"}
+<!---FUN countOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }.count()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").count()
+```
+
+</tab></tabs>
+<inline-frame src="./resources/countOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+#### countDistinct on GroupBy {collapsible="true"}
+<!---FUN countDistinctOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }.countDistinct { name.firstName }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").countDistinct { "name"["firstName"] }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/countDistinctOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+#### aggregate on GroupBy {collapsible="true"}
+<!---FUN aggregateOnGroupBy-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
 df.groupBy { city }.aggregate {
+    // Count rows within each group and store the result
+    // into a new "total" column
     count() into "total"
+
+    // Count rows with "age" column value greater than 18 within each group
+    // and store the result into a new "adults" column
     count { age > 18 } into "adults"
+
+    // Compute the median of the "age" column values within each group
+    // and store it into a new "median age" column
     median { age } into "median age"
+
+    // Compute the minimum of the "age" column values within each group
+    // and store it into a new "min age" column
     min { age } into "min age"
+
+    // Store the "name" column group values of the oldest person in each group
+    // as a new "oldest" column group
     maxBy { age }.name into "oldest"
 }
 ```
@@ -167,10 +963,24 @@ df.groupBy { city }.aggregate {
 
 ```kotlin
 df.groupBy("city").aggregate {
+    // Count rows within each group and store the result
+    // into a new "total" column
     count() into "total"
+
+    // Count rows with "age" column value greater than 18 within each group
+    // and store the result into a new "adults" column
     count { "age"<Int>() > 18 } into "adults"
+
+    // Compute the median of the "age" column values within each group
+    // and store it into a new "median age" column
     median("age") into "median age"
+
+    // Compute the minimum of the "age" column values within each group
+    // and store it into a new "min age" column
     min("age") into "min age"
+
+    // Store the "name" column group values of the oldest person in each group
+    // as a new "oldest" column group
     maxBy("age")["name"] into "oldest"
 }
 // or
@@ -184,16 +994,19 @@ df.groupBy("city").aggregate {
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByAggregations.html" width="100%"/>
+<inline-frame src="./resources/aggregateOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
-If only one aggregation function is used, column name can be omitted:
+If only one aggregation function is used, the column name can be omitted:
 
-<!---FUN groupByAggregateWithoutInto-->
+<!---FUN aggregateOnGroupByWithoutInto-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
+// The last expression is not stored with `into`,
+// so its value is stored in a new column named "aggregated"
 df.groupBy { city }.aggregate { maxBy { age }.name }
 ```
 
@@ -201,82 +1014,460 @@ df.groupBy { city }.aggregate { maxBy { age }.name }
 <tab title="Strings">
 
 ```kotlin
+// The last expression is not stored with `into`,
+// so its value is stored in a new column named "aggregated"
 df.groupBy("city").aggregate { maxBy("age")["name"] }
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByAggregateWithoutInto.html" width="100%"/>
+<inline-frame src="./resources/aggregateOnGroupByWithoutInto.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
-Most common aggregation functions can be computed directly at [`GroupBy DataFrame`](groupBy.md#transformation) :
+### Aggregation statistics
+[`Aggregation statistics`](summaryStatistics.md) are predefined shortcuts for common statistical aggregations such as sum, mean, median, and others.
 
-<!---FUN groupByDirectAggregations-->
+Each function computes a statistic across the [`rows`](DataRow.md) of a group and returns the result as a new [`column`](DataColumn.md) (or several columns) in the resulting [`DataFrame`](DataFrame.md).
+
+The following aggregation statistics are available:
+* [`count`](count.md);
+* [`countDistinct`](countDistinct.md);
+* [`max / maxOf / maxFor`](minmax.md); 
+* [`min / minOf / minFor`](minmax.md); 
+* [`sum / sumOf / sumFor`](sum.md); 
+* [`mean / meanOf / meanFor`](mean.md); 
+* [`std / stdOf / stdFor`](std.md); 
+* [`median / medianOf / medianFor`](median.md); 
+* [`percentile / percentileOf / percentileFor`](percentile.md).
+
+To compute one or several [`statistics`](summaryStatistics.md) per every group of `GroupBy`, use the [`aggregate`](groupBy.md#aggregate-on-groupby) function.
+
+The functions `max`, `maxOf`, and `maxFor` differ as follows. They all calculate the maximum of values, but:
+* `max` computes it on the selected columns. If more than one column is selected, for each group it computes one maximum value among all selected columns.
+* `maxOf` computes it by a [`row expression`](DataRow.md#row-expressions): the expression is calculated for each row of the group and the maximum value is returned.
+* `maxFor` computes it for each of the selected columns within each group. If more than one column is selected, for each group it computes the maximum value for each selected column separately.
+
+Similar logic applies to other statistics.
+
+#### Direct aggregations
+Most common aggregation functions can be computed directly on a `GroupBy`.
+
+##### Examples of direct aggregations
+###### max {collapsible="true"}
+<!---FUN maxOnGroupBy-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.groupBy { city }.max() // max for every comparable column
-df.groupBy { city }.mean() // mean for every numeric column
-df.groupBy { city }.max { age } // max age into column "age"
-df.groupBy { city }.sum("total weight") { weight } // sum of weights into column "total weight"
-df.groupBy { city }.count() // number of rows into column "count"
-df.groupBy { city }
-    .max { name.firstName.length() and name.lastName.length() } // maximum length of firstName or lastName into column "max"
-df.groupBy { city }
-    .medianFor { age and weight } // median age into column "age", median weight into column "weight"
-df.groupBy { city }
-    .minFor { (age into "min age") and (weight into "min weight") } // min age into column "min age", min weight into column "min weight"
-df.groupBy { city }.meanOf("mean ratio") { weight?.div(age) } // mean of weight/age into column "mean ratio"
+df.groupBy { city }.max() // max for every column with mutually comparable values
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.groupBy("city").max() // max for every comparable column
-df.groupBy("city").mean() // mean for every numeric column
-df.groupBy("city").max("age") // max age into column "age"
-df.groupBy("city").sum("weight", name = "total weight") // sum of weights into column "total weight"
-df.groupBy("city").count() // number of rows into column "count"
+df.groupBy("city").max() // max for every column with mutually comparable values
+```
+
+</tab></tabs>
+<inline-frame src="./resources/maxOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN maxSelectedOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.max { age and weight }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").max("age", "weight")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/maxSelectedOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN maxForOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.maxFor { age and weight }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").maxFor("age", "weight")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/maxForOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN maxOfOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.maxOf { if (age < 30) weight else null }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").maxOf { if ("age"<Int>() < 30) "weight"<Int>() else null }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/maxOfOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN maxOnGroupByNameLength-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }
+    .max {
+        name.firstName.map {
+            it.length
+        } and name.lastName.map { it.length }
+    } // maximum length of firstName or lastName into column "max"
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
 df.groupBy("city").max {
-    "name"["firstName"]<String>().length() and "name"["lastName"]<String>().length()
+    "name"["firstName"]<String>().map { it.length } and "name"["lastName"]<String>().map { it.length }
 } // maximum length of firstName or lastName into column "max"
+```
+
+</tab></tabs>
+<inline-frame src="./resources/maxOnGroupByNameLength.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+###### min {collapsible="true"}
+<!---FUN minOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.min { age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").min("age")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/minOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN minForOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }
+    .minFor {
+        (age into "minAge") and (weight into "minWeight")
+    } // min age into column "min age", min weight into column "min weight"
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
 df.groupBy("city")
-    .medianFor("age", "weight") // median age into column "age", median weight into column "weight"
-df.groupBy("city")
-    .minFor { ("age"<Int>() into "min age") and ("weight"<Int?>() into "min weight") } // min age into column "min age", min weight into column "min weight"
-df.groupBy("city").meanOf("mean ratio") {
+    .minFor {
+        ("age"<Int>() into "minAge") and ("weight"<Int?>() into "minWeight")
+    } // min age into column "min age", min weight into column "min weight"
+```
+
+</tab></tabs>
+<inline-frame src="./resources/minForOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+###### sum {collapsible="true"}
+<!---FUN sumOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }.sum("totalWeight") { weight } // sum of weights into column "total weight"
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").sum("weight", name = "totalWeight") // sum of weights into column "total weight"
+```
+
+</tab></tabs>
+<inline-frame src="./resources/sumOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+###### mean {collapsible="true"}
+<!---FUN meanOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }.mean() // mean for every numeric column
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").mean() // mean for every numeric column
+```
+
+</tab></tabs>
+<inline-frame src="./resources/meanOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN meanOfOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }.meanOf("meanRatio") { weight?.div(age) } // mean of weight/age into column "mean ratio"
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").meanOf("meanRatio") {
     "weight"<Int?>()?.div("age"<Int>())
 } // mean of weight/age into column "mean ratio"
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByDirectAggregations.html" width="100%"/>
+<inline-frame src="./resources/meanOfOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
-To get all column values for every group without aggregation use `values` function:
-* for [ValueColumn](DataColumn.md#valuecolumn) of type `T` it will gather group values into lists of type `List<T>`
-* for [ColumnGroup](DataColumn.md#columngroup) it will gather group values into [`DataFrame`](DataFrame.md) and convert [ColumnGroup](DataColumn.md#columngroup) into [FrameColumn](DataColumn.md#framecolumn)
-
-<!---FUN groupByWithoutAggregation-->
+###### std {collapsible="true"}
+<!---FUN stdOnGroupBy-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.groupBy { city }.values()
-df.groupBy { city }.values { name and age }
-df.groupBy { city }.values { weight into "weights" }
+df.groupBy { isHappy }.std { age }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.groupBy("city").values()
-df.groupBy("city").values("name", "age")
-df.groupBy("city").values { "weight" into "weights" }
+df.groupBy("isHappy").std("age")
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByWithoutAggregation.html" width="100%"/>
+<inline-frame src="./resources/stdOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
+
+###### median {collapsible="true"}
+<!---FUN medianOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.median { age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").median("age")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/medianOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN medianForOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }
+    .medianFor { age and weight } // median age into column "age", median weight into column "weight"
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city")
+    .medianFor("age", "weight") // median age into column "age", median weight into column "weight"
+```
+
+</tab></tabs>
+<inline-frame src="./resources/medianForOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+###### percentile {collapsible="true"}
+<!---FUN percentileOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.percentile(25.0) { age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").percentile(25.0) { "age"<Int>() }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/percentileOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+## Mapping
+
+Aggregation turns each group into values that end up next to the grouping keys. Mapping does not:
+it hands every keys/group combination to a lambda and collects whatever that lambda returns.
+
+Every combination arrives as a `GroupWithKey`, so the key values are available as `key`
+(a [`DataRow`](DataRow.md)) and the rows of the group as `group` (a [`DataFrame`](DataFrame.md)).
+
+The following mapping methods are available:
+* [`map`](map.md#map-on-groupby) — returns a `List` with one computed value per keys/group combination.
+* [`mapToRows`](map.md#map-on-groupby) — computes a [`row`](DataRow.md) per combination
+and collects them into a [`DataFrame`](DataFrame.md).
+* [`mapToFrames`](map.md#map-on-groupby) — computes a [`DataFrame`](DataFrame.md) per combination
+and collects them into a [FrameColumn](DataColumn.md#framecolumn).
+
+Unlike the aggregation methods above, the result does not carry the grouping key columns:
+what the lambda returns is what you get. `map` and `mapToRows` leave out the combinations for which
+the lambda returns `null`, so their results can be shorter than the number of combinations.
+
+### Examples of mapping
+
+#### map on GroupBy {collapsible="true"}
+The number of people per city, as a `List` in the order of the groups:
+
+<!---FUN groupByMap-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }.map { group.rowsCount() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").map { group.rowsCount() }
+```
+
+</tab></tabs>
+<!---END-->
+
+#### mapToRows on GroupBy {collapsible="true"}
+The oldest person of every city, one [`row`](DataRow.md) per city:
+
+<!---FUN groupByMapToRows-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }.mapToRows { group.sortByDesc { age }.firstOrNull() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").mapToRows { group.sortByDesc("age").firstOrNull() }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByMapToRows.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+#### mapToFrames on GroupBy {collapsible="true"}
+The two oldest people for each first name, as a [FrameColumn](DataColumn.md#framecolumn).
+Every frame keeps all the columns of the original, including the one it was grouped by:
+
+<!---FUN groupByMapToFrames-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { name.firstName }.mapToFrames { group.sortByDesc { age }.take(2) }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy { "name"["firstName"] }.mapToFrames { group.sortByDesc("age").take(2) }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByMapToFrames.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+## Pivot + GroupBy
+A `GroupBy` can be pivoted with the [`pivot`](pivot.md#pivot-groupby) method. It produces a `PivotGroupBy`
+that combines vertical and horizontal grouping, enabling computation of cross-group, matrix-like statistics.
+
+<!---FUN pivotOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.pivot { name.firstName }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").pivot { "name"["firstName"]<String>() }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/pivotOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+For more information, see [`pivot + groupBy`](pivot.md#pivot-groupby)

@@ -1,7 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
+import org.jetbrains.kotlinx.dataframe.api.allNulls
+import org.jetbrains.kotlinx.dataframe.api.colsOf
+import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.CustomEncoder
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
@@ -28,17 +31,20 @@ private const val MIN_IDE_VERSION_SUPPORT_DATAFRAME_CONVERTABLE = 243
 
 internal class JupyterHtmlRenderer(val display: DisplayConfiguration, val builder: JupyterIntegration.Builder)
 
-@OptIn(ExperimentalSerializationApi::class)
 internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     noinline getFooter: (T) -> String,
     crossinline modifyConfig: T.(DisplayConfiguration) -> DisplayConfiguration = { it },
     applyRowsLimit: Boolean = true,
 ) = builder.renderWithHost<T> { host, value ->
+    val addHtml = (value as? DisableRowsLimitWrapper)?.addHtml ?: true
     val contextRenderer = JupyterCellRenderer(this.notebook, host)
     val reifiedDisplayConfiguration = value.modifyConfig(display)
     val footer = getFooter(value)
 
     val df = convertToDataFrame(value)
+
+    val isFormatted = reifiedDisplayConfiguration.cellFormatter != null ||
+        df.hasFormattedColumns()
 
     val limit = if (applyRowsLimit) {
         reifiedDisplayConfiguration.rowsLimit ?: df.rowsCount()
@@ -46,20 +52,22 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         df.rowsCount()
     }
 
-    val html = DataFrameHtmlData
-        .tableDefinitions(
-            includeJs = reifiedDisplayConfiguration.isolatedOutputs,
-            includeCss = true,
-        ).plus(
-            df.toHtml(
-                // is added later to make sure it's put outside of potential iFrames
-                configuration = reifiedDisplayConfiguration.copy(enableFallbackStaticTables = false),
-                cellRenderer = contextRenderer,
-            ) { footer },
-        ).toJupyterHtmlData()
+    val html by lazy {
+        DataFrameHtmlData
+            .tableDefinitions(
+                includeJs = reifiedDisplayConfiguration.isolatedOutputs,
+                includeCss = true,
+            ).plus(
+                df.toHtml(
+                    // is added later to make sure it's put outside of potential iFrames
+                    configuration = reifiedDisplayConfiguration.copy(enableFallbackStaticTables = false),
+                    cellRenderer = contextRenderer,
+                ) { footer },
+            ).toJupyterHtmlData()
+    }
 
     // Generates a static version of the table which can be displayed in GitHub previews etc.
-    val staticHtml = df.toStaticHtml(reifiedDisplayConfiguration, DefaultCellRenderer).toJupyterHtmlData()
+    val staticHtml by lazy { df.toStaticHtml(reifiedDisplayConfiguration, DefaultCellRenderer).toJupyterHtmlData() }
 
     if (notebook.kernelVersion >= KotlinKernelVersion.from(MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI)!!) {
         val ideBuildNumber = KotlinNotebookPluginUtils.getKotlinNotebookIDEBuildNumber()
@@ -67,10 +75,10 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         // TODO Do we need to handle the improved meta data here as well?
         val jsonEncodedDf = when {
             !ideBuildNumber.supportsDynamicNestedTables() ->
-                encodeFrameNoDynamicNestedTables(df, limit).toString()
+                encodeFrameNoDynamicNestedTables(df = df, limit = limit, isFormatted = isFormatted).toString()
 
             else -> {
-                val encoders = buildList<CustomEncoder> {
+                val encoders = buildList {
                     if (ideBuildNumber.supportsDataFrameConvertableValues()) {
                         add(DataframeConvertableEncoder(this))
                     }
@@ -83,15 +91,24 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
                     rowLimit = limit,
                     nestedRowLimit = reifiedDisplayConfiguration.rowsLimit,
                     customEncoders = encoders,
+                    isFormatted = isFormatted,
                 )
             }
         }
-
-        notebook.renderAsIFrameAsNeeded(html, staticHtml, jsonEncodedDf)
+        if (!addHtml) {
+            mimeResult(
+                "application/kotlindataframe+json" to jsonEncodedDf,
+            )
+        } else {
+            notebook.renderAsIFrameAsNeeded(data = html, staticData = staticHtml, jsonEncodedDf = jsonEncodedDf)
+        }
     } else {
-        notebook.renderHtmlAsIFrameIfNeeded(html)
+        notebook.renderHtmlAsIFrameIfNeeded(data = html)
     }
 }
+
+internal fun AnyFrame.hasFormattedColumns() =
+    this.getColumns { colsAtAnyDepth().colsOf<FormattedFrame<*>?> { !it.allNulls() } }.isNotEmpty()
 
 private fun KotlinNotebookPluginUtils.IdeBuildNumber?.supportsDynamicNestedTables() =
     this != null && majorVersion >= MIN_IDE_VERSION_SUPPORT_JSON_WITH_METADATA
@@ -125,8 +142,8 @@ internal fun DataFrameHtmlData.toJupyterHtmlData() = HtmlData(style, body, scrip
 // region friend module error suppression
 
 @Suppress("INVISIBLE_REFERENCE")
-private fun encodeFrameNoDynamicNestedTables(df: AnyFrame, limit: Int) =
-    org.jetbrains.kotlinx.dataframe.impl.io.encodeFrameNoDynamicNestedTables(df, limit)
+private fun encodeFrameNoDynamicNestedTables(df: AnyFrame, limit: Int, isFormatted: Boolean) =
+    org.jetbrains.kotlinx.dataframe.impl.io.encodeFrameNoDynamicNestedTables(df, limit, isFormatted)
 
 @Suppress("INVISIBLE_REFERENCE", "ktlint:standard:function-naming")
 private fun DataframeConvertableEncoder(encoders: List<CustomEncoder>, rowLimit: Int? = null) =

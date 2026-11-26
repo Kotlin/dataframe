@@ -1,0 +1,62 @@
+# Excel
+
+<web-summary>
+Read from and write to Excel files in `.xls` or `.xlsx` formats with Kotlin DataFrame for seamless spreadsheet integration.
+</web-summary>
+
+<card-summary>
+Kotlin DataFrame makes it easy to load and save data from Excel files — perfect for working with spreadsheet-based workflows.
+</card-summary>
+
+<link-summary>
+Learn how to read and write Excel files using Kotlin DataFrame with just a single line of code.
+</link-summary>
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.io.Excel-->
+
+Kotlin DataFrame supports reading from and writing to Excel files in both `.xls` and `.xlsx` formats.
+
+**API reference**: [`readExcel`](https://kotlin.github.io/dataframe/api-docs/dataframe-excel/org.jetbrains.kotlinx.dataframe.io/read-excel.html), [`writeExcel`](https://kotlin.github.io/dataframe/api-docs/dataframe-excel/org.jetbrains.kotlinx.dataframe.io/write-excel.html), [dataframe-excel module](https://kotlin.github.io/dataframe/api-docs/dataframe-excel/index.html)
+
+Requires the [`dataframe-excel` module](Modules.md#dataframe-excel), 
+which is included by default in the general [`dataframe`](Modules.md#dataframe-general) 
+artifact and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.
+
+<warning>
+When packaging an application as a fat JAR, merge `META-INF/services` resources. Otherwise, reading `.xls` or `.xlsx`
+files may fail even though all Apache POI dependencies are present. See [Packaging into a fat JAR](Packaging.md).
+</warning>
+
+## Read
+
+You can read a [`DataFrame`](DataFrame.md) from an Excel file (via a file path or URL) 
+using the [`readExcel()`](read.md#read-from-excel) method:
+
+<!---FUN readExcel-->
+
+```kotlin
+val df = DataFrame.readExcel("example.xlsx")
+```
+
+<!---END-->
+
+<!---FUN readExcelViaUrl-->
+
+```kotlin
+val df = DataFrame.readExcel("https://kotlin.github.io/dataframe/resources/example.xlsx")
+```
+
+<!---END-->
+
+## Write
+
+You can write a [`DataFrame`](DataFrame.md) to an Excel file using the 
+[`writeExcel()`](write.md#write-to-excel-spreadsheet) method:
+
+<!---FUN writeExcel-->
+
+```kotlin
+df.writeExcel("example.xlsx")
+```
+
+<!---END-->

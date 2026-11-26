@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.NA
  *
  * You add additional constraints to an [IsBetterThan] function in the following fashion:
  *
- * Let's say you want a value to álways be returned when it satisfies the condition `isPreferred(it)`,
+ * Let's say you want a value to always be returned when it satisfies the condition `isPreferred(it)`,
  * but in all other cases, you just want the best.
  * Then you can write:
  * ```kt
@@ -36,7 +36,7 @@ internal typealias IsBetterThan<C> = C.(other: C) -> Boolean
 /**
  * Returns the index of the first element in this sequence that is not null and is better than all previous elements.
  *
- * Returns -1 if there are no elements non-`null` elements in [this].
+ * Returns -1 if there are no non-`null` elements in [this].
  *
  * @param isBetterThan A function defining what it means for a value to be "better" than another.
  */
@@ -50,7 +50,7 @@ internal inline fun <C> Sequence<C>.indexOfBestNotNullBy(isBetterThan: IsBetterT
  * Returns the index of the first element in this sequence
  * that is not [NA (null or NaN)][NA] and is better than all previous elements.
  *
- * Returns -1 if there are no elements non-`NA` elements in [this].
+ * Returns -1 if there are no non-`NA` elements in [this].
  *
  * @param isBetterThan A function defining what it means for a value to be "better" than another.
  */

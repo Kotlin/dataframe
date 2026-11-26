@@ -18,7 +18,7 @@ public sealed interface FieldType {
 
 /**
  * Returns whether the column type ends with `?` or not.
- * NOTE: for [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
+ * NOTE: for [<code>FieldType.FrameFieldType</code>][FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
  */
 public fun FieldType.isNullable(): Boolean =
     when (this) {
@@ -29,15 +29,15 @@ public fun FieldType.isNullable(): Boolean =
 
 /**
  * Returns whether the column type doesn't end with `?` or whether it does.
- * NOTE: for [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
+ * NOTE: for [<code>FieldType.FrameFieldType</code>][FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
  */
 public fun FieldType.isNotNullable(): Boolean = !isNullable()
 
 private fun String.toNullable() = if (this.last() == '?' || this == "*") this else "$this?"
 
 /**
- * Returns a new fieldType with the same type but with nullability in the column type.
- * NOTE: for [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
+ * Returns a new fieldType with the same type but with nullability enabled in the column type.
+ * NOTE: for [<code>FieldType.FrameFieldType</code>][FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
  */
 public fun FieldType.toNullable(): FieldType =
     if (isNotNullable()) {
@@ -52,7 +52,7 @@ public fun FieldType.toNullable(): FieldType =
 
 /**
  * Returns a new fieldType with the same type but with nullability disabled in the column type.
- * NOTE: for [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
+ * NOTE: for [<code>FieldType.FrameFieldType</code>][FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
  */
 public fun FieldType.toNotNullable(): FieldType =
     if (isNullable()) {
@@ -130,6 +130,8 @@ public class ValidFieldName private constructor(private val identifier: String, 
                     .replace("`", "'")
                     .replace(";", " ")
                     .replace("\\", " ")
+                    .replace("\n", " ")
+                    .replace("\r", " ")
             }
 
             return ValidFieldName(result, needsQuote)

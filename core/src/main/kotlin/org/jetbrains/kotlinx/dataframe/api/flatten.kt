@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -22,7 +23,7 @@ import kotlin.reflect.KProperty
  * Removes {@get [FlattenDocs.GROUPS]} column groups in the [DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
- * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
+ * Potential column name clashes are resolved by adding the minimal possible name prefix from ancestor columns.
  *
  * The columns to flatten need to be selected.
  * See [Selecting Columns][FlattenDocs.FlattenSelectingOptions] for all the selecting options
@@ -39,17 +40,14 @@ import kotlin.reflect.KProperty
  *
  * @see {@include [DocumentationUrls.Flatten]}
  */
-@ExcludeFromSources
-@Suppress("ClassName")
 private interface FlattenDocs {
-    interface FLATTEN_PARAM
-
-    interface GROUPS
+    typealias FLATTEN_PARAM = Nothing
+    typealias GROUPS = Nothing
 
     /**
      * @include [SelectingColumns] {@set [SelectingColumns.OPERATION] [flatten][flatten]}
      */
-    interface FlattenSelectingOptions
+    typealias FlattenSelectingOptions = Nothing
 }
 
 /**
@@ -78,6 +76,8 @@ public fun <T, C> DataFrame<T>.flatten(
  * {@include [FlattenDocs]}
  * {@set [FlattenDocs.GROUPS] selected}
  */
+@Refine
+@StringApiInterpretable(interpreter = "Flatten0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.flatten(
     vararg columns: String,
     keepParentNameForColumns: Boolean = false,

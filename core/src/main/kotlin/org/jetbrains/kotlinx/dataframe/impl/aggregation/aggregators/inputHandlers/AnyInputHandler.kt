@@ -14,7 +14,8 @@ import kotlin.reflect.KType
  *
  * When calculating the value type, it will try to find the common type in terms of inheritance.
  */
-internal class AnyInputHandler<in Value : Any, out Return : Any?> : AggregatorInputHandler<Value, Return> {
+internal class AnyInputHandler<in Value : Any, out Return : Any?>(override val valueTypeIfEmpty: KType = nothingType) :
+    AggregatorInputHandler<Value, Return> {
 
     /** No preprocessing is done on the input values. */
     override fun preprocessAggregation(
@@ -26,7 +27,14 @@ internal class AnyInputHandler<in Value : Any, out Return : Any?> : AggregatorIn
      * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],
      * this function can be called to calculate it in terms of inheritance by combining the set of known [valueTypes].
      */
-    override fun calculateValueType(valueTypes: Set<KType>): ValueType = valueTypes.commonType(false).toValueType()
+    override fun calculateValueType(valueTypes: Set<KType>): ValueType =
+        if (valueTypes.isEmpty()) {
+            valueTypeIfEmpty.toValueType()
+        } else {
+            valueTypes
+                .commonType(false)
+                .toValueType()
+        }
 
     /**
      * WARNING: HEAVY!
@@ -46,7 +54,7 @@ internal class AnyInputHandler<in Value : Any, out Return : Any?> : AggregatorIn
             }
         }.toSet()
         return if (classes.isEmpty()) {
-            nothingType(hasNulls)
+            valueTypeIfEmpty
         } else {
             classes.commonType(hasNulls)
         }.toValueType()

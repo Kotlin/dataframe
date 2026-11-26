@@ -2,11 +2,15 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
+import org.jetbrains.kotlinx.dataframe.api.getColumns
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.asArrayAsListOrNull
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -17,102 +21,236 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.dataframe.util.PRINT
 import java.math.BigDecimal
 
-internal fun AnyFrame.renderToString(
-    rowsLimit: Int = 20,
-    valueLimit: Int = 40,
+/**
+ * Renders this [<code>DataFrame</code>][DataFrame] to a [<code>String</code>][String] as a text table.
+ *
+ * Use it when you need the rendered table as a [<code>String</code>][String] instead of printing it.
+ *
+ * See also [<code>print</code>][org.jetbrains.kotlinx.dataframe.api.print] — prints the rendered table to standard output.
+ *
+ * @param [rowsLimit] The maximum number of rows to render (default: `20`). When some rows are skipped,
+ * a `...` line and the total column and row counts are rendered below the table. `null` renders all rows;
+ * a negative value throws [<code>IllegalArgumentException</code>][IllegalArgumentException].
+ * @param [valueLimit] The maximum length of a rendered cell value (default: `40`). Longer values are cut
+ * to `valueLimit` characters ending in `...`, or replaced with just `...` when `valueLimit` is 1 to 3.
+ * `null` does not limit the length; a non-positive value throws [<code>IllegalArgumentException</code>][IllegalArgumentException].
+ * @param [borders] Whether to draw borders around the table (default: `false`).
+ * @param [alignLeft] Whether to align the cell content to the left instead of the right (default: `false`).
+ * @param [columnTypes] Whether to render the column types under the header (default: `true`).
+ * @param [title] Whether to add a `DataFrame [rows x columns]` line above the table (default: `false`).
+ * @param [rowIndex] Whether to include the row index as the first column (default: `true`).
+ * @param [borderStyle] The style of the border characters drawn when [borders] is `true`
+ * (default: [<code>StringBorderStyle.DottedLineWithRounderCorners</code>][org.jetbrains.kotlinx.dataframe.io.StringBorderStyle.DottedLineWithRounderCorners]).
+ *
+ * @return This [<code>DataFrame</code>][DataFrame] rendered as a text table.
+ */
+public fun AnyFrame.renderToString(
+    rowsLimit: Int? = 20,
+    valueLimit: Int? = 40,
     borders: Boolean = false,
     alignLeft: Boolean = false,
-    columnTypes: Boolean = false,
+    columnTypes: Boolean = true,
     title: Boolean = false,
     rowIndex: Boolean = true,
+    borderStyle: StringBorderStyle = StringBorderStyle.DottedLineWithRounderCorners,
 ): String {
+    require(rowsLimit == null || rowsLimit >= 0) { "Requested rows count $rowsLimit is less than zero." }
+    require(valueLimit == null || valueLimit > 0) { "Requested value limit $valueLimit is not positive." }
     val sb = StringBuilder()
+    val table = prepareTable(rowsLimit, valueLimit, columnTypes, rowIndex)
+    val columnWidths = table.values.mapIndexed { col, vals ->
+        (vals + table.header[col] + (table.types?.get(col) ?: "")).maxOf { it.length } + 2
+    }
 
     // title
     if (title) {
-        sb.appendLine("Data Frame [${size()}]")
+        sb.appendLine("DataFrame [${size()}]")
         sb.appendLine()
     }
-
-    // data
-    val rowsCount = rowsLimit.coerceAtMost(nrow)
-    val cols = if (rowIndex) listOf((0 until rowsCount).toColumn()) + columns() else columns()
-    val header = cols.mapIndexed { colIndex, col ->
-        if (columnTypes && (!rowIndex || colIndex > 0)) {
-            "${col.name()}:${renderType(col)}"
-        } else {
-            col.name()
-        }
-    }
-    val values = cols.map {
-        val top = it.take(rowsLimit)
-        val precision = if (top.isNumber()) top.asNumbers().scale() else 0
-        val decimalFormat =
-            if (precision >= 0) RendererDecimalFormat.fromPrecision(precision) else RendererDecimalFormat.of("%e")
-        top.values().map {
-            renderValueForStdout(it, valueLimit, decimalFormat = decimalFormat).truncatedContent
-        }
-    }
-    val columnLengths = values.mapIndexed { col, vals -> (vals + header[col]).map { it.length }.maxOrNull()!! + 1 }
 
     // top border
     if (borders) {
-        sb.append("\u230C")
-        for (i in 1 until columnLengths.sum() + columnLengths.size) sb.append('-')
-        sb.append("\u230D")
+        sb.append(borderStyle.topLeft)
+        repeat(columnWidths.sum() + columnWidths.size - 1) { sb.append(borderStyle.horizontal) }
+        sb.append(borderStyle.topRight)
         sb.appendLine()
-        sb.append("|")
+        sb.append(borderStyle.vertical)
     }
 
     // header
-    for (col in header.indices) {
-        val len = columnLengths[col]
-        val str = header[col]
-        val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
+    for (col in table.header.indices) {
+        val width = columnWidths[col]
+        val str = table.header[col]
+        val padded = if (alignLeft) str.padEnd(width) else str.padStart(width)
         sb.append(padded)
-        if (borders) sb.append("|")
+        if (borders) sb.append(borderStyle.vertical)
     }
     sb.appendLine()
 
+    table.types?.let { types ->
+        if (borders) sb.append(borderStyle.vertical)
+        for (col in table.header.indices) {
+            val width = columnWidths[col]
+            val str = types[col]
+            val padded = if (alignLeft) str.padEnd(width) else str.padStart(width)
+            sb.append(padded)
+            if (borders) sb.append(borderStyle.vertical)
+        }
+        sb.appendLine()
+    }
+
     // header splitter
     if (borders) {
-        sb.append("|")
-        for (colLength in columnLengths) {
-            for (i in 1..colLength) sb.append('-')
-            sb.append("|")
+        sb.append(borderStyle.vertical)
+        for (colWidth in columnWidths) {
+            repeat(colWidth) { sb.append(borderStyle.horizontal) }
+            sb.append(borderStyle.headerSplit)
+        }
+        sb.appendLine()
+    } else {
+        for ((i, colWidth) in columnWidths.withIndex()) {
+            val splitterSize = minOf(colWidth, 4)
+            val char = if (rowIndex && i == 0) " " else "-"
+            val str = char.repeat(splitterSize)
+            val padded = if (alignLeft) str.padEnd(colWidth) else str.padStart(colWidth)
+            sb.append(padded)
         }
         sb.appendLine()
     }
 
     // data
-    for (row in 0 until rowsCount) {
-        if (borders) sb.append("|")
-        for (col in values.indices) {
-            val len = columnLengths[col]
-            val str = values[col][row]
-            val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
+    for (row in 0 until table.rowsCount) {
+        if (borders) sb.append(borderStyle.vertical)
+        for (col in table.values.indices) {
+            val width = columnWidths[col]
+            val str = table.values[col][row]
+            val padded = if (alignLeft) str.padEnd(width) else str.padStart(width)
             sb.append(padded)
-            if (borders) sb.append("|")
+            if (borders) sb.append(borderStyle.vertical)
         }
         sb.appendLine()
     }
 
     // footer
-    if (nrow > rowsLimit) {
+    if (table.totalRows > table.rowsCount) {
         sb.appendLine("...")
+        sb.appendLine("${size.ncol} columns x ${size.nrow} rows")
     } else if (borders) {
-        sb.append("\u230E")
-        for (i in 1 until columnLengths.sum() + columnLengths.size) sb.append('-')
-        sb.append("\u230F")
+        sb.append(borderStyle.bottomLeft)
+        repeat(columnWidths.sum() + columnWidths.size - 1) { sb.append(borderStyle.horizontal) }
+        sb.append(borderStyle.bottomRight)
         sb.appendLine()
     }
     return sb.toString()
 }
 
-internal val valueToStringLimitDefault = 1000
-internal val valueToStringLimitForRowAsTable = 50
+@Deprecated(message = PRINT, level = DeprecationLevel.HIDDEN)
+public fun AnyFrame.renderToString(
+    rowsLimit: Int = 20,
+    valueLimit: Int = 40,
+    borders: Boolean = false,
+    alignLeft: Boolean = false,
+    columnTypes: Boolean = true,
+    title: Boolean = false,
+    rowIndex: Boolean = true,
+): String = renderToString(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, rowIndex)
+
+public interface StringBorderStyle {
+    public val topLeft: String
+    public val topRight: String
+    public val bottomLeft: String
+    public val bottomRight: String
+    public val horizontal: String
+    public val vertical: String
+    public val headerSplit: String
+
+    public object DottedLineWithRounderCorners : StringBorderStyle {
+        public override val topLeft: String = "\u230C"
+        public override val topRight: String = "\u230D"
+        public override val bottomLeft: String = "\u230E"
+        public override val bottomRight: String = "\u230F"
+        public override val horizontal: String = "-"
+        public override val vertical: String = "|"
+        public override val headerSplit: String = "|"
+    }
+
+    public object ContinuousWithRoundedCorners : StringBorderStyle {
+        public override val topLeft: String = "╭"
+        public override val topRight: String = "╮"
+        public override val bottomLeft: String = "╰"
+        public override val bottomRight: String = "╯"
+        public override val horizontal: String = "─"
+        public override val vertical: String = "│"
+        public override val headerSplit: String = "┼"
+    }
+
+    public object ContinuousWithSquareCorners : StringBorderStyle {
+        public override val topLeft: String = "┌"
+        public override val topRight: String = "┐"
+        public override val bottomLeft: String = "└"
+        public override val bottomRight: String = "┘"
+        public override val horizontal: String = "─"
+        public override val vertical: String = "│"
+        public override val headerSplit: String = "┼"
+    }
+
+    public companion object
+}
+
+internal class PreparedTable(
+    val header: List<String>,
+    val types: List<String>?,
+    val values: List<List<String>>,
+    val rowsCount: Int,
+    val totalRows: Int,
+)
+
+internal fun AnyFrame.prepareTable(
+    rowsLimit: Int?,
+    valueLimit: Int?,
+    columnTypes: Boolean,
+    rowIndex: Boolean,
+    escapeValue: (String) -> String = { it },
+): PreparedTable {
+    val rowsCount = rowsLimit?.coerceAtMost(nrow) ?: rowsCount()
+    val cols = if (rowIndex) listOf((0..<rowsCount).toColumn()) + columns() else columns()
+    val header = cols.map { col -> col.name() }
+    val types = if (columnTypes) {
+        cols.mapIndexed { colIndex, col ->
+            if (!rowIndex || colIndex > 0) {
+                renderType(col)
+            } else {
+                ""
+            }
+        }
+    } else {
+        null
+    }
+    val values = cols.map { col ->
+        val top = col.take(rowsCount)
+        val precision = if (top.isNumber()) {
+            top.asNumbers().scale()
+        } else if (top.isColumnGroup()) {
+            top.getColumns { colsAtAnyDepth().filter { it.isNumber() } }.maxOfOrNull {
+                it.asNumbers().scale()
+            } ?: 0
+        } else {
+            0
+        }
+        val decimalFormat =
+            if (precision >= 0) RendererDecimalFormat.fromPrecision(precision) else RendererDecimalFormat.of("%e")
+        top.values().map {
+            escapeValue(renderValueForStdout(it, valueLimit ?: -1, decimalFormat = decimalFormat).truncatedContent)
+        }
+    }
+    return PreparedTable(header, types, values, rowsCount, nrow)
+}
+
+internal const val VALUE_TO_STRING_LIMIT_DEFAULT = 1000
+internal const val VALUE_TO_STRING_LIMIT_FOR_ROW_AS_TABLE = 50
 
 internal fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
     fun Any?.skip(): Boolean =
@@ -125,13 +263,13 @@ internal fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
     return owner.columns().map { it.name() to it[index] }.filter { !it.second.skip() }
 }
 
-internal fun AnyRow.renderToString(): String {
+internal fun AnyRow.renderToString(decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT): String {
     val values = getVisibleValues()
     if (values.isEmpty()) return "{ }"
     return values.joinToString(
         prefix = "{ ",
         postfix = " }",
-    ) { "${it.first}:${renderValueForStdout(it.second).truncatedContent}" }
+    ) { "${it.first}:${renderValueForStdout(it.second, decimalFormat = decimalFormat).truncatedContent}" }
 }
 
 internal fun AnyRow.renderToStringTable(forHtml: Boolean = false): String {
@@ -163,15 +301,15 @@ internal fun renderValueForRowTable(value: Any?, forHtml: Boolean): RenderedCont
         is Collection<*> -> renderCollectionName(value).let { RenderedContent.textWithLength("$it $value", it.length) }
 
         else -> if (forHtml) {
-            renderValueForHtml(value, valueToStringLimitForRowAsTable, RendererDecimalFormat.DEFAULT)
+            renderValueForHtml(value, VALUE_TO_STRING_LIMIT_FOR_ROW_AS_TABLE, RendererDecimalFormat.DEFAULT)
         } else {
-            renderValueForStdout(value, valueToStringLimitForRowAsTable)
+            renderValueForStdout(value, VALUE_TO_STRING_LIMIT_FOR_ROW_AS_TABLE)
         }
     }
 
 internal fun renderValueForStdout(
     value: Any?,
-    limit: Int = valueToStringLimitDefault,
+    limit: Int = VALUE_TO_STRING_LIMIT_DEFAULT,
     decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
 ): RenderedContent =
     renderValueToString(value, decimalFormat)
@@ -191,6 +329,8 @@ internal fun renderValueToString(value: Any?, decimalFormat: RendererDecimalForm
         is List<*> -> if (value.isEmpty()) "[ ]" else value.toString()
 
         is Array<*> -> if (value.isEmpty()) "[ ]" else value.toList().toString()
+
+        is AnyRow -> value.renderToString(decimalFormat)
 
         else ->
             value?.asArrayAsListOrNull()

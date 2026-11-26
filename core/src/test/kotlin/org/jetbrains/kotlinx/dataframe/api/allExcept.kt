@@ -18,7 +18,7 @@ class AllExceptTests : ColumnsSelectionDslTests() {
 
     @Test
     fun `issue 761`() {
-        val renamed = df.rename { colsAtAnyDepth() except name.firstName }.into { it.name.uppercase() }
+        val renamed = df.rename { colsAtAnyDepth() except name.firstName }.to { it.name.uppercase() }
         renamed.columnNames() shouldBe listOf("NAME", "AGE", "CITY", "WEIGHT", "ISHAPPY")
         renamed.getColumnGroup("NAME").columnNames() shouldBe listOf("firstName", "LASTNAME")
 
@@ -43,7 +43,7 @@ class AllExceptTests : ColumnsSelectionDslTests() {
     }
 
     @Test
-    fun `exceptions`() {
+    fun exceptions() {
         shouldThrow<IllegalStateException> {
             dfGroup.select {
                 name.firstName.allColsExcept("firstName"["secondName"])
@@ -113,26 +113,26 @@ class AllExceptTests : ColumnsSelectionDslTests() {
         val nameAccessor = column<String>("name")
         listOf(
             df.select { cols(age, weight, isHappy) },
-            df.select { cols().except { cols { it.name in listOf("name", "city") } } },
-            df.select { cols().except { cityAccessor and nameAccessor } },
-            df.select { cols().except { city and name } },
-            df.select { cols().except(city and name) },
-            df.select { cols().except(city, name) },
-            df.select { cols().except(cityAccessor, nameAccessor) },
-            df.select { cols().except("city", "name") },
-            df.select { cols().except(Person::city, Person::name) },
-            df.select { cols().except(pathOf("city"), pathOf("name")) },
+            df.select { all().except { cols { it.name in listOf("name", "city") } } },
+            df.select { all().except { cityAccessor and nameAccessor } },
+            df.select { all().except { city and name } },
+            df.select { all().except(city and name) },
+            df.select { all().except(city, name) },
+            df.select { all().except(cityAccessor, nameAccessor) },
+            df.select { all().except("city", "name") },
+            df.select { all().except(Person::city, Person::name) },
+            df.select { all().except(pathOf("city"), pathOf("name")) },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { cols(age, city, weight, isHappy) },
-            df.select { cols() except { cols { it.name == "name" } } },
-            df.select { cols() except cols { it.name == "name" } },
-            df.select { cols() except nameAccessor },
-            df.select { cols() except name },
-            df.select { cols() except "name" },
-            df.select { cols() except Person::name },
-            df.select { cols() except pathOf("name") },
+            df.select { all() except { cols { it.name == "name" } } },
+            df.select { all() except cols { it.name == "name" } },
+            df.select { all() except nameAccessor },
+            df.select { all() except name },
+            df.select { all() except "name" },
+            df.select { all() except Person::name },
+            df.select { all() except pathOf("name") },
         ).shouldAllBeEqual()
 
         listOf(

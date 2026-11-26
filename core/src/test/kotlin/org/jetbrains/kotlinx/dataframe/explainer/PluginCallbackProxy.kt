@@ -96,11 +96,11 @@ object PluginCallbackProxy : PluginCallback {
                                 """
                                 <details>
                                 <summary>${
-                                    expressions.joinToString(".") { it.source }.also {
-                                        if (it.length > 95) {
-                                            TODO(
-                                                "expression is too long ${it.length}. better to split sample in multiple snippets",
-                                            )
+                                    expressions.joinToString(".") { it.source }.let {
+                                        if (it.length > 70) {
+                                            it.take(70) + "..."
+                                        } else {
+                                            it
                                         }
                                     }.escapeHtmlForIFrame()
                                 }</summary>

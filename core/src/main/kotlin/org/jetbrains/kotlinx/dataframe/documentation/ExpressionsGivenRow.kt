@@ -30,7 +30,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  *
  * @include [AddDataRowNote]
  *
- * A {@include [RowExpressionLink]} is similar to a {@include [RowConditionLink]} but that expects a [Boolean] as result.
+ * A {@include [RowExpressionLink]} is similar to a {@include [RowConditionLink]} but expects a [Boolean] as result.
  */
 internal interface ExpressionsGivenRow {
 
@@ -38,12 +38,13 @@ internal interface ExpressionsGivenRow {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface OPERATION
-
+    @ExcludeFromSources
+    typealias OPERATION = Nothing
     // Using <code>` notation to not create double `` when including
 
     /** {@set [OPERATION] <code>`operation`</code>} */
-    interface SetDefaultOperationArg
+    @ExcludeFromSources
+    typealias SetDefaultOperationArg = Nothing
 
     /**
      * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
@@ -53,9 +54,13 @@ internal interface ExpressionsGivenRow {
      * [RowExpression][DfRowExpression] that provides access to
      * the modified/generated value of the preceding row ([AddDataRow.newValue]).
      */
-    interface AddDataRowNote
+    typealias AddDataRowNote = Nothing
 
-    /** Provide a new value for every selected cell given its row using a [row expression][DfRowExpression]. */
+    /**
+     * Provide a new value for every selected cell given its row using a [row expression][DfRowExpression].
+     *
+     * For more information, {@include [DocumentationUrls.DataRow.RowExpression]}
+     */
     interface RowExpression {
 
         /**
@@ -68,14 +73,17 @@ internal interface ExpressionsGivenRow {
          * `df.`{@get [OPERATION]}` { 2021 - age }`
          * @include [SetDefaultOperationArg]
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [Row Expression][RowExpression.WithExample] */
-    interface RowExpressionLink
+    @ExcludeFromSources
+    typealias RowExpressionLink = Nothing
 
     /** Provide a new value for every selected cell given its row and its previous value using a
      * [row value expression][DfRowValueExpression].
+     *
+     * For more information, {@include [DocumentationUrls.DataRow.RowValueExpression]}
      */
     interface RowValueExpression {
 
@@ -89,12 +97,14 @@ internal interface ExpressionsGivenRow {
          * `df.`{@get [OPERATION]}` { it.uppercase() }`
          * {@include [SetDefaultOperationArg]}
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [Row Value Expression][RowValueExpression.WithExample] */
-    interface RowValueExpressionLink
+    @ExcludeFromSources
+    typealias RowValueExpressionLink = Nothing
 }
 
 /** [Row Expression][ExpressionsGivenRow] */
-internal interface RowExpressionsLink
+@ExcludeFromSources
+internal typealias RowExpressionsLink = Nothing

@@ -7,58 +7,71 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
+public class ExplodeWrongColumnKindException(public val df: DataFrame<*>, public val col: ColumnWithPath<*>) :
+    IllegalArgumentException() {
+    override val message: String =
+        "Column '${col.path.joinToString()}' cannot be exploded: expected a FrameColumn or " +
+            "a ValueColumn of List, but got ${col.kind()} of type ${col.type()}"
+}
+
+private fun ColumnWithPath<*>.canBeExploded() = isList() || isFrameColumn()
+
 private val defaultExplodeColumns: ColumnsSelector<*, *> = {
-    colsAtAnyDepth().filter { it.isList() || it.isFrameColumn() }
+    colsAtAnyDepth().filter { it.canBeExploded() }
 }
 
 // region explode DataFrame
 
 /**
- * Splits list-like values in the specified [columns] and spreads them vertically —
+ * Splits list-like values in the specified [<code>columns</code>][columns] and spreads them vertically —
  * that is, it adds a separate row for each element (one value per row).
  * Values in all other columns are duplicated to preserve row context.
  *
- * If no [columns] are specified, all columns (at any depth) containing
- * [List] or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] values will be exploded.
+ * If no [<code>columns</code>][columns] are specified, all columns (at any depth) containing
+ * [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] values will be exploded.
  *
- * If [dropEmpty] is `true`, rows with empty lists or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s will be removed.
+ * If [<code>dropEmpty</code>][dropEmpty] is `true`, rows with empty lists or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s will be removed.
  * If `false`, such rows will be exploded into `null` values.
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns.
  *
  * Each exploded column will have a new type (`List<T>` -> `T`).
  * When several columns are exploded in one operation, lists in different columns will be aligned.
  *
- * This operation is the reverse of [implode][org.jetbrains.kotlinx.dataframe.api.implode].
+ * This operation is the reverse of [<code>implode</code>][org.jetbrains.kotlinx.dataframe.api.implode].
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, see: [See `explode` on the documentation website.](https://kotlin.github.io/dataframe/explode.html)
  *
  * ### This `explode` overload
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
- * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ *
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ *
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * #### NOTE:
- * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
- * in this DSL directly with any function, they are NOT valid return types for the
- * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
- * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
- * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -77,44 +90,56 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = {
  * df.explode { colsOf<List<Double>>() }
  * ```
  *
- * @param dropEmpty If `true`, removes rows with empty lists or DataFrames.
- *                  If `false`, such rows will be exploded into `null` values.
- * @param columns The [ColumnsSelector] used to select columns to explode.
- *                If not specified, all applicable columns will be exploded.
- * @return A new [DataFrame] with exploded columns.
+ * @param [dropEmpty] If `true`, rows with empty [<code>List</code>][List]s or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s are removed.
+ * If `false`, such rows will be exploded into `null` values.
+ * @param selector The [<code>ColumnsSelector</code>][ColumnsSelector] used to select columns to explode.
+ * If not specified, all applicable columns (i.e., of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]) will be exploded.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns.
+ * @throws IllegalArgumentException if the specified columns are not of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  */
 @Refine
 @Interpretable("Explode0")
 public fun <T> DataFrame<T>.explode(
     dropEmpty: Boolean = true,
-    columns: ColumnsSelector<T, *> = defaultExplodeColumns,
-): DataFrame<T> = explodeImpl(dropEmpty, columns)
+    selector: ColumnsSelector<T, *> = defaultExplodeColumns,
+): DataFrame<T> {
+    getColumnsWithPaths(selector).forEach { col ->
+        if (!col.canBeExploded()) {
+            throw ExplodeWrongColumnKindException(this, col)
+        }
+    }
+    return explodeImpl(dropEmpty, selector)
+}
 
 /**
- * Splits list-like values in the specified [columns] and spreads them vertically —
+ * Splits list-like values in the specified [<code>columns</code>][columns] and spreads them vertically —
  * that is, it adds a separate row for each element (one value per row).
  * Values in all other columns are duplicated to preserve row context.
  *
- * If no [columns] are specified, all columns (at any depth) containing
- * [List] or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] values will be exploded.
+ * If no [<code>columns</code>][columns] are specified, all columns (at any depth) containing
+ * [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] values will be exploded.
  *
- * If [dropEmpty] is `true`, rows with empty lists or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s will be removed.
+ * If [<code>dropEmpty</code>][dropEmpty] is `true`, rows with empty lists or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s will be removed.
  * If `false`, such rows will be exploded into `null` values.
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns.
  *
  * Each exploded column will have a new type (`List<T>` -> `T`).
  * When several columns are exploded in one operation, lists in different columns will be aligned.
  *
- * This operation is the reverse of [implode][org.jetbrains.kotlinx.dataframe.api.implode].
+ * This operation is the reverse of [<code>implode</code>][org.jetbrains.kotlinx.dataframe.api.implode].
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, see: [See `explode` on the documentation website.](https://kotlin.github.io/dataframe/explode.html)
  *
  * ### This `explode` overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ *
+ *
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### Example
  *
@@ -124,12 +149,15 @@ public fun <T> DataFrame<T>.explode(
  * val exploded = df.explode("tags", "scores")
  * ```
  *
- * @param dropEmpty If `true`, removes rows with empty lists or DataFrames.
- *                  If `false`, such rows will be exploded into `null` values.
- * @param columns The [column names][String] used to select columns to explode.
- *                If not specified, all applicable columns will be exploded.
- * @return A new [DataFrame] with exploded columns.
+ * @param [dropEmpty] If `true`, rows with empty [<code>List</code>][List]s or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s are removed.
+ * If `false`, such rows will be exploded into `null` values.
+ * @param columns The [<code>column names</code>][String] used to select columns to explode.
+ * If not specified, all applicable columns (i.e., of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]) will be exploded.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns.
+ * @throws IllegalArgumentException if the specified columns are not of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  */
+@Refine
+@StringApiInterpretable(interpreter = "Explode0", stringArgument = "columns", targetArgument = "selector")
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
@@ -148,43 +176,43 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
 // region explode DataRow
 
 /**
- * Splits list-like values in the specified [columns] of this [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] and spreads them vertically —
+ * Splits list-like values in the specified [<code>columns</code>][columns] of this [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] and spreads them vertically —
  * that is, it adds a separate row for each element (one value per row)
- * and combine them into new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * and combines them into a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  * Values in all other columns are duplicated to preserve row context.
  *
- * If no [columns] are specified, all columns (at any depth) containing
- * [List] or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] values will be exploded.
+ * If no [<code>columns</code>][columns] are specified, all columns (at any depth) containing
+ * [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] values will be exploded.
  *
- * If [dropEmpty] is `true`, the result will exclude rows with empty lists or DataFrames.
+ * If [<code>dropEmpty</code>][dropEmpty] is `true`, the result will exclude rows with empty lists or DataFrames.
  * If `false`, such values will be exploded into `null`.
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] expanded into multiple rows based on the exploded columns.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] expanded into multiple rows based on the exploded columns.
  *
  * Each exploded column will have a new type (`List<T>` → `T`).
  * When several columns are exploded in one operation, lists in different columns will be aligned.
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, see: [See `explode` on the documentation website.](https://kotlin.github.io/dataframe/explode.html)
  *
  * ### This `explode` overload
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
- * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ *
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ *
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * #### NOTE:
- * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
- * in this DSL directly with any function, they are NOT valid return types for the
- * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
- * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
- * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -198,41 +226,48 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
  * row.explode { hobbies and scores }
  * ```
  *
- * @param dropEmpty If `true`, removes rows with empty lists or DataFrames.
- *                  If `false`, such rows will be exploded into `null` values.
- * @param columns The [ColumnsSelector] used to select columns to explode.
- *                 If not specified, all applicable columns will be exploded.
- * @return A new [DataFrame] with exploded columns from this [DataRow].
+ * @param [dropEmpty] If `true`, rows with empty [<code>List</code>][List]s or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s are removed.
+ * If `false`, such rows will be exploded into `null` values.
+ * @param columns The [<code>ColumnsSelector</code>][ColumnsSelector] used to select columns to explode.
+ * If not specified, all applicable columns (i.e., of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]) will be exploded.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns from this [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
+ * @throws IllegalArgumentException if the specified columns are not of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  */
+@Refine
+@Interpretable("ExplodeColumns")
 public fun <T> DataRow<T>.explode(
     dropEmpty: Boolean = true,
     columns: ColumnsSelector<T, *> = defaultExplodeColumns,
 ): DataFrame<T> = toDataFrame().explode(dropEmpty, columns)
 
 /**
- * Splits list-like values in the specified [columns] of this [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] and spreads them vertically —
+ * Splits list-like values in the specified [<code>columns</code>][columns] of this [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] and spreads them vertically —
  * that is, it adds a separate row for each element (one value per row)
- * and combine them into new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * and combines them into a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  * Values in all other columns are duplicated to preserve row context.
  *
- * If no [columns] are specified, all columns (at any depth) containing
- * [List] or [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] values will be exploded.
+ * If no [<code>columns</code>][columns] are specified, all columns (at any depth) containing
+ * [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] values will be exploded.
  *
- * If [dropEmpty] is `true`, the result will exclude rows with empty lists or DataFrames.
+ * If [<code>dropEmpty</code>][dropEmpty] is `true`, the result will exclude rows with empty lists or DataFrames.
  * If `false`, such values will be exploded into `null`.
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] expanded into multiple rows based on the exploded columns.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] expanded into multiple rows based on the exploded columns.
  *
  * Each exploded column will have a new type (`List<T>` → `T`).
  * When several columns are exploded in one operation, lists in different columns will be aligned.
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, see: [See `explode` on the documentation website.](https://kotlin.github.io/dataframe/explode.html)
  *
  * ### This `explode` overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ *
+ *
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### Example
  *
@@ -242,12 +277,15 @@ public fun <T> DataRow<T>.explode(
  * row.explode("hobbies", "scores")
  * ```
  *
- * @param dropEmpty If `true`, removes rows with empty lists or DataFrames.
- *                  If `false`, such rows will be exploded into `null` values.
- * @param columns The [column names][String] used to select columns to explode.
- *                 If not specified, all applicable columns will be exploded.
- * @return A new [DataFrame] with exploded columns from this [DataRow].
+ * @param [dropEmpty] If `true`, rows with empty [<code>List</code>][List]s or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s are removed.
+ * If `false`, such rows will be exploded into `null` values.
+ * @param columns The [<code>column names</code>][String] used to select columns to explode.
+ * If not specified, all applicable columns (i.e., of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]) will be exploded.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns from this [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
+ * @throws IllegalArgumentException if the specified columns are not of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  */
+@Refine
+@StringApiInterpretable(interpreter = "ExplodeColumns", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataRow<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
@@ -266,29 +304,29 @@ public fun <T, C> DataRow<T>.explode(vararg columns: KProperty<C>, dropEmpty: Bo
 // region explode DataColumn
 
 /**
- * Splits list-like values in this [DataColumn] and spreads them vertically —
+ * Splits list-like values in this [<code>DataColumn</code>][DataColumn] and spreads them vertically —
  * that is, it adds a separate row for each element (one value per row).
  *
- * Returns a new [DataColumn] with the exploded values.
+ * Returns a new [<code>DataColumn</code>][DataColumn] with the exploded values.
  * The resulting column will have a new type (`List<T>` → `T`).
  *
  * For more information, see: [See `explode` on the documentation website.](https://kotlin.github.io/dataframe/explode.html)
  *
- * @return A new [DataColumn] with exploded values.
+ * @return A new [<code>DataColumn</code>][DataColumn] with exploded values.
  */
 @JvmName("explodeList")
 public fun <T> DataColumn<Collection<T>>.explode(): DataColumn<T> = explodeImpl() as DataColumn<T>
 
 /**
- * Explodes a [DataColumn] of [DataFrame] values into a single [ColumnGroup].
+ * Explodes a [<code>DataColumn</code>][DataColumn] of [<code>DataFrame</code>][DataFrame] values into a single [<code>ColumnGroup</code>][ColumnGroup].
  *
- * Each nested [DataFrame] is unwrapped, and its columns are placed side by side
+ * Each nested [<code>DataFrame</code>][DataFrame] is unwrapped, and its columns are placed side by side
  * within a column group named after the original column.
  * The number of resulting rows equals the total number of rows across all nested DataFrames.
  *
  * For more information, see: [See `explode` on the documentation website.](https://kotlin.github.io/dataframe/explode.html)
  *
- * @return A [ColumnGroup] containing the concatenated contents of all nested DataFrames.
+ * @return A [<code>ColumnGroup</code>][ColumnGroup] containing the concatenated contents of all nested DataFrames.
  */
 @JvmName("explodeFrames")
 public fun <T> DataColumn<DataFrame<T>>.explode(): ColumnGroup<T> = concat().asColumnGroup(name())

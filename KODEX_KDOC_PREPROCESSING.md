@@ -1,0 +1,479 @@
+# KDoc Preprocessing with KoDEx
+
+You might have spotted some notations like `{@include [Something]}` in the `/** KDocs */` of DataFrame's source code.
+These are special notations for [KoDEx](https://github.com/Jolanrensen/KoDEx)
+that we use to generate parts of the KDoc documentation.
+
+Kotlin libraries like DataFrame use KDoc to document their code and especially their public API. This allows users
+to understand how to use the library and what to expect from it. However, writing KDoc can be a tedious task, especially
+when you have to repeat the same information in multiple places. KoDEx allows us to write the
+information only once and then include it in multiple places.
+
+This document explains how to use KoDEx in the DataFrame project.
+
+<!-- TOC -->
+* [KDoc Preprocessing with KoDEx](#kdoc-preprocessing-with-kodex)
+  * [How the Processing Works](#how-the-processing-works)
+  * [Previewing the Processed KDocs in IntelliJ IDEA](#previewing-the-processed-kdocs-in-intellij-idea)
+  * [Notation](#notation)
+    * [`@include`: Including content from other KDocs](#include-including-content-from-other-kdocs)
+    * [`@includeFile`: Including all content from a relative file](#includefile-including-all-content-from-a-relative-file)
+    * [`@set` and `@get` / `$`: Setting and getting variables](#set-and-get---setting-and-getting-variables)
+    * [`@comment`: Commenting out KDoc content](#comment-commenting-out-kdoc-content)
+    * [`@sample` and `@sampleNoComments`: Including code samples](#sample-and-samplenocomments-including-code-samples)
+    * [`@exportAsHtmlStart` and `@exportAsHtmlEnd`: Exporting content as HTML](#exportashtmlstart-and-exportashtmlend-exporting-content-as-html)
+    * [`\`: Escape Character](#-escape-character)
+    * [`@ExcludeFromSources` Annotation: Excluding code content from sources](#excludefromsources-annotation-excluding-code-content-from-sources)
+  * [KoDEx Conventions in DataFrame](#kodex-conventions-in-dataframe)
+  * [KDoc -> WriterSide](#kdoc---writerside)
+<!-- TOC -->
+
+## How the Processing Works
+
+Unlike Java, Kotlin library authors
+[don't have the ability to share a jar file with documentation](https://github.com/Kotlin/dokka/issues/2787). They have
+to share documentation along with their `sources.jar` file which users can attach in their IDE to see the docs.
+DataFrame thus uses KoDEx in Gradle to copy and modify the source code, processing the KDoc notations,
+and publishing the modified files as the `sources.jar` file.
+
+This is set up by the `dfbuild.kodex` convention plugin in [build-logic](build-logic/src/main/kotlin/dfbuild.kodex.gradle.kts)
+using the `kodex {}` DSL of the KoDEx Gradle plugin. For each module applying it, like `core`, this creates:
+- The `processKDocsMain` task, which processes the KDocs in the source files and writes them to the
+  `generated-sources` folder.
+- A `mainKodex` source set and compilation, which compiles the processed sources from `generated-sources`
+  with the same dependencies and compiler settings as the normal `main` sources. Because of this,
+  anything annotated with `@ExcludeFromSources` is not only removed from the sources, but also from the compiled classes.
+- The `kodexMainKodexJar` and `kodexMainKodexSourcesJar` tasks, which create a library- and sources jar
+  from the `mainKodex` compilation and the processed sources, respectively.
+
+If the module also applies `libs.publisher`, a `kodexJava` software component is created as well.
+It's a copy of the normal `java` component (same dependencies, attributes, and javadoc jar), 
+but with these KoDEx jars as library- and sources jar.
+The publication of the module selects it explicitly:
+```kotlin
+kotlinPublications {
+    publication {
+        // ...
+        composeOf { from(kodexAwareComponentToPublish()) }
+    }
+}
+```
+This way, when you run any `publish` task, these KoDEx jars are published instead of the normal ones.
+If a module forgets this, publishing fails, so the unprocessed jars are never published by accident.
+The normal jar is still used within the build itself, for instance, by other modules depending on `core`.
+It's possible to optionally skip this step, for example, when you publish the library locally during development, 
+by providing the `-PskipKodex` project property: `./gradlew publishToMavenLocal -PskipKodex`.
+The normal, unprocessed, jars are published then.
+
+The same goes for the [Dokka API reference](https://kotlin.github.io/dataframe/api-docs/index.html).
+Dokka creates a Dokka source set for every Kotlin source set, so also for `mainKodex`.
+`dfbuild.kodex` suppresses the `main` one and documents `mainKodex` instead
+(with the same display name, like "jvm"), so the API reference shows the processed KDocs
+and respects `@ExcludeFromSources`. Running any Dokka task, like `./gradlew dokkaGeneratePublicationHtml`,
+runs `processKDocsMain` (and the ktlint formatting of its output) first.
+With `-PskipKodex`, Dokka documents the normal, unprocessed, `main` sources instead.
+
+`core:processKDocsMain` can also be run separately if you just want to see the result of the KDoc processing by KoDEx.
+
+> [!NOTE]
+> `processKDocsMain` only checks whether `generated-sources` is non-empty to decide whether it's up to date;
+> it doesn't track the generated files themselves.
+> So if you revert or edit files in `generated-sources`, run `./gradlew processKDocsMain --rerun`
+> before building the jars or Dokka, otherwise the stale files are used.
+
+To make sure the generated sources can be seen and reviewed on GitHub,
+since [PR #731](https://github.com/Kotlin/dataframe/pull/731),
+there's been a [GitHub action](.github/workflows/generated-sources.yml) that runs the `core:processKDocsMain` task and
+shows the results in the PR checks. After a PR is
+merged, [another action](.github/workflows/generated-sources-master.yml)
+runs on the master branch and commits the generated sources automatically.
+This way, the generated sources are always up to date with the latest changes in the code.
+This means you don't have to run and commit the generated sources yourself, though it's
+still okay if you do.
+
+The processing by KoDEx is done in multiple "waves" across the source files.
+Each "wave" processes different notations and depends on the results of previous waves.
+DataFrame uses
+the [recommended order](https://github.com/Jolanrensen/KoDEx/tree/main?tab=readme-ov-file#recommended-order-of-default-processors)
+of processors, which is as follows:
+
+- `INCLUDE_DOC_PROCESSOR`: The `@include` processor
+- `INCLUDE_FILE_DOC_PROCESSOR`: The `@includeFile` processor
+- `ARG_DOC_PROCESSOR`: The `@set` and `@get` / `$` processor. This runs `@set` first and then `@get` / `$`.
+- `COMMENT_DOC_PROCESSOR`: The `@comment` processor
+- `SAMPLE_DOC_PROCESSOR`: The `@sample` and `@sampleNoComments` processor
+- `EXPORT_AS_HTML_DOC_PROCESSOR`: The `@exportAsHtmlStart` and `@exportAsHtmlEnd` tags for `@ExportAsHtml`
+- `REMOVE_ESCAPE_CHARS_PROCESSOR`: The processor that removes escape characters
+
+See the [Notation](#notation) section for more information on each of these processors.
+
+## Previewing the Processed KDocs in IntelliJ IDEA
+
+KoDEx comes with an
+[IntelliJ IDEA plugin](https://plugins.jetbrains.com/plugin/27473)
+that allows you to preview the processed KDocs without having to run the Gradle task.
+It also provides highlighting for the KDoc notations and more.
+
+![image](https://github.com/Jolanrensen/KoDEx/assets/17594275/7f051063-38c7-4e8b-aeb8-fa6cf14a2566)
+
+As described in the README of KoDEx, the plugin may not 100% match the results of the Gradle task. This is
+because it uses IntelliJ to resolve references instead of Dokka. However, it should give you a good idea of what the
+processed KDocs will look like, and, most importantly, it's really fast.
+
+You can install the plugin from [the marketplace](https://plugins.jetbrains.com/plugin/27473),
+by building the project yourself, 
+or by downloading the latest release from the
+[releases page](https://github.com/Jolanrensen/KoDEx/releases).
+Simply look for the latest release which has the zip file attached.
+If it's outdated or doesn't work on your version of IntelliJ, don't hesitate to
+ping [@Jolanrensen](https://github.com/Jolanrensen)
+on GitHub. This also applies if you have any issues with the IntelliJ or Gradle plugin, of course :).
+
+## Notation
+
+KoDEx uses special notations in KDocs to indicate that a certain (tag) processor should be applied
+in that place.
+These notations follow the Javadoc/KDoc `@tag content`/`{@tag content}` tag conventions.
+
+When a tag starts a line, write it **without** `{}`, the same way you write `@param`, `@return`,
+`@throws`; braces there change nothing and only add noise. Use `{}` when the tag sits in the middle
+of a line, inside a ` ``` ` block, or when it has to be scoped — see the exception below.
+
+A block tag is fed everything up to the next block tag, but most processors (`@include`, `@get`/`$`,
+`@sample`, `@includeFile`, `@exportAsHtmlStart`, …) take only the arguments they need and leave the
+rest in place, so a following paragraph is **not** a reason to reach for `{}`:
+
+```kt
+/**
+ * @include [CommonDocs]
+ * This sentence stays right after the included content.
+ */
+```
+
+`@comment` and `@set KEY` are the exception: they consume everything they are fed, so anything below
+them becomes part of their input and disappears. Move them down among the other tags, or scope them
+with `{}`:
+
+```kt
+/**
+ * {@set [CommonDocs.OPERATION] [select][select]}
+ * Without the brackets this sentence would have been part of the `@set` value.
+ */
+```
+
+An `@sample` tag inlines the sample code where the tag sits, and a block tag is fed everything up
+to the next one — so an `@sample` written below `@param`/`@throws` ends up inside that tag's
+description in the rendered KDoc, and so does any plain text below a block tag. Write `@sample`
+tags and trailing prose above the first block tag; below a block tag, only other block tags may
+follow.
+
+Tag processors have access to any number of arguments they need, which are separated by spaces, like:
+
+```kt
+/**
+ * @tag arg1 arg2 arg3 extra text
+ * or {@tag arg1 arg2 arg3}
+ */
+```
+
+though, most only need one or two arguments.
+It's up to the tag processor what to do with excessive arguments, but most tag processors will leave them in place.
+
+### `@include`: Including content from other KDocs
+
+<p align="center">
+  <img src="docs/imgs/include1.png" alt="include1.png" width="45%"/>
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img src="docs/imgs/include2.png" alt="include2.png" width="45%"/>
+</p>
+
+The most used tag across the library is `@include [Reference]`.
+This tag includes all the content of the supplied reference's KDoc in the current KDoc.
+The reference can be a class, function, property, or any other documented referable entity
+(type aliases are an exception, as Dokka does not support them).
+The reference can be a fully qualified name or a relative name; imports and aliases are taken into account.
+
+You cannot include something from another library at the moment.
+
+Writing something after the include tag, like
+
+```kt
+/**
+ * @include [Reference] some text
+ */
+```
+
+is allowed and will remain in place. Like:
+
+```kt
+/**
+ * This is from the reference. some text
+ */
+```
+
+Referring to a function with the same name as the current element is allowed and will be resolved correctly
+(although, the IntelliJ plugin will not resolve it correctly).
+KoDEx assumes you don't want a circular reference, as that does not work for obvious reasons.
+
+Finally, if you include some KDoc that contains a `[reference]`, KoDEx will replace that reference
+with its fully qualified path. This is important because we cannot assume that the target file has access to
+the same imports as the source file. The original name will be left in place as alias, like
+`[reference][path.to.reference]`.
+This is also done for references used as key in `@set` and `@get` / `$` tags.
+
+In a `@throws` tag this alias breaks the exception type, because Dokka expects a plain type name
+after the tag: write exception names in an `@include`d snippet without brackets (or fully
+qualified) instead.
+
+Everything in the included KDoc renders in the host — `@param` lines included. A rendered `@param`
+line can therefore be owned by another file (for example, an `impl/` KDoc that is `@include`d into a
+public function), so a style fix must target the owning declaration. The place to *locate* such a line
+is the processed file under `generated-sources/`, not the file the API declaration lives in.
+
+### `@includeFile`: Including all content from a relative file
+
+This tag is not used in the DataFrame project at the moment. It's used like:
+
+```kt
+/**
+ * @includeFile (path/to/file.kt)
+ */
+```
+
+and, as expected, it pastes the content of the file at the location of the tag.
+
+Both the relative- and absolute paths are supported.
+
+### `@set` and `@get` / `$`: Setting and getting variables
+
+<p align="center">
+  <img src="docs/imgs/arg1.png" alt="arg1.png" width="45%"/>
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img src="docs/imgs/arg2.png" alt="arg2.png" width="45%"/>
+</p>
+
+Combined with `@include`, these tags are the most powerful ones available.
+They allow you to create templates and fill them in with different values at the location they're included.
+
+`@set` is used to set a variable, and `@get` / `$` is used to get the value of a variable
+(with an optional default value).
+
+What's important to note is that this processor is run **after** the `@include` processor and the variables
+that are created with `@set` are only available in the current KDoc.
+
+To form an idea of how they are processed, it's best to think of waves of processing again.
+
+All `@set` tags are processed before any `@get` / `$` tags.
+So there's no `{@set A {@get B}}` cycle, as that would not work.
+
+For example, given the KDoc from the picture above:
+
+```kt
+/**
+ * @include [Doc]
+ * @set NAME Function A
+ */
+```
+
+After running the `@include` processor, the intermediate state of the KDoc will be:
+
+```kt
+/**
+ * This is {@get NAME default} and it does something cool
+ * @set NAME Function A
+ */
+```
+
+Then, all `@set` statements are processed:
+
+```kt
+/**
+ * This is {@get NAME default} and it does something cool
+ */
+```
+
+`NAME` is `"Function A"` now.
+
+Then all `@get` statements are processed:
+
+```kt
+/**
+ * This is Function A and it does something cool
+ */
+```
+
+A `@get` with no value expands to nothing in the template's own KDoc. For templates that are not
+marked `@ExcludeFromSources` (private file-local ones ship in `sources.jar`), give every `@get` a
+default: `{@get [TYPE] [Number]}` — the default is used only where no `@set` supplies a value.
+
+You can put as many `@set` and `@get` / `$` tags in a KDoc as you want, just make sure to pick unique
+key names :).
+I'd always recommend using a `[Reference]` as key name.
+It's a good practice to keep the key names unique and refactor-safe.
+
+Finally, you need to make sure you take the order of tags processing into account. As stated by
+the [README](https://github.com/Jolanrensen/KoDEx/tree/main?tab=readme-ov-file#preprocessors),
+tags are processed in the following order:
+
+* Inline tags
+    * depth-first
+    * top-to-bottom
+    * left-to-right
+* Block tags
+    * top-to-bottom
+
+This means that you can overwrite a variable by a block tag that was set by an inline tag even if the
+inline tag is written below the block tag!
+
+For example:
+
+```kt
+/**
+ * $NAME
+ * @set NAME a
+ * {@set NAME b}
+ */
+```
+
+Here, `NAME` is first set to `"b"` and the ` {@set NAME b}` part is erased from the doc.
+Then `NAME` is set to `"a"` and that line disappears too.
+`$NAME` is rewritten to `{@get NAME}` and then it's replaced by retrieving the value of `NAME`,
+which makes the final doc look like:
+
+```kt
+/**
+ * a
+ *
+ */
+```
+
+### `@comment`: Commenting out KDoc content
+
+<p align="center">
+  <img src="docs/imgs/comment1.png" alt="comment1.png" width="45%"/>
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img src="docs/imgs/comment2.png" alt="comment2.png" width="45%"/>
+</p>
+
+Just like being able to use `//` in code to comment out lines, you can use `@comment` to comment out KDoc content.
+This is useful for documenting something about the preprocessing processes that should not be visible in the
+published `sources.jar`.
+
+Anything inside a `@comment` tag block or inline tag `{}` will be removed from the KDoc when the processor is run.
+
+### `@sample` and `@sampleNoComments`: Including code samples
+
+<p align="center">
+  <img src="docs/imgs/sample1.png" alt="sample1.png" width="45%"/>
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img src="docs/imgs/sample2.png" alt="sample2.png" width="45%"/>
+</p>
+
+This processor can be seen as an extension to the normal `@sample` tag. While the 'normal' `@sample [Reference]` tag shows the code from the target reference as
+is,
+`@sample` and `@sampleNoComments` actually copy over the code to inside a ` ```kt ``` ` (or `java`) code block in the
+KDoc.
+
+Just like [korro](https://github.com/devcrocod/korro), if `// SampleStart` or `// SampleEnd` are present in the code,
+only the code between these markers will be included in the KDoc.
+
+`@sampleNoComments` is the same as `@sample`, but it will remove all KDocs from the code before pasting it here.
+
+Gradle resolves `@sample` references into the `:samples` module, which is added as a contextual source, but the
+IntelliJ KoDEx plugin does not: the IDE hover then shows a `SampleDocProcessor` error
+where the sample would be (the rest of the KDoc is rendered fine).
+This only affects the IDE preview: still write KDoc examples as `@sample` references to passing tests in
+`:samples`, not as literal ` ```kotlin ` blocks
+(see [Examples section](KDOC_GUIDELINES.md#examples-section)).
+
+### `@exportAsHtmlStart` and `@exportAsHtmlEnd`: Exporting content as HTML
+
+See [KDoc -> WriterSide](#kdoc---writerside).
+
+### `\`: Escape Character
+
+The final wave of processing is the removal of escape characters.
+This is done by the `REMOVE_ESCAPE_CHARS_PROCESSOR`.
+
+The escape character `\` is used to escape the special characters `@`, `{`, `}`, `[`, `]`, `$`, and `\` itself.
+Escaped characters are ignored by processors and are left in place.
+
+This means that `/** {\@get TEST} */` will become `/** {@get TEST} */` after preprocessing instead of actually
+fetching the value of `TEST`.
+Similarly, `/** [Reference\] */` will not be replaced by the fully qualified path of `Reference` after it is
+`@include`'d somewhere else.
+This can come in handy when building difficult templates containing a lot of `[]` characters that should not be
+treated as references.
+
+### `@ExcludeFromSources` Annotation: Excluding code content from sources
+
+<p align="center">
+  <img src="docs/imgs/excludeFromSources1.png" alt="excludeFromSources.png" width="45%"/>
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img src="docs/imgs/excludeFromSources2.png" alt="excludeFromSources.png" width="45%"/>
+</p>
+
+The `@ExcludeFromSources` annotation is used to exclude a class, function, or property from the `sources.jar` file.
+This is useful to clean up the sources and delete interfaces or classes that are only used as KDoc 'source'.
+
+The annotation is not a KDoc tag but a normal Kotlin annotation detected by KoDEx.
+
+Excluding a declaration also excludes everything nested inside it, so don't repeat the annotation
+on the members of an excluded interface or class: a typealias nested in an `@ExcludeFromSources`
+interface is already excluded.
+
+Since [v0.3.9](https://github.com/Jolanrensen/KoDEx/releases/tag/v0.3.9) it's also possible to
+exclude a whole file from the `sources.jar` by adding the annotation to the top of the file,
+like `@file:ExcludeFromSources`.
+
+### Using (nested) Type Aliases Instead of Interfaces
+
+([Nested](https://kotlinlang.org/docs/type-aliases.html#nested-type-aliases))
+[Type aliases](https://kotlinlang.org/docs/type-aliases.html)
+can be used to save byte size in the published library.jar file.
+This is useful when you have a lot of documentation interfaces without a body that are only used to host KDoc.
+
+For example:
+
+```kt
+/** [Common doc][CommonDoc] */
+typealias CommonDocLink = Nothing
+
+/**
+ * ## {@include [CommonDocLink]}
+ * Hello from $[NAME]!
+ */
+interface CommonDoc {
+
+    // name argument
+    typealias NAME = Nothing
+}
+```
+
+## KoDEx Conventions in DataFrame
+
+See [KDoc Guidelines](KDOC_GUIDELINES.md).
+
+## KDoc -> WriterSide
+
+There's a special annotation, `@ExportAsHtml`, that allows you to export the content of the KDoc of the annotated
+function, interface, typealias, or class as HTML.
+The Markdown of the KDoc is rendered to HTML using [JetBrains/markdown](https://github.com/JetBrains/markdown) and, in
+the case of DataFrame, put in [./docs/StardustDocs/resources/snippets/kdocs](docs/StardustDocs/resources/snippets/kdocs).
+From there, the HTML can be included in any WriterSide page as an iFrame.
+This can be done using our custom `<inline-frame src=""/>` tag.
+
+An example of the result can be found in the
+[DataFrame documentation](https://kotlin.github.io/dataframe/columnselectors.html#full-dsl-grammar).
+
+The annotation supports two parameters: `theme`, and `stripReferences`, which both are `true` by default.
+When the `theme` argument is `true`, some CSS is added to the HTML output to make it look good in combination with
+WriterSide. If the `stripReferences` is `true`, all `[]` references are stripped,
+like `[name][fully.qualified.name]` -> `<code>name</code>`. This makes the output a lot more readable since
+the references won't be clickable in the HTML output anyway.
+
+Optionally, the tags `@exportAsHtmlStart` and `@exportAsHtmlEnd` can be used to mark the start and end of the content
+to be exported as HTML.
+This is useful when you only want to export a part of the KDoc.
+
+`@ExportAsHtml` can also safely be used in combination with `@ExcludeFromSources`.

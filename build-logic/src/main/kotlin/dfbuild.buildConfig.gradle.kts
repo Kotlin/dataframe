@@ -1,0 +1,35 @@
+@file:OptIn(ExperimentalBuildToolsApi::class, ExperimentalKotlinGradlePluginApi::class)
+
+import org.gradle.kotlin.dsl.support.uppercaseFirstChar
+import org.jetbrains.kotlin.buildtools.api.ExperimentalBuildToolsApi
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
+plugins {
+    alias(conventions.plugins.dfbuild.kotlinJvmCommon)
+    alias(libs.plugins.buildconfig)
+}
+
+buildConfig {
+    packageName = "org.jetbrains.kotlinx.dataframe.`${project.name}`"
+    className = "BuildConfig"
+    buildConfigField("KOTLIN_VERSION", libs.versions.kotlin.asProvider().get())
+    buildConfigField("KOTLIN_COMPILER_VERSION", kotlin.compilerVersion.get())
+    buildConfigField("VERSION", "${project.version}")
+    buildConfigField("DEBUG", findProperty("kotlin.dataframe.debug")?.toString()?.toBoolean() ?: false)
+}
+
+// combining buildconfig with ktlint
+val buildConfigSources = kotlin.sourceSets.create("buildConfigSources") {
+    kotlin.srcDir("build/generated/sources/buildConfig/main")
+}
+tasks.generateBuildConfigClasses {
+    finalizedBy(
+        "runKtlintFormatOver${buildConfigSources.name.uppercaseFirstChar()}SourceSet",
+    )
+}
+tasks.named { "Ktlint" in it && "Check" in it }.configureEach {
+    dependsOn(
+        tasks.generateBuildConfigClasses,
+        "runKtlintFormatOver${buildConfigSources.name.uppercaseFirstChar()}SourceSet",
+    )
+}

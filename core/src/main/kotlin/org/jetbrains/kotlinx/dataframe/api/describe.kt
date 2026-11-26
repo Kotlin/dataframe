@@ -59,7 +59,7 @@ public interface ColumnDescription {
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  */
 @ExcludeFromSources
-internal interface SummaryMetrics
+internal typealias SummaryMetrics = Nothing
 
 /**
  * ## The Describe Operation
@@ -74,7 +74,7 @@ internal interface SummaryMetrics
  * {@include [SummaryMetrics]}
  */
 @ExcludeFromSources
-internal interface Describe
+internal typealias Describe = Nothing
 
 /**
  * {@include [Describe]} {@set COLUMNS the selected}
@@ -86,12 +86,11 @@ internal interface Describe
  * ### This Describe Overload
  */
 @ExcludeFromSources
-internal interface DescribeWithSelection
+internal typealias DescribeWithSelection = Nothing
 
 /** {@set [SelectingColumns.OPERATION] [describe][describe]} */
 @ExcludeFromSources
-private interface SetDescribeOperationArg
-
+private typealias SetDescribeOperationArg = Nothing
 // endregion
 
 // region DataColumn
@@ -103,6 +102,8 @@ private interface SetDescribeOperationArg
  * missing values, most frequent values, and statistical measures if applicable.
  *
  * {@include [SummaryMetrics]}
+ *
+ * For more information: {@include [DocumentationUrls.Describe]}
  *
  * @return A [DataFrame] where each row represents the descriptive statistics of a single column.
  *         The output contains one row per described column with the summary metrics as columns.
@@ -116,6 +117,8 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
 /**
  * {@include [Describe]}
  *
+ * For more information: {@include [DocumentationUrls.Describe]}
+ *
  * @return A [DataFrame] where each row represents the descriptive statistics of a single column in the input DataFrame.
  *         The output contains one row per described column with the summary metrics as columns.
  */
@@ -126,7 +129,8 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
 
 /**
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetDescribeOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetDescribeOperationArg]}
+ *
  * @param [columns] The [Columns Selector][ColumnsSelector] that specifies which
  * columns of this [DataFrame] should be described.
  */
@@ -135,8 +139,9 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
 
 /**
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetDescribeOperationArg]}
- * @param [columns] The [Column Names][String] that specifies which
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetDescribeOperationArg]}
+ *
+ * @param [columns] The [Column Names][String] that specify which
  * columns of this [DataFrame] should be described.
  */
 public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDescription> =
@@ -144,8 +149,8 @@ public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDe
 
 /**
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetDescribeOperationArg]}
- * @param [columns] The [Column Accessors][ColumnReference] that specifies which
+ *
+ * @param [columns] The [Column Accessors][ColumnReference] that specify which
  * columns of this [DataFrame] should be described.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -155,8 +160,8 @@ public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReferenc
 
 /**
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.KProperties.WithExample] {@include [SetDescribeOperationArg]}
- * @param [columns] The [KProperties][KProperty] that specifies which
+ *
+ * @param [columns] The [KProperties][KProperty] that specify which
  * columns of this [DataFrame] should be described.
  */
 @Deprecated(DEPRECATED_ACCESS_API)

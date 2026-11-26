@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import java.util.Locale
 
-public fun NameNormalizer.Companion.from(normalizationDelimiters: Set<Char>): NameNormalizer {
+public fun NameNormalizer.Companion.toCamelCaseFrom(normalizationDelimiters: Set<Char>): NameNormalizer {
     val delimitersSet = normalizationDelimiters.joinToString("", "[", "]")
     val delimitedStringRegex by lazy {
         ".+$delimitersSet.+".toRegex()

@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
-import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
+import org.jetbrains.kotlinx.dataframe.api.NameValueProperty
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
@@ -14,9 +14,9 @@ import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
  *
  * @param name name of the generated interface
  * @param path URL or relative path to data.
- * If a path starts with protocol (http, https, ftp, jdbc), it's considered a URL.
+ * If a path starts with a protocol (http, https, ftp, jdbc), it's considered a URL.
  * Otherwise, it's treated as a relative path.
- * By default, it will be resolved relatively to project dir, i.e. File(projectDir, path)
+ * By default, it will be resolved relative to project dir, i.e. File(projectDir, path)
  * You can configure it by passing `dataframe.resolutionDir` option to preprocessor,
  * see https://kotlinlang.org/docs/ksp-quickstart.html#pass-options-to-processors
  * @param visibility visibility of the generated interface.
@@ -78,7 +78,7 @@ public annotation class JsonOptions(
      * */
     public val typeClashTactic: String = TypeClashTactics.ARRAY_AND_VALUE_COLUMNS,
     /**
-     * List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+     * List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
      *     will be created.
      *
      * Example:

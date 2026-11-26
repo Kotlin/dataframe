@@ -1,35 +1,42 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.YearMonth
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.atTime
+import kotlinx.datetime.format.DateTimeComponents
+import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toInstant
-import kotlinx.datetime.toJavaInstant
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toJavaLocalTime
-import kotlinx.datetime.toKotlinInstant
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toKotlinLocalTime
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.toStdlibInstant
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
-import org.jetbrains.kotlinx.dataframe.RowValueExpression
+import org.jetbrains.kotlinx.dataframe.api.AddDataRow
 import org.jetbrains.kotlinx.dataframe.api.Convert
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumn
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalDate
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalDateTime
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalTime
+import org.jetbrains.kotlinx.dataframe.api.isValueColumn
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.to
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
@@ -37,9 +44,9 @@ import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.ColumnTypeMismatchesColumnValuesException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
-import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.impl.isSubtypeWithNullabilityOf
 import org.jetbrains.kotlinx.dataframe.path
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
@@ -56,20 +63,28 @@ import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
-import kotlin.text.trim
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.toJavaDuration
+import kotlin.time.toJavaInstant
+import kotlin.time.toKotlinDuration
+import kotlin.time.toKotlinInstant
 import kotlin.toBigDecimal
+import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
+import kotlin.time.Instant as StdlibInstant
 import kotlin.toBigDecimal as toBigDecimalKotlin
 import kotlin.toBigInteger as toBigIntegerKotlin
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 @PublishedApi
 internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
     type: KType,
     infer: Infer,
-    rowConverter: RowValueExpression<T, C, R>,
+    rowConverter: AddDataRow<T>.(C) -> R,
 ): DataFrame<T> =
     asColumn { col ->
         try {
@@ -87,64 +102,6 @@ internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
     infer: Infer,
     rowConverter: RowColumnExpression<T, C, R>,
 ): DataFrame<T> = asColumn { col -> df.newColumn(type, col.name, infer) { rowConverter(it, col) } }
-
-/**
- * Specific implementation for [convertToTypeImpl] for [String] -> [Double] conversion
- *
- * This function exists because [convertToTypeImpl] can only retrieve a single parser
- * double has two: one with the given locale (or system default) and one POSIX parser
- */
-internal fun DataColumn<String?>.convertToDoubleImpl(
-    locale: Locale?,
-    nullStrings: Set<String>?,
-    useFastDoubleParser: Boolean?,
-): DataColumn<Double?> {
-    val nullStrings = nullStrings ?: Parsers.nulls
-    val useFastDoubleParser = useFastDoubleParser ?: Parsers.useFastDoubleParser
-
-    fun applyParser(parser: (String) -> Double?): DataColumn<Double?> {
-        var currentRow = 0
-        try {
-            return mapIndexed { row, value ->
-                currentRow = row
-                value?.let {
-                    if (it in nullStrings) return@let null
-
-                    parser(value.trim()) ?: throw TypeConversionException(
-                        value = value,
-                        from = typeOf<String>(),
-                        to = typeOf<Double>(),
-                        column = path,
-                    )
-                }
-            }
-        } catch (e: TypeConversionException) {
-            throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
-        }
-    }
-
-    return if (locale != null) {
-        val explicitParser = Parsers.getDoubleParser(
-            locale = locale,
-            useFastDoubleParser = useFastDoubleParser,
-        )
-        applyParser(explicitParser)
-    } else {
-        try {
-            val defaultParser =
-                Parsers.getDoubleParser(
-                    locale = null,
-                    useFastDoubleParser = useFastDoubleParser,
-                )
-            applyParser(defaultParser)
-        } catch (_: TypeConversionException) {
-            val posixParser = Parsers.getPosixDoubleParser(
-                useFastDoubleParser = useFastDoubleParser,
-            )
-            applyParser(posixParser)
-        }
-    }
-}
 
 internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?): AnyCol {
     val from = type
@@ -206,14 +163,8 @@ internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?):
 
     if (from == to) return this
 
-    // catch for ColumnGroup and FrameColumn since they don't have changeType,
-    // but user converters can still exist
-    if (from.isSubtypeOf(to)) {
-        try {
-            return (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
-        } catch (_: UnsupportedOperationException) {
-            //
-        }
+    if (from.isSubtypeOf(to) && this.isValueColumn()) {
+        return this.changeType(to.withNullability(hasNulls()))
     }
 
     return when (val converter = getConverter(from, to, parserOptions)) {
@@ -225,9 +176,17 @@ internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?):
 internal val convertersCache = mutableMapOf<Triple<KType, KType, ParserOptions?>, TypeConverter?>()
 
 internal fun getConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? =
-    convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
+    if (from == typeOf<String>() || from == typeOf<String?>()) {
+        // GlobalParserOptions might influence which parsers should run and which should be skipped,
+        // so we should not cache String converters.
+        createConverter(from, to, options)
+    } else {
+        convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
+    }
 
 internal typealias TypeConverter = (Any) -> Any?
+
+private val TypeConverterIdentity: TypeConverter = { it }
 
 internal fun Any.convertTo(type: KType): Any? {
     val clazz = javaClass.kotlin
@@ -241,6 +200,7 @@ internal inline fun <T> convert(crossinline converter: (T) -> Any?): TypeConvert
 
 private enum class DummyEnum
 
+@Suppress("UNCHECKED_CAST")
 internal fun createConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? {
     if (from.arguments.isNotEmpty() || to.arguments.isNotEmpty()) return null
     if (from.isMarkedNullable) {
@@ -249,29 +209,49 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
     }
     val fromClass = from.jvmErasure
     val toClass = to.jvmErasure
-
-    if (fromClass == toClass) return { it }
-
-    if (toClass.isValue) {
-        val constructor =
-            toClass.primaryConstructor ?: error("Value type $toClass doesn't have primary constructor")
-        val underlyingType = constructor.parameters.single().type
-        val converter = getConverter(from, underlyingType)
-            ?: throw TypeConverterNotFoundException(from, underlyingType, null)
-        return convert<Any> {
-            val converted = converter(it)
-            if (converted == null && !underlyingType.isMarkedNullable) {
-                throw TypeConversionException(it, from, underlyingType, null)
-            }
-            constructor.call(converted)
-        }
-    }
-
     return when {
+        fromClass == toClass -> TypeConverterIdentity
+
+        // kotlin.time.Duration is a value class,
+        // so it must be handled before the generic toClass.isValue / fromClass.isValue branches.
+        toClass == Duration::class -> when (fromClass) {
+            String::class -> Parsers.getAsConverterOrNull(to, options)!!
+            JavaDuration::class -> convert<JavaDuration> { it.toKotlinDuration() }
+            Long::class -> convert<Long> { it.milliseconds }
+            Int::class -> convert<Int> { it.milliseconds }
+            else -> null
+        }
+
+        fromClass == Duration::class -> when (toClass) {
+            JavaDuration::class -> convert<Duration> { it.toJavaDuration() }
+            Long::class -> convert<Duration> { it.inWholeMilliseconds }
+            Int::class -> convert<Duration> { it.inWholeMilliseconds.toInt() }
+            String::class -> convert<Duration> { it.toString() }
+            else -> null
+        }
+
+        toClass.isValue -> {
+            val constructor =
+                toClass.primaryConstructor ?: error("Value type $toClass doesn't have primary constructor")
+            val underlyingType = constructor.parameters.single().type
+            val converter = getConverter(from, underlyingType)
+                ?: throw TypeConverterNotFoundException(from, underlyingType, null)
+            return convert<Any> {
+                val converted = converter(it)
+                if (converted == null && !underlyingType.isMarkedNullable) {
+                    throw TypeConversionException(it, from, underlyingType, null)
+                }
+                constructor.call(converted)
+            }
+        }
+
         fromClass == String::class -> {
-            val parser = Parsers[to.withNullability(false)]
+            // turn our parsers into a converter if we have them
+            // !NOTE! Do not cache this converter.
+            // GlobalParserOptions might influence which parsers should run and which should be skipped
+            val parserConverter = Parsers.getAsConverterOrNull(to, options)
             when {
-                parser != null -> parser.toConverter(options)
+                parserConverter != null -> parserConverter
 
                 // convert enums by name (or by `value` if they implement DataSchemaEnum)
                 toClass.isSubclassOf(Enum::class) -> convert<String> { string ->
@@ -368,7 +348,13 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
             Char::class -> when (toClass) {
                 Int::class -> convert<Char> { it.code }
-                else -> null
+
+                else -> // convert char to string and then to target type
+                    getConverter(typeOf<String>(), to, options)?.let { stringConverter ->
+                        convert<Char> {
+                            stringConverter(it.toString())
+                        }
+                    }
             }
 
             Int::class -> when (toClass) {
@@ -396,7 +382,10 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 LocalTime::class -> convert<Int> { it.toLong().toLocalTime(defaultTimeZone) }
 
-                Instant::class -> convert<Int> { Instant.fromEpochMilliseconds(it.toLong()) }
+                StdlibInstant::class -> convert<Int> { StdlibInstant.fromEpochMilliseconds(it.toLong()) }
+
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
+                DeprecatedInstant::class -> convert<Int> { DeprecatedInstant.fromEpochMilliseconds(it.toLong()) }
 
                 JavaLocalDateTime::class -> convert<Int> {
                     it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
@@ -407,6 +396,8 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 JavaLocalTime::class -> convert<Int> { it.toLong().toLocalTime(defaultTimeZone).toJavaLocalTime() }
 
                 JavaInstant::class -> convert<Int> { JavaInstant.ofEpochMilli(it.toLong()) }
+
+                JavaDuration::class -> convert<Int> { JavaDuration.ofMillis(it.toLong()) }
 
                 else -> null
             }
@@ -434,7 +425,10 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 LocalTime::class -> convert<Byte> { it.toLong().toLocalTime(defaultTimeZone) }
 
-                Instant::class -> convert<Byte> { Instant.fromEpochMilliseconds(it.toLong()) }
+                StdlibInstant::class -> convert<Byte> { StdlibInstant.fromEpochMilliseconds(it.toLong()) }
+
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
+                DeprecatedInstant::class -> convert<Byte> { DeprecatedInstant.fromEpochMilliseconds(it.toLong()) }
 
                 JavaLocalDateTime::class -> convert<Byte> {
                     it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
@@ -472,7 +466,10 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 LocalTime::class -> convert<Short> { it.toLong().toLocalTime(defaultTimeZone) }
 
-                Instant::class -> convert<Short> { Instant.fromEpochMilliseconds(it.toLong()) }
+                StdlibInstant::class -> convert<Short> { StdlibInstant.fromEpochMilliseconds(it.toLong()) }
+
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
+                DeprecatedInstant::class -> convert<Short> { DeprecatedInstant.fromEpochMilliseconds(it.toLong()) }
 
                 JavaLocalDateTime::class -> convert<Short> {
                     it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
@@ -522,7 +519,10 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 LocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone) }
 
-                Instant::class -> convert<Long> { Instant.fromEpochMilliseconds(it) }
+                StdlibInstant::class -> convert<Long> { StdlibInstant.fromEpochMilliseconds(it) }
+
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
+                DeprecatedInstant::class -> convert<Long> { DeprecatedInstant.fromEpochMilliseconds(it) }
 
                 JavaLocalDateTime::class -> convert<Long> {
                     it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
@@ -534,27 +534,63 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 JavaInstant::class -> convert<Long> { JavaInstant.ofEpochMilli(it) }
 
+                JavaDuration::class -> convert<Long> { JavaDuration.ofMillis(it) }
+
                 else -> null
             }
 
-            Instant::class -> when (toClass) {
-                Long::class -> convert<Instant> { it.toEpochMilliseconds() }
+            StdlibInstant::class -> when (toClass) {
+                Long::class -> convert<StdlibInstant> { it.toEpochMilliseconds() }
 
-                LocalDateTime::class -> convert<Instant> { it.toLocalDateTime(defaultTimeZone) }
+                LocalDateTime::class -> convert<StdlibInstant> { it.toLocalDateTime(defaultTimeZone) }
 
-                LocalDate::class -> convert<Instant> { it.toLocalDate(defaultTimeZone) }
+                LocalDate::class -> convert<StdlibInstant> { it.toLocalDate(defaultTimeZone) }
 
-                LocalTime::class -> convert<Instant> { it.toLocalTime(defaultTimeZone) }
+                LocalTime::class -> convert<StdlibInstant> { it.toLocalTime(defaultTimeZone) }
 
-                JavaLocalDateTime::class -> convert<Instant> {
+                JavaLocalDateTime::class -> convert<StdlibInstant> {
                     it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
                 }
 
-                JavaLocalDate::class -> convert<Instant> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
+                JavaLocalDate::class -> convert<StdlibInstant> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
 
-                JavaInstant::class -> convert<Instant> { it.toJavaInstant() }
+                JavaInstant::class -> convert<StdlibInstant> { it.toJavaInstant() }
 
-                JavaLocalTime::class -> convert<Instant> { it.toLocalTime(defaultTimeZone).toJavaLocalTime() }
+                JavaLocalTime::class -> convert<StdlibInstant> { it.toLocalTime(defaultTimeZone).toJavaLocalTime() }
+
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
+                DeprecatedInstant::class -> convert<StdlibInstant> { it.toDeprecatedInstant() }
+
+                else -> null
+            }
+
+            // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
+            DeprecatedInstant::class -> when (toClass) {
+                Long::class -> convert<DeprecatedInstant> { it.toStdlibInstant().toEpochMilliseconds() }
+
+                LocalDateTime::class -> convert<DeprecatedInstant> {
+                    it.toStdlibInstant().toLocalDateTime(defaultTimeZone)
+                }
+
+                LocalDate::class -> convert<DeprecatedInstant> { it.toStdlibInstant().toLocalDate(defaultTimeZone) }
+
+                LocalTime::class -> convert<DeprecatedInstant> { it.toStdlibInstant().toLocalTime(defaultTimeZone) }
+
+                JavaLocalDateTime::class -> convert<DeprecatedInstant> {
+                    it.toStdlibInstant().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                }
+
+                JavaLocalDate::class -> convert<DeprecatedInstant> {
+                    it.toStdlibInstant().toLocalDate(defaultTimeZone).toJavaLocalDate()
+                }
+
+                JavaInstant::class -> convert<DeprecatedInstant> { it.toStdlibInstant().toJavaInstant() }
+
+                JavaLocalTime::class -> convert<DeprecatedInstant> {
+                    it.toStdlibInstant().toLocalTime(defaultTimeZone).toJavaLocalTime()
+                }
+
+                StdlibInstant::class -> convert<DeprecatedInstant> { it.toStdlibInstant() }
 
                 else -> null
             }
@@ -570,7 +606,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 LocalTime::class -> convert<JavaInstant> { it.toKotlinInstant().toLocalTime(defaultTimeZone) }
 
-                Instant::class -> convert<JavaInstant> { it.toKotlinInstant() }
+                StdlibInstant::class -> convert<JavaInstant> { it.toKotlinInstant() }
 
                 JavaLocalDateTime::class -> convert<JavaInstant> {
                     it.toKotlinInstant().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
@@ -584,6 +620,20 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                     it.toKotlinInstant().toLocalTime(defaultTimeZone).toJavaLocalTime()
                 }
 
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
+                DeprecatedInstant::class -> convert<JavaInstant> {
+                    it.toKotlinInstant().toDeprecatedInstant()
+                }
+
+                else -> null
+            }
+
+            JavaDuration::class -> when (toClass) {
+                Long::class -> convert<JavaDuration> { it.toMillis() }
+
+                Int::class -> convert<JavaDuration> { it.toMillis().toInt() }
+
+                // Duration::class already handled above
                 else -> null
             }
 
@@ -623,15 +673,58 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 else -> null
             }
 
+            DateTimeComponents::class -> when (toClass) {
+                UtcOffset::class -> convert<DateTimeComponents> { it.toUtcOffset() }
+
+                YearMonth::class -> convert<DateTimeComponents> { it.toYearMonth() }
+
+                LocalDate::class -> convert<DateTimeComponents> { it.toLocalDate() }
+
+                LocalTime::class -> convert<DateTimeComponents> { it.toLocalTime() }
+
+                LocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime() }
+
+                JavaLocalDate::class -> convert<DateTimeComponents> { it.toLocalDate().toJavaLocalDate() }
+
+                JavaLocalTime::class -> convert<DateTimeComponents> { it.toLocalTime().toJavaLocalTime() }
+
+                JavaLocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime().toJavaLocalDateTime() }
+
+                StdlibInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset() }
+
+                DeprecatedInstant::class -> convert<DateTimeComponents> {
+                    it.toInstantUsingOffset().toDeprecatedInstant()
+                }
+
+                JavaInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toJavaInstant() }
+
+                Long::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toEpochMilliseconds() }
+
+                else -> null
+            }
+
             LocalDateTime::class -> when (toClass) {
                 LocalDate::class -> convert<LocalDateTime> { it.date }
+
                 LocalTime::class -> convert<LocalDateTime> { it.time }
-                Instant::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone) }
+
+                StdlibInstant::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone) }
+
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
+                DeprecatedInstant::class -> convert<LocalDateTime> {
+                    it.toInstant(defaultTimeZone).toDeprecatedInstant()
+                }
+
                 Long::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone).toEpochMilliseconds() }
+
                 JavaLocalDateTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime() }
+
                 JavaLocalDate::class -> convert<LocalDateTime> { it.date.toJavaLocalDate() }
+
                 JavaLocalTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime().toLocalTime() }
+
                 JavaInstant::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone).toJavaInstant() }
+
                 else -> null
             }
 
@@ -642,8 +735,13 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 LocalDateTime::class -> convert<JavaLocalDateTime> { it.toKotlinLocalDateTime() }
 
-                Instant::class -> convert<JavaLocalDateTime> {
+                StdlibInstant::class -> convert<JavaLocalDateTime> {
                     it.toKotlinLocalDateTime().toInstant(defaultTimeZone)
+                }
+
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
+                DeprecatedInstant::class -> convert<JavaLocalDateTime> {
+                    it.toKotlinLocalDateTime().toInstant(defaultTimeZone).toDeprecatedInstant()
                 }
 
                 Long::class -> convert<JavaLocalDateTime> {
@@ -663,11 +761,22 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
             LocalDate::class -> when (toClass) {
                 LocalDateTime::class -> convert<LocalDate> { it.atTime(0, 0) }
-                Instant::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone) }
+
+                StdlibInstant::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone) }
+
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
+                DeprecatedInstant::class -> convert<LocalDate> {
+                    it.atStartOfDayIn(defaultTimeZone).toDeprecatedInstant()
+                }
+
                 Long::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone).toEpochMilliseconds() }
+
                 JavaLocalDate::class -> convert<LocalDate> { it.toJavaLocalDate() }
+
                 JavaLocalDateTime::class -> convert<LocalDate> { it.atTime(0, 0).toJavaLocalDateTime() }
+
                 JavaInstant::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone).toJavaInstant() }
+
                 else -> null
             }
 
@@ -676,8 +785,13 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 LocalDateTime::class -> convert<JavaLocalDate> { it.atTime(0, 0).toKotlinLocalDateTime() }
 
-                Instant::class -> convert<JavaLocalDate> {
+                StdlibInstant::class -> convert<JavaLocalDate> {
                     it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone)
+                }
+
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
+                DeprecatedInstant::class -> convert<JavaLocalDate> {
+                    it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone).toDeprecatedInstant()
                 }
 
                 Long::class -> convert<JavaLocalDate> {
@@ -715,15 +829,147 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 }
 
 internal fun Long.toLocalDateTime(zone: TimeZone = defaultTimeZone) =
-    Instant.fromEpochMilliseconds(this).toLocalDateTime(zone)
+    StdlibInstant.fromEpochMilliseconds(this).toLocalDateTime(zone)
 
 internal fun Long.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).date
 
 internal fun Long.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).time
 
-internal fun Instant.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).date
+internal fun StdlibInstant.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).date
 
-internal fun Instant.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).time
+internal fun StdlibInstant.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).time
+
+/**
+ * Converts a column inferred as a common supertype ([<code>Any</code>][Any], [<code>Comparable</code>][Comparable], [<code>Number</code>][Number], [<code>Serializable</code>][Serializable]) value by value:
+ * the column type says nothing about the values, so each one is looked at on its own.
+ *
+ * [<code>convertInZone</code>][convertInZone] converts the values of the zone-taking source types and returns `null` for any other value;
+ * those go through the converter table in the system current time zone, as in [<code>convertToTypeImpl</code>][convertToTypeImpl].
+ * A value that fails to convert is reported with its column and row, like [<code>convertToTypeImpl</code>][convertToTypeImpl] does.
+ */
+private fun AnyCol.convertPerValueInZone(to: KType, convertInZone: (Any) -> Any?): AnyCol {
+    val from = type
+    var currentRow = 0
+    try {
+        val values = values.mapIndexed { row, value ->
+            currentRow = row
+            value?.let { convertInZone(it) ?: it.convertViaTable(from, to, path) }
+        }
+        return DataColumn.createValueColumn(name, values, to.withNullability(values.any { it == null }))
+    } catch (e: TypeConversionException) {
+        throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
+    }
+}
+
+private fun Any.convertViaTable(columnType: KType, to: KType, path: ColumnPath): Any? {
+    val clazz = javaClass.kotlin
+    if (clazz.isSubclassOf(to.jvmErasure)) return this
+    val converter = getConverter(clazz.createStarProjectedType(false), to)
+        ?: throw TypeConverterNotFoundException(columnType, to, path)
+    return converter(this)
+}
+
+/**
+ * Zone-aware [<code>LocalDate</code>][LocalDate] conversion for a column of an erased type: the zone-dependent source types
+ * ([<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant], [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant]) dispatch to their zone-taking
+ * conversions. Columns of every other type are converted as if [<code>zone</code>][zone] was not passed: conversions
+ * that do not depend on a time zone ignore it, while [<code>Byte</code>][Byte], [<code>Short</code>][Short] and [<code>JavaInstant</code>][JavaInstant] sources are
+ * interpreted in the system current time zone. A column inferred as a common supertype ([<code>Any</code>][Any],
+ * [<code>Comparable</code>][Comparable], [<code>Number</code>][Number], [<code>Serializable</code>][Serializable]) is converted per value: [<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant] and [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] values
+ * use [<code>zone</code>][zone], other values go through the converter table in the system current time zone.
+ */
+@Suppress("UNCHECKED_CAST")
+internal fun AnyCol.convertToLocalDateInZone(zone: TimeZone): AnyCol =
+    when (type.jvmErasure) {
+        Long::class -> (this as DataColumn<Long?>).convertToLocalDate(zone)
+
+        Int::class -> (this as DataColumn<Int?>).convertToLocalDate(zone)
+
+        StdlibInstant::class -> (this as DataColumn<StdlibInstant?>).convertToLocalDate(zone)
+
+        DeprecatedInstant::class -> (this as DataColumn<DeprecatedInstant?>).convertToLocalDate(zone)
+
+        Any::class, Comparable::class, Number::class, java.io.Serializable::class ->
+            convertPerValueInZone(typeOf<LocalDate?>()) { value ->
+                when (value) {
+                    is Long -> value.toLocalDate(zone)
+                    is Int -> value.toLong().toLocalDate(zone)
+                    is StdlibInstant -> value.toLocalDate(zone)
+                    is DeprecatedInstant -> value.toStdlibInstant().toLocalDate(zone)
+                    else -> null
+                }
+            }
+
+        else -> convertToTypeImpl(typeOf<LocalDate?>(), null)
+    }
+
+/**
+ * Zone-aware [<code>LocalTime</code>][LocalTime] conversion for a column of an erased type: the zone-dependent source types
+ * ([<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant], [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant]) dispatch to their zone-taking
+ * conversions. Columns of every other type are converted as if [<code>zone</code>][zone] was not passed: conversions
+ * that do not depend on a time zone ignore it, while [<code>Byte</code>][Byte], [<code>Short</code>][Short] and [<code>JavaInstant</code>][JavaInstant] sources are
+ * interpreted in the system current time zone. A column inferred as a common supertype ([<code>Any</code>][Any],
+ * [<code>Comparable</code>][Comparable], [<code>Number</code>][Number], [<code>Serializable</code>][Serializable]) is converted per value: [<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant] and [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] values
+ * use [<code>zone</code>][zone], other values go through the converter table in the system current time zone.
+ */
+@Suppress("UNCHECKED_CAST")
+internal fun AnyCol.convertToLocalTimeInZone(zone: TimeZone): AnyCol =
+    when (type.jvmErasure) {
+        Long::class -> (this as DataColumn<Long?>).convertToLocalTime(zone)
+
+        Int::class -> (this as DataColumn<Int?>).convertToLocalTime(zone)
+
+        StdlibInstant::class -> (this as DataColumn<StdlibInstant?>).convertToLocalTime(zone)
+
+        DeprecatedInstant::class -> (this as DataColumn<DeprecatedInstant?>).convertToLocalTime(zone)
+
+        Any::class, Comparable::class, Number::class, java.io.Serializable::class ->
+            convertPerValueInZone(typeOf<LocalTime?>()) { value ->
+                when (value) {
+                    is Long -> value.toLocalTime(zone)
+                    is Int -> value.toLong().toLocalTime(zone)
+                    is StdlibInstant -> value.toLocalTime(zone)
+                    is DeprecatedInstant -> value.toStdlibInstant().toLocalTime(zone)
+                    else -> null
+                }
+            }
+
+        else -> convertToTypeImpl(typeOf<LocalTime?>(), null)
+    }
+
+/**
+ * Zone-aware [<code>LocalDateTime</code>][LocalDateTime] conversion for a column of an erased type: the zone-dependent source types
+ * ([<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant], [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant]) dispatch to their zone-taking
+ * conversions. Columns of every other type are converted as if [<code>zone</code>][zone] was not passed: conversions
+ * that do not depend on a time zone ignore it, while [<code>Byte</code>][Byte], [<code>Short</code>][Short] and [<code>JavaInstant</code>][JavaInstant] sources are
+ * interpreted in the system current time zone. A column inferred as a common supertype ([<code>Any</code>][Any],
+ * [<code>Comparable</code>][Comparable], [<code>Number</code>][Number], [<code>Serializable</code>][Serializable]) is converted per value: [<code>Long</code>][Long], [<code>Int</code>][Int], [<code>kotlin.time.Instant</code>][kotlin.time.Instant] and [<code>kotlinx.datetime.Instant</code>][kotlinx.datetime.Instant] values
+ * use [<code>zone</code>][zone], other values go through the converter table in the system current time zone.
+ */
+@Suppress("UNCHECKED_CAST")
+internal fun AnyCol.convertToLocalDateTimeInZone(zone: TimeZone): AnyCol =
+    when (type.jvmErasure) {
+        Long::class -> (this as DataColumn<Long?>).convertToLocalDateTime(zone)
+
+        Int::class -> (this as DataColumn<Int?>).convertToLocalDateTime(zone)
+
+        StdlibInstant::class -> (this as DataColumn<StdlibInstant?>).convertToLocalDateTime(zone)
+
+        DeprecatedInstant::class -> (this as DataColumn<DeprecatedInstant?>).convertToLocalDateTime(zone)
+
+        Any::class, Comparable::class, Number::class, java.io.Serializable::class ->
+            convertPerValueInZone(typeOf<LocalDateTime?>()) { value ->
+                when (value) {
+                    is Long -> value.toLocalDateTime(zone)
+                    is Int -> value.toLong().toLocalDateTime(zone)
+                    is StdlibInstant -> value.toLocalDateTime(zone)
+                    is DeprecatedInstant -> value.toStdlibInstant().toLocalDateTime(zone)
+                    else -> null
+                }
+            }
+
+        else -> convertToTypeImpl(typeOf<LocalDateTime?>(), null)
+    }
 
 internal val defaultTimeZone get() = TimeZone.currentSystemDefault()
 

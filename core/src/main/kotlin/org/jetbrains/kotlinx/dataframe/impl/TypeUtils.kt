@@ -65,7 +65,7 @@ internal fun KType.projectUpTo(superClass: KClass<*>): KType {
 }
 
 /**
- * Changes generic type parameters to its upperbound, like `List<T> -> List<Any?>` and
+ * Changes generic type parameters to their upper bounds, like `List<T> -> List<Any?>` and
  * `Comparable<T> -> Comparable<Nothing>`.
  * Works recursively as well.
  */
@@ -136,7 +136,12 @@ internal fun KType.projectDownTo(subClass: KClass<*>): KType {
 internal fun KType.replace(substitution: Map<KTypeParameter, KType?>): KType =
     when (val clazz = classifier) {
         is KTypeParameter -> substitution[clazz] ?: this
-        is KClass<*> -> clazz.createType(arguments.map { KTypeProjection(it.variance, it.type?.replace(substitution)) })
+
+        is KClass<*> -> clazz.createType(
+            arguments.map { KTypeProjection(it.variance, it.type?.replace(substitution)) },
+            nullable = isMarkedNullable,
+        )
+
         else -> this
     }
 
@@ -398,7 +403,7 @@ internal fun guessValueType(
  * See [createColumnGuessingType] for how to create a column with the guessed type.
  *
  * @param values the values to guess the type from
- * @param upperBound the upper bound of the type to guess
+ * @param upperBound the optional upper bound of the type to guess. This is an optional hint to speed up the search.
  * @param listifyValues if true, then values and nulls will be wrapped in a list if they appear among other lists.
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `List<Int>` instead of `Any?`
  *   Note: this parameter is ignored if another [Collection] is present in the values.
@@ -406,7 +411,7 @@ internal fun guessValueType(
  *   that a column group should be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`,
  *   so the function will return [DataRow].
  * @param unifyNumbers if true, then all number types encountered will be unified to the smallest possible
- *   number-type that can hold all number values lossless in [values]. See [commonNumberClass].
+ *   number-type that can hold all number values lossless in [values]. See [unifiedNumberClassOrNull].
  *   Unsigned numbers are not supported.
  *   If false, the result of encountering multiple number types would be [Number].
  */
@@ -607,14 +612,7 @@ internal val KClass<*>.isArray: Boolean
  * Use [KType.isArray] to also check for `Array<>`.
  */
 internal val KType.isPrimitiveArray: Boolean
-    get() =
-        if (arguments.isNotEmpty()) {
-            // Catching https://github.com/Kotlin/dataframe/issues/678
-            // as typeOf<Array<Int>>().classifier == IntArray::class
-            false
-        } else {
-            (classifier as? KClass<*>)?.isPrimitiveArray == true
-        }
+    get() = (classifier as? KClass<*>)?.isPrimitiveArray == true
 
 /**
  * Returns `true` if this type is of an array, either a primitive array like `XArray` or `Array<>`.
@@ -696,7 +694,7 @@ internal fun Iterable<Any?>.types(): Set<KType> =
     }
 
 /**
- * Checks whether this KType adheres to `T : Comparable<T & Any>?`, aka, it is comparable with itself.
+ * Checks whether this KType adheres to `T : Comparable<T & Any>?`, aka, it is mutually comparable with itself.
  */
 internal fun KType.isIntraComparable(): Boolean =
     this.isSubtypeOf(

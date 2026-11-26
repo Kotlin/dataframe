@@ -2,88 +2,88 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.modes
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
-import org.jetbrains.kotlinx.dataframe.annotations.CandidateForRemoval
-import org.jetbrains.kotlinx.dataframe.api.GroupBy
-import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.asSequence
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getOrNull
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.indexOfAggregationResult
-import org.jetbrains.kotlinx.dataframe.impl.namedValues
 import kotlin.reflect.typeOf
 
-@CandidateForRemoval
-internal fun <T> Grouped<T>.aggregateByOrNull(body: DataFrameExpression<T, DataRow<T>?>): DataFrame<T> {
-    require(this is GroupBy<*, T>)
-    val keyColumns = keys.columnNames().toSet()
-    return aggregateInternal {
-        val row = body(df, df)
-        row?.namedValues()?.forEach {
-            if (!keyColumns.contains(it.name)) yield(it)
-        }
-    }.cast()
-}
+@PublishedApi
+internal object NoElementAtIndex
 
 /**
- * Selects the best matching value in the [sequence][values]
- * using the provided [Aggregator] `by` the provided [selector].
+ * Selects the best matching value in the [<code>sequence</code>][values]
+ * using the provided [<code>Aggregator</code>][Aggregator] `by` the provided [<code>selector</code>][selector].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "ktlint:standard:comment-wrapping")
 @PublishedApi
-internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateByOrNull(
+internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateBy(
     values: Sequence<T>,
     crossinline selector: (T) -> V,
-): T? =
-    values.elementAtOrNull(
+): Result<T> {
+    val res /* : T | NoElementAtIndex */ = values.elementAtOrElse(
         indexOfAggregationResult(
             values = values.map { selector(it) },
             valueType = typeOf<V>(),
         ),
-    )
+    ) { NoElementAtIndex }
+
+    return when (res) {
+        is NoElementAtIndex ->
+            Result.failure(NoSuchElementException("No values to aggregate"))
+
+        else -> Result.success(res as T)
+    }
+}
 
 /**
- * Selects the best matching value in the [iterable][values]
- * using the provided [Aggregator] `by` the provided [selector].
+ * Selects the best matching value in the [<code>iterable</code>][values]
+ * using the provided [<code>Aggregator</code>][Aggregator] `by` the provided [<code>selector</code>][selector].
  *
  * Faster implementation than for sequences.
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "ktlint:standard:comment-wrapping")
 @PublishedApi
-internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateByOrNull(
+internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateBy(
     values: Iterable<T>,
     crossinline selector: (T) -> V,
-): T? =
-    values.elementAtOrNull(
+): Result<T> {
+    val res /* : T | NoElementAtIndex */ = values.elementAtOrElse(
         indexOfAggregationResult(
             values = values.asSequence().map { selector(it) },
             valueType = typeOf<V>(),
         ),
-    )
+    ) { NoElementAtIndex }
+
+    return when (res) {
+        is NoElementAtIndex ->
+            Result.failure(NoSuchElementException("No values to aggregate"))
+
+        else -> Result.success(res as T)
+    }
+}
 
 /**
- * Selects the best matching value in the [column] using the provided [Aggregator] `by` the provided [selector].
+ * Selects the best matching value in the [<code>column</code>][column] using the provided [<code>Aggregator</code>][Aggregator] `by` the provided [<code>selector</code>][selector].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
 @PublishedApi
-internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateByOrNull(
+internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateBy(
     column: DataColumn<T>,
     crossinline selector: (T) -> V,
-): T? = aggregateByOrNull(column.values(), selector)
+): Result<T> = aggregateBy(column.values(), selector)
 
 /**
- * Selects the best matching value in the [dataframe][data]
- * using the provided [Aggregator] `by` the provided [rowExpression].
+ * Selects the best matching value in the [<code>dataframe</code>][data]
+ * using the provided [<code>Aggregator</code>][Aggregator] `by` the provided [<code>rowExpression</code>][rowExpression].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
@@ -100,8 +100,8 @@ internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregat
     )
 
 /**
- * Selects the best matching value in the [dataframe][data]
- * using the provided [Aggregator] `by` the provided [column].
+ * Selects the best matching value in the [<code>dataframe</code>][data]
+ * using the provided [<code>Aggregator</code>][Aggregator] `by` the provided [<code>column</code>][column].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */

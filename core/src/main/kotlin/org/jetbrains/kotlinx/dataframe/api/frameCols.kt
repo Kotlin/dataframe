@@ -12,8 +12,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -55,14 +57,17 @@ public interface FrameColsColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**`frameCols`**][ColumnsSelectionDsl.colGroups] */
-        public interface PlainDslName
+        /** [**`frameCols`**][ColumnsSelectionDsl.frameCols] */
+        @ExcludeFromSources
+        public typealias PlainDslName = Nothing
 
-        /** __`.`__[**`frameCols`**][ColumnsSelectionDsl.colGroups] */
-        public interface ColumnSetName
+        /** __`.`__[**`frameCols`**][ColumnsSelectionDsl.frameCols] */
+        @ExcludeFromSources
+        public typealias ColumnSetName = Nothing
 
-        /** __`.`__[**`frameCols`**][ColumnsSelectionDsl.colGroups] */
-        public interface ColumnGroupName
+        /** __`.`__[**`frameCols`**][ColumnsSelectionDsl.frameCols] */
+        @ExcludeFromSources
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -70,9 +75,11 @@ public interface FrameColsColumnsSelectionDsl {
      * Creates a subset of columns from [this\] that are [FrameColumns][FrameColumn].
      *
      * You can optionally use a [filter\] to only include certain columns.
-     * [frameCols] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
+     * [frameCols] can be called using any of the supported [APIs][AccessApis] (+ [ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: {@include [DocumentationUrls.FrameCols]}
      *
      * ### Check out: [Grammar]
      *
@@ -95,10 +102,11 @@ public interface FrameColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups\]
      * @see [ColumnsSelectionDsl.cols\]
      */
+    @ExcludeFromSources
     private interface CommonFrameColsDocs {
 
         /** Example argument */
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**

@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.getValuesType
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.util.CHUNKED_IMPL_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.CREATE
@@ -35,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.util.CREATE_INLINE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.CREATE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.CREATE_WITH_TYPE_INFERENCE
 import org.jetbrains.kotlinx.dataframe.util.CREATE_WITH_TYPE_INFERENCE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.INDICES_BASE_COLUMN
 import org.jetbrains.kotlinx.dataframe.util.TYPE_SUGGESTION_IMPORT
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -216,8 +218,18 @@ public interface DataColumn<out T> : BaseColumn<T> {
             infer: Infer = Infer.None,
         ): DataColumn<T> = createByType(name, values, typeOf<T>(), infer)
 
-        /** Creates an empty [DataColumn] with given [name]. */
-        public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), typeOf<Unit>())
+        /**
+         * Creates an empty [DataColumn] with given [name] of type [Nothing].
+         * If you want to specify another type, use [`emptyOf<T>()`][emptyOf].
+         *
+         * @see emptyOf
+         */
+        public fun empty(name: String = ""): DataColumn<Nothing> =
+            createValueColumn(name, emptyList<Unit>(), nothingType).cast()
+
+        /** Creates an empty [DataColumn] of type [T] with given [name]. */
+        public inline fun <reified T> emptyOf(name: String = ""): DataColumn<T> =
+            createValueColumn(name, emptyList<T>(), typeOf<T>()).cast()
 
         // region deprecated
 
@@ -297,18 +309,24 @@ public interface DataColumn<out T> : BaseColumn<T> {
     public override operator fun get(range: IntRange): DataColumn<T>
 }
 
-public val AnyCol.name: String get() = name()
-public val AnyCol.path: ColumnPath get() = path()
+public val DataColumn<*>.name: String get() = name()
+public val DataColumn<*>.path: ColumnPath get() = path()
 
 public val <T> DataColumn<T>.values: Iterable<T> get() = values()
-public val AnyCol.hasNulls: Boolean get() = hasNulls()
-public val AnyCol.size: Int get() = size()
-public val AnyCol.indices: IntRange get() = indices()
+public val DataColumn<*>.hasNulls: Boolean get() = hasNulls()
+public val DataColumn<*>.size: Int get() = size()
+public val DataColumn<*>.indices: IntRange get() = indices()
 
-public val AnyCol.type: KType get() = type()
-public val AnyCol.kind: ColumnKind get() = kind()
-public val AnyCol.typeClass: KClass<*>
+public val DataColumn<*>.type: KType get() = type()
+public val DataColumn<*>.kind: ColumnKind get() = kind()
+public val DataColumn<*>.typeClass: KClass<*>
     get() = type.classifier as? KClass<*>
         ?: error("Cannot cast ${type.classifier?.javaClass} to a ${KClass::class}. Column $name: $type")
 
+public fun DataColumn<*>.indices(): IntRange = 0 until size()
+
+@Deprecated(
+    message = INDICES_BASE_COLUMN,
+    level = DeprecationLevel.HIDDEN, // clashes with the new indices overload on DataColumn
+)
 public fun AnyBaseCol.indices(): IntRange = 0 until size()

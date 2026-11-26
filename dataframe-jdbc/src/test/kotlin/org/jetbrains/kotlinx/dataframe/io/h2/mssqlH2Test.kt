@@ -6,22 +6,25 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.aliasesNameColumns
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import java.math.BigDecimal
+import java.sql.Blob
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.Date
 import java.util.UUID
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 private const val URL =
     "jdbc:h2:mem:testmssql;DB_CLOSE_DELAY=-1;MODE=MSSQLServer;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
@@ -32,34 +35,34 @@ interface Table1MSSSQL {
     val bigintColumn: Long
     val binaryColumn: ByteArray
     val bitColumn: Boolean
-    val charColumn: Char
+    val charColumn: String
     val dateColumn: Date
-    val datetime3Column: java.sql.Timestamp
-    val datetime2Column: java.sql.Timestamp
+    val datetime3Column: Instant
+    val datetime2Column: Instant
     val decimalColumn: BigDecimal
     val floatColumn: Double
-    val imageColumn: ByteArray?
+    val imageColumn: Blob?
     val intColumn: Int
     val moneyColumn: BigDecimal
-    val ncharColumn: Char
+    val ncharColumn: String
     val ntextColumn: String
     val numericColumn: BigDecimal
     val nvarcharColumn: String
     val nvarcharMaxColumn: String
     val realColumn: Float
-    val smalldatetimeColumn: java.sql.Timestamp
+    val smalldatetimeColumn: Instant
     val smallintColumn: Int
     val smallmoneyColumn: BigDecimal
     val timeColumn: java.sql.Time
-    val timestampColumn: java.sql.Timestamp
+    val timestampColumn: Instant
     val tinyintColumn: Int
-    val uniqueidentifierColumn: Char
+    val uniqueidentifierColumn: Uuid
     val varbinaryColumn: ByteArray
     val varbinaryMaxColumn: ByteArray
     val varcharColumn: String
     val varcharMaxColumn: String
-    val geometryColumn: String
-    val geographyColumn: String
+    val geometryColumn: ByteArray? // no such column in the table yet: read as nulls
+    val geographyColumn: ByteArray? // no such column in the table yet: read as nulls
 }
 
 class MSSQLH2Test {
@@ -173,24 +176,24 @@ class MSSQLH2Test {
 
     @Test
     fun `basic test for reading sql tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1", limit = 5).cast<Table1MSSSQL>()
+        val df1 = DataFrame.readSqlTable(connection, "table1", limit = 5).cast<Table1MSSSQL>(verify = true)
 
-        val result = df1.filter { it[Table1MSSSQL::id] == 1 }
+        val result = df1.filter { "id"<Int>() == 1 }
         result[0][30] shouldBe "Sample1 text"
-        result[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
-        result[0][Table1MSSSQL::bitColumn] shouldBe true
-        result[0][Table1MSSSQL::intColumn] shouldBe 123456
-        result[0][Table1MSSSQL::ntextColumn] shouldBe "Sample1 text"
+        result[0]["bigintColumn"] shouldBe 123456789012345L
+        result[0]["bitColumn"] shouldBe true
+        result[0]["intColumn"] shouldBe 123456
+        result[0]["ntextColumn"] shouldBe "Sample1 text"
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrameSchema.readSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintColumn"]!!.type shouldBe typeOf<Long?>()
         schema.columns["binaryColumn"]!!.type shouldBe typeOf<ByteArray?>()
         schema.columns["bitColumn"]!!.type shouldBe typeOf<Boolean?>()
         schema.columns["charColumn"]!!.type shouldBe typeOf<String?>()
         schema.columns["dateColumn"]!!.type shouldBe typeOf<Date?>()
-        schema.columns["datetime3Column"]!!.type shouldBe typeOf<java.sql.Timestamp?>()
-        schema.columns["datetime2Column"]!!.type shouldBe typeOf<java.sql.Timestamp?>()
+        schema.columns["datetime3Column"]!!.type shouldBe typeOf<Instant?>()
+        schema.columns["datetime2Column"]!!.type shouldBe typeOf<Instant?>()
         schema.columns["decimalColumn"]!!.type shouldBe typeOf<BigDecimal?>()
         schema.columns["floatColumn"]!!.type shouldBe typeOf<Double?>()
         schema.columns["intColumn"]!!.type shouldBe typeOf<Int?>()
@@ -201,11 +204,11 @@ class MSSQLH2Test {
         schema.columns["nvarcharColumn"]!!.type shouldBe typeOf<String?>()
         schema.columns["nvarcharMaxColumn"]!!.type shouldBe typeOf<String?>()
         schema.columns["realColumn"]!!.type shouldBe typeOf<Float?>()
-        schema.columns["smalldatetimeColumn"]!!.type shouldBe typeOf<java.sql.Timestamp?>()
+        schema.columns["smalldatetimeColumn"]!!.type shouldBe typeOf<Instant?>()
         schema.columns["smallintColumn"]!!.type shouldBe typeOf<Int?>()
         schema.columns["smallmoneyColumn"]!!.type shouldBe typeOf<BigDecimal?>()
         schema.columns["timeColumn"]!!.type shouldBe typeOf<java.sql.Time?>()
-        schema.columns["timestampColumn"]!!.type shouldBe typeOf<java.sql.Timestamp?>()
+        schema.columns["timestampColumn"]!!.type shouldBe typeOf<Instant?>()
         schema.columns["tinyintColumn"]!!.type shouldBe typeOf<Int?>()
         schema.columns["varbinaryColumn"]!!.type shouldBe typeOf<ByteArray?>()
         schema.columns["varbinaryMaxColumn"]!!.type shouldBe typeOf<ByteArray?>()
@@ -224,11 +227,11 @@ class MSSQLH2Test {
             FROM Table1
             """.trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery, limit = 3).cast<Table1MSSSQL>()
-        val result = df.filter { it[Table1MSSSQL::id] == 1 }
-        result[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery, limit = 3)
+        val result = df.filter { "id"<Int>() == 1 }
+        result[0]["bigintColumn"] shouldBe 123456789012345L
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintColumn"]!!.type shouldBe typeOf<Long?>()
     }
@@ -237,15 +240,20 @@ class MSSQLH2Test {
     fun `read from all tables`() {
         val dataframes = DataFrame.readAllSqlTables(connection, limit = 4).values.toList()
 
-        val table1Df = dataframes[0].cast<Table1MSSSQL>()
+        val table1Df = dataframes[0].cast<Table1MSSSQL>(verify = true)
 
         table1Df.rowsCount() shouldBe 4
-        table1Df.filter { it[Table1MSSSQL::id] > 2 }.rowsCount() shouldBe 2
-        table1Df[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
+        table1Df.filter { "id"<Int>() > 2 }.rowsCount() shouldBe 2
+        table1Df[0]["bigintColumn"] shouldBe 123456789012345L
     }
 
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column`() {
+        aliasesNameColumns(connection)
     }
 }

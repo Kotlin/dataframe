@@ -4,6 +4,8 @@
 
 Computes the cumulative sum of values in the selected columns.
 
+**API reference**: [`cumSum`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/cum-sum.html)
+
 ```text
 cumSum(skipNA = true) [ { columns } ]
 ```
@@ -14,7 +16,7 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 
 **Parameters:**
 * `skipNA` — when `true`, ignores [`NA` values](nanAndNa.md#na) (`null` or `NaN`). 
-  When `false`, all values after first `NA` will be `NaN` (for `Double` and `Float` columns) or `null` (for integer columns).
+  When `false`, all values after the first `NA` will be `NaN` (for `Double` and `Float` columns) or `null` (for integer columns).
 
 **Available for:**
 * [`DataFrame`](DataFrame.md)
@@ -27,6 +29,38 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 df.cumSum { weight }
 df.weight.cumSum()
 df.groupBy { city }.cumSum { weight }.concat()
+```
+
+<!---END-->
+
+### Big numbers
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.CumSumSamples-->
+
+> `java.math.BigDecimal` and `java.math.BigInteger` are not supported:
+> `cumSum` throws an exception at runtime for such columns.
+> Compute the cumulative sum manually with Kotlin standard library methods and Java big number arithmetic,
+> or [`convert`](convert.md) the column to a primitive type first.
+> {style="warning"}
+
+For a `BigDecimal` column `amount`, the exact cumulative sum can be computed with Java `BigDecimal` arithmetic:
+
+<!---FUN cumSumBigNumbersManually-->
+
+```kotlin
+// exact cumulative sum, computed with Java `BigDecimal` arithmetic
+df.amount.toList().runningReduce(BigDecimal::add).toColumn("amount")
+```
+
+<!---END-->
+
+Alternatively, [`convert`](convert.md) the column to a primitive type first — at the cost of precision:
+
+<!---FUN cumSumBigNumbersConverted-->
+
+```kotlin
+// approximate cumulative sum, computed after converting the column to `Double`
+df.convert { amount }.toDouble().cumSum { amount }
 ```
 
 <!---END-->

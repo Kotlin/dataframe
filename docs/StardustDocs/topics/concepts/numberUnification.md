@@ -12,7 +12,7 @@ The following graph shows the hierarchy of number types in Kotlin DataFrame.
 
 The order is top-down from the most complex type to the simplest one.
 
-For each number type in the graph, it holds that a number of that type can be expressed lossless by
+For each number type in the graph, it holds that a number of that type can be expressed losslessly by
 a number of a more complex type (any of its parents).
 This is either because the more complex type has a larger range or higher precision (in terms of bits).
 

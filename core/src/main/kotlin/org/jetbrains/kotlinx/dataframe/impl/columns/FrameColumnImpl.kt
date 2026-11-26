@@ -1,13 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.BuildConfig
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.core.BuildConfig
 import org.jetbrains.kotlinx.dataframe.impl.anyNull
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas
@@ -43,9 +43,13 @@ internal open class FrameColumnImpl<T> constructor(
     override fun addParent(parent: ColumnGroup<*>) = FrameColumnWithParent(parent, this)
 
     override fun createWithValues(values: List<DataFrame<T>>, hasNulls: Boolean?) =
-        DataColumn.createFrameColumn(name, values)
+        DataColumn.createFrameColumn(name, values, if (values.allEmpty()) schema else null)
 
-    override fun changeType(type: KType) = throw UnsupportedOperationException()
+    // The schema is computed from the non-empty dataframes. When none is left — an empty slice (`head(0)`,
+    // a `filter` that keeps nothing) or a slice of only empty dataframes — there is nothing to compute it from,
+    // so the schema of this column is kept. The lazy schema is shared, not copied: until it is read, the slice
+    // keeps the dataframes of this column reachable.
+    private fun List<DataFrame<*>>.allEmpty(): Boolean = none { it.nrow > 0 }
 
     override fun distinct() = FrameColumnImpl(name, distinct.value.toList(), schema, distinct)
 
@@ -55,11 +59,7 @@ internal open class FrameColumnImpl<T> constructor(
 
     override fun forceResolve() = ResolvingFrameColumn(this)
 
-    override fun get(indices: Iterable<Int>): FrameColumn<T> =
-        DataColumn.createFrameColumn(
-            name = name,
-            groups = indices.map { values[it] },
-        )
+    override fun get(indices: Iterable<Int>): FrameColumn<T> = createWithValues(indices.map { values[it] }, null)
 
     override fun get(columnName: String) =
         throw UnsupportedOperationException("Can not get nested column '$columnName' from FrameColumn '$name'")

@@ -39,6 +39,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.put
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.topmostChildren
 import org.jetbrains.kotlinx.dataframe.impl.equalsByElement
+import org.jetbrains.kotlinx.dataframe.impl.isNothing
 import org.jetbrains.kotlinx.dataframe.impl.rollingHash
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
@@ -126,6 +127,8 @@ internal fun <A> ColumnAccessor<A>.onResolve(check: (ColumnWithPath<*>?) -> Unit
         override fun rename(newName: String): ColumnAccessor<A> = this@onResolve.rename(newName).onResolve(check)
 
         override fun name(): String = this@onResolve.name()
+
+        override fun path(): ColumnPath = this@onResolve.path()
 
         override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<A>? =
             this@onResolve.resolveSingle(context).also(check)
@@ -271,9 +274,9 @@ private fun <T> List<ColumnWithPath<T>>.singleImpl(): ColumnWithPath<T> =
 
 /**
  * Converts [this] [ColumnsResolver] to a [SingleColumn].
- * [resolveSingle] will return the single column of [this] if there is only one, else it will return throw an exception:
+ * [resolveSingle] will return the single column of [this] if there is only one, else it will throw an exception:
  * In case of an empty [ColumnsResolver], a [NoSuchElementException] will be thrown.
- * In case of more than one column, a [IllegalArgumentException] will be thrown.
+ * In case of more than one column, an [IllegalArgumentException] will be thrown.
  * If the result is used as a [ColumnSet], `null` will be converted to an empty list.
  */
 internal fun <T> ColumnsResolver<T>.singleImpl(): SingleColumn<T> =
@@ -488,6 +491,7 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(
  */
 internal fun KType.toColumnKind(): ColumnKind =
     when {
+        this.isNothing -> ColumnKind.Value
         this.isSubtypeOf(typeOf<AnyFrame>()) -> ColumnKind.Frame
         this.isSubtypeOf(typeOf<AnyRow?>()) -> ColumnKind.Group
         else -> ColumnKind.Value

@@ -5,8 +5,8 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.ValueWithDefault
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import kotlin.reflect.KType
 
-@Suppress("DataClassPrivateConstructor")
-public data class NamedValue private constructor(
+@ConsistentCopyVisibility
+public data class NamedValue internal constructor(
     val path: ColumnPath,
     val value: Any?,
     val type: KType?,

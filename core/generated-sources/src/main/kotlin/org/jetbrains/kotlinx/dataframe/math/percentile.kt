@@ -1,20 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.api.isNaN
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import java.math.BigDecimal
-import java.math.BigInteger
-import kotlin.math.round
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 /**
- * Uses [QuantileEstimationMethod.R8] for primitive numbers, else [QuantileEstimationMethod.R3]
+ * Uses [<code>QuantileEstimationMethod.R8</code>][QuantileEstimationMethod.R8] for primitive numbers, else [<code>QuantileEstimationMethod.R3</code>][QuantileEstimationMethod.R3]
  */
 internal fun <T : Comparable<T>> Sequence<T>.percentileOrNull(percentile: Double, type: KType, skipNaN: Boolean): Any? {
     when {
@@ -31,11 +27,6 @@ internal fun <T : Comparable<T>> Sequence<T>.percentileOrNull(percentile: Double
                 "Unable to compute the percentile for ${
                     renderType(type)
                 }. Only primitive numbers or self-comparables are supported.",
-            )
-
-        type == typeOf<BigDecimal>() || type == typeOf<BigInteger>() ->
-            throw IllegalArgumentException(
-                "Cannot calculate the percentile for big numbers in DataFrame. Only primitive numbers are supported.",
             )
 
         // TODO kdocs: note about loss of precision for Long
@@ -77,8 +68,8 @@ internal val percentileConversion: CalculateReturnType = { type, isEmpty ->
 }
 
 /**
- * Returns the index of the [percentile] in the unsorted sequence [this].
- * If `!`[skipNaN] and the sequence [this] contains NaN, the index of the first NaN will be returned.
+ * Returns the index of the [<code>percentile</code>][percentile] in the unsorted sequence [<code>this</code>][this].
+ * If `!`[<code>skipNaN</code>][skipNaN] and the sequence [<code>this</code>][this] contains NaN, the index of the first NaN will be returned.
  * Returns -1 if the sequence is empty.
  */
 internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfPercentile(
@@ -99,43 +90,15 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfPercentile(
                     renderType(type)
                 }. Only primitive numbers or self-comparables are supported.",
             )
-
-        nonNullType == typeOf<BigDecimal>() || nonNullType == typeOf<BigInteger>() ->
-            throw IllegalArgumentException(
-                "Cannot calculate the percentile for big numbers in DataFrame. Only primitive numbers are supported.",
-            )
-    }
-
-    val indexedSequence = this.mapIndexedNotNull { i, it ->
-        if (it == null) {
-            null
-        } else {
-            IndexedComparable(i, it)
-        }
     }
 
     // TODO make configurable https://github.com/Kotlin/dataframe/issues/1121
-    val method = QuantileEstimationMethod.R3
-
-    // percentile of 25.0 means the 25th 100-quantile, so 25 / 100 = 0.25
-    val p = percentile / 100.0
-
-    // get the index where the percentile can be found in the sorted sequence
-    val indexEstimation = indexedSequence.quantileIndexEstimation(
-        p = p,
-        type = typeOf<IndexedComparable<Nothing>>(),
+    return quantileIndex(
+        // percentile of 25.0 means the 25th 100-quantile, so 25 / 100 = 0.25
+        p = percentile / 100.0,
+        type = type,
         skipNaN = skipNaN,
-        method = method,
+        method = QuantileEstimationMethod.R3,
         name = "percentile",
     )
-    if (indexEstimation.isNaN()) return this.indexOfFirst { it.isNaN }
-    if (indexEstimation < 0.0) return -1
-    require(indexEstimation == round(indexEstimation)) {
-        "percentile expected a whole number index from quantileIndexEstimation but was $indexEstimation"
-    }
-
-    val percentileResult = indexedSequence.toList().quickSelect(k = indexEstimation.toInt())
-
-    // return the original unsorted index of the found result
-    return percentileResult.index
 }

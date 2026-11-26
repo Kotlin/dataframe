@@ -6,6 +6,8 @@ Basic summary statistics:
 * [count](count.md)
 * [valueCounts](valueCounts.md)
 
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)
+
 Aggregating summary statistics:
 * [sum](sum.md)
 * [min/max](minmax.md)
@@ -14,7 +16,7 @@ Aggregating summary statistics:
 * [median](median.md)
 * [percentile](percentile.md)
 
-Every summary statistics can be used in aggregations of:
+Every summary statistic can be used in aggregations of:
 * [`DataFrame`](DataFrame.md)
 * [`DataColumn`](DataColumn.md)
 * [`GroupBy DataFrame`](#groupby-statistics)
@@ -36,8 +38,8 @@ df.pivot { city }.groupBy { name.lastName }.std()
 [sum](sum.md), [mean](mean.md), [std](std.md) are available for (primitive) number columns of types 
 `Int`, `Double`, `Float`, `Long`, `Byte`, `Short`, and any mix of those.
 
-[min/max](minmax.md), [median](median.md), and [percentile](percentile.md) are available for self-comparable columns 
-(so columns of type `T : Comparable<T>`, like `DateTime`, `String`, `Int`, etc.)
+[min/max](minmax.md), [median](median.md), and [percentile](percentile.md) are available for self-comparable columns
+(so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 which includes all primitive number columns, but no mix of different number types.
 
 In all cases, `null` values are ignored.
@@ -45,10 +47,14 @@ In all cases, `null` values are ignored.
 `NaN` values can optionally be ignored by setting the `skipNaN` flag to `true`.
 When it's set to `false`, a `NaN` in the input will be propagated to the result.
 
-Big numbers (`BigInteger`, `BigDecimal`) are generally **not** supported for statistics.
-Please [convert](convert.md) them to primitive types before using statistics.
+Big numbers (`BigInteger`, `BigDecimal`) are **not** supported by [sum](sum.md), [mean](mean.md),
+[std](std.md), and [cumSum](cumSum.md) — these operations throw at runtime for such columns.
+[min/max](minmax.md) work with them, as they only compare values;
+[median](median.md) and [percentile](percentile.md) are not explicitly supported and work only for some overloads.
+Please [convert](convert.md) big numbers to primitive types before using statistics,
+or compute the statistic manually with Java big number arithmetic.
 
-When statistics `x` is applied to several columns, it can be computed in several modes:
+When statistic `x` is applied to several columns, it can be computed in several modes:
 * `x(): DataRow` computes separate value per every suitable column
 * `x { columns }: Value` computes single value across all given columns 
 * `xFor { columns }: DataRow` computes separate value per every given column
@@ -75,7 +81,7 @@ df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
 
 ### groupBy statistics
 
-When statistics are applied to [`GroupBy DataFrame`](groupBy.md#transformation), it is computed for every data group. 
+When a statistic is applied to a [`GroupBy DataFrame`](groupBy.md#transformation), it is computed for every data group. 
 
 If a statistic is applied in a mode that returns a single value for every data group,
 it will be stored in a single column named according to the statistic name.
@@ -103,7 +109,7 @@ df.groupBy { city }.meanOf("custom") { age / 2 } // [`city`, `custom`]
 <!---END-->
 
 If a statistic is applied in a mode that returns a separate value for every column in a data group,
-aggregated values will be stored in columns with original column names.
+aggregated values will be stored in columns with the original column names.
 
 <!---FUN statisticGroupByMany-->
 
@@ -117,7 +123,7 @@ df.groupBy { city }.mean() // [`city`, `age`, `weight`, ...]
 
 ### pivot statistics
 
-When statistics are applied to `Pivot` or `PivotGroupBy`, it is computed for every data group.
+When a statistic is applied to `Pivot` or `PivotGroupBy`, it is computed for every data group.
 
 If a statistic is applied in a mode that returns a single value for every data group,
 it will be stored in a `DataFrame` cell without any name.

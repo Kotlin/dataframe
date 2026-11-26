@@ -9,7 +9,7 @@ internal class ValueColumnWithPathImpl<T> internal constructor(
     override val data: ValueColumn<T>,
     override val path: ColumnPath,
 ) : ColumnWithPath<T>,
-    ValueColumn<T> by data {
+    ValueColumnInternal<T> by data.internalValueColumn() {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T> = this
 

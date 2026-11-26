@@ -10,106 +10,157 @@ import org.apache.arrow.vector.types.pojo.ArrowType
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
-import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
+import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
+import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 /**
  * Create Arrow [Field] (note: this is part of [Schema], does not contain data itself) that has the same
- * name, type and nullable as [this]
+ * name, type and nullability as [this].
+ *
+ * Nullability is the one exception: a column of `Nothing` or `Nothing?` maps to a nullable `Null` field, and
+ * for `Nothing` the nullability is not preserved — an Arrow
+ * [NullVector][org.apache.arrow.vector.NullVector] has no validity bitmap, so a non-nullable `Null` field
+ * is not representable.
  */
-public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Field {
+public fun DataColumn<*>.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Field {
     val column = this
     val columnType = column.type()
-    val nullable = columnType.isMarkedNullable
+    return when (column) {
+        is ColumnGroup<*> -> {
+            ColumnSchema.Group(schema(), type()).toArrowField(column.name(), mismatchSubscriber)
+        }
+
+        else -> columnType.toArrowField(column.name(), mismatchSubscriber)
+    }
+}
+
+internal fun ColumnSchema.toArrowField(name: String, mismatchSubscriber: (ConvertingMismatch) -> Unit): Field =
+    when (this) {
+        is ColumnSchema.Value -> type.toArrowField(name, mismatchSubscriber)
+
+        is ColumnSchema.Group -> {
+            val childFields = schema.columns.map { (childName, childSchema) ->
+                childSchema.toArrowField(childName, mismatchSubscriber)
+            }
+            Field(name, FieldType(nullable, ArrowType.Struct(), null), childFields)
+        }
+
+        is ColumnSchema.Frame -> {
+            val childFields = schema.columns.map { (childName, childSchema) ->
+                childSchema.toArrowField(childName, mismatchSubscriber)
+            }
+            val childStructField = Field("item", FieldType(true, ArrowType.Struct(), null), childFields)
+            Field(name, FieldType(nullable, ArrowType.List(), null), listOf(childStructField))
+        }
+    }
+
+/**
+ * `kotlinx.datetime.Instant` is superseded by [kotlin.time.Instant] but still resolvable, so columns holding it are
+ * mapped too. Kept in a `val` to keep the deprecation suppression off the whole `when`. See issue #1350.
+ */
+@Suppress("DEPRECATION")
+internal val deprecatedInstantType: KType = typeOf<DeprecatedInstant?>()
+
+internal const val NANOS_PER_SECOND: Long = 1_000_000_000L
+
+/**
+ * How many of these units fit into one second.
+ *
+ * Every Arrow timestamp vector stores a `Long` counting this many parts of a second since the epoch, so this is the
+ * divisor that splits such a value into whole seconds plus a sub-second remainder — and the multiplier that puts it
+ * back together. Shared by the reader
+ * ([DataFrame.readArrowFeather][org.jetbrains.kotlinx.dataframe.io.readArrowFeather]) and the writer
+ * ([AnyFrame.arrowWriter][org.jetbrains.kotlinx.dataframe.io.arrowWriter]) so the two can never disagree about a unit.
+ */
+internal val TimeUnit.perSecond: Long
+    get() = when (this) {
+        TimeUnit.SECOND -> 1L
+        TimeUnit.MILLISECOND -> 1_000L
+        TimeUnit.MICROSECOND -> 1_000_000L
+        TimeUnit.NANOSECOND -> NANOS_PER_SECOND
+    }
+
+/**
+ * The precision an [Instant][StdlibInstant] column is written with when no target [Schema] is supplied.
+ *
+ * Microseconds, not nanoseconds, for range: an Arrow nanosecond timestamp is an `int64` count of nanoseconds since
+ * the epoch, which only spans 1677–2262, while a microsecond one reaches roughly ±292 277 years around it. That
+ * still does not cover the whole [StdlibInstant] range — an instant beyond it is reported as
+ * [ConvertingMismatch.ValueOutOfRange] and refused rather than silently wrapping — but it covers every instant a
+ * file is likely to hold.
+ * It is also the precision pandas, Polars and PyArrow emit by default. The trade-off is that a sub-microsecond
+ * instant loses its last three digits on write; that is reported as [ConvertingMismatch.PrecisionReduced], and an
+ * explicit target [Schema] with `Timestamp(NANOSECOND, "UTC")` avoids it.
+ */
+internal val DEFAULT_INSTANT_UNIT: TimeUnit = TimeUnit.MICROSECOND
+
+internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMismatch) -> Unit): Field {
+    val nullable = isMarkedNullable
     return when {
-        columnType.isSubtypeOf(typeOf<String?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Utf8(), null),
-                emptyList(),
-            )
+        // Both `Nothing` and `Nothing?` land here: an empty column is `Nothing` (not nullable), and being the
+        // subtype of every type it would otherwise match the first `isSubtypeOf` branch below and silently
+        // become `Utf8` (issue #1812). The field is nullable even for the non-nullable `Nothing` — an Arrow
+        // `NullVector` carries no validity bitmap, so a non-nullable `Null` field is not representable
+        // (Arrow's own `Field.createVector` widens it back).
+        isSubtypeOf(nullableNothingType) -> Field(name, FieldType(true, ArrowType.Null(), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<Boolean?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Bool(), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<String?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Utf8(), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<Byte?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Int(8, true), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<Boolean?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Bool(), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<Short?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Int(16, true), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<Byte?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Int(8, true), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<Int?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Int(32, true), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<Short?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Int(16, true), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<Long?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Int(64, true), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<Int?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Int(32, true), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<Float?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<Long?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Int(64, true), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<Double?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<Float?>()) ->
+            Field(name, FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<JavaLocalDate?>()) ||
-            columnType.isSubtypeOf(typeOf<LocalDate?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Date(DateUnit.DAY), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<Double?>()) ->
+            Field(name, FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<JavaLocalDateTime?>()) ||
-            columnType.isSubtypeOf(typeOf<LocalDateTime?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Date(DateUnit.MILLISECOND), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<JavaLocalDate?>()) || isSubtypeOf(typeOf<LocalDate?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Date(DateUnit.DAY), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<JavaLocalTime?>()) ||
-            columnType.isSubtypeOf(typeOf<LocalTime>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Time(TimeUnit.NANOSECOND, 64), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<JavaLocalDateTime?>()) || isSubtypeOf(typeOf<LocalDateTime?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Date(DateUnit.MILLISECOND), null), emptyList())
+
+        // An instant is written as a timestamp *with* a timezone: the `"UTC"` marker says the values are already
+        // normalized to UTC, which is what Parquet records as `isAdjustedToUTC = true`, and is what makes the
+        // column read back as an instant rather than as a local date-time. For the unit see
+        // [DEFAULT_INSTANT_UNIT] — it is deliberately coarser than an instant can be.
+        isSubtypeOf(typeOf<StdlibInstant?>()) ||
+            isSubtypeOf(typeOf<JavaInstant?>()) ||
+            isSubtypeOf(deprecatedInstantType) ->
+            Field(name, FieldType(nullable, ArrowType.Timestamp(DEFAULT_INSTANT_UNIT, "UTC"), null), emptyList())
+
+        isSubtypeOf(typeOf<JavaLocalTime?>()) || isSubtypeOf(typeOf<LocalTime?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Time(TimeUnit.NANOSECOND, 64), null), emptyList())
 
         else -> {
-            mismatchSubscriber(ConvertingMismatch.SavedAsString(column.name(), column.typeClass.java))
-            Field(column.name(), FieldType(true, ArrowType.Utf8(), null), emptyList())
+            val clazz = (classifier as? kotlin.reflect.KClass<*>)?.java ?: Any::class.java
+            mismatchSubscriber(ConvertingMismatch.SavedAsString(name, clazz))
+            Field(name, FieldType(true, ArrowType.Utf8(), null), emptyList())
         }
     }
 }
@@ -117,8 +168,15 @@ public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit 
 /**
  * Create Arrow [Schema] matching [this] actual data.
  * Columns with not supported types will be interpreted as String
+ *
+ * The one exception is the nullability of a `Nothing`/`Nothing?` column — see [toArrowField].
+ *
+ * Note the two ways a date-time column is mapped: a `LocalDateTime` column becomes `Date(MILLISECOND)`, while an
+ * `Instant` column becomes `Timestamp(MICROSECOND, "UTC")` — a timestamp *with* a time zone, which is how Arrow
+ * and Parquet mark values already normalized to UTC. Sub-microsecond instants lose their last three digits at that
+ * precision, reported as [ConvertingMismatch.PrecisionReduced]; see [DEFAULT_INSTANT_UNIT] for why.
  */
-public fun List<AnyCol>.toArrowSchema(
+public fun List<DataColumn<*>>.toArrowSchema(
     mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage,
 ): Schema {
     val fields = this.map { it.toArrowField(mismatchSubscriber) }

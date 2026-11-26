@@ -7,7 +7,10 @@ import org.jetbrains.kotlinx.jupyter.testkit.ReplProvider
 abstract class DataFrameJupyterTest :
     JupyterReplTestCase(
         ReplProvider.forLibrariesTesting(
-            setOf("dataframe", "dataframe-jupyter"),
+            libraries = setOf("dataframe", "kandy-geo", "kandy"),
+            extraCompilerArguments = listOf(
+                "-Xopt-in=kotlin.uuid.ExperimentalUuidApi",
+            ),
         ),
     )
 

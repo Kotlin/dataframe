@@ -27,9 +27,9 @@ To stay updated on progress, subscribe to the
 Yes — Kotlin DataFrame can be used in Android projects.
 
 There is no dedicated Android artifact yet, but you can include the standard **JVM artifact**  
-by setting up a [custom Gradle configuration](gettingStartedGradleAdvanced.md).
+by setting up a [custom Gradle configuration](SetupAndroid.md).
 
-## How to start with Kotlin DataFrame ?
+## How to start with Kotlin DataFrame?
 
 If you're new to Kotlin DataFrame, the [Quickstart guide](quickstart.md) is the perfect place to begin —  
 it gives a brief yet comprehensive introduction to the basics of working with DataFrame.
@@ -41,7 +41,7 @@ to explore various use cases and deepen your understanding of Kotlin DataFrame.
 
 For the best experience, Kotlin DataFrame is most effective in an interactive environment.
 
-- **[Kotlin Notebook](gettingStartedKotlinNotebook.md)** is ideal for exploring Kotlin DataFrame.  
+- **[Kotlin Notebook](SetupKotlinNotebook.md)** is ideal for exploring Kotlin DataFrame.  
   Everything works out of the box — interactivity, rich rendering of DataFrames and plots.  
   You can instantly see the results of each operation, view the contents of your DataFrames after every transformation,  
   inspect individual rows and columns, and explore data step-by-step in a live and interactive way.  
@@ -109,10 +109,10 @@ in a **type-safe** and **name-safe** way.
 
 They are generated automatically when working with Kotlin DataFrame in:
 
-- [Kotlin Notebook](gettingStartedKotlinNotebook.md), where extension properties are generated 
+- [Kotlin Notebook](SetupKotlinNotebook.md), where extension properties are generated 
 after each cell execution.
 - A Kotlin project in [IntelliJ IDEA](https://www.jetbrains.com/idea/) with the
-  [](Compiler-Plugin.md) enabled, where the properties are generated at compile time.
+  [compiler plugin](Compiler-Plugin.md) enabled, where the properties are generated at compile time.
 
 ## I used the KProperties API in older versions, what should I use now that it's deprecated?
 
@@ -125,7 +125,7 @@ Annotate your Kotlin class with [`@DataSchema`](Compiler-Plugin.md#dataschema-de
 and the plugin will automatically generate type-safe extension properties 
 for your [`DataFrame`](DataFrame.md).
 Or alternatively, call [`toDataFrame()`](createDataFrame.md#todataframe) on a list of Kotlin or Java objects, 
-and the resulting `DataFrame` will have schema according to their properties or getters.
+and the resulting `DataFrame` will have a schema according to their properties or getters.
 
 See [compiler plugin examples](Compiler-Plugin.md#examples).
 
@@ -145,7 +145,7 @@ Yes, Kotlin DataFrame is designed to work with hierarchical data.
 
 You can read JSON or any other nested format into a [`DataFrame`](DataFrame.md)
 with hierarchical structure — using `FrameColumn` 
-(a column of data frames) and `ColumnGroup` (a column with nested subcolumns).
+(a column of dataframes) and `ColumnGroup` (a column with nested subcolumns).
 
 Both [dataframe schemas](schemas.md) and [extension properties](extensionPropertiesApi.md)
 fully support nested data structures, allowing type-safe access and transformations at any depth.
@@ -169,36 +169,6 @@ including support for reading and writing GeoJSON and Shapefile formats, as well
 
 See the [GeoDataFrame Guide](https://kotlin.github.io/kandy/geo-plotting-guide.html) for details 
 and examples with beautiful [Kandy](https://kotlin.github.io/kandy) geo visualizations.
-
-## What is the difference between Compiler Plugin, Gradle Plugin, and KSP Plugin?
-
-> The current Gradle plugin is **under consideration for deprecation** and may be officially marked as deprecated 
-> in future releases.
-> The KSP plugin doesn't work for now.
->
-> At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead 
-> of relying on the plugins.
-{style="warning"}
-
-All these plugins relate to working with [dataframe schemas](schemas.md), but they serve different purposes:
-
-- **[Gradle Plugin](DataSchemaGenerationGradle.md)** and **[KSP Plugin](https://github.com/Kotlin/dataframe/tree/master/plugins/symbol-processor)** 
- are used to **generate data schemas** from external sources as part of the Gradle build process.
-
-    - **Gradle Plugin**: You declare the data source in your `build.gradle.kts` file  
-      using the `dataframes { ... }` block.
-
-    - **KSP Plugin**: You annotate your Kotlin file with `@ImportDataSchema` file annotation,  
-      and the schema will be generated via Kotlin Symbol Processing.
-
-  See [Data Schemas in Gradle Projects](https://kotlin.github.io/dataframe/schemasgradle.html) for more.
-
-- **[Compiler Plugin](Compiler-Plugin.md)**
- provides **on-the-fly generation** of [extension properties](extensionPropertiesApi.md)  
- based on an existing schema **during compilation**.
- However, when reading data from files or external sources (like SQL),
- the schema cannot be inferred automatically — you need to 
- specify it manually or use the Gradle or KSP plugin to generate it.
 
 ## How do I contribute or report an issue?
 

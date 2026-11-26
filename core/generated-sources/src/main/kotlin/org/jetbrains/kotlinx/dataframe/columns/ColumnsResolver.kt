@@ -9,11 +9,11 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 
 /**
  * ## ColumnsResolver
- * Entity that can be resolved into a list of [columns][DataColumn].
+ * Entity that can be resolved into a list of [<code>columns</code>][DataColumn].
  *
- * Used as a return type of [ColumnsSelector].
+ * Used as a return type of [<code>ColumnsSelector</code>][ColumnsSelector].
  *
- * Implemented by [SingleColumn] and [ColumnSet].
+ * Implemented by [<code>SingleColumn</code>][SingleColumn] and [<code>ColumnSet</code>][ColumnSet].
  *
  * @param C common type of resolved columns
  * @see [SingleColumn]
@@ -24,9 +24,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 public sealed interface ColumnsResolver<out C> {
 
     /**
-     * Resolves this [ColumnsResolver] as a [List]<[ColumnWithPath]<[C]>>.
-     * In many cases this function [transforms][ColumnsResolver.transform] a parent [ColumnsResolver] to reach
-     * the current [ColumnsResolver] result.
+     * Resolves this [<code>ColumnsResolver</code>][ColumnsResolver] as a [<code>List</code>][List]<[<code>ColumnWithPath</code>][ColumnWithPath]<[<code>C</code>][C]>>.
+     * In many cases this function [<code>transforms</code>][ColumnsResolver.transform] a parent [<code>ColumnsResolver</code>][ColumnsResolver] to reach
+     * the current [<code>ColumnsResolver</code>][ColumnsResolver] result.
      */
     public fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>>
 }

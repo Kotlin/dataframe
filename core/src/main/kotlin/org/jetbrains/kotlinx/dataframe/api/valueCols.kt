@@ -12,8 +12,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -56,13 +58,16 @@ public interface ValueColsColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`valueCols`**][ColumnsSelectionDsl.valueCols] */
-        public interface PlainDslName
+        @ExcludeFromSources
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`valueCols`**][ColumnsSelectionDsl.valueCols] */
-        public interface ColumnSetName
+        @ExcludeFromSources
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`valueCols`**][ColumnsSelectionDsl.valueCols] */
-        public interface ColumnGroupName
+        @ExcludeFromSources
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -70,9 +75,11 @@ public interface ValueColsColumnsSelectionDsl {
      * Creates a subset of columns from [this\] that are [ValueColumns][ValueColumn].
      *
      * You can optionally use a [filter\] to only include certain columns.
-     * [valueCols] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
+     * [valueCols] can be called using any of the supported [APIs][AccessApis] (+ [ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: {@include [DocumentationUrls.ValueCols]}
      *
      * ### Check out: [Grammar]
      *
@@ -95,10 +102,11 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups\]
      * @see [ColumnsSelectionDsl.cols\]
      */
+    @ExcludeFromSources
     private interface CommonValueColsDocs {
 
         /** Example argument */
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**

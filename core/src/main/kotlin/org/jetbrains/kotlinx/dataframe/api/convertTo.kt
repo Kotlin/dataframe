@@ -1,11 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
-import org.jetbrains.kotlinx.dataframe.exceptions.ColumnNotFoundException
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
@@ -17,16 +15,18 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
- * Specifies how to handle columns in original dataframe that were not matched to any column in destination dataframe schema.
+ * Specifies how to handle columns in the original dataframe that were not matched to any column in the destination dataframe schema.
+ *
+ * For more information: {@include [DocumentationUrls.ConvertTo]}
  */
 public enum class ExcessiveColumns {
     /**
-     * Remove excessive columns from resulting dataframe
+     * Remove excessive columns from the resulting dataframe
      */
     Remove,
 
     /**
-     * Keep excessive columns in resulting dataframe
+     * Keep excessive columns in the resulting dataframe
      */
     Keep,
 
@@ -38,10 +38,16 @@ public enum class ExcessiveColumns {
 
 /**
  * Holds data context for [fill] operation
+ *
+ * For more information: {@include [DocumentationUrls.ConvertTo]}
  */
 public data class ConvertToFill<T, C>(internal val dsl: ConvertSchemaDsl<T>, val columns: ColumnsSelector<T, C>)
 
-/** Provides access to [fromType] and [toSchema] in the flexible [ConvertSchemaDsl.convertIf] method. */
+/**
+ * Provides access to [fromType] and [toSchema] in the flexible [ConvertSchemaDsl.convertIf] method.
+ *
+ * For more information: {@include [DocumentationUrls.ConvertTo]}
+ */
 public class ConverterScope(public val fromType: KType, public val toSchema: ColumnSchema)
 
 /**
@@ -52,12 +58,14 @@ public class ConverterScope(public val fromType: KType, public val toSchema: Col
  * df.convertTo<SomeSchema> {
  *     // defines how to convert Int? -> String
  *     convert<Int?>().with { it?.toString() ?: "No input given" }
- *     // defines how to convert String -> SomeType
+ *     // defines how to convert String/Char -> SomeType
  *     parser { SomeType(it) }
  *     // fill missing column `sum` with expression `a+b`
  *     fill { sum }.with { a + b }
  * }
  * ```
+ *
+ * For more information: {@include [DocumentationUrls.ConvertTo]}
  */
 public interface ConvertSchemaDsl<in T> {
 
@@ -66,6 +74,8 @@ public interface ConvertSchemaDsl<in T> {
      *
      * Note: In most cases using `convert<Type>().with { }` is more convenient, however
      * if you only have [KType], this method can be used.
+     *
+     * For more information: {@include [DocumentationUrls.ConvertTo]}
      */
     public fun <A, B> convert(from: KType, to: KType, converter: (A) -> B)
 
@@ -74,8 +84,10 @@ public interface ConvertSchemaDsl<in T> {
      * If you want to define a common conversion for multiple types (or any type), or
      * you need extra information about the target, such as its schema, use this method.
      *
-     * The exact type conversion does have higher priority. After that, this flexible conversions will be checked
+     * The exact type conversion does have higher priority. After that, these flexible conversions will be checked
      * in order.
+     *
+     * For more information: {@include [DocumentationUrls.ConvertTo]}
      *
      * @param condition a function that should return `true` if the conversion should be applied from the given `fromType`
      *   to the given `toSchema`.
@@ -88,9 +100,12 @@ public interface ConvertSchemaDsl<in T> {
 }
 
 /**
- * Defines how to fill specified columns in destination schema that were not found in original dataframe.
+ * Defines how to fill all specified columns in the destination schema that were not found in the original dataframe.
  * All [fill] operations for missing columns are executed after successful conversion of matched columns, so converted values of matched columns can be safely used in [with] expression.
- * @param columns target columns in destination dataframe schema to be filled
+ *
+ * For more information: {@include [DocumentationUrls.ConvertTo]}
+ *
+ * @param columns target columns in the destination dataframe schema to be filled
  */
 public inline fun <T, reified C> ConvertSchemaDsl<T>.fill(
     noinline columns: ColumnsSelector<T, C>,
@@ -101,18 +116,28 @@ public fun <T, C> ConvertToFill<T, C>.with(expr: RowExpression<T, C>) {
 }
 
 /**
- * Defines how to convert `String` values into given type [C].
+ * Defines how to convert `String` values into the given type [C].
+ *
+ * This method is a shortcut for `convert<String>().with { }`.
+ *
+ * If no converter is defined for `Char` values, this converter will be used for them as well.
+ *
+ * For more information: {@include [DocumentationUrls.ConvertTo]}
  */
 public inline fun <reified C> ConvertSchemaDsl<*>.parser(noinline parser: (String) -> C): Unit =
     convert<String>().with(parser)
 
 /**
- * Defines how to convert values of given type [C]
+ * Defines how to convert values of the given type [C].
+ *
+ * For more information: {@include [DocumentationUrls.ConvertTo]}
  */
 public inline fun <reified C> ConvertSchemaDsl<*>.convert(): ConvertType<C> = ConvertType(this, typeOf<C>())
 
 /**
  * Defines how to convert values of type [C] into type [R]
+ *
+ * For more information: {@include [DocumentationUrls.ConvertTo]}
  */
 public inline fun <C, reified R> ConvertType<C>.with(noinline converter: (C) -> R): Unit =
     dsl.convert(from, typeOf<R>(), converter)
@@ -134,6 +159,8 @@ public class ConvertType<T>(
  *
  * To specify custom type converters for the particular types use [ConvertSchemaDsl].
  *
+ * For more information: {@include [DocumentationUrls.ConvertTo]}
+ *
  * Example of Dsl:
  * ```kotlin
  * df.convertTo<SomeSchema> {
@@ -149,16 +176,16 @@ public class ConvertType<T>(
  * @param [T] class that defines target schema for conversion.
  * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [DataFrame].
  * @param [body] optional dsl to define custom type converters.
- * @throws [ColumnNotFoundException] if [DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [IllegalArgumentException] if [DataFrame] doesn't contain columns that are required by destination schema.
  * @throws [ExcessiveColumnsException] if [DataFrame] contains columns that are not required by destination schema and [excessiveColumnsBehavior] is set to [ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.
  * @return converted [DataFrame].
  */
-public inline fun <reified T : Any> AnyFrame.convertTo(
+public inline fun <reified T : Any> DataFrame<*>.convertTo(
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
-): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
+): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).castUnchecked()
 
 /**
  * Converts values in [DataFrame] to match given column schema [T].
@@ -168,6 +195,8 @@ public inline fun <reified T : Any> AnyFrame.convertTo(
  * Type converters for every column are selected automatically. See [convert] operation for details.
  *
  * To specify custom type converters for the particular types use [ConvertSchemaDsl].
+ *
+ * For more information: {@include [DocumentationUrls.ConvertTo]}
  *
  * Example of Dsl:
  * ```kotlin
@@ -182,20 +211,20 @@ public inline fun <reified T : Any> AnyFrame.convertTo(
  * ```
  *
  * @param [T] class that defines target schema for conversion.
- * @param [schemaFrom] dataframe which type [T] will be used.
+ * @param [schemaFrom] dataframe whose type [T] will be used.
  * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [DataFrame].
  * @param [body] optional dsl to define custom type converters.
- * @throws [ColumnNotFoundException] if [DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [IllegalArgumentException] if [DataFrame] doesn't contain columns that are required by destination schema.
  * @throws [ExcessiveColumnsException] if [DataFrame] contains columns that are not required by destination schema and [excessiveColumnsBehavior] is set to [ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.
  * @return converted [DataFrame].
  */
-public inline fun <reified T : Any> AnyFrame.convertTo(
+public inline fun <reified T : Any> DataFrame<*>.convertTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
-): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
+): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).castUnchecked()
 
 /**
  * Converts values in [DataFrame] to match given column schema [schemaType].
@@ -205,6 +234,8 @@ public inline fun <reified T : Any> AnyFrame.convertTo(
  * Type converters for every column are selected automatically. See [convert] operation for details.
  *
  * To specify custom type converters for the particular types use [ConvertSchemaDsl].
+ *
+ * For more information: {@include [DocumentationUrls.ConvertTo]}
  *
  * Example of Dsl:
  * ```kotlin
@@ -221,16 +252,16 @@ public inline fun <reified T : Any> AnyFrame.convertTo(
  * @param [schemaType] defines target schema for conversion.
  * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [DataFrame].
  * @param [body] optional dsl to define custom type converters.
- * @throws [ColumnNotFoundException] if [DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [IllegalArgumentException] if [DataFrame] doesn't contain columns that are required by destination schema.
  * @throws [ExcessiveColumnsException] if [DataFrame] contains columns that are not required by destination schema and [excessiveColumnsBehavior] is set to [ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.
  * @return converted [DataFrame].
  */
-public fun AnyFrame.convertTo(
+public fun DataFrame<*>.convertTo(
     schemaType: KType,
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     body: ConvertSchemaDsl<Any>.() -> Unit = {},
-): AnyFrame = convertToImpl(schemaType, true, excessiveColumnsBehavior, body)
+): DataFrame<*> = convertToImpl(schemaType, true, excessiveColumnsBehavior, body)
 
 // endregion

@@ -190,17 +190,17 @@ class FastDoubleParserTests {
                 val parsedByNumberFormatter = formatter.parse(formatted)?.toDouble()
 
                 val parsedString = parser.parseOrNull(formatted)
-                assert(double == parsedString || double.isNaN() && parsedString?.isNaN() == true) {
+                assert(double == parsedString || (double.isNaN() && parsedString?.isNaN() == true)) {
                     "Failed to parse $formatted with locale $locale. Expected $double, got $parsedString. NumberFormat parsed it like: $parsedByNumberFormatter"
                 }
 
                 val parsedCharArray = parser.parseOrNull(formatted.toCharArray())
-                assert(double == parsedCharArray || double.isNaN() && parsedCharArray?.isNaN() == true) {
+                assert(double == parsedCharArray || (double.isNaN() && parsedCharArray?.isNaN() == true)) {
                     "Failed to parse $formatted with locale $locale. Expected $double, got $parsedCharArray. NumberFormat parsed it like: $parsedByNumberFormatter"
                 }
 
                 val parsedByteArray = parser.parseOrNull(formatted.toByteArray())
-                assert(double == parsedByteArray || double.isNaN() && parsedByteArray?.isNaN() == true) {
+                assert(double == parsedByteArray || (double.isNaN() && parsedByteArray?.isNaN() == true)) {
                     "Failed to parse $formatted with locale $locale. Expected $double, got $parsedByteArray. NumberFormat parsed it like: $parsedByNumberFormatter"
                 }
             }

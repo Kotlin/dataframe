@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
@@ -11,8 +10,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import kotlin.reflect.KProperty
@@ -53,13 +54,16 @@ public interface ColGroupsColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`colGroups`**][ColumnsSelectionDsl.colGroups] */
-        public interface PlainDslName
+        @ExcludeFromSources
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colGroups`**][ColumnsSelectionDsl.colGroups] */
-        public interface ColumnSetName
+        @ExcludeFromSources
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colGroups`**][ColumnsSelectionDsl.colGroups] */
-        public interface ColumnGroupName
+        @ExcludeFromSources
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -67,9 +71,11 @@ public interface ColGroupsColumnsSelectionDsl {
      * Creates a subset of columns from [this\] that are [ColumnGroups][ColumnGroup].
      *
      * You can optionally use a [filter\] to only include certain columns.
-     * [colGroups] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
+     * [colGroups] can be called using any of the supported [APIs][AccessApis] (+ [ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: {@include [DocumentationUrls.ColGroups]}
      *
      * ### Check out: [Grammar]
      *
@@ -92,10 +98,11 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCols\]
      * @see [ColumnsSelectionDsl.valueCols\]
      */
+    @ExcludeFromSources
     private interface CommonColGroupsDocs {
 
         /** Example argument */
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**
@@ -109,7 +116,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("ColGroups0")
-    public fun ColumnSet<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun ColumnSet<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         columnGroupsInternal(filter)
 
     /**
@@ -121,7 +128,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("ColGroups1")
-    public fun ColumnsSelectionDsl<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun ColumnsSelectionDsl<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         asSingleColumn().columnGroupsInternal(filter)
 
     /**
@@ -133,7 +140,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColGroup.`[colGroups][SingleColumn.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("ColGroups2")
-    public fun SingleColumn<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun SingleColumn<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         this.ensureIsColumnGroup().columnGroupsInternal(filter)
 
     /**
@@ -144,7 +151,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[colGroups][String.colGroups]`() }`
      */
-    public fun String.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun String.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         columnGroup(this).colGroups(filter)
 
     /**
@@ -155,7 +162,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[colGroups][KProperty.colGroups]`() }`
      */
-    public fun KProperty<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun KProperty<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         columnGroup(this).colGroups(filter)
 
     /**
@@ -164,7 +171,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colGroups][ColumnPath.colGroups]`() }`
      */
-    public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         columnGroup(this).colGroups(filter)
 }
 
@@ -177,6 +184,6 @@ public interface ColGroupsColumnsSelectionDsl {
 @Suppress("UNCHECKED_CAST")
 internal inline fun ColumnsResolver<*>.columnGroupsInternal(
     crossinline filter: (ColumnGroup<*>) -> Boolean,
-): ColumnSet<AnyRow> = colsInternal { it.isColumnGroup() && filter(it) }.cast()
+): ColumnSet<DataRow<*>> = colsInternal { it.isColumnGroup() && filter(it) }.cast()
 
 // endregion

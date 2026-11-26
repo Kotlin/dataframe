@@ -8,9 +8,17 @@ public open class TypeConversionException(
     public val from: KType,
     public val to: KType,
     public val column: ColumnPath?,
+    public val extraInformation: String? = null,
 ) : RuntimeException() {
 
     override val message: String
-        get() = "Failed to convert '$value' from $from to $to" +
-            (column?.let { " in column '${it.joinToString()}'" } ?: "")
+        get() = buildString {
+            append("Failed to convert '$value' from $from to $to")
+            if (column != null) {
+                append(" in column '${column.joinToString()}'")
+            }
+            if (extraInformation != null) {
+                append(": $extraInformation")
+            }
+        }
 }

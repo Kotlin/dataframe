@@ -1,0 +1,74 @@
+# all
+
+
+<web-summary>
+Discover `all` operation in Kotlin DataFrame.
+</web-summary>
+
+<card-summary>
+Discover `all` operation in Kotlin DataFrame.
+</card-summary>
+
+<link-summary>
+Discover `all` operation in Kotlin DataFrame.
+</link-summary>
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.utils.AllSamples-->
+
+Checks if all rows in the [](DataFrame.md) satisfy the predicate.
+
+**API reference**: [`all`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/all.html)
+
+Returns `Boolean` — `true` if every row satisfies the predicate, `false` otherwise.
+
+```kotlin
+all { rowCondition }
+
+rowCondition: (DataRow) -> Boolean
+```
+
+When called on a [`DataColumn`](DataColumn.md), checks that all values in the [`DataColumn`](DataColumn.md) satisfy the predicate.
+
+**Related operations**: [](any.md), [](filter.md), [](single.md), [](count.md).
+
+### Examples
+
+<!---FUN notebook_test_all_3-->
+
+```kotlin
+df
+```
+
+<inline-frame src="./resources/notebook_test_all_3.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+Check if all persons' `age` is greater than 21:
+
+<!---FUN notebook_test_all_4-->
+
+```kotlin
+df.all { age > 21 }
+```
+
+<!---END-->
+
+Output:
+```text
+false
+```
+
+Check if all persons have `age` greater or equal to 15:
+
+<!---FUN notebook_test_all_5-->
+
+```kotlin
+df.all { name.first().isUpperCase() && age >= 15 }
+```
+
+<!---END-->
+
+Output:
+```text
+true
+```

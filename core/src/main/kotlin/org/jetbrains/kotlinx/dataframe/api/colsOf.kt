@@ -8,10 +8,12 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.size
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -79,13 +81,16 @@ public interface ColsOfColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**colsOf**][ColumnsSelectionDsl.colsOf] */
-        public interface PlainDslName
+        @ExcludeFromSources
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colsOf`**][ColumnsSelectionDsl.colsOf] */
-        public interface ColumnSetName
+        @ExcludeFromSources
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsOf`**][ColumnsSelectionDsl.colsOf] */
-        public interface ColumnGroupName
+        @ExcludeFromSources
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -95,6 +100,13 @@ public interface ColsOfColumnsSelectionDsl {
      * by [filter\].
      *
      * This function operates solely on columns at the top-level.
+     *
+     * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][colsOf]`<T?>()`.
+     *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
+     *   To exclude these columns, call `.`[filter][ColumnsSelectionDsl.filter]` { !it.`[allNulls][DataColumn.allNulls]`() }`
+     *   after it.
+     *
+     * For more information: {@include [DocumentationUrls.ColsOf]}
      *
      * ### Check out: [Grammar]
      *
@@ -122,13 +134,14 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      */
+    @ExcludeFromSources
     private interface CommonColsOfDocs {
 
         /** @return A [ColumnSet] containing the columns of given type that were included by [filter\]. */
-        interface Return
+        typealias Return = Nothing
 
         /** @param [filter\] an optional filter function that takes a column of type [C\] and returns `true` if the column should be included. */
-        interface FilterParam
+        typealias FilterParam = Nothing
     }
 
     /**
@@ -141,7 +154,7 @@ public interface ColsOfColumnsSelectionDsl {
      * @include [CommonColsOfDocs.FilterParam]
      * @include [CommonColsOfDocs.Return]
      */
-    public fun <C> String.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
+    public fun <C> String.colsOf(type: KType, filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsOf(type, filter)
 
     /**
@@ -156,7 +169,7 @@ public interface ColsOfColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> KProperty<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
+    public fun <C> KProperty<*>.colsOf(type: KType, filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsOf(type, filter)
 
     /**
@@ -169,7 +182,7 @@ public interface ColsOfColumnsSelectionDsl {
      * @include [CommonColsOfDocs.FilterParam]
      * @include [CommonColsOfDocs.Return]
      */
-    public fun <C> ColumnPath.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
+    public fun <C> ColumnPath.colsOf(type: KType, filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsOf(type, filter)
 }
 
@@ -183,7 +196,7 @@ public interface ColsOfColumnsSelectionDsl {
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
-public fun <C> ColumnSet<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<C> =
+public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
     colsOfInternal(type, filter)
 
 /**
@@ -197,8 +210,9 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
 @Interpretable("ColsOf1")
-public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: ColumnFilter<C> = { true }): ColumnSet<C> =
-    colsOf(typeOf<C>(), filter)
+public inline fun <reified C> ColumnSet<*>.colsOf(
+    noinline filter: (ColumnWithPath<C>) -> Boolean = { true },
+): ColumnSet<C> = colsOf(typeOf<C>(), filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -208,8 +222,10 @@ public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: ColumnFilter<
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
-public fun <C> ColumnsSelectionDsl<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<C> =
-    asSingleColumn().colsOf(type, filter)
+public fun <C> ColumnsSelectionDsl<*>.colsOf(
+    type: KType,
+    filter: (ColumnWithPath<C>) -> Boolean = { true },
+): ColumnSet<C> = asSingleColumn().colsOf(type, filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -221,7 +237,7 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(type: KType, filter: ColumnFilter<C
  */
 @Interpretable("ColsOf0")
 public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
-    noinline filter: ColumnFilter<C> = { true },
+    noinline filter: (ColumnWithPath<C>) -> Boolean = { true },
 ): ColumnSet<C> = asSingleColumn().colsOf(typeOf<C>(), filter)
 
 /**
@@ -234,8 +250,10 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
-public fun <C> SingleColumn<DataRow<*>>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<C> =
-    ensureIsColumnGroup().colsOfInternal(type, filter)
+public fun <C> SingleColumn<DataRow<*>>.colsOf(
+    type: KType,
+    filter: (ColumnWithPath<C>) -> Boolean = { true },
+): ColumnSet<C> = ensureIsColumnGroup().colsOfInternal(type, filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -249,16 +267,16 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(type: KType, filter: ColumnFilter
  */
 @Interpretable("ColsOf2")
 public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
-    noinline filter: ColumnFilter<C> = { true },
+    noinline filter: (ColumnWithPath<C>) -> Boolean = { true },
 ): ColumnSet<C> = colsOf(typeOf<C>(), filter)
 
 /**
  * If this [ColumnsResolver] is a [SingleColumn], it
  * returns a new [ColumnSet] containing the columns inside of this [SingleColumn] that
- * match the given [filter] and are the given [type].
+ * match the given [filter] and are of the given [type].
  *
  * Else, it returns a new [ColumnSet] containing all columns in this [ColumnsResolver] that
- * match the given [filter] and are the given [type].
+ * match the given [filter] and are of the given [type].
  */
 @Suppress("UNCHECKED_CAST")
 internal inline fun <C> ColumnsResolver<*>.colsOfInternal(

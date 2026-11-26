@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toKotlinLocalDate
@@ -32,6 +31,8 @@ import org.junit.Test
 import java.math.BigDecimal
 import java.util.Locale
 import kotlin.reflect.typeOf
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
 
 class ParserTests {
 
@@ -39,11 +40,17 @@ class ParserTests {
     fun `parse datetime with custom format`() {
         val col by columnOf("04.02.2021 -- 19:44:32")
         col.tryParse().type() shouldBe typeOf<String>()
-        DataFrame.parser.addDateTimePattern("dd.MM.uuuu -- HH:mm:ss")
+        DataFrame.parser.addJavaDateTimePattern("dd.MM.uuuu -- HH:mm:ss")
         val parsed = col.parse()
-        parsed.type() shouldBe typeOf<LocalDateTime>()
-        parsed.cast<LocalDateTime>()[0].year shouldBe 2021
+        parsed.type() shouldBe typeOf<JavaLocalDateTime>()
+        parsed.cast<JavaLocalDateTime>()[0].year shouldBe 2021
         DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun `parse to Char`() {
+        val col by columnOf("a", "b")
+        col.parse().type() shouldBe typeOf<Char>()
     }
 
     @Test(expected = IllegalStateException::class)
@@ -60,13 +67,13 @@ class ParserTests {
 
     @Test(expected = TypeConversionException::class)
     fun `converter for mixed column should throw`() {
-        val col by columnOf(1, "a")
+        val col by columnOf<Any>(1, "a")
         col.convertTo<Int>()
     }
 
     @Test
     fun `convert mixed column`() {
-        val col by columnOf(1.0, "1")
+        val col by columnOf<Any>(1.0, "1")
         val converted = col.convertTo<Int>()
         converted.type() shouldBe typeOf<Int>()
         converted[0] shouldBe 1
@@ -84,7 +91,7 @@ class ParserTests {
 
     @Test
     fun `convert to Boolean`() {
-        val col by columnOf(BigDecimal(1.0), BigDecimal(0.0), 0, 1, 10L, 0.0, 0.1)
+        val col by columnOf<Number>(BigDecimal(1.0), BigDecimal(0.0), 0, 1, 10L, 0.0, 0.1)
         col.convertTo<Boolean>().shouldBe(
             DataColumn.createValueColumn("col", listOf(true, false, false, true, true, false, true), typeOf<Boolean>()),
         )
@@ -98,16 +105,16 @@ class ParserTests {
 
         datetimeCol.shouldBe(
             columnOf(
-                java.time.LocalDateTime.of(1971, 1, 2, 0, 0, 1).toKotlinLocalDateTime(),
-                java.time.LocalDateTime.of(1971, 1, 2, 0, 1, 0).toKotlinLocalDateTime(),
-                java.time.LocalDateTime.of(1971, 1, 2, 1, 0, 0).toKotlinLocalDateTime(),
+                JavaLocalDateTime.of(1971, 1, 2, 0, 0, 1).toKotlinLocalDateTime(),
+                JavaLocalDateTime.of(1971, 1, 2, 0, 1, 0).toKotlinLocalDateTime(),
+                JavaLocalDateTime.of(1971, 1, 2, 1, 0, 0).toKotlinLocalDateTime(),
             ),
         )
         longCol.convertToLocalDate(TimeZone.UTC).shouldBe(
             columnOf(
-                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
-                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
-                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                JavaLocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                JavaLocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                JavaLocalDate.of(1971, 1, 2).toKotlinLocalDate(),
             ),
         )
         longCol.convertToLocalTime(TimeZone.UTC).shouldBe(
@@ -120,9 +127,9 @@ class ParserTests {
 
         datetimeCol.convertToLocalDate().shouldBe(
             columnOf(
-                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
-                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
-                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                JavaLocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                JavaLocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                JavaLocalDate.of(1971, 1, 2).toKotlinLocalDate(),
             ),
         )
         datetimeCol.convertToLocalTime().shouldBe(
@@ -431,15 +438,15 @@ class ParserTests {
 
             columnDot.convertTo<Double>() shouldBe columnOf(123_456.789, 987_654.321)
             columnComma.convertTo<Double>() shouldBe columnOf(123_456.789, 987_654.321)
-            shouldThrow<TypeConversionException> { columnMixed.convertTo<Double>() }
+            columnMixed.convertTo<Double>() shouldBe columnOf(123_456.789, 987_654.321)
 
             columnDot.convertTo<Double?>() shouldBe columnOf(123_456.789, 987_654.321)
             columnComma.convertTo<Double?>() shouldBe columnOf(123_456.789, 987_654.321)
-            shouldThrow<TypeConversionException> { columnMixed.convertTo<Double?>() }
+            columnMixed.convertTo<Double?>() shouldBe columnOf(123_456.789, 987_654.321)
 
             columnDot.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(123_456.789, 987_654.321)
             columnComma.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(123_456.789, 987_654.321)
-            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleNotDefined) }
+            columnMixed.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(123_456.789, 987_654.321)
 
             columnDot.convertToDouble(parsingLocaleUsesDot) shouldBe columnOf(123_456.789, 987_654.321)
             shouldThrow<TypeConversionException> { columnComma.convertToDouble(parsingLocaleUsesDot) }

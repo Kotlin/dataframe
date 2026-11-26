@@ -1,0 +1,158 @@
+# AGENTS.md — samples
+
+Guidance for this module. See the root `AGENTS.md` for repo-wide build/style/KoDEx rules; only module-specific
+details are here.
+
+**Writing or updating documentation?** The rules live in [`DOCUMENTATION_GUIDELINES.md`](../DOCUMENTATION_GUIDELINES.md)
+(website topics + samples) and [`KDOC_GUIDELINES.md`](../KDOC_GUIDELINES.md) (KDocs) — read the relevant one first.
+For an operation page (topic + samples in this module), use the
+[`operation-website-documentation`](../.agents/skills/operation-website-documentation/SKILL.md) skill,
+which walks through that workflow step by step. If anything here disagrees with the guidelines, the guidelines win.
+
+## What this module is
+
+`:samples` holds the **code samples** (plus DataFrame iframes and Kandy plot images) for the documentation website.
+Documentation snippets here are runnable tests: running them produces output that Korro injects into the WriterSide
+docs under `docs/StardustDocs/topics/`.
+
+It also holds the **KDoc examples**: public KDocs include them with the KoDEx `@sample` notation (KoDEx adds
+`samples/src/test/kotlin` as a contextual source), so the code a KDoc shows is a passing test here. Rename or
+delete a sample, and the `@sample` references to it break — search `src/main/kotlin` for the function name first.
+See the "Examples section" in `KDOC_GUIDELINES.md`.
+
+**New documentation samples belong here**, not in `:core`. (Sample migration into this module is in progress —
+issue #898; `:core` still has a legacy `samples` source set + `samplesTest`/`korro` tasks that will be removed.)
+Never use the legacy "dataframe explainer" / `@TransformDataFrameExpressions` mechanism; when migrating a page,
+rewrite its `:core` samples here with Sample Helper outputs.
+
+**Moving a page's samples here means deleting the `:core` originals in the same PR** (usually from
+`core/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/Access.kt`). Nothing reports a `:core` sample
+that no page imports any more, so the orphan stays, and the next person who edits it sees no change on the
+page. Before the PR, check that every function the page imported from `:core` is either deleted or still used by
+another page. After deleting, grep the removed samples' identifiers across `core/src`: imports used only by them
+die silently (hidden by `@file:Suppress("ktlint")` in files like `Modify.kt`), and a `@DataSchema` whose last
+user is gone orphans its pair in `generated-dataschema-accessors`, which nothing reports either.
+
+A test that asserts what a page prints belongs here too, not in `:core`: the dependency runs
+`:samples` → `:core` (`build.gradle.kts` takes `:core` through its jars; `core/build.gradle.kts` has no
+dependency on `:samples`), so a `:core` test cannot reach `TestBase.peopleDf` and has to copy the fixture
+— and a copy stops tracking the original the day someone adds a row to it.
+
+## How it works
+
+- Sample sources live under `src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/**`
+  (subpackages `api/`, `io/`, `guides/`, `concepts/`, `schemas/`, …). Test resources (CSV/JSON/XLSX/Parquet/Feather)
+  are in `src/test/resources/`.
+- The module applies the DataFrame **compiler plugin** (`libs.plugins.dataframe.compiler.plugin`), so samples get
+  compile-time type-safe accessors. It depends on the built jars of the I/O modules (`runtimeOnly(projects.dataframe)`)
+  — "must depend on jars for the compiler plugin to work".
+- **Running the tests emits korro output lines** (into `build/korroOutputLines/`). Then the `korro` task injects the
+  sample code + output between the `<!---FUN x-->` / `<!---END-->` marks of the topic markdown. Korro's
+  `docs`/`samples` includes in `build.gradle.kts` define exactly which `docs/StardustDocs/topics/**` files and sample
+  packages this module owns. Never hand-write or hand-patch the inserted snippets.
+- **A text `Output:` block is either generated or stale.** `String.saveSample()` writes one (with the
+  `Output:` header), `CodeString.saveSample()` wraps the value in a ` ```kotlin ` fence and
+  `String.saveTextSample()` in a ` ```text ` one; korro then injects the block **inside** the
+  `<!---FUN-->`…`<!---END-->` region. A block typed by hand sits *outside* `<!---END-->`, and nothing checks it
+  ever again. At the time of writing the topics carry 8 generated blocks against 10 hand-written ones, so the
+  hand-written shape is common but is the one that rots — prefer `saveSample`.
+- **`groupSamples` tab convention:** function-name suffixes map to doc tabs — `_properties` → "Properties",
+  `_strings` → "Strings", `_kotlin` → "Kotlin", `_java` → "Java". Korro wraps the variants into `<tabs>`/`<tab>`
+  itself: in the topic write a single `<!---FUN x-->` with the **base** name (no suffix) and no tab markup.
+  Both functions of a pair carry the suffix (`x_properties` + `x_strings`); a base-named `x` next to an
+  `x_strings` does **not** group — korro renders `x` alone and the `_strings` twin silently disappears from
+  the page.
+  `SampleHelper` cuts the `_properties`/`_strings` suffix off output file names too (`namePartsToRemove`), so both
+  variants write `./resources/x.html` — save the output in one of them only (usually `_properties`).
+- **Iframes / plots:** `DataFrameSampleHelper` (`SampleHelper`) saves DataFrames as HTML iframes into
+  `docs/StardustDocs/resources/<subFolder>/<pageName>/` and Kandy plots as SVGs into `docs/StardustDocs/images/`,
+  named after the test function without the suffix. It also writes a korro output line for them (its
+  `onDfHtmlSampleSaved` / `onPlotSampleSaved` hooks), so korro injects the `<inline-frame>` / `<img>` **inside** the
+  `<!---FUN-->`…`<!---END-->` block, together with any text output of the same test, in the order they were saved.
+  **Don't add one by hand after `<!---END-->`** — it duplicates the generated one. The only hand-written iframe is
+  for an output shown without code: a test with no `// SampleStart` and no `FUN` mark in the topic.
+  The `updateShadowResources` task regenerates `docs/StardustDocs/topics/_shadow_resources.md` (a `<resource>` tag
+  per generated file, keyed by file name only). So an `<inline-frame>` `src` is always **flat** —
+  `./resources/<testName>.html`, never the on-disk path; a nested `src` builds fine but renders an empty frame.
+  These are all generated — don't edit them by hand. If a sample output changes, confirm the change is intentional.
+
+## Build / run
+
+First delete the page's HTML output folder (`rm -rf docs/StardustDocs/resources/<subFolder>/<pageName>`; the tests
+recreate it), then run in this order (`korro` **must** run after `test`):
+
+```bash
+./gradlew :samples:clean :samples:build :samples:test
+./gradlew :samples:korro
+./gradlew :samples:updateShadowResources
+```
+
+- **Never skip `clean`** before `build`/`test`/`korro`: otherwise stale korro output lines in `build/` (incl. those of
+  renamed or deleted samples) survive and get injected into the docs.
+- `clean` does **not** remove HTML outputs — they are written straight into the tracked
+  `docs/StardustDocs/resources/`. Without deleting the page folder first, HTML of renamed or deleted samples stays
+  on disk and `updateShadowResources` registers it again.
+- The test task already sets `--add-opens java.base/java.nio=ALL-UNNAMED` (for Arrow).
+- After editing a sample file, run `./gradlew :samples:ktlintFormat :samples:ktlintCheck`.
+
+## Writing a sample
+
+- **One test file per documentation page**, e.g. `api/<Operation>Samples.kt` extending
+  `DataFrameSampleHelper("<pageName>", "api")`; keep the test order aligned with the topic's sections. Put it in the
+  subpackage matching its topic, and make sure both the test and the topic file are covered by the `korro.docs` /
+  `korro.samples` includes.
+- Mark snippets with `// SampleStart` / `// SampleEnd`; show the input dataframe first, in its own sample.
+  The code inside `// SampleStart` runs in the test: a call that intentionally throws must be wrapped in
+  `shouldThrow` **inside** the shown block, or the test fails on the throw it was meant to demonstrate.
+- If the operation selects columns or uses row values, the basic example is a `x_properties` / `x_strings` pair
+  (Extension Properties API / String API). If the operation can't take plain `String` names, write `_strings` with
+  `String` column accessors (`col<Int>("age")`, `getValue<Int>("age")`, …) — never the outdated "Invoked String API"
+  (`"age"<Int>()`). The ban covers **column selection**: inside a row expression (`filter { }`, `into { }`,
+  `add { }`, `minBy { }`), `"age"<Int>()` on a `DataRow` is the String API cell read (a non-deprecated member
+  operator; `concepts/AccessApis.kt` teaches this form), and `col<T>(name)` resolves only in the
+  columns-selection DSL (the receiver of any `ColumnsSelector` lambda), not in a row expression
+  (`DataRow` receiver). Use the Extension Properties API in the remaining examples.
+- **After** `// SampleEnd`: save outputs (`.saveDfHtmlSample()` for `DataFrame`/`DataColumn`/`GroupBy`, using
+  `.toDataFrame()`/`.values()`/`.frames()` if needed; `.savePlotSVGSample()` for plots; `.saveSample()` /
+  `.saveTextSample()` for `String`/`CodeString` — see above) and add highlighting (`.format` / `.formatHeader` /
+  `.defaultHeaderFormatting { }` — rows for row-oriented operations, headers for column-oriented ones). Korro puts
+  every saved output into the topic itself, inside the sample's `FUN`/`END` block.
+  When the sample's result is an expression, keep `val df =` out of the shown code by putting `// SampleEnd`
+  mid-chain and continuing with `.saveDfHtmlSample()` on the next line (`MapSamples.mapDf` is the pattern).
+- **Assert the shown code, not a copy of it — one asserted statement per sample.** Chain assertions (`.also { }`)
+  and the output-saving calls onto the shown statement after `// SampleEnd` — korro excludes everything past the
+  mark from the snippet, so the test exercises exactly the code the page shows. Never assert a shown statement
+  through a re-invoked copy, top-level or inside an `.also { }`: when a section shows several operations, split
+  it into separate samples/FUN blocks, each with its own chain and its own saved output. Input constructions
+  (`val df = …`) may share the sample with the one asserted statement.
+- Use small, illustrative data (e.g. a frame with `null`s for `null`-related operations). `TestBase`'s `peopleDf`
+  etc. is the default; otherwise declare a `@DataSchema` class/interface in the sample class (class level only)
+  + `dataFrameOf(...)` (see `ConcatSamples.kt`). The compiler plugin rejects `@DataSchema`/enum/value class
+  declarations inside function bodies ("@DataSchema declarations cannot be local", "Value class cannot be local
+  or inner") — show such declarations in the topic as `text`-fenced signatures instead of samples. korro cannot
+  render the declaration header either — a class `FUN` target emits only the `// SampleStart`–`// SampleEnd`
+  region inside the body, never the `enum class X { … }` line — so the `text` fence is the only shape that can
+  show it.
+  Numbers that read as real-world facts (star counts, prices, view counts) are either copied from a tracked
+  dataset (e.g. `data/*.csv`) or clearly synthetic — the rendered iframe presents them to the reader as real.
+- A DSL function used inside a lambda body needs its import even when it reads like a member:
+  `preserve<Name>()` inside `properties { }` is an extension on `TraversePropertiesDsl`, so the sample
+  needs `import org.jetbrains.kotlinx.dataframe.api.preserve` — there are no wildcard imports here.
+- A sample using API its file has never called needs its imports added: the compiler reports
+  `UNRESOLVED_REFERENCE` and the compiler plugin then cannot interpret the chain, so the generated
+  accessors (`it.ts`) vanish from the assertion too. Mind the package: `DataColumn.toDataFrame()` lives
+  in `api`, while `io.toDataFrame` is `ArrowReader`'s extension — with `dataframe-arrow` on the classpath,
+  importing the `io` one gives `UNRESOLVED_REFERENCE_WRONG_RECEIVER`.
+- Shown sample code is page content: when its faithful shape violates ktlint, suppress at file level
+  (`@file:Suppress("ktlint")`, as `Generate.kt` and `TestBase.kt` do) rather than letting `ktlintFormat` rewrite
+  what the page displays. Suppress only what that shape needs: when one sample's layout breaks one rule (a row of
+  `dataFrameOf(…)(…)` values per line), put `@Suppress("ktlint:standard:<rule>")` on that test function instead.
+  Never carry a file-level suppression over into a new file from the file it replaces — it switches the whole
+  file off, and line length and wrapping then go unchecked.
+- **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without
+  deprecation warnings.
+- Conversion shortcuts with `@Refine` (e.g. `toLocalDate(format)`, `toJavaLocalDate(formatter)`) change the
+  result's compile-time marker type, so the source schema's accessors no longer apply to it — read converted
+  columns by name (`it["date"]`) in assertions.
+- Write each sample as a runnable test with optional assertions; it must pass and must not be `@Ignore`d (except
+  complex integration tests, e.g. reading from DBs).

@@ -4,17 +4,28 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.owner
 
 /**
- * Path to a [column][DataColumn] in [DataFrame].
+ * Path to a [<code>column</code>][DataColumn] in [<code>DataFrame</code>][DataFrame].
  *
- * Stores a list of [column names][DataColumn.name] that are used to retrieve columns through a chain of [column groups][ColumnGroup].
+ * Stores a list of [<code>column names</code>][DataColumn.name] that are used to retrieve columns through a chain of [<code>column groups</code>][ColumnGroup].
+ *
+ * A path may refer to an existing column or describe a destination that does not exist yet.
+ * In operations such as [<code>move into</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.into] and
+ * [<code>insert under</code>][org.jetbrains.kotlinx.dataframe.api.InsertClause.under], missing parts of the destination path
+ * are created automatically when the operation is performed.
  */
 public data class ColumnPath(val path: List<String>) :
     List<String> by path,
     ColumnAccessor<Any?> {
+
+    internal companion object {
+        internal val EMPTY = ColumnPath(emptyList())
+    }
 
     public constructor(name: String) : this(listOf(name))
 
@@ -23,17 +34,17 @@ public data class ColumnPath(val path: List<String>) :
     public fun parent(): ColumnPath? = if (path.isEmpty()) null else dropLast(1)
 
     /**
-     * Returns a shortened [ColumnPath] without the last [size] elements.
+     * Returns a shortened [<code>ColumnPath</code>][ColumnPath] without the last [<code>size</code>][size] elements.
      *
-     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.dropLastChildren]
+     * NOTE: If called from the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], you might be looking for [<code>ColumnsSelectionDsl.dropLastCols</code>][ColumnsSelectionDsl.dropLastCols]
      * instead.
      */
     public fun dropLast(size: Int = 1): ColumnPath = ColumnPath(path.dropLast(size))
 
     /**
-     * Returns a shortened [ColumnPath] without the first [size] elements.
+     * Returns a shortened [<code>ColumnPath</code>][ColumnPath] without the first [<code>size</code>][size] elements.
      *
-     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.dropChildren]
+     * NOTE: If called from the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], you might be looking for [<code>ColumnsSelectionDsl.dropCols</code>][ColumnsSelectionDsl.dropCols]
      * instead.
      */
     public fun dropFirst(size: Int = 1): ColumnPath = ColumnPath(path.drop(size))
@@ -45,9 +56,9 @@ public data class ColumnPath(val path: List<String>) :
     public operator fun plus(otherPath: Iterable<String>): ColumnPath = ColumnPath(path + otherPath)
 
     /**
-     * Returns a shortened [ColumnPath] containing just the first [first] elements.
+     * Returns a shortened [<code>ColumnPath</code>][ColumnPath] containing just the first [<code>first</code>][first] elements.
      *
-     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.takeCols]
+     * NOTE: If called from the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], you might be looking for [<code>ColumnsSelectionDsl.takeCols</code>][ColumnsSelectionDsl.takeCols]
      * instead.
      */
     public fun take(first: Int): ColumnPath = ColumnPath(path.take(first))
@@ -56,9 +67,9 @@ public data class ColumnPath(val path: List<String>) :
         ColumnPath(if (path.size < 2) listOf(name) else path.dropLast(1) + name)
 
     /**
-     * Returns a shortened [ColumnPath] containing just the last [last] elements.
+     * Returns a shortened [<code>ColumnPath</code>][ColumnPath] containing just the last [<code>last</code>][last] elements.
      *
-     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.takeLast]
+     * NOTE: If called from the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], you might be looking for [<code>ColumnsSelectionDsl.takeLast</code>][ColumnsSelectionDsl.takeLast]
      * instead.
      */
     public fun takeLast(last: Int): ColumnPath = ColumnPath(path.takeLast(last))

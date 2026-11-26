@@ -73,7 +73,7 @@ public fun readOpenApiAsString(
  *
  * @param swaggerParseResult the result of parsing an OpenAPI specification, created using [readOpenApi] or [readOpenApiAsString].
  * @param extensionProperties whether to add extension properties to the generated interfaces. This is usually not
- *   necessary, since both the KSP- and the Gradle plugin, will add extension properties to the generated code.
+ *   necessary, since both the KSP- and the Gradle plugin will add extension properties to the generated code.
  * @param visibility the visibility of the generated marker classes.
  *
  * @return a [Code] object, representing the generated code.
@@ -184,13 +184,13 @@ private fun readOpenApi(
 
 /**
  * Converts named OpenApi schemas to a list of [OpenApiMarker]s.
- * Will cause an exception for circular references, however they shouldn't occur in OpenApi specs.
+ * Will cause an exception for circular references; however, they shouldn't occur in OpenApi specs.
  *
  * Some explanation:
  * OpenApi provides schemas for all the types used. For each type, we want to generate a [Marker]
  * (Which can be an interface, enum or typealias). However, the OpenApi schema is not ordered per se,
  * so when we are reading the schema it might be that we have a reference to a (super)type
- * (which are queried using `getRefMarker`) for which we have not yet created a [Marker].
+ * (which is queried using `getRefMarker`) for which we have not yet created a [Marker].
  * In that case, we "pause" that one (by returning `CannotFindRefMarker`) and try to read another type schema first.
  * Circular references cannot exist since it's encoded in JSON, so we never get stuck in an infinite loop.
  * When all markers are "retrieved" (so turned from a [RetrievableMarker] to a [MarkerResult.OpenApiMarker]),
@@ -277,8 +277,8 @@ private fun Map<String, Schema<*>>.toMarkers(topInterfaceName: ValidFieldName): 
  * - `enum:` creating an enum of any type.
  * - `type: object`
  *     - `properties:` (`additionalProperties` are ignored) creating an [OpenApiMarker.Interface] using the fields in the properties.
- *     - `additionalProperties:` (if `properties` is not present) creating an [OpenApiMarker.AdditionalPropertiesInterface] using the additionalProperties schema as type of `value`.
- * - `type:` if type is something else, generating a type alias for it. This can be a [OpenApiMarker.TypeAlias] or a [OpenApiMarker.MarkerAlias].
+ *     - `additionalProperties:` (if `properties` is not present) creating an [OpenApiMarker.AdditionalPropertyInterface] using the additionalProperties schema as type of `value`.
+ * - `type:` if type is something else, generating a type alias for it. This can be an [OpenApiMarker.TypeAlias] or an [OpenApiMarker.MarkerAlias].
  *
  * @param typeName The name of the schema / type to convert.
  * @param getRefMarker Function to retrieve a [Marker] for a given reference name.
@@ -332,7 +332,12 @@ private fun Schema<*>.toMarker(
 
                         fields += allSuperFields
                             .filter {
-                                it.fieldName.unquoted in requiredFields && it.fieldType.isNullable()
+                                it.fieldName.unquoted in requiredFields &&
+                                    it.fieldType.isNullable() &&
+                                    // Don't override intrinsically nullable types (like nullable enums) to be
+                                    // non-null. Their nullability comes from the type itself, not from being
+                                    // optional, so being required in a child schema cannot make them non-null.
+                                    !it.fieldType.refersToNullableMarker(getRefMarker, topInterfaceName)
                             }.map {
                                 generatedFieldOf(
                                     fieldName = it.fieldName,
@@ -450,7 +455,7 @@ private fun Schema<*>.toMarker(
                                     .additionalPropertyPaths
                                     .map { it.prepend(name) }
 
-                                val validName = ValidFieldName.of(name.snakeToLowerCamelCase())
+                                val validName = ValidFieldName.of(name)
 
                                 // find the field type of the marker reference
                                 val fieldType = openApiTypeResult.marker.toFieldType()
@@ -476,7 +481,7 @@ private fun Schema<*>.toMarker(
 
                                 this += generatedFieldOf(
                                     overrides = false,
-                                    fieldName = ValidFieldName.of(name.snakeToLowerCamelCase()),
+                                    fieldName = ValidFieldName.of(name),
                                     columnName = name,
                                     fieldType = FieldType.ValueFieldType(
                                         typeFqName = enumMarker.name +
@@ -503,7 +508,7 @@ private fun Schema<*>.toMarker(
                                         return MarkerResult.CannotFindRefMarker
 
                                     is FieldTypeResult.FieldType -> {
-                                        val validName = ValidFieldName.of(name.snakeToLowerCamelCase())
+                                        val validName = ValidFieldName.of(name)
 
                                         keyValuePaths += fieldTypeResult
                                             .additionalPropertyPaths
@@ -692,7 +697,7 @@ private fun Schema<*>.toMarker(
  * `anyOf` and `oneOf` types are merged.
  *
  * These results still have to be converted to [FieldType]s to be able to generate [OpenApiMarker]s from it
- * (unless it's a [OpenApiTypeResult.UsingRef] of course).
+ * (unless it's an [OpenApiTypeResult.UsingRef] of course).
  *
  * @receiver Single property of an OpenApi type schema to convert.
  * @param getRefMarker function to attempt to resolve a reference.

@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 import org.jetbrains.jupyter.parser.JupyterParser
 import org.jetbrains.jupyter.parser.notebook.CodeCell
 import org.jetbrains.jupyter.parser.notebook.Output
-import org.jetbrains.kotlinx.dataframe.BuildConfig
+import org.jetbrains.kotlinx.dataframe.`dataframe-jupyter`.BuildConfig
 import org.jetbrains.kotlinx.jupyter.exceptions.causesSequence
 import org.jetbrains.kotlinx.jupyter.repl.result.EvalResultEx
 import org.junit.Assume

@@ -24,11 +24,13 @@ Explore our structured, in-depth guides to steadily improve your Kotlin DataFram
 
 <img src="quickstart_preview.png" border-effect="rounded" width="705"/>
 
+* [](Guide-for-backend-SQL-developers.md) — migration guide for backend developers with SQL/ORM experience moving to Kotlin DataFrame
+
 * [](extensionPropertiesApi.md) — learn about extension properties for [`DataFrame`](DataFrame.md) 
 and make working with your data both convenient and type-safe.
 
 * [Enhanced Column Selection DSL](https://blog.jetbrains.com/kotlin/2024/07/enhanced-column-selection-dsl-in-kotlin-dataframe/)
-  — explore powerful DSL for typesafe and flexible column selection in Kotlin DataFrame.
+  — explore the powerful DSL for typesafe and flexible column selection in Kotlin DataFrame.
 * [](Kotlin-DataFrame-Features-in-Kotlin-Notebook.md)
   — discover interactive Kotlin DataFrame outputs in
   [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html).
@@ -53,13 +55,13 @@ and make working with your data both convenient and type-safe.
 <img src="geoguide_preview.png" border-effect="rounded" width="705"/>
 
 
-* [Using Unsupported Data Sources](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples):
-  — A guide by examples. While these might one day become proper integrations of DataFrame, for now,
+* Using Unsupported Data Sources:
+  — A guide with examples. While these might one day become proper integrations of DataFrame, for now,
   we provide them as examples for how to make such integrations yourself.
-    * [Apache Spark Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/spark)
-    * [Apache Spark Interop (With Kotlin Spark API)](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/kotlinSpark)
-    * [Multik Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/multik)
-    * [JetBrains Exposed Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/exposed)
+    * [Apache Spark Interop (With and Without Kotlin Spark API)](https://github.com/Kotlin/dataframe/tree/master/examples/projects/kotlin-spark)
+    * [Multik Interop](https://github.com/Kotlin/dataframe/tree/master/examples/projects/multik)
+    * [JetBrains Exposed Interop](https://github.com/Kotlin/dataframe/tree/master/examples/projects/exposed)
+    * [Hibernate ORM](https://github.com/Kotlin/dataframe/tree/master/examples/projects/hibernate)
 * [OpenAPI Guide](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/json/KeyValueAndOpenApi.ipynb)
   — learn how to parse and explore [OpenAPI](https://swagger.io) JSON structures using Kotlin DataFrame,
   enabling structured access and intuitive analysis of complex API schemas (*experimental*, supports OpenAPI 3.0.0).
@@ -68,8 +70,18 @@ and make working with your data both convenient and type-safe.
 
 Explore our extensive collection of practical examples and real-world analytics workflows.
 
-* [Kotlin DataFrame Compiler Plugin Example](https://github.com/Kotlin/dataframe/blob/master/examples/kotlin-dataframe-plugin-example)  
-  — a simple project demonstrating the usage of the [compiler plugin](Compiler-Plugin.md),  
+* [Kotlin DataFrame Compiler Plugin Gradle Example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-gradle-example)  
+  — a simple Gradle project demonstrating the usage of the [compiler plugin](Compiler-Plugin.md),  
+  showcasing DataFrame expressions with [extension properties](extensionPropertiesApi.md)  
+  that are generated on-the-fly in the IDEA project.
+
+* [Kotlin DataFrame Compiler Plugin Maven Example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-maven-example)  
+  — a simple Maven project demonstrating the usage of the [compiler plugin](Compiler-Plugin.md),  
+  showcasing DataFrame expressions with [extension properties](extensionPropertiesApi.md)  
+  that are generated on-the-fly in the IDEA project.
+
+* [Kotlin DataFrame Compiler Plugin Kotlin Toolchain Example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-kotlin-toolchain-example)  
+  — a simple Kotlin Toolchain project demonstrating the usage of the [compiler plugin](Compiler-Plugin.md),  
   showcasing DataFrame expressions with [extension properties](extensionPropertiesApi.md)  
   that are generated on-the-fly in the IDEA project.
 
@@ -86,21 +98,25 @@ Explore our extensive collection of practical examples and real-world analytics 
   — a practical example of working with deeply nested, hierarchical DataFrames using GitHub data.
 
 * [Netflix Example](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/netflix/netflix.ipynb)
-  — explore TV shows and movies from Netflix with the powerful Kotlin Dataframe API and beautiful
+  — explore TV shows and movies from Netflix with the powerful Kotlin DataFrame API and beautiful
   [Kandy](https://kotlin.github.io/kandy/) visualizations.
 
-* [Top-12 German Companies Financial Analyze](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/top_12_german_companies)
+* [Top-12 German Companies Financial Analysis](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/top_12_german_companies)
   — analyze key financial metrics for several major German companies.
 
 * [Movies Example](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/movies/movies.ipynb)
-  — basic Kotlin DataFrame operations on data from [movielens](https://movielens.org/).
+  — basic Kotlin DataFrame operations on (modified) data from [movielens](https://movielens.org/).
 
 * [YouTube Example](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/youtube/Youtube.ipynb)
-  — explore YouTube videos with YouTube REST API and Kotlin Dataframe.
+  — explore YouTube videos with YouTube REST API and Kotlin DataFrame.
 
 * [IMDb SQL Database Example](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb)
   — analyze IMDb data stored in MariaDB using Kotlin DataFrame
   and visualize with [Kandy](https://kotlin.github.io/kandy/).
+
+* [Reading Parquet files from Apache Spark](https://github.com/Kotlin/dataframe/tree/master/examples/projects/spark-parquet-dataframe)
+  — this project showcases how to export data and ML models from Apache Spark via reading from Parquet files. 
+[Kandy](https://kotlin.github.io/kandy/) is used to visualize the exported data and Linear Regression model.
 
 See also [Kandy User Guides](https://kotlin.github.io/kandy/user-guide.html)
 and [Examples Gallery](https://kotlin.github.io/kandy/examples.html)

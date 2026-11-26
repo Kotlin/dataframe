@@ -8,14 +8,24 @@ import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams
 import java.io.File
 import java.io.InputStream
+import java.nio.file.Path
 import kotlin.reflect.typeOf
 
+@Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public class TsvDeephaven(private val delimiter: Char = DelimParams.TSV_DELIMITER) : SupportedDataFrameFormat {
+
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
     override fun readDataFrame(stream: InputStream, header: List<String>): DataFrame<*> =
         DataFrame.readTsv(inputStream = stream, header = header, delimiter = delimiter)
 
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
     override fun readDataFrame(file: File, header: List<String>): DataFrame<*> =
         DataFrame.readTsv(file = file, header = header, delimiter = delimiter)
+
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
+    override fun readDataFrame(path: Path, header: List<String>): DataFrame<*> =
+        DataFrame.readTsv(path = path, header = header, delimiter = delimiter)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "tsv"
 

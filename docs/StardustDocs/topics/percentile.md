@@ -4,6 +4,8 @@
 
 Computes the specified [percentile](https://en.wikipedia.org/wiki/Percentile) of values.
 
+**API reference**: [`percentile`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/percentile.html)
+
 This is also called the "centile" or the 100-[quantile](https://en.wikipedia.org/wiki/Quantile).
 
 The 25th percentile is also known as the first [quartile](https://en.wikipedia.org/wiki/Quartile) (Q1),
@@ -21,7 +23,7 @@ The results of the operation on these types are interpolated using
 [Quantile Estimation Method](#quantile-estimation-methods) R8.
 
 The operation is also available for self-comparable columns
-(so columns of type `T : Comparable<T>`, like `DateTime`, `String`, etc.)
+(so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 In this case, the return type remains `T?`.
 The index of the result of the operation on these types is rounded using
 [Quantile Estimation Method](#quantile-estimation-methods) R3.
@@ -50,9 +52,9 @@ In the future we might add an option to change the quantile estimation method.
 <!---FUN percentileModes-->
 
 ```kotlin
-df.percentile(25.0) // 25th percentile of values per every comparable column
+df.percentile(25.0) // 25th percentile of values for every column with mutually comparable values
 df.percentile(75.0) { age and weight } // 75th percentile of all values in `age` and `weight`
-df.percentileFor(50.0, skipNaN = true) { age and weight } // 50th percentile of values per `age` and `weight` separately
+df.percentileFor(50.0, skipNaN = true) { age and name.firstName } // 50th percentile of values per `age` and `firstName` separately
 df.percentileOf(75.0) { (weight ?: 0) / age } // 75th percentile of expression evaluated for every row
 df.percentileBy(25.0) { age } // DataRow where the 25th percentile of `age` lies (index rounded using R3)
 ```
@@ -90,3 +92,40 @@ The following automatic type conversions are performed for the `percentile` oper
 | Double -> Double                 | null                   |
 | Float -> Double                  | null                   |
 | Nothing -> Nothing               | null                   |
+
+### Big numbers
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.PercentileSamples-->
+
+> `java.math.BigDecimal` and `java.math.BigInteger` are not explicitly supported.
+> They are self-comparable, so some overloads (like `df.percentile(25.0)`) still select a value
+> without interpolating it, while others (like `df.percentile(25.0) { bigDecimalCol }`) throw at runtime.
+> Don't rely on this: compute the percentile manually with Kotlin standard library methods
+> and Java big number arithmetic, or [`convert`](convert.md) the column to a primitive type first.
+> {style="warning"}
+
+For a `BigDecimal` column `amount`, the exact percentile can be selected from the sorted values
+with the same [closest rank method](#quantile-estimation-methods) R3 that DataFrame uses:
+
+<!---FUN percentileBigNumbersManually-->
+
+```kotlin
+// exact 25th percentile: the closest rank (R3) of the sorted values
+val amounts = df.amount.toList().sorted()
+val rank = round(0.25 * amounts.size).toInt().coerceIn(1, amounts.size)
+amounts[rank - 1]
+```
+
+<!---END-->
+
+Alternatively, [`convert`](convert.md) the column to a primitive type first —
+this interpolates the percentile, at the cost of precision:
+
+<!---FUN percentileBigNumbersConverted-->
+
+```kotlin
+// approximate, interpolated 25th percentile, computed after converting the column to `Double`
+df.convert { amount }.toDouble().percentile(25.0) { amount }
+```
+
+<!---END-->

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.rendering
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldInclude
@@ -89,6 +90,28 @@ class RenderingTests : TestBase() {
         val html = df.toHtml().toString()
         html shouldNotContain "\\\\"
         html shouldNotContain "&#34;"
+    }
+
+    @Test
+    fun `cellContentLimit null disables cell content truncation`() {
+        val longValue = "abcdefghij".repeat(10)
+        val df = dataFrameOf("text")(longValue)
+
+        // by default the value is truncated to the default cellContentLimit of 40 characters
+        df.toHtml().body shouldNotContain longValue
+
+        df.toHtml(DisplayConfiguration(cellContentLimit = null)).body shouldContain longValue
+    }
+
+    @Test
+    fun `negative cellContentLimit is rejected`() {
+        val df = dataFrameOf("text")("abc")
+
+        shouldThrow<IllegalArgumentException> {
+            df.toHtml(DisplayConfiguration(cellContentLimit = -1))
+        }.message shouldBe
+            "DisplayConfiguration.cellContentLimit must be non-negative but was -1. " +
+            "Set it to `null` if you want to disable the limit."
     }
 
     @Test
@@ -194,9 +217,7 @@ class RenderingTests : TestBase() {
         val df = dataFrameOf(
             columnOf(1, null).named("a"),
             columnOf(intArrayOf(1), intArrayOf(2)).named("b"),
-            // TODO https://github.com/Kotlin/dataframe/issues/679
-            // columnOf(arrayOf(1), arrayOf(2)).named("d"),
-            DataColumn.createValueColumn("c", listOf(arrayOf(1), arrayOf(2))),
+            columnOf(arrayOf(1), arrayOf(2)).named("c"),
             columnOf(arrayOf(1, null), arrayOf(2, null)).named("d"),
         )
 

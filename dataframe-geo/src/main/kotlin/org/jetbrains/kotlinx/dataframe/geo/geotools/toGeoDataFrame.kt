@@ -23,7 +23,7 @@ import org.locationtech.jts.geom.Geometry
  * @return a GeoDataFrame containing the data from this SimpleFeatureCollection, including
  *         geometries and other attributes, and an associated CRS if present.
  */
-fun SimpleFeatureCollection.toGeoDataFrame(): GeoDataFrame<*> {
+public fun SimpleFeatureCollection.toGeoDataFrame(): GeoDataFrame<*> {
     require(schema is SimpleFeatureType) {
         "GeoTools: SimpleFeatureType expected but was: ${schema::class.simpleName}"
     }

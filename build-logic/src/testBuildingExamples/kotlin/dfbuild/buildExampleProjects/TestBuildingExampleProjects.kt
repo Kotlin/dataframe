@@ -1,0 +1,147 @@
+package dfbuild.buildExampleProjects
+
+import org.apache.maven.shared.invoker.DefaultInvocationRequest
+import org.apache.maven.shared.invoker.DefaultInvoker
+import org.gradle.tooling.BuildException
+import org.gradle.tooling.GradleConnector
+import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
+import org.junit.AssumptionViolatedException
+import java.io.File
+import java.util.concurrent.TimeUnit
+
+/**
+ * Implementations of this class are auto-generated from 'examples/projects'
+ * into 'build/generated/testBuildingExamples'.
+ *
+ * See ':build-logic/src/main/kotlin/dfbuild/buildExampleProjects/generateTestCase.kt'.
+ *
+ * Each folder needs to have its own test class so the tests can run in parallel.
+ *
+ * This class, as well as the generated tests, are automatically registered as
+ * the 'testBuildingExamples' [SourceSet][org.gradle.api.tasks.SourceSet] by the
+ * `dfbuild.buildExampleProjects` convention plugin.
+ */
+@Suppress("unused")
+abstract class TestBuildingExampleProjects {
+    /**
+     * Allows receiving certain Gradle properties.
+     * These are passed down to the tests from the `dfbuild.buildExampleProjects` convention plugin.
+     */
+    protected fun getGradleProperty(name: String): String? = System.getProperty("gradle.properties.$name")
+
+    protected fun buildExampleProject(folder: File, isDev: Boolean) {
+        val name = folder.name.toCamelCaseByDelimiters().replaceFirstChar { it.uppercase() } +
+            (if (isDev) "Dev" else "")
+
+        val buildSystem = folder.detectBuildSystem()
+            ?: error(
+                "Could not detect build system in example project folder '$folder'. We only support ${BuildSystem.entries.toList()}.",
+            )
+
+        val isAndroid = "android" in name.lowercase()
+        when (buildSystem) {
+            BuildSystem.GRADLE ->
+                buildGradleProject(name = name, folder = folder, isAndroid = isAndroid)
+
+            BuildSystem.MAVEN ->
+                buildMavenProject(name = name, folder = folder)
+
+            BuildSystem.KOTLIN_TOOLCHAIN ->
+                buildKotlinToolchainProject(name = name, folder = folder)
+        }
+    }
+
+    protected fun buildGradleProject(name: String, folder: File, isAndroid: Boolean) {
+        // Needs the android.sdk.dir property to be set or -Pandroid.sdk.dir=... added as Gradle argument
+        // when an android-named example is run
+        val androidSdkDir = getGradleProperty("android.sdk.dir")
+        if (isAndroid && androidSdkDir == null) {
+            throw AssumptionViolatedException(
+                "Skipping `runBuild$name` because the `android.sdk.dir` property is not to run the Android example '$folder'.",
+            )
+        }
+
+        GradleConnector.newConnector()
+            .forProjectDirectory(folder)
+            .connect()
+            .use {
+                it.newBuild()
+                    .forTasks("clean", "build")
+                    .setJvmArguments("-Xmx2g", "-XX:MaxMetaspaceSize=1024m")
+                    .withArguments(
+                        buildList {
+                            if (isAndroid) {
+                                this += "-Dsdk.dir=$androidSdkDir"
+                                this += "-Dandroid.home=$androidSdkDir"
+                            }
+                        },
+                    )
+                    .setStandardInput(System.`in`)
+                    .setStandardOutput(System.out)
+                    .setStandardError(System.err)
+                    .run()
+            }
+    }
+
+    protected fun buildMavenProject(name: String, folder: File) {
+        DefaultInvoker()
+            .execute(
+                DefaultInvocationRequest().apply {
+                    mavenExecutable = folder.resolve("mvnw").also { it.setExecutable(true) }
+                    pomFile = folder.resolve("pom.xml")
+                    goals = listOf("clean", "compile")
+                    isNoTransferProgress = true
+                    isBatchMode = true
+                    mavenOpts = "-Xmx2g -XX:MaxMetaspaceSize=512m"
+                    setLocalRepositoryDirectory(File(getGradleProperty("maven.repo.local")!!))
+                },
+            ).let { result ->
+                if (result.exitCode != 0) {
+                    throw BuildException(
+                        "`build$name` failed. Could not build Maven project in '$folder'.",
+                        result.executionException,
+                    )
+                }
+            }
+    }
+
+    protected fun buildKotlinToolchainProject(name: String, folder: File) {
+        val isWindows = System.getProperty("os.name").startsWith("Windows")
+        folder
+            .resolve(if (isWindows) "kotlin.bat" else "kotlin")
+            .setExecutable(true)
+
+        val launcher =
+            if (isWindows) {
+                arrayOf("cmd", "/c", "kotlin.bat")
+            } else {
+                arrayOf("./kotlin")
+            }
+
+        val commands = listOf("check", "build")
+        for (command in commands) {
+            val process = ProcessBuilder(*launcher, command)
+                .directory(folder)
+                .apply {
+                    // TODO this may stop working if `kotlin` ever stops running on the JVM
+                    environment()["KOTLIN_CLI_JAVA_OPTIONS"] =
+                        "\"-Dmaven.repo.local=${getGradleProperty("maven.repo.local")!!}\""
+                }
+                .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .start()
+
+            if (!process.waitFor(10, TimeUnit.MINUTES)) {
+                process.destroyForcibly()
+                error("Kotlin Toolchain $command command in '$folder' timed out")
+            }
+
+            if (process.exitValue() != 0) {
+                throw BuildException(
+                    "`build$name` failed. Could not '$command' the Kotlin Toolchain project in '$folder'.",
+                    Exception("Exit code ${process.exitValue()}, see the build output above."),
+                )
+            }
+        }
+    }
+}

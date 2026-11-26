@@ -9,10 +9,12 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
 import java.io.OutputStream
 import java.nio.channels.Channels
 import java.nio.channels.WritableByteChannel
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption
+import kotlin.io.path.outputStream
 
 public val ignoreMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch -> }
 public val writeMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch ->
@@ -27,7 +29,7 @@ public val logMismatchMessage: (ConvertingMismatch) -> Unit = { message: Convert
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
- * If [dataFrame] content does not match with [targetSchema], behaviour is specified by [mode], mismatches would be sent to [mismatchSubscriber]
+ * If [dataFrame] content does not match [targetSchema], the behaviour is specified by [mode], and mismatches would be sent to [mismatchSubscriber]
  */
 public interface ArrowWriter : AutoCloseable {
     public val dataFrame: DataFrame<*>
@@ -47,9 +49,10 @@ public interface ArrowWriter : AutoCloseable {
 
     /**
      * If [restrictWidening] is true, [dataFrame] columns not described in [targetSchema] would not be saved (otherwise, would be saved as is).
-     * If [restrictNarrowing] is true, [targetSchema] fields that are not nullable and do not exist in [dataFrame] will produce exception (otherwise, would not be saved).
-     * If [strictType] is true, [dataFrame] columns described in [targetSchema] with non-compatible type will produce exception (otherwise, would be saved as is).
-     * If [strictNullable] is true, [targetSchema] fields that are not nullable and contain nulls in [dataFrame] will produce exception (otherwise, would be saved as is with nullable = true).
+     * If [restrictNarrowing] is true, [targetSchema] fields that are not nullable and do not exist in [dataFrame] will produce an exception (otherwise, would not be saved).
+     * If [strictType] is true, [dataFrame] columns described in [targetSchema] with an incompatible type
+     * will produce an exception (otherwise, they would be saved as is).
+     * If [strictNullable] is true, [targetSchema] fields that are not nullable and contain nulls in [dataFrame] will produce an exception (otherwise, would be saved as is with nullable = true).
      */
     public data class Mode(
         public val restrictWidening: Boolean,
@@ -71,7 +74,7 @@ public interface ArrowWriter : AutoCloseable {
     // IPC saving block
 
     /**
-     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to opened [channel].
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format), write to opened [channel].
      */
     public fun writeArrowIPC(channel: WritableByteChannel) {
         allocateVectorSchemaRoot().use { vectorSchemaRoot ->
@@ -82,22 +85,36 @@ public interface ArrowWriter : AutoCloseable {
     }
 
     /**
-     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to opened [stream].
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format), write to opened [stream].
      */
     public fun writeArrowIPC(stream: OutputStream) {
         writeArrowIPC(Channels.newChannel(stream))
     }
 
     /**
-     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
-     * If file exists, it can be recreated or expanded.
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
+     * If [append] is true, data is appended to the file; otherwise, the existing file is truncated.
      */
     public fun writeArrowIPC(file: File, append: Boolean = true) {
-        writeArrowIPC(FileOutputStream(file, append))
+        writeArrowIPC(file.toPath(), append)
     }
 
     /**
-     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new [ByteArray]
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format),
+     * write to a new or existing file on the given [path].
+     * If [append] is true, data is appended to the file at the given [path]; otherwise, the existing file is truncated.
+     */
+    public fun writeArrowIPC(path: Path, append: Boolean = true) {
+        val options = if (append) {
+            arrayOf(StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+        } else {
+            arrayOf(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
+        }
+        path.outputStream(*options).use { outputStream -> writeArrowIPC(outputStream) }
+    }
+
+    /**
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format), write to new [ByteArray]
      */
     public fun saveArrowIPCToByteArray(): ByteArray {
         val stream = ByteArrayOutputStream()
@@ -108,7 +125,7 @@ public interface ArrowWriter : AutoCloseable {
     // Feather saving block
 
     /**
-     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to opened [channel].
+     * Save data to [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files), write to opened [channel].
      */
     public fun writeArrowFeather(channel: WritableByteChannel) {
         allocateVectorSchemaRoot().use { vectorSchemaRoot ->
@@ -119,22 +136,36 @@ public interface ArrowWriter : AutoCloseable {
     }
 
     /**
-     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to opened [stream].
+     * Save data to [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files), write to opened [stream].
      */
     public fun writeArrowFeather(stream: OutputStream) {
         writeArrowFeather(Channels.newChannel(stream))
     }
 
     /**
-     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new or existing [file].
-     * If file exists, it would be recreated.
+     * Save data to [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files), write to new or existing [file].
+     * If [file] exists, it would be recreated.
      */
     public fun writeArrowFeather(file: File) {
-        writeArrowFeather(FileOutputStream(file))
+        writeArrowFeather(file.toPath())
     }
 
     /**
-     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new [ByteArray]
+     * Save data to [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files),
+     * write to a new or existing file on the given [path].
+     * If file on the given [path] exists, it would be recreated.
+     */
+    public fun writeArrowFeather(path: Path) {
+        path.outputStream(
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING,
+        ).use { outputStream ->
+            writeArrowFeather(outputStream)
+        }
+    }
+
+    /**
+     * Save data to [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files), write to new [ByteArray]
      */
     public fun saveArrowFeatherToByteArray(): ByteArray {
         val stream = ByteArrayOutputStream()

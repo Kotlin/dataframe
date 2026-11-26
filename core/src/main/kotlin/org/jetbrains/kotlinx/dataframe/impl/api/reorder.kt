@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Reorder
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
@@ -21,9 +22,16 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
 import kotlin.reflect.typeOf
 
+/**
+ * @param unwrapSingleColumnGroup when `true` and [Reorder.columns] selects exactly one column group,
+ * the nested columns of that group are reordered instead of the group itself.
+ * `reorderColumnsBy(atAnyDepth = false)` passes `false`: it must reorder only the top-level columns,
+ * even when the only top-level column is a column group. The value is passed on to the dataframes of frame columns.
+ */
 internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
     desc: Boolean,
     expression: ColumnExpression<C, V>,
+    unwrapSingleColumnGroup: Boolean = true,
 ): DataFrame<T> {
     data class ColumnInfo(
         val treeNode: TreeNode<ColumnPosition>,
@@ -33,9 +41,11 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
     )
 
     val columnsWithPaths = df.getColumnsWithPaths(columns)
-    if (columnsWithPaths.size == 1 && columnsWithPaths[0].isColumnGroup()) {
+    if (unwrapSingleColumnGroup && columnsWithPaths.size == 1 && columnsWithPaths[0].isColumnGroup()) {
         val path = columnsWithPaths[0].path
-        return df.reorder { path.allCols().cast<C>() }.reorderImpl(desc, expression)
+        // `false`: if the only nested column is a column group too, its own nested columns keep their order
+        return df.reorder { path.allCols().cast<C>() }
+            .reorderImpl(desc, expression, unwrapSingleColumnGroup = false)
     }
 
     var df = df
@@ -62,16 +72,21 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
                 var column = c.column
                 if (inFrameColumns && column.isFrameColumn()) {
                     column = column.asAnyFrameColumn()
-                        .map(typeOf<AnyFrame>()) { it.cast<T>().reorder(columns).reorderImpl(desc, expression) }
+                        // pass both flags on, so that frame columns nested in this frame are reordered too,
+                        // and with `atAnyDepth = false` a single column group in this frame keeps its nested columns
+                        .map(typeOf<AnyFrame>()) {
+                            Reorder(it.castUnchecked<T>(), columns, inFrameColumns)
+                                .reorderImpl(desc, expression, unwrapSingleColumnGroup)
+                        }
                         .cast()
                 }
                 ColumnToInsert(path, column, src.treeNode)
             }
             val newGroup = removed.df.insertImpl(toInsert)
             df = if (parentPath.isEmpty()) {
-                newGroup.cast()
+                newGroup.castUnchecked()
             } else {
-                df.replace(parentPath).with { newGroup.asColumnGroup(it.name()) }
+                df.replace { parentPath }.with { newGroup.asColumnGroup(it.name()) }
             }
         }
     return df

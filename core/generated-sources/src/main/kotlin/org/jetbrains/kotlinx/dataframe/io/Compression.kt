@@ -10,9 +10,9 @@ import java.util.zip.ZipInputStream
 
 /**
  * Compression algorithm to use when reading files.
- * We support [GZIP][Compression.Gzip] and [ZIP][Compression.Zip] compression out of the box.
+ * We support [<code>GZIP</code>][Compression.Gzip] and [<code>ZIP</code>][Compression.Zip] compression out of the box.
  *
- * Custom decompression algorithms can be added by creating an instance of [Compression].
+ * Custom decompression algorithms can be added by creating an instance of [<code>Compression</code>][Compression].
  */
 public fun interface Compression<I : InputStream> {
     public companion object {
@@ -30,7 +30,7 @@ public fun interface Compression<I : InputStream> {
         public fun of(url: URL): Compression<*> = of(url.path)
     }
 
-    /** Wraps any [InputStream] into a decompressing [InflaterInputStream] stream */
+    /** Wraps any [<code>InputStream</code>][InputStream] into a decompressing [<code>InflaterInputStream</code>][InflaterInputStream] stream */
     public fun wrapStream(inputStream: InputStream): I
 
     /** Can be overridden to perform some actions before reading from the input stream. */

@@ -1,10 +1,9 @@
-@file:Suppress("ClassName")
-
 package org.jetbrains.kotlinx.dataframe.documentation
 
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.diff
 import org.jetbrains.kotlinx.dataframe.api.drop
@@ -17,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.index
 
 /**
  * ## Selecting Rows
+ *
  * Selecting rows that satisfy a "Row Condition" ({@include [DocumentationUrls.DataRow.RowConditions]})
  * can occur in the following two types of operations:
  * - Selecting entire rows ({@include [RowConditionLink]}), for instance in [filter], [drop], [first], and [count]
@@ -29,23 +29,88 @@ import org.jetbrains.kotlinx.dataframe.index
  */
 internal interface SelectingRows {
 
-    /*
-     * The key for a @set that will define the operation name for the examples below.
-     * Make sure to [alias][your examples].
+    /**
+     * {@comment
+     *    Row filter KDoc-snippet.
+     *    Include it into KDoc with `@include [SelectingRows.RowFilterSnippet]`.
+     * }
+     *
+     * The [predicate\] is a [RowFilter] — a lambda that receives each [DataRow] as both `this` and `it`
+     * and is expected to return a [Boolean] value.
+     *
+     * It allows you to define conditions using the row's values directly,
+     * including through [extension properties][AccessApis.ExtensionPropertiesApi]
+     * for convenient and type-safe access.
+     *
+     * For more information, {@include [DocumentationUrls.DataRow.RowFilter]}
      */
-    interface FIRST_OPERATION
+    @ExcludeFromSources
+    typealias RowFilterSnippet = Nothing
+
+    /**
+     * {@comment
+     *    Row filter KDoc-snippet.
+     *    Include it into KDoc with `@include [SelectingRows.RowValueFilterSnippet]`.
+     * }
+     *
+     * The [predicate\] is a [RowValueFilter] — a lambda that receives each [DataRow] as `this` and
+     * the given value as `it`
+     * and is expected to return a [Boolean] value.
+     *
+     * It allows you to define conditions using the row's values directly,
+     * including through [extension properties][AccessApis.ExtensionPropertiesApi]
+     * for convenient and type-safe access.
+     *
+     * For more information, {@include [DocumentationUrls.DataRow.RowValueFilter]}
+     */
+    @ExcludeFromSources
+    typealias RowValueFilterSnippet = Nothing
 
     /*
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface SECOND_OPERATION
+    @ExcludeFromSources
+    typealias FIRST_OPERATION = Nothing
+
+    /*
+     * The key for a @set that will define the operation name for the examples below.
+     * Make sure to [alias][your examples].
+     */
+    @ExcludeFromSources
+    typealias SECOND_OPERATION = Nothing
 
     /** {@set [FIRST_OPERATION] operation}{@set [SECOND_OPERATION] where} */
-    interface SetDefaultOperationArg
+    @ExcludeFromSources
+    typealias SetDefaultOperationArg = Nothing
+
+    /*
+     * The key for a `@set` that defines which rows the operation takes (`first` or `last`).
+     */
+    @ExcludeFromSources
+    typealias WHICH_ROWS = Nothing
+
+    /**
+     * {@comment
+     *    Column types after a row slice. Include it into KDoc with `@include [SelectingRows.SlicedColumnTypesSnippet]`,
+     *    setting [WHICH_ROWS] to `first` or `last`.
+     * }
+     *
+     * If the number of rows to take is greater than or equal to the number of rows, the whole [DataFrame]
+     * is returned as it is.
+     * Otherwise, each column keeps its runtime type except for nullability: a nullable column
+     * whose `{@get [WHICH_ROWS] first}` values contain no `null` becomes non-nullable at runtime;
+     * the compile-time type is not affected.
+     *
+     * When the number of rows to take is `0`, the result has no rows but keeps all columns:
+     * a column group keeps its nested columns, and a frame column keeps its schema.
+     */
+    @ExcludeFromSources
+    typealias SlicedColumnTypesSnippet = Nothing
 
     /** [Entire-Row Condition][EntireRowCondition.WithExample] */
-    interface RowConditionLink
+    @ExcludeFromSources
+    typealias RowConditionLink = Nothing
 
     /** Filter or find rows to operate on using a [row filter][RowFilter]. */
     interface EntireRowCondition {
@@ -60,11 +125,12 @@ internal interface SelectingRows {
          * `df.`{@get [FIRST_OPERATION]}` { `[diff][diff]` { age } == 0 }`
          * @include [SetDefaultOperationArg]
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [Row-Value Condition][RowValueCondition.WithExample] */
-    interface RowValueConditionLink
+    @ExcludeFromSources
+    typealias RowValueConditionLink = Nothing
 
     /** Filter or find rows to operate on after [selecting columns][SelectingColumns] using a
      * [row value filter][RowValueFilter].
@@ -78,12 +144,13 @@ internal interface SelectingRows {
          *
          * `df.`{@get [FIRST_OPERATION]}` { length }.`{@get [SECOND_OPERATION]}` { it > 10.0 }`
          *
-         * `df.`{@get [FIRST_OPERATION]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`{@get [SECOND_OPERATION]}` { `[index][index]`() > 4 && city != "Paris" }`
+         * `df.`{@get [FIRST_OPERATION]}` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }.`{@get [SECOND_OPERATION]}` { `[index][index]`() > 4 && city != "Paris" }`
          * @include [SetDefaultOperationArg]
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 }
 
 /** [Row Condition][SelectingRows] */
-internal interface RowConditionLink
+@ExcludeFromSources
+internal typealias RowConditionLink = Nothing

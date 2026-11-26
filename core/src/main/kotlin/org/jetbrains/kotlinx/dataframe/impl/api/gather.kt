@@ -62,13 +62,13 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
 
         // explode keys and values
         df = when {
-            keysColumn != null && valuesColumn != null -> df.explode(keysColumn, valuesColumn)
-            else -> df.explode(keysColumn ?: valuesColumn!!)
+            keysColumn != null && valuesColumn != null -> df.explode { keysColumn and valuesColumn }
+            else -> df.explode { keysColumn ?: valuesColumn!! }
         }
 
         // explode values in lists
         if (explode && valuesColumn != null) {
-            df = df.explode(valuesColumn)
+            df = df.explode { valuesColumn }
         }
     } else {
         val nameAndValue = column<List<Pair<K, Any?>>>("nameAndValue")
@@ -103,7 +103,7 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
                 df = df
                     .split { nameAndValuePairs }
                     .into(keysColumn.name(), valuesColumn.name())
-                    .explode(valuesColumn)
+                    .explodeImpl { valuesColumn }
             }
 
             keysColumn != null -> {

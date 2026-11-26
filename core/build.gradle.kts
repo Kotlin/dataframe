@@ -1,51 +1,38 @@
-import com.google.devtools.ksp.gradle.KspTask
-import com.google.devtools.ksp.gradle.KspTaskJvm
+import dfbuild.kodex.kodexAwareComponentToPublish
+import io.github.devcrocod.korro.KorroGenerateTask
 import io.github.devcrocod.korro.KorroTask
-import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
 import org.gradle.jvm.tasks.Jar
-import org.gradle.kotlin.dsl.withType
+import org.gradle.kotlin.dsl.named
+import org.intellij.lang.annotations.Language
+import org.jetbrains.dokka.gradle.tasks.DokkaBaseTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
 plugins {
+    with(conventions.plugins.dfbuild) {
+        alias(kotlinJvm8)
+        alias(buildConfig)
+        alias(kodex)
+        alias(keywordsGenerator)
+        alias(dokka)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
         alias(korro)
-//        alias(kover)
-        alias(ktlint)
-        alias(kodex)
-        alias(simpleGit)
-        alias(buildconfig)
         alias(binary.compatibility.validator)
-
-        // generates keywords using the :generator module
-        alias(keywordGenerator)
-
-        // dependence on our own plugin
-        alias(dataframe)
-
-        // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
-        alias(ksp)
+        alias(kotlinx.benchmark)
     }
-    idea
 }
 
 group = "org.jetbrains.kotlinx"
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-}
-
 kotlin.sourceSets {
     main {
-        kotlin.srcDir("build/generated/ksp/main/kotlin/")
+        kotlin.srcDir("src/generated-dataschema-accessors/main/kotlin/")
     }
     test {
-        kotlin.srcDir("build/generated/ksp/test/kotlin/")
+        kotlin.srcDir("src/generated-dataschema-accessors/test/kotlin/")
     }
 }
 
@@ -56,14 +43,27 @@ sourceSets {
     }
 }
 
+// Separate source set for Java 16+ language-specific tests (e.g., Java Records)
+val testJava16 = sourceSets.create("testJava16") {
+    java.srcDir("src/testJava16/java")
+    kotlin.srcDir("src/testJava16/kotlin")
+    compileClasspath += sourceSets.main.get().output + configurations.testCompileClasspath.get()
+    runtimeClasspath += output + compileClasspath + configurations.testRuntimeClasspath.get()
+}
+
 dependencies {
-    val kotlinCompilerPluginClasspathSamples by configurations.getting
+    val kotlinCompilerPluginClasspathSamples = configurations.getByName("kotlinCompilerPluginClasspathSamples")
 
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
     kotlinCompilerPluginClasspathSamples(projects.plugins.expressionsConverter)
 
     api(libs.commonsCsv)
+    constraints {
+        api(libs.commonsCodec) {
+            because("commons-codec < 1.23.0 is flagged by CVE scanners (Blake3 docs); transitive via commons-csv")
+        }
+    }
 
     implementation(libs.commonsIo)
     implementation(libs.fastDoubleParser)
@@ -77,6 +77,11 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
+    testImplementation(projects.commonTestUtils)
+    // kotest shouldBe forcefully escapes newlines when content is identical except additional newlines
+    // which makes diff very hard to perceive. CodeGenerationTests.kt suffers from it a lot. using assertEquals there for working diff.
+    testImplementation(kotlin("test"))
+    testImplementation(libs.kotlinx.benchmark.runtime)
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
@@ -91,11 +96,63 @@ dependencies {
     testImplementation(projects.dataframeCsv)
 }
 
-val samplesImplementation by configurations.getting {
+// Configure testJava16 dependencies to extend from test
+configurations {
+    getByName("testJava16Implementation") {
+        extendsFrom(configurations.testImplementation.get())
+    }
+    getByName("testJava16RuntimeOnly") {
+        extendsFrom(configurations.testRuntimeOnly.get())
+    }
+}
+
+// Configure testJava16 sources to use Java 16+
+tasks.named<JavaCompile>("compileTestJava16Java") {
+    sourceCompatibility = JavaVersion.VERSION_16.toString()
+    targetCompatibility = JavaVersion.VERSION_16.toString()
+    options.release.set(16)
+}
+
+tasks.named<KotlinCompile>("compileTestJava16Kotlin") {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_16
+        freeCompilerArgs.add("-Xjdk-release=16")
+    }
+}
+
+benchmark {
+    targets {
+        register("test")
+    }
+    configurations {
+        register("sort") {
+            include("SortingBenchmark")
+        }
+        register("groupBy") {
+            include("GroupByBenchmark")
+        }
+    }
+}
+
+// TODO(#898)
+// All korro/samples related tasks should be removed
+// after migration all test sample to :samples module
+
+configurations.getByName("samplesImplementation") {
     extendsFrom(configurations.testImplementation.get())
 }
 
+tasks.named<JavaCompile>("compileSamplesJava") {
+    sourceCompatibility = JavaVersion.VERSION_11.toString()
+    targetCompatibility = JavaVersion.VERSION_11.toString()
+    options.release.set(11)
+}
+
 val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+        freeCompilerArgs.add("-Xjdk-release=11")
+    }
     tasks.named<KotlinCompile>("compileTestKotlin").get().let {
         friendPaths.from(it.friendPaths)
         libraries.from(it.libraries)
@@ -104,18 +161,10 @@ val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
     destinationDirectory = layout.buildDirectory.dir("classes/testWithOutputs/kotlin")
 }
 
-tasks.withType<KspTask> {
-    // "test" classpath is re-used, so repeated generation should be disabled
-    if (name == "kspSamplesKotlin") {
-        dependsOn("kspTestKotlin")
-        enabled = false
-    }
-}
-
-val clearTestResults by tasks.registering(Delete::class, fun Delete.() {
+val clearTestResults = tasks.register<Delete>("clearTestResults") {
     delete(layout.buildDirectory.dir("dataframes"))
     delete(layout.buildDirectory.dir("korroOutputLines"))
-})
+}
 
 val samplesTest = tasks.register<Test>("samplesTest") {
     group = "Verification"
@@ -140,7 +189,7 @@ val samplesTest = tasks.register<Test>("samplesTest") {
         sourceSets["main"].runtimeClasspath
 }
 
-val clearSamplesOutputs by tasks.registering {
+val clearSamplesOutputs = tasks.register("clearSamplesOutputs") {
     group = "documentation"
 
     doFirst {
@@ -152,12 +201,6 @@ val clearSamplesOutputs by tasks.registering {
     }
 }
 
-val addSamplesToGit by tasks.registering(GitTask::class, fun GitTask.() {
-    directory = file(".")
-    command = "add"
-    args = listOf("-A", "../docs/StardustDocs/resources/snippets")
-})
-
 val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     group = "documentation"
     mainClass = "org.jetbrains.kotlinx.dataframe.explainer.SampleAggregatorKt"
@@ -165,9 +208,12 @@ val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     dependsOn(clearSamplesOutputs)
     dependsOn(samplesTest)
     classpath = sourceSets.test.get().runtimeClasspath
+}
 
-    doLast {
-        addSamplesToGit.get().executeCommand()
+tasks.withType<KorroGenerateTask> {
+    dependsOn(copySamplesOutputs)
+    if (name == "korroGenerate") {
+        mustRunAfter(":samples:korro")
     }
 }
 
@@ -175,137 +221,32 @@ tasks.withType<KorroTask> {
     dependsOn(copySamplesOutputs)
 }
 
-// region docPreprocessor
-
-val generatedSourcesFolderName = "generated-sources"
-
-// Backup the kotlin source files location
-val kotlinMainSources = kotlin.sourceSets.main
-    .get()
-    .kotlin.sourceDirectories
-    .toList()
-val kotlinTestSources = kotlin.sourceSets.test
-    .get()
-    .kotlin.sourceDirectories
-    .toList()
-
-fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
-
-// Include both test and main sources for cross-referencing, Exclude generated sources
-val processKDocsMainSources = (kotlinMainSources + kotlinTestSources)
-    .filterNot { pathOf("build", "generated") in it.path }
-
-// sourceset of the generated sources as a result of `processKDocsMain`, this will create linter tasks
-val generatedSources by kotlin.sourceSets.creating {
-    kotlin {
-        setSrcDirs(
-            listOf(
-                "build/generated/ksp/main/kotlin/",
-                "core/build/generatedSrc",
-                "$generatedSourcesFolderName/src/main/kotlin",
-                "$generatedSourcesFolderName/src/main/java",
-            ),
-        )
-    }
-}
-
-// Task to generate the processed documentation
-val processKDocsMain by creatingRunKodexTask(processKDocsMainSources) {
-    group = "KDocs"
-    target = file(generatedSourcesFolderName)
-
-    // false, so `runKtlintFormatOverGeneratedSourcesSourceSet` can format the output
-    outputReadOnly = false
-
-    exportAsHtml {
-        dir = file("../docs/StardustDocs/resources/snippets/kdocs")
-    }
-    finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
-}
-
-tasks.named("ktlintGeneratedSourcesSourceSetCheck") {
-    onlyIf { false }
-}
-tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
-    onlyIf { false }
-}
-
-// Exclude the generated/processed sources from the IDE
-idea {
-    module {
-        excludeDirs.add(file(generatedSourcesFolderName))
-    }
-}
-
-// If `changeJarTask` is run, modify all Jar tasks such that before running the Kotlin sources are set to
-// the target of `processKdocMain`, and they are returned to normal afterward.
-// This is usually only done when publishing
-val changeJarTask by tasks.registering {
-    outputs.upToDateWhen { project.hasProperty("skipKodex") }
-    doFirst {
-        tasks.withType<Jar> {
-            doFirst {
-                require(generatedSources.kotlin.srcDirs.toList().isNotEmpty()) {
-                    logger.error("`processKDocsMain`'s outputs are empty, did `processKDocsMain` run before this task?")
-                }
-                kotlin.sourceSets.main {
-                    kotlin.setSrcDirs(generatedSources.kotlin.srcDirs)
-                }
-                logger.lifecycle("$this is run with modified sources: \"$generatedSourcesFolderName\"")
-            }
-
-            doLast {
-                kotlin.sourceSets.main {
-                    kotlin.setSrcDirs(kotlinMainSources)
-                }
-            }
-        }
-    }
-}
-
-// if `processKDocsMain` runs, the Jar tasks must run after it so the generated-sources are there
-tasks.withType<Jar> {
-    mustRunAfter(changeJarTask, tasks.generateKeywordsSrc, processKDocsMain)
-}
-
-// modify all publishing tasks to depend on `changeJarTask` so the sources are swapped out with generated sources
-tasks.configureEach {
-    if (!project.hasProperty("skipKodex") && name.startsWith("publish")) {
-        dependsOn(processKDocsMain, changeJarTask)
-    }
-}
-
-// Exclude the generated/processed sources from the IDE
-idea {
-    module {
-        excludeDirs.add(file(generatedSourcesFolderName))
-    }
-}
-
-// If we want to use Dokka, make sure to use the preprocessed sources
-tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
-    dependsOn(processKDocsMain)
-    dokkaSourceSets {
-        all {
-            sourceRoot(processKDocsMain.target.get())
-        }
-    }
-}
-
-// endregion
-
 korro {
-    docs = fileTree(rootProject.rootDir) {
-        include("docs/StardustDocs/topics/*.md")
+    behavior {
+        ignoreMissing = true
+    }
+    docs {
+        from(
+            fileTree(rootProject.file("docs/StardustDocs")) {
+                include("topics/*.md")
+                include("topics/concepts/*.md")
+            },
+        )
+        baseDir = rootProject.file("docs/StardustDocs")
     }
 
-    samples = fileTree(project.projectDir) {
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
-    }
-
-    outputs = fileTree(project.layout.buildDirectory) {
-        include("korroOutputLines/*")
+    samples {
+        from(
+            fileTree(project.projectDir) {
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
+            },
+        )
+        outputs.from(
+            fileTree(project.layout.buildDirectory) {
+                include("korroOutputLines/*")
+            },
+        )
     }
 
     groupSamples {
@@ -319,102 +260,131 @@ korro {
         funSuffix("_strings") {
             replaceText("NAME", "Strings")
         }
+
         beforeGroup = "<tabs>\n"
         afterGroup = "</tabs>"
     }
 }
 
-tasks.withType<KspTaskJvm> {
-    dependsOn(tasks.generateKeywordsSrc)
+// generateLibrariesJson makes sure a META-INF/kotlin-jupyter-libraries/libraries.json file is generated
+// This file allows loading dataframe-jupyter when dataframe-core is present on its own in a Kotlin Notebook.
+val generatedJupyterResourcesDir = layout.buildDirectory.dir("generated/jupyter")
+val generateLibrariesJson = tasks.register("generateLibrariesJson") {
+    val outDir = generatedJupyterResourcesDir.get().asFile.resolve("META-INF/kotlin-jupyter-libraries")
+    val outFile = outDir.resolve("libraries.json")
+    outputs.file(outFile)
+    inputs.property("version", project.version)
+
+    doLast {
+        outDir.mkdirs()
+        @Language("json")
+        val content =
+            """
+            {
+              "descriptors": [
+                {
+                  "init": [
+                    "USE { dependencies(\"org.jetbrains.kotlinx:dataframe-jupyter:${project.version}\") }"
+                  ]
+                }
+              ]
+            }
+            """.trimIndent()
+
+        outFile.delete()
+        outFile.writeText(content)
+        logger.lifecycle("generated META-INF/kotlin-jupyter-libraries/libraries.json for :core")
+    }
+}
+
+// If `includeCoreLibrariesJson` is set, modify the processResources task such that it includes
+// a META-INF libraries.json file.
+// This file allows loading dataframe-jupyter when dataframe-core is present on its own in a Kotlin Notebook.
+// This is usually only done when publishing.
+tasks.processResources {
+    if (project.hasProperty("includeCoreLibrariesJson")) {
+        dependsOn(generateLibrariesJson)
+        from(generatedJupyterResourcesDir) {
+            into("") // keep META-INF/... structure as generated
+        }
+        doLast {
+            logger.lifecycle("$this includes generated META-INF/kotlin-jupyter-libraries/libraries.json")
+        }
+    }
+}
+
+tasks.withType<Jar> {
+    mustRunAfter(tasks.generateKeywordsSrc)
+}
+
+tasks.processKDocsMain {
+    dependsOn(tasks.generateKeywordsSrc, tasks.generateBuildConfigClasses)
 }
 
 tasks.runKtlintFormatOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
 }
 
 tasks.runKtlintFormatOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspTestKotlin")
 }
-
-tasks.named("runKtlintFormatOverGeneratedSourcesSourceSet") {
+tasks.named { it == "runKtlintFormatOverMainKodexSourceSet" }.configureEach {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
 }
 
 tasks.runKtlintCheckOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
 }
 
 tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspTestKotlin")
 }
 
-tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
+tasks.named { it == "runKtlintCheckOverMainKodexSourceSet" }.configureEach {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
 }
 
-kotlin {
-    explicitApi()
+tasks.withType<DokkaBaseTask>().configureEach {
+    dependsOn(tasks.generateKeywordsSrc)
 }
 
 tasks.withType<KotlinCompile> {
     compilerOptions {
         optIn.addAll("kotlin.RequiresOptIn")
         freeCompilerArgs.addAll("-Xinline-classes")
-        freeCompilerArgs.addAll("-Xjvm-default=all")
+        freeCompilerArgs.addAll("-jvm-default=no-compatibility")
     }
 }
 
 tasks.test {
+    maxHeapSize = "1g"
+}
+
+// Test task for Java 16+ language-specific tests
+val testJava16Task = tasks.register<Test>("testJava16") {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+
+    testClassesDirs = testJava16.output.classesDirs
+    classpath = testJava16.runtimeClasspath
+
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+
     maxHeapSize = "2048m"
-//    kover {
-//        currentProject {
-//            instrumentation { disabledForTestTasks.addAll("samplesTest") }
-//        }
-//        reports {
-//            total {
-//                filters {
-//                    excludes {
-//                        classes("org.jetbrains.kotlinx.dataframe.jupyter.*")
-//                        classes("org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests")
-//                    }
-//                }
-//            }
-//        }
-//    }
+}
+
+tasks.check {
+    dependsOn(testJava16Task)
 }
 
 kotlinPublications {
     publication {
         publicationName = "core"
         artifactId = "dataframe-core"
-        description = "Dataframe core API"
+        description = "Kotlin DataFrame: core API"
         packageName = artifactId
-    }
-}
-
-val instrumentedJars: Configuration by configurations.creating {
-    isCanBeConsumed = true
-    isCanBeResolved = false
-}
-
-artifacts {
-    add("instrumentedJars", tasks.jar.get().archiveFile) {
-        builtBy(tasks.jar)
-    }
-}
-
-// Disable and enable if updating plugin breaks the build
-dataframes {
-    schema {
-        sourceSet = "test"
-        visibility = org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
-        name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
+        // publishes the KoDEx-processed jars, see `dfbuild.kodex`
+        composeOf { from(kodexAwareComponentToPublish()) }
     }
 }

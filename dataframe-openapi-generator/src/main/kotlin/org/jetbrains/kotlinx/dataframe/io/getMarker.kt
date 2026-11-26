@@ -11,8 +11,8 @@ internal fun AdditionalProperty.Companion.getMarker(typeArguments: List<String>)
         isOpen = false,
         fields = listOf(
             generatedFieldOf(
-                fieldName = ValidFieldName.of(AdditionalProperty<*>::key.name),
-                columnName = AdditionalProperty<*>::key.name,
+                fieldName = ValidFieldName.of(AdditionalProperty<*>::name.name),
+                columnName = AdditionalProperty<*>::name.name,
                 overrides = false,
                 fieldType = FieldType.ValueFieldType(String::class.qualifiedName!!),
             ),

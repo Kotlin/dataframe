@@ -19,7 +19,7 @@ Here are the key features:
 
 ### Drag-and-Drop Data Files
 
-You can quickly load data into `DataFrame` into a notebook by simply dragging and dropping a file 
+You can quickly load data into a `DataFrame` in a notebook by simply dragging and dropping a file 
 (.csv/.json/.xlsx and .geojson/.shp) directly into the notebook editor:
 
 <video src="ktnb_drag_n_drop.mp4" controls=""/>
@@ -78,9 +78,31 @@ like copying text from a document, but with the structure and format of your dat
 
 <video src="https://github.com/user-attachments/assets/88e53dfb-361f-40f8-bffb-52a512cdd3cd" controls=""/>
 
+### Rendering of images in the cell
+
+The table widget can render `BufferedImage`s. 
+Given a column of images, right-click on the cell and click `View Image` in the context menu.
+ 
+![ktnb_cell_image.png](ktnb_cell_image.png)
+
+### Clickable URI links
+
+String values starting with `http://`, `https://`, `file:/` are treated as clickable links that open, for example, your browser or file manager.
+Click on the cell to trigger a toolbar to appear.
+
+![ktnb_clickable_link.png](ktnb_clickable_link.png)
+
+Clicking on `Open URL` or `Open File URI` for the first time triggers a notification with a link to `Settings` → `URL Click Settings`.
+Choose what protocols should be allowed.
+
+![ktnb_link_settings.png](ktnb_link_settings.png)
 
 To get started, ensure you have the latest version of the Kotlin Notebook Plugin installed in IntelliJ IDEA,
 and begin exploring your data using Kotlin DataFrame in your notebook cells.
 
-For more information on using the Kotlin Notebook Plugin,
-refer to the [official documentation](https://kotlinlang.org/docs/kotlin-notebook-overview.html).
+## Related documentation
+
+- [Kotlin for Data Analysis in notebooks](https://kotlinlang.org/docs/kotlin-notebook-overview.html):
+  Learn more about Kotlin Notebook capabilities for data analysis.
+- [Kotlin Notebooks in IntelliJ IDEA](https://www.jetbrains.com/help/idea/kotlin-notebook.html):
+  Detailed documentation on working with Kotlin Notebooks in the IDE.

@@ -4,7 +4,14 @@ import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException
+import org.jetbrains.kotlinx.dataframe.api.InsertClause
+import org.jetbrains.kotlinx.dataframe.api.InsertException
+import org.jetbrains.kotlinx.dataframe.api.NotAColumnGroupInsertException
+import org.jetbrains.kotlinx.dataframe.api.after
+import org.jetbrains.kotlinx.dataframe.api.before
+import org.jetbrains.kotlinx.dataframe.api.castUnchecked
+import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -12,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ReadonlyTreeNode
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ReferenceData
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getAncestor
 import org.jetbrains.kotlinx.dataframe.impl.columns.withDf
+import org.jetbrains.kotlinx.dataframe.impl.removeAt
 
 internal data class ColumnToInsert(
     val insertionPath: ColumnPath,
@@ -32,13 +40,14 @@ internal fun <T> insertImpl(df: DataFrame<T>?, columns: List<ColumnToInsert>) =
 internal fun dataFrameOf(columns: List<ColumnToInsert>) =
     insertImpl<Unit>(null, columns, columns.firstOrNull()?.referenceNode?.getRoot(), 0)
 
+@Throws(InsertException::class)
 internal fun <T> insertImpl(
     df: DataFrame<T>?,
     columns: List<ColumnToInsert>,
     treeNode: ReadonlyTreeNode<ReferenceData>?,
     depth: Int,
 ): DataFrame<T> {
-    if (columns.isEmpty()) return df ?: DataFrame.empty().cast()
+    if (columns.isEmpty()) return df ?: DataFrame.empty().castUnchecked()
 
     val childDepth = depth + 1
 
@@ -52,14 +61,16 @@ internal fun <T> insertImpl(
         if (subTree != null) {
             // assert that new columns go directly under current column so they have longer paths
             val invalidPath = subTree.firstOrNull { it.insertionPath.size == childDepth }
-            check(invalidPath == null) {
-                val text = invalidPath!!.insertionPath.joinToString(".")
-                "Can not insert column `$text` because column with this path already exists in DataFrame"
+            if (invalidPath != null) {
+                val text = invalidPath.insertionPath.joinToString(".")
+                throw DuplicateColumnPathInsertException(
+                    "Can not insert column `$text` because column with this path already exists in DataFrame",
+                )
             }
             val group = it as? ColumnGroup<*>
-            check(group != null) {
-                "Can not insert columns under a column '${it.name()}', because it is not a column group"
-            }
+                ?: throw NotAColumnGroupInsertException(
+                    "Can not insert columns under a column '${it.name()}', because it is not a column group",
+                )
             val newDf = insertImpl(group, subTree, treeNode?.get(it.name()), childDepth)
             val newCol = group.withDf(newDf)
             newColumns.add(newCol)
@@ -119,10 +130,16 @@ internal fun <T> insertImpl(
         val newCol = if (nodeToInsert != null) {
             val column = nodeToInsert.column
             if (columns.size > 1) {
-                check(columns.count { it.insertionPath.size == childDepth } == 1) {
-                    "Can not insert more than one column into the path ${nodeToInsert.insertionPath}"
+                if (columns.count { it.insertionPath.size == childDepth } != 1) {
+                    throw DuplicateColumnPathInsertException(
+                        "Can not insert more than one column into the path ${nodeToInsert.insertionPath}",
+                    )
                 }
-                check(column is ColumnGroup<*>)
+                if (column !is ColumnGroup<*>) {
+                    throw NotAColumnGroupInsertException(
+                        "Can not insert columns under a column '${column.name()}', because it is not a column group",
+                    )
+                }
                 val newDf = insertImpl(
                     column,
                     columns.filter { it.insertionPath.size > childDepth },
@@ -146,5 +163,15 @@ internal fun <T> insertImpl(
         }
     }
 
-    return newColumns.toDataFrame().cast()
+    return newColumns.toDataFrame().castUnchecked()
+}
+
+internal fun <T> InsertClause<T>.afterImpl(columnPath: ColumnPath): DataFrame<T> {
+    val dstPath = ColumnPath(columnPath.removeAt(columnPath.size - 1) + column.name())
+    return df.insertImpl(dstPath, column).move { dstPath }.after { columnPath }
+}
+
+internal fun <T> InsertClause<T>.beforeImpl(columnPath: ColumnPath): DataFrame<T> {
+    val dstPath = ColumnPath(columnPath.removeAt(columnPath.size - 1) + column.name())
+    return df.insertImpl(dstPath, column).move { dstPath }.before { columnPath }
 }

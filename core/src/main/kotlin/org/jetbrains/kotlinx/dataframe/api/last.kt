@@ -11,13 +11,18 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
@@ -27,28 +32,187 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
+/**
+ * Returns the last value in this [DataColumn].
+ *
+ * For more information: {@include [DocumentationUrls.LastOnColumn]}
+ *
+ * See also [lastOrNull], [first], [take], [takeLast], [single].
+ *
+ * @return The last value in this [DataColumn].
+ *
+ * @throws [IndexOutOfBoundsException] if the [DataColumn] is empty.
+ */
 public fun <T> DataColumn<T>.last(): T = get(size - 1)
 
+/**
+ * Returns the last value in this [DataColumn]. If the [DataColumn] is empty, returns `null`.
+ *
+ * For more information: {@include [DocumentationUrls.LastOrNullOnColumn]}
+ *
+ * See also [last], [first], [take], [takeLast], [single].
+ *
+ * @return The last value in this [DataColumn], or `null` if the [DataColumn] is empty.
+ */
 public fun <T> DataColumn<T>.lastOrNull(): T? = if (size > 0) last() else null
 
+/**
+ * Returns the last value in this [DataColumn] that matches the given [predicate].
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of financial transactions sorted by time,
+ * // find the amount of the most recent financial transaction over 100 euros
+ * df.amount.last { it > 100 }
+ * ```
+ *
+ * For more information: {@include [DocumentationUrls.LastOnColumn]}
+ *
+ * See also [lastOrNull], [first], [take], [takeLast], [single].
+ *
+ * @param [predicate] A lambda expression used to get the last value
+ * that satisfies a condition specified in this expression.
+ * This predicate takes a value from the [DataColumn] as an input
+ * and returns `true` if the value satisfies the condition or `false` otherwise.
+ *
+ * @return The last value in this [DataColumn] that matches the given [predicate].
+ *
+ * @throws [NoSuchElementException] if the [DataColumn] contains no element matching the [predicate]
+ * (including the case when the [DataColumn] is empty).
+ */
 public inline fun <T> DataColumn<T>.last(predicate: (T) -> Boolean): T = values.last(predicate)
 
+/**
+ * Returns the last value in this [DataColumn] that matches the given [predicate].
+ * Returns `null` if the [DataColumn] contains no elements matching the [predicate]
+ * (including the case when the [DataColumn] is empty).
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of financial transactions sorted by time,
+ * // find the amount of the most recent financial transaction over 100 euros,
+ * // or 'null' if there is no such transaction
+ * df.amount.lastOrNull { it > 100 }
+ * ```
+ *
+ * For more information: {@include [DocumentationUrls.LastOrNullOnColumn]}
+ *
+ * See also [last], [first], [take], [takeLast], [single].
+ *
+ * @param [predicate] A lambda expression used to get the last value
+ * that satisfies a condition specified in this expression.
+ * This predicate takes a value from the [DataColumn] as an input
+ * and returns `true` if the value satisfies the condition or `false` otherwise.
+ *
+ * @return The last value in this [DataColumn] that matches the given [predicate],
+ * or `null` if the [DataColumn] contains no elements matching the [predicate].
+ */
 public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = values.lastOrNull(predicate)
 
 // endregion
 
 // region DataFrame
 
+/**
+ * Returns the last [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
+ * Returns `null` if the [DataFrame] contains no rows matching the [predicate]
+ * (including the case when the [DataFrame] is empty).
+ *
+ * @include [SelectingRows.RowFilterSnippet]
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of financial transactions sorted by time,
+ * // obtain the most recent financial transaction with amount over 100 euros,
+ * // or 'null' if there is no such transaction
+ * df.lastOrNull { amount > 100 }
+ * ```
+ *
+ * For more information: {@include [DocumentationUrls.LastOrNull]}
+ *
+ * See also [last][DataFrame.last],
+ * [first][DataFrame.first],
+ * [take][DataFrame.take],
+ * [takeLast][DataFrame.takeLast],
+ * [takeWhile][DataFrame.takeWhile],
+ * [singleOrNull][DataFrame.singleOrNull], that returns `null` unless there is exactly one row to return.
+ *
+ * @param [predicate] A [row filter][RowFilter] used to get the last value
+ * that satisfies a condition specified in this filter.
+ *
+ * @return A [DataRow] containing the last row that matches the given [predicate],
+ * or `null` if the [DataFrame] contains no rows matching the [predicate].
+ */
 public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<T>? =
     rowsReversed().firstOrNull { predicate(it, it) }
 
+/**
+ * Returns the last [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
+ *
+ * @include [SelectingRows.RowFilterSnippet]
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of financial transactions sorted by time,
+ * // find the most recent financial transaction with amount over 100 euros
+ * df.last { amount > 100 }
+ * ```
+ *
+ * For more information: {@include [DocumentationUrls.Last]}
+ *
+ * See also [lastOrNull][DataFrame.lastOrNull],
+ * [first][DataFrame.first],
+ * [take][DataFrame.take],
+ * [takeLast][DataFrame.takeLast],
+ * [takeWhile][DataFrame.takeWhile],
+ * [single][DataFrame.single], that fails unless there is exactly one row to return.
+ *
+ * @param [predicate] A [row filter][RowFilter] used to get the last value
+ * that satisfies a condition specified in this filter.
+ *
+ * @return A [DataRow] containing the last row that matches the given [predicate].
+ *
+ * @throws [NoSuchElementException] if the [DataFrame] contains no rows matching the [predicate].
+ */
 public inline fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> =
     rowsReversed().first {
         predicate(it, it)
     }
 
+/**
+ * Returns the last [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
+ *
+ * For more information: {@include [DocumentationUrls.LastOrNull]}
+ *
+ * See also [last][DataFrame.last],
+ * [first][DataFrame.first],
+ * [take][DataFrame.take],
+ * [takeLast][DataFrame.takeLast],
+ * [singleOrNull][DataFrame.singleOrNull], that returns `null` unless there is exactly one row to return.
+ *
+ * @return A [DataRow] containing the last row in this [DataFrame], or `null` if the [DataFrame] is empty.
+ */
 public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) get(nrow - 1) else null
 
+/**
+ * Returns the last [row][DataRow] in this [DataFrame].
+ *
+ * For more information: {@include [DocumentationUrls.Last]}
+ *
+ * See also [lastOrNull][DataFrame.lastOrNull],
+ * [first][DataFrame.first],
+ * [take][DataFrame.take],
+ * [takeLast][DataFrame.takeLast],
+ * [single][DataFrame.single], that fails unless there is exactly one row to return.
+ *
+ * @return A [DataRow] containing the last row in this [DataFrame].
+ *
+ * @throws NoSuchElementException if the [DataFrame] contains no rows.
+ */
 public fun <T> DataFrame<T>.last(): DataRow<T> {
     if (nrow == 0) {
         throw NoSuchElementException("DataFrame has no rows. Use `lastOrNull`.")
@@ -60,9 +224,68 @@ public fun <T> DataFrame<T>.last(): DataRow<T> {
 
 // region GroupBy
 
+/**
+ * [Reduces][GroupByDocs.Reducing] the groups of this [GroupBy]
+ * by taking the last [row][DataRow] from each group,
+ * and returns a [ReducedGroupBy] containing these rows
+ * (one [row][DataRow] per group, each [row][DataRow] is the last [row][DataRow] in its group).
+ *
+ * If a group in this [GroupBy] is empty,
+ * the corresponding [row][DataRow] in the resulting [ReducedGroupBy] will contain `null` values
+ * for all columns in the group, except the grouping key.
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of order status logs sorted by time,
+ * // find the most recent status for each order
+ * df.groupBy { orderId }.last().concat()
+ * ```
+ *
+ * For more information: {@include [DocumentationUrls.Last]}
+ *
+ * For more information about [GroupBy] and [last] with examples: {@include [DocumentationUrls.GroupBy]}
+ *
+ * See also [first][GroupBy.first].
+ *
+ * @return A [ReducedGroupBy] containing the last [row][DataRow]
+ * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
+ */
 @Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.last(): ReducedGroupBy<T, G> = reduce { lastOrNull() }
 
+/**
+ * [Reduces][GroupByDocs.Reducing] the groups of this [GroupBy]
+ * by taking from each group the last [row][DataRow] satisfying the given [predicate],
+ * and returns a [ReducedGroupBy] containing these rows (one [row][DataRow] per group,
+ * each [row][DataRow] is the last [row][DataRow] in its group that satisfies the [predicate]).
+ *
+ * If the group in [GroupBy] contains no matching rows,
+ * the corresponding row in [ReducedGroupBy] will contain `null` values for all columns in the group,
+ * except the grouping key.
+ *
+ * @include [SelectingRows.RowFilterSnippet]
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of order status logs sorted by time,
+ * // find the most recent status shown to the customer for each order
+ * df.groupBy { orderId }.last { !isInternal }.concat()
+ * ```
+ *
+ * For more information: {@include [DocumentationUrls.Last]}
+ *
+ * For more information about [GroupBy] and [last] with examples: {@include [DocumentationUrls.GroupBy]}
+ *
+ * See also [first][GroupBy.first].
+ *
+ * @param [predicate] A [row filter][RowFilter] used to get the last value
+ * that satisfies a condition specified in this filter.
+ *
+ * @return A [ReducedGroupBy] containing the last [row][DataRow] matching the [predicate]
+ * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
+ */
 @Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.last(predicate: RowFilter<G>): ReducedGroupBy<T, G> = reduce { lastOrNull(predicate) }
 
@@ -70,16 +293,136 @@ public fun <T, G> GroupBy<T, G>.last(predicate: RowFilter<G>): ReducedGroupBy<T,
 
 // region Pivot
 
+/**
+ * [Reduces][PivotDocs.Reducing] this [Pivot] by taking the last [row][DataRow] from each group,
+ * and returns a [ReducedPivot] that contains the last [row][DataRow] from the corresponding group in each column.
+ *
+ * For more information: {@include [DocumentationUrls.Last]}
+ *
+ * For more information about [Pivot] and [last] with examples: {@include [DocumentationUrls.Pivot]}
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of real estate listings, find the most recent (if sorted by date and time)
+ * // or the most expensive (if sorted by price) listing for each type of property (house, apartment, etc.)
+ * df.pivot { type }.last().values()
+ * ```
+ *
+ * See also [pivot], [reduce][Pivot.reduce], [first][Pivot.first].
+ *
+ * @return A [ReducedPivot] containing in each column the last [row][DataRow] from the corresponding group.
+ */
 public fun <T> Pivot<T>.last(): ReducedPivot<T> = reduce { lastOrNull() }
 
+/**
+ * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the last [row][DataRow]
+ * satisfying the given [predicate], and returns a [ReducedPivot] that contains the last [row][DataRow],
+ * matching the [predicate], from the corresponding group in each column.
+ *
+ * For more information: {@include [DocumentationUrls.Last]}
+ *
+ * For more information about [Pivot] and [last] with examples: {@include [DocumentationUrls.Pivot]}
+ *
+ * @include [SelectingRows.RowFilterSnippet]
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of real estate listings sorted by date and time,
+ * // find the most recent listing for each type of property (house, apartment, etc.)
+ * // with the price less than 500,000 euros
+ * df.pivot { type }.last { price < 500_000 }.values()
+ * ```
+ *
+ * See also [pivot], [reduce][Pivot.reduce], [first][Pivot.first].
+ *
+ * @param [predicate] A [row filter][RowFilter] used to get the last value
+ * that satisfies a condition specified in this filter.
+ *
+ * @return A [ReducedPivot] containing in each column the last [row][DataRow]
+ * that satisfies the [predicate], from the corresponding group (or a [row][DataRow] with `null` values)
+ */
 public fun <T> Pivot<T>.last(predicate: RowFilter<T>): ReducedPivot<T> = reduce { lastOrNull(predicate) }
 
 // endregion
 
 // region PivotGroupBy
 
+/**
+ * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking the last [row][DataRow]
+ * from each combined [pivot] + [groupBy] group, and returns a [ReducedPivotGroupBy]
+ * that contains the last row from each corresponding group.
+ * If any combined [pivot] + [groupBy] group in [PivotGroupBy] is empty, in the resulting [ReducedPivotGroupBy]
+ * it will be represented by a [row][DataRow] with `null` values (except the grouping key).
+ *
+ * For more information: {@include [DocumentationUrls.Last]}
+ *
+ * For more information about [PivotGroupBy] with examples: {@include [DocumentationUrls.PivotGroupBy]}
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of real estate listings sorted by date and time,
+ * // find the most recent listing for each combination of type of property (house, apartment, etc.)
+ * // and the city it is located in
+ * df.pivot { type }.groupBy { city }.last().values()
+ * ```
+ *
+ * See also [groupBy][Pivot.groupBy],
+ * [pivot][GroupBy.pivot],
+ * [reduce][PivotGroupBy.reduce],
+ * [first][PivotGroupBy.first].
+ *
+ * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
+ * the last [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
+ * or a [row][DataRow] with `null` values (except the grouping key) if this [DataFrame] is empty.
+ */
+@Interpretable("PivotGroupByLast0")
 public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrNull() }
 
+/**
+ * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy]
+ * by taking from each combined [pivot] + [groupBy] group the last [row][DataRow] satisfying the given [predicate].
+ * Returns a [ReducedPivotGroupBy] that contains the last [row][DataRow], matching the [predicate],
+ * from each corresponding group.
+ * If any combined [pivot] + [groupBy] group in [PivotGroupBy] does not contain any rows matching the [predicate],
+ * in the resulting [ReducedPivotGroupBy] it will be represented by a [row][DataRow] with `null` values
+ * (except the grouping key).
+ *
+ * For more information: {@include [DocumentationUrls.Last]}
+ *
+ * @include [DocumentationUrls.PivotGroupBy]
+ *
+ * @include [DocumentationUrls.Pivot]
+ *
+ * @include [DocumentationUrls.GroupBy]
+ *
+ * @include [SelectingRows.RowFilterSnippet]
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of real estate listings sorted by date and time,
+ * // for each combination of type of property (house, apartment, etc.)
+ * // and the city it is located in,
+ * // find the most recent listing with the price less than 500,000 euros
+ * df.pivot { type }.groupBy { city }.last { price < 500_000 }.values()
+ * ```
+ *
+ * See also [groupBy][Pivot.groupBy],
+ * [pivot][GroupBy.pivot],
+ * [reduce][PivotGroupBy.reduce],
+ * [first][PivotGroupBy.first].
+ *
+ * @param [predicate] A [row filter][RowFilter] used to get the last value
+ * that satisfies a condition specified in this filter.
+ *
+ * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
+ * the last matching the [predicate] [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
+ * or a [row][DataRow] with `null` values if this [DataFrame] does not contain any rows matching the [predicate].
+ */
+@Interpretable("PivotGroupByLast1")
 public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupBy<T> = reduce { lastOrNull(predicate) }
 
 // endregion
@@ -120,13 +463,16 @@ public interface LastColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`last`**][ColumnsSelectionDsl.last] */
-        public interface PlainDslName
+        @ExcludeFromSources
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`last`**][ColumnsSelectionDsl.last] */
-        public interface ColumnSetName
+        @ExcludeFromSources
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`lastCol`**][ColumnsSelectionDsl.lastCol] */
-        public interface ColumnGroupName
+        @ExcludeFromSources
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -137,6 +483,8 @@ public interface LastColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     *
+     * For more information: {@include [DocumentationUrls.FirstLastSingleCols]}
      *
      * ### Check out: [Grammar]
      *
@@ -156,10 +504,11 @@ public interface LastColumnsSelectionDsl {
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @see [ColumnsSelectionDsl.first\]
      */
+    @ExcludeFromSources
     private interface CommonLastDocs {
 
         /** Examples key */
-        interface Examples
+        typealias Examples = Nothing
     }
 
     /**
@@ -171,7 +520,7 @@ public interface LastColumnsSelectionDsl {
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("Last0")
-    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+    public fun <C> ColumnSet<C>.last(condition: (ColumnWithPath<C>) -> Boolean = { true }): SingleColumn<C> =
         (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.last(condition)) }
             .singleOrNullWithTransformerImpl()
@@ -183,7 +532,7 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[last][ColumnsSelectionDsl.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     @Interpretable("Last1")
-    public fun ColumnsSelectionDsl<*>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnsSelectionDsl<*>.last(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         asSingleColumn().lastCol(condition)
 
     /**
@@ -193,7 +542,7 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[lastCol][SingleColumn.lastCol]`() }`
      */
     @Interpretable("Last2")
-    public fun SingleColumn<DataRow<*>>.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<DataRow<*>>.lastCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().last(condition)
 
     /**
@@ -201,7 +550,7 @@ public interface LastColumnsSelectionDsl {
      * @set [CommonLastDocs.Examples]
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastCol][String.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun String.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun String.lastCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).lastCol(condition)
 
     /**
@@ -213,7 +562,7 @@ public interface LastColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun KProperty<*>.lastCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).lastCol(condition)
 
     /**
@@ -221,7 +570,7 @@ public interface LastColumnsSelectionDsl {
      * @set [CommonLastDocs.Examples]
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[lastCol][ColumnPath.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnPath.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnPath.lastCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).lastCol(condition)
 }
 

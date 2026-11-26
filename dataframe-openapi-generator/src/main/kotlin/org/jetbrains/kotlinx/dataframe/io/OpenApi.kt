@@ -77,9 +77,10 @@ public class OpenApi : SupportedCodeGenerationFormat {
         try {
             when (sample) {
                 is SupportedFormatSample.DataString -> isOpenApiStr(sample.sampleData)
-                is SupportedFormatSample.DataFile -> isOpenApi(sample.sampleFile)
+                is SupportedFormatSample.DataPath -> isOpenApi(sample.samplePath)
                 is SupportedFormatSample.PathString -> isOpenApi(sample.samplePath)
                 is SupportedFormatSample.DataUrl -> isOpenApi(sample.sampleUrl)
+                is SupportedFormatSample.DataFile -> isOpenApi(sample.sampleFile.toPath())
             }
         } catch (_: Exception) {
             false

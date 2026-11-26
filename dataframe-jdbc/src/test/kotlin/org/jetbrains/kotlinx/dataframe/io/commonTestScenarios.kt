@@ -1,19 +1,30 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.Actual
+import io.kotest.assertions.Expected
+import io.kotest.assertions.createAssertionError
+import io.kotest.assertions.print.print
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.inferType
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.io.db.MsSql
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.sql.Connection
 import java.sql.ResultSet
 import kotlin.reflect.typeOf
 
+private const val TEST_TABLE_NAME = "testtable123"
+
 internal fun inferNullability(connection: Connection) {
+    connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS $TEST_TABLE_NAME") }
+
     // prepare tables and data
     @Language("SQL")
     val createTestTable1Query = """
-                CREATE TABLE TestTable1 (
+                CREATE TABLE $TEST_TABLE_NAME (
                     id INT PRIMARY KEY,
                     name VARCHAR(50),
                     surname VARCHAR(50),
@@ -21,28 +32,27 @@ internal fun inferNullability(connection: Connection) {
                 )
             """
 
-    connection.createStatement().execute(createTestTable1Query)
+    connection.createStatement().use { st -> st.execute(createTestTable1Query) }
 
     connection.createStatement()
-        .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)")
+        .execute("INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)")
     connection.createStatement()
-        .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)")
+        .execute("INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)")
     connection.createStatement()
-        .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)")
+        .execute("INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)")
     connection.createStatement()
-        .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)")
+        .execute("INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)")
 
     // start testing `readSqlTable` method
 
     // with default inferNullability: Boolean = true
-    val tableName = "TestTable1"
-    val df = DataFrame.readSqlTable(connection, tableName)
+    val df = DataFrame.readSqlTable(connection, TEST_TABLE_NAME)
     df.schema().columns["id"]!!.type shouldBe typeOf<Int>()
     df.schema().columns["name"]!!.type shouldBe typeOf<String>()
     df.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
     df.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
-    val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
+    val dataSchema = DataFrameSchema.readSqlTable(connection, TEST_TABLE_NAME)
     dataSchema.columns.size shouldBe 4
     dataSchema.columns["id"]!!.type shouldBe typeOf<Int>()
     dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
@@ -50,7 +60,7 @@ internal fun inferNullability(connection: Connection) {
     dataSchema.columns["age"]!!.type shouldBe typeOf<Int>()
 
     // with inferNullability: Boolean = false
-    val df1 = DataFrame.readSqlTable(connection, tableName, inferNullability = false)
+    val df1 = DataFrame.readSqlTable(connection, TEST_TABLE_NAME, inferNullability = false)
     df1.schema().columns["id"]!!.type shouldBe typeOf<Int>()
 
     // this column changed a type because it doesn't contain nulls
@@ -62,11 +72,11 @@ internal fun inferNullability(connection: Connection) {
 
     // start testing `readSQLQuery` method
 
-    // ith default inferNullability: Boolean = true
+    // with default inferNullability: Boolean = true
     @Language("SQL")
     val sqlQuery =
         """
-        SELECT name, surname, age FROM TestTable1
+        SELECT name, surname, age FROM $TEST_TABLE_NAME
         """.trimIndent()
 
     val df2 = DataFrame.readSqlQuery(connection, sqlQuery)
@@ -74,7 +84,7 @@ internal fun inferNullability(connection: Connection) {
     df2.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
     df2.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
-    val dataSchema2 = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+    val dataSchema2 = DataFrameSchema.readSqlQuery(connection, sqlQuery)
     dataSchema2.columns.size shouldBe 3
     dataSchema2.columns["name"]!!.type shouldBe typeOf<String?>()
     dataSchema2.columns["surname"]!!.type shouldBe typeOf<String?>()
@@ -93,10 +103,10 @@ internal fun inferNullability(connection: Connection) {
 
     connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
         @Language("SQL")
-        val selectStatement = "SELECT * FROM TestTable1"
+        val selectStatement = "SELECT * FROM $TEST_TABLE_NAME"
 
         st.executeQuery(selectStatement).use { rs ->
-            // ith default inferNullability: Boolean = true
+            // with default inferNullability: Boolean = true
             val df4 = DataFrame.readResultSet(rs, MsSql)
             df4.schema().columns["id"]!!.type shouldBe typeOf<Int>()
             df4.schema().columns["name"]!!.type shouldBe typeOf<String>()
@@ -105,7 +115,7 @@ internal fun inferNullability(connection: Connection) {
 
             rs.beforeFirst()
 
-            val dataSchema3 = DataFrame.getSchemaForResultSet(rs, MsSql)
+            val dataSchema3 = DataFrameSchema.readResultSet(rs, MsSql)
             dataSchema3.columns.size shouldBe 4
             dataSchema3.columns["id"]!!.type shouldBe typeOf<Int>()
             dataSchema3.columns["name"]!!.type shouldBe typeOf<String?>()
@@ -126,5 +136,67 @@ internal fun inferNullability(connection: Connection) {
     }
     // end testing `readResultSet` method
 
-    connection.createStatement().execute("DROP TABLE TestTable1")
+    connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS $TEST_TABLE_NAME") }
+}
+
+private const val ALIAS_TABLE_NAME = "alias_test_table"
+
+/**
+ * An SQL `AS` alias names the column it renames, both in the [DataFrame] and in its [DataFrameSchema]:
+ * on a plain column, on an expression, and on two same-named columns of a join.
+ * The aliases are unquoted and lower-case; [reportedAs] is how the database reports such an identifier
+ * (H2 without a compatibility mode upper-cases it).
+ */
+internal fun aliasesNameColumns(connection: Connection, reportedAs: (String) -> String = { it }) {
+    connection.createStatement().use { st ->
+        st.execute("DROP TABLE IF EXISTS $ALIAS_TABLE_NAME")
+        st.execute("CREATE TABLE $ALIAS_TABLE_NAME (id INT, name VARCHAR(50))")
+        st.execute("INSERT INTO $ALIAS_TABLE_NAME (id, name) VALUES (1, 'John')")
+    }
+
+    @Language("SQL")
+    val plainAndExpression =
+        "SELECT id AS customer_id, name AS customer_name, id + 1 AS next_id FROM $ALIAS_TABLE_NAME"
+    val aliases = listOf("customer_id", "customer_name", "next_id").map(reportedAs)
+    DataFrame.readSqlQuery(connection, plainAndExpression).columnNames() shouldBe aliases
+    DataFrameSchema.readSqlQuery(connection, plainAndExpression).columns.keys.toList() shouldBe aliases
+
+    @Language("SQL")
+    val sameNamedColumns =
+        "SELECT a.name AS first_name, b.name AS second_name " +
+            "FROM $ALIAS_TABLE_NAME a JOIN $ALIAS_TABLE_NAME b ON a.id = b.id"
+    val joinAliases = listOf("first_name", "second_name").map(reportedAs)
+    DataFrame.readSqlQuery(connection, sameNamedColumns).columnNames() shouldBe joinAliases
+    DataFrameSchema.readSqlQuery(connection, sameNamedColumns).columns.keys.toList() shouldBe joinAliases
+
+    connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS $ALIAS_TABLE_NAME") }
+}
+
+/**
+ * Helper to check whether the provided schema matches the inferred schema.
+ *
+ * It must hold that all types in the provided schema are equal or super to
+ * the corresponding types in the inferred schema.
+ */
+@Suppress("INVISIBLE_REFERENCE")
+fun AnyFrame.assertInferredTypesMatchSchema() {
+    if (!schema().compare(inferType().schema()).isSuperOrMatches()) {
+        throw createAssertionError(
+            message = "Inferred schema must be <: Provided schema",
+            cause = null,
+            expected = Expected(inferType().schema().toString().lines().sorted().joinToString("\n").print()),
+            actual = Actual(schema().toString().lines().sorted().joinToString("\n").print()),
+        )
+    }
+}
+
+fun DataFrameSchema.assertMatches(other: DataFrameSchema) {
+    if (!this.compare(other).isSuperOrMatches()) {
+        throw createAssertionError(
+            message = "Schemas must be <:",
+            cause = null,
+            expected = Expected(other.toString().lines().sorted().joinToString("\n").print()),
+            actual = Actual(this.toString().lines().sorted().joinToString("\n").print()),
+        )
+    }
 }

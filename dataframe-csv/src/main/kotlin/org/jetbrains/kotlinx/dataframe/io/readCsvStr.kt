@@ -50,6 +50,7 @@ public fun DataFrame.Companion.readCsvStr(
 ): DataFrame<*> =
     readDelimImpl(
         inputStream = text.byteInputStream(),
+        charset = Charsets.UTF_8,
         delimiter = delimiter,
         header = header,
         hasFixedWidthColumns = hasFixedWidthColumns,

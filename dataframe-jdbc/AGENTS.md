@@ -1,0 +1,172 @@
+# AGENTS.md — dataframe-jdbc
+
+Guidance for this module. See the root `AGENTS.md` for repo-wide build/style/KoDEx rules; only module-specific
+details are here.
+
+## What this module is
+
+`dataframe-jdbc` (artifact `dataframe-jdbc`, "JDBC support for Kotlin DataFrame"). Reads SQL tables, queries,
+`ResultSet`s, `DataSource`s, and whole schemas from any JDBC database into a `DataFrame`, mapping SQL types to
+Kotlin types. Depends only on `core`.
+
+**No JDBC driver is shipped for any database** — users always bring their own driver on the runtime classpath
+(this applies equally to H2, MySQL, MariaDB, MSSQL, PostgreSQL, SQLite, DuckDB). DuckDB, SQLite, and PostgreSQL are
+declared `compileOnly` for a *different* reason: the module's own code compiles against those drivers' specific API
+classes (`DuckDb.kt` → `org.duckdb.DuckDBColumnType.*`; `PostgreSql.kt` → `org.postgresql.geometric.PG*`, `PGobject`;
+`Sqlite.kt` → `org.sqlite.SQLiteConfig`), so their classes must be on the *compile* classpath but are deliberately
+kept off the *runtime* classpath. The other `DbType`s reference their driver only by class-name string
+(e.g. `"org.h2.Driver"`, `"com.mysql.jdbc.Driver"`), so they need no compile-time dependency at all.
+
+## Public API surface (`src/main/kotlin/.../io/`)
+
+- `readJdbc.kt` — the entry points, all as `DataFrame.Companion` / receiver extensions:
+  `readSqlTable`, `readSqlQuery`, `readResultSet`, `readAllSqlTables`, and `readDataFrame` on
+  `DbConnectionConfig` / `Connection` / `DataSource` / `ResultSet`. Each has overloads taking a
+  `DbConnectionConfig`, an existing `Connection`, or a `DataSource`.
+- `DbConnectionConfig.kt` — URL/user/password/readOnly config for library-managed connections.
+- `jdbcSchema.kt`, `readDataFrameSchema.kt` — schema inference (for codegen / `@DataSchema`).
+
+## The `DbType` abstraction — the core of this module
+
+`io/db/DbType.kt` is an `abstract class` keyed by `dbTypeInJdbcUrl`. Each supported database is a subclass:
+`H2`, `MariaDb`, `MySql`, `Sqlite`, `PostgreSql`, `MsSql`, `DuckDb` (all in `io/db/`). `extractDBTypeFromUrl(url)`
+in `io/db/util.kt` matches the JDBC URL substring to pick the instance (H2 additionally resolves its `MODE` —
+MySQL/PostgreSQL/MSSQLServer/MariaDB/Regular — from the URL or a live connection).
+
+The value-reading pipeline is a sequence of overridable `open` functions on `DbType`, applied per column. Understand
+this chain before changing type mapping — the type variables `J → D → P` flow through it:
+
+1. `getTableColumnsMetadata(resultSet)` → `TableColumnMetadata` list (with defensive fallbacks for drivers like Hive
+   that throw `SQLFeatureNotSupportedException`).
+2. Type **J** (what the driver returns): `getExpectedJdbcType(...)` gives `typeOf<J>()` — the type
+   `ResultSet.getObject` actually returns — and `getValueFromResultSet(...)` extracts the actual value of type J
+   (which must match that type exactly).
+3. Type **D**: `getPreprocessedValueType(...)` / `preprocessValue(...)` — Java→Kotlin conversions
+   (e.g. `Timestamp`→`kotlin.time.Instant`, `java.util.UUID`→`kotlin.uuid.Uuid`).
+4. Type **P**: `getTargetColumnSchema(...)` → `ColumnSchema` and `buildDataColumn(...)` → the final `DataColumn<P>`
+   (post-processes `java.sql.Array`→Kotlin arrays).
+
+**A metadata fallback must not guess a column's nullability.** When `isNullable` is unsupported,
+`getTableColumnsMetadata` looks the column up with `DatabaseMetaData.getColumns`, whose name arguments are
+patterns: H2, like other drivers, reads a `null` table or column pattern as "any", so a lookup with an unknown
+name returns the `IS_NULLABLE` of some other column. A known name is a pattern too: `_` and `%` are LIKE
+wildcards, so `is_active` also matches an earlier `isXactive`. Look up only when both names are known, take only
+the row whose `TABLE_NAME` and `COLUMN_NAME` equal them, and otherwise assume nullable. The two errors are not equal: a column wrongly read as nullable only gains a `?`, while one
+wrongly read as non-null fails to read with `inferNullability = false`.
+
+**H2 in a compatibility mode delegates type mapping to the emulated database's `DbType`** (`H2(Mode.MySql)`
+→ `MySql`, `Mode.MsSqlServer` → `MsSql`, and so on), but it reports *its own* metadata and returns *its own*
+value classes. It delegates only `getExpectedJdbcType`: `getValueFromResultSet`, `getPreprocessedValueType`
+and `preprocessValue` stay H2's own, so a delegated branch that fires for H2 declares a type that H2 then never
+returns. So every condition in an overridden `getExpectedJdbcType` has to be chosen so that it excludes
+H2, and which field does that differs per case: `MariaDb` keys its blob branch on `jdbcType != Types.BLOB`,
+because H2 in MariaDB mode reports `Types.BLOB` and does return a real `java.sql.Blob`; `MsSql` keys its
+`Short` branch on `javaClassName`, because H2 in MSSQL mode reports `Types.SMALLINT` too but returns an
+`Integer`. Neither field is the right discriminator in general — `io/h2/*H2Test.kt` is the oracle that
+decides, so run it before believing either.
+
+**SQLite is the case where neither field describes the column at all.** The Xerial driver reports both
+`javaClassName` and `jdbcType` from the storage class of the *first row*: a `BIGINT` column is reported as
+`Types.VARCHAR` / `String` when its first row holds text, and as `Types.FLOAT` / `Double` when it holds a
+real number. Only `sqlTypeName` — the declared type, verbatim from `CREATE TABLE` — stays the same whatever
+the rows hold, so `Sqlite` keys its mappings on it (`EmbeddedColumnTypeAuditTest` pins this driver
+behaviour). Before choosing a discriminator for any driver, probe it with a first row of every storage
+class — `NULL`, a small and a large integer, a real number, text — not only with a representative value.
+
+Other overridable behavior: `quoteIdentifier` (per-DB identifier quoting), `buildSqlQueryWithLimit`/
+`buildSelectTableQueryWithLimit`, `configureReadStatement` (fetch size/direction, query timeout), `createConnection`
+(SQLite needs read-only set at connect time), `isSystemTable`, `buildTableMetadata`, `tableTypes`.
+
+**Adding a new database or fixing type handling:** subclass `DbType`, override only the functions that deviate from
+the defaults, register it in `extractDBTypeFromUrl`, and copy the KDoc structure from a sibling like `PostgreSql.kt`.
+For databases with structured/composite types, subclass `AdvancedDbType` instead (see next section).
+
+### `AdvancedDbType` — for structured types / heavy per-type mapping (experimental)
+
+`io/db/AdvancedDbType.kt` is an alternative base class (`abstract class AdvancedDbType : DbType`, **experimental,
+API subject to change**). Instead of overriding the individual `open` pipeline functions, it `final`-overrides the
+**whole `J → D → P` chain** and routes every column through a single per-column `JdbcToDataFrameConverter`
+(`io/db/JdbcToDataFrameConverter.kt`). A subclass implements just one method —
+`protected abstract fun generateConverter(tableColumnMetadata): AnyJdbcToDataFrameConverter` — and the returned
+converter supplies the expected JDBC type, preprocessed type, target schema, value extraction, and column building.
+Converters are cached per `CacheKey(sqlTypeName, jdbcType, size, javaClassName, isNullable)`.
+
+**When to use which:** extend plain `DbType` for ordinary relational databases where you only tweak a few functions
+(type mapping, quoting, limits, system-table filtering). Extend `AdvancedDbType` when a database has
+structured/composite types (arrays, `STRUCT`/`MAP`/`LIST` nesting) or needs a lot of per-JDBC-type mapping and a
+single caching converter per column type is cleaner than many overrides. The only built-in subclass today is
+**`DuckDb`** (`io/db/DuckDb.kt`) — use it as the reference implementation. (This is the piece agents have missed in
+the past, e.g. while extending SQLite handling — check whether `AdvancedDbType` fits before overriding `DbType`.)
+
+## Custom `DbType` (extensibility for users)
+
+Every `read*` function accepts an optional `DbType` argument. When it's omitted, the library resolves the built-in
+type from the JDBC URL via `extractDBTypeFromUrl`; when it's supplied, that instance is used directly and URL
+detection is skipped. A user can therefore pass their own `DbType` subclass **without touching this module or
+registering anything** — it lives entirely in the user's own code.
+
+This is the intended escape hatch for cases the built-ins don't cover, for example:
+
+- a database the library doesn't ship a `DbType` for (Oracle, DB2, Snowflake, ClickHouse, Hive, …);
+- a driver whose SQL→Kotlin type mapping or `ResultSet` behavior deviates and needs `getExpectedJdbcType` /
+  `preprocessValue` / `getValueFromResultSet` overridden;
+- per-DB tuning: custom `quoteIdentifier`, `defaultFetchSize`/`defaultQueryTimeout`, `tableTypes`, or
+  `isSystemTable` filtering.
+
+Because the user's subclass overrides the same `open` pipeline described above, custom types get the full
+metadata → JDBC type → preprocess → column-build flow for free and only override what differs.
+
+## Tests
+
+Test layout under `src/test/kotlin/.../io/` splits by how the DB is provided:
+
+- `io/h2/` — run entirely on **embedded H2** in the various compatibility modes (`h2Test`, `mysqlH2Test`,
+  `postgresH2Test`, `mssqlH2Test`, `mariadbH2Test`). These need no external DB and run in normal `test`.
+- `io/local/` — integration tests against a **real DBMS** (`postgresTest`, `mysqlTest`, `mariadbTest`,
+  `mssqlTest`, `duckDbTest`, `imdbTest`). They connect to either a Dockerized or a locally installed server;
+  don't point them at a production database.
+- `io/db/jdbcTypesTest.kt` — SQL-type-to-KType mapping, asserted against synthetic
+  `TableColumnMetadata` rather than a live driver. Its metadata is only as true as its source: copy
+  `jdbcType` and `javaClassName` from a probe of the real driver, and do not cite such a test as evidence
+  of what a driver returns.
+- `io/db/tableColumnsMetadataTest.kt` — the fallbacks of `getTableColumnsMetadata`, on a proxy over an H2
+  `ResultSet` that makes chosen `ResultSetMetaData` methods throw. No bundled driver reaches these
+  branches on its own (H2, SQLite and DuckDB all answer `isNullable`), so a new fallback is tested the
+  same way.
+- SQLite tests at the top level use bundled `.sqlite` files in `src/test/resources/`.
+- `commonTestScenarios.kt` holds the shared assertions reused across databases.
+
+**`@DataSchema` interfaces in these tests are only checked by `cast<T>(verify = true)`** — write the
+argument out: a bare `cast<T>()` resolves to the overload that checks nothing. The check needs the
+exact column type, nullability included, and the nullability is inferred from the rows read
+(`inferNullability`), so the same table can read as `String` with a `limit` and as `String?` without
+one. It stops at the first mismatch, and a nullable field with no matching column is filled with
+nulls instead of reported — a wrong name on a nullable field never fails.
+
+**The column-type audit** is the second half of that mapping coverage and lives in its own two files
+rather than in `commonTestScenarios.kt`, because it carries a large per-database SQL fixture with it:
+
+- `columnTypeAudit.kt` — two assertions, both driven by a probe table with one column per SQL type.
+  `assertColumnTypesMatchValues` checks the invariant behind #2087, that the type the library declares
+  accepts the value the driver returns; `assertColumnTypes` pins the type each column is actually read
+  as, which is the claim the `readSqlTypeMapping_*.md` pages publish.
+- `columnTypeAuditTables.kt` — the probe tables and expected-type maps for the containerized databases;
+  the embedded ones live next to their test in `embeddedColumnTypeAuditTest.kt`.
+
+Both assertions are called from every `*TestBase` and from `EmbeddedColumnTypeAuditTest`, so all seven
+databases are covered. The expected types must come from a real run: read them off the failure message
+of a run with an incomplete map rather than deriving them by hand. Only the H2/SQLite/DuckDB half runs
+in the ordinary `test` task — the rest needs `testcontainersTest` and a working Docker.
+The probe row is a type fixture, not an example: some of its literals print degenerate values
+(`to_tsvector('a')` is an empty string, `a` being a stop word). Take a documented example value from a test
+that asserts that value. A `timestamptz`/`tstzrange` literal is parsed and printed in the session time zone,
+so a test that asserts its text sets `TIME ZONE` before the `INSERT` and resets it in `finally`.
+
+Test-only driver dependencies (MariaDB, MySQL, MSSQL, H2, SQLite, PostgreSQL, DuckDB, plus HikariCP and
+kotest-assertions) are declared `testImplementation` in `build.gradle.kts`. Run just this module with
+`./gradlew dataframe-jdbc:test` (add `-Pkotlin.dataframe.debug=true` to match CI checks).
+
+## Note
+
+The module uses KoDEx + BuildConfig generation (`processKDocsMain` depends on `generateBuildConfigClasses`);
+generated sources are build output — see the root `AGENTS.md` for the generated-sources and KDoc rules.

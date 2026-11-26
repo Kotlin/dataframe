@@ -1,4 +1,4 @@
-# Kotlin DataFrame Compiler Plugin
+# Setup And Overview
 
 <web-summary>
 Explore the Kotlin DataFrame Compiler Plugin —  
@@ -16,7 +16,8 @@ a powerful tool providing on-the-fly type-safe column-accessors for dataframes.
 </link-summary>
 
 
-> Now available in Gradle projects, is coming soon to Kotlin Notebook and Maven projects.
+> Now available in Gradle (IDEA 2025.2+), Maven (IDEA 2025.3+),
+> and Kotlin Toolchain (0.12.0+, IDEA 2026.2.1+) projects!
 
 **Kotlin DataFrame Compiler Plugin** is a Kotlin compiler plugin that automatically generates  
 **[type-safe extension properties](extensionPropertiesApi.md)** for your dataframes,  
@@ -34,15 +35,18 @@ Check out this video that shows how expressions update the schema of a dataframe
 
 ## Setup
 
-Install [IntelliJ IDEA EAP](https://www.jetbrains.com/idea/nextversion/). 
-Going forward, compiler plugin updates will be released with Kotlin plugin updates. 
-Next release: 2025.2
+We recommend using an up-to-date IntelliJ IDEA and Kotlin version for the best experience. Requires at least versions 2025.2 and 2.2.20, respectively. 
 
-Setup plugins in `build.gradle.kts`:
+<tabs>
+
+<tab title="Gradle">
+
+Set up the plugins in `build.gradle.kts`:
 
 ```kotlin
 kotlin("jvm") version "%compilerPluginKotlinVersion%"
 ```
+
 
 ```kotlin
 kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
@@ -53,23 +57,111 @@ Setup library dependency:
 implementation("org.jetbrains.kotlinx:dataframe:%dataFrameVersion%")
 ```
 
-Add this line to `gradle.properties`: 
+If you're using a version older than Kotlin 2.4.0,
+incremental compilation must be disabled due to [this issue](https://youtrack.jetbrains.com/issue/KT-66735).
+
+Add the following line to your `gradle.properties` file:
+
 ```properties
 kotlin.incremental=false
 ```
- 
-`Sync` the project.
 
-Disabling incremental compilation will no longer be necessary
-when https://youtrack.jetbrains.com/issue/KT-66735 is resolved.
+Sync the project. This is not needed anymore from Kotlin 2.4.0+.
+
+See [](SetupGradle.md) and [](SetupCustomGradle.md) for more details.
+
+</tab>
+
+<tab title="Maven">
+
+The DataFrame compiler plugin can be used in Maven projects starting from IntelliJ IDEA 2025.3, available now as EAP builds
+
+Update the `<kotlin-maven-plugin>` in the `<plugin>` section of your `pom.xml`:
+
+```xml
+<plugin>
+    <artifactId>kotlin-maven-plugin</artifactId>
+    <groupId>org.jetbrains.kotlin</groupId>
+    <version>%compilerPluginKotlinVersion%</version>
+
+    <configuration>
+        <!-- Specify the Kotlin-dataframe plugin -->
+        <compilerPlugins>
+            <plugin>kotlin-dataframe</plugin>
+        </compilerPlugins>
+    </configuration>
+
+    <!-- Add the Kotlin-dataframe plugin dependency -->
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-dataframe</artifactId>
+            <version>%compilerPluginKotlinVersion%</version>
+        </dependency>
+    </dependencies>
+</plugin>
+```
+
+Setup library dependency:
+
+```xml
+<dependency>
+    <groupId>org.jetbrains.kotlinx</groupId>
+    <artifactId>dataframe</artifactId>
+    <version>%dataFrameVersion%</version>
+</dependency>
+```
+
+Sync the project.
+
+See [](SetupMaven.md) for more details.
+
+</tab>
+
+<tab title="Kotlin Toolchain">
+
+The DataFrame compiler plugin can be used with [Kotlin Toolchain](https://kotlin-toolchain.org/) starting from
+Kotlin Toolchain 0.12.0+ and IntelliJ IDEA 2026.2.1+.
+
+Update the `settings:` block in your `module.yaml` file as follows:
+
+```yaml
+settings:
+  kotlin:
+    version: %compilerPluginKotlinVersion%
+    dataframe: enabled
+```
+
+Doing so will enable the compiler plugin matching the Kotlin version.
+It will also automatically add the latest (`%dataFrameVersion%`) [`dataframe-core`](Modules.md#dataframe-core)
+dependency to your project.
+
+In contrast to Maven and Gradle projects, this does NOT include any IO dependencies.
+
+See [](SetupKotlinToolchain.md) for more details about this.
+
+If you want a specific version of the DataFrame library, you can do that in the `settings.kotlin.dataframe:` block:
+
+```yaml
+settings:
+  kotlin:
+    version: %compilerPluginKotlinVersion%
+    dataframe:
+      enabled: true
+      version: %dataFrameVersion%
+```
+
+</tab>
+
+</tabs>
 
 ## Features overview
 
 ### Static interpretation of DataFrame API
 
-Plugin evaluates dataframe operations, given compile-time known arguments such as constant String, resolved types, property access calls.
+The plugin evaluates dataframe operations, given compile-time known arguments such as constant String, resolved types, property access calls.
 It updates the return type of the function call to provide properties that match column names and types.
-The goal is to reflect the result of operations you apply to dataframe in types and have convenient typed API 
+The goal is to reflect the result of the operations you apply to a dataframe in types and have a convenient typed API: 
 
 ```kotlin
 val weatherData = dataFrameOf(
@@ -88,7 +180,7 @@ is displayed when you hover on an expression or variable:
 
 ### @DataSchema declarations
 
-Untyped DataFrame can be assigned a data schema - top-level interface or class that describes names and types of columns in the dataframe.
+An untyped DataFrame can be assigned a data schema — a top-level interface or data class that describes the names and types of the columns in the dataframe.
 
 ```kotlin
 @DataSchema
@@ -116,6 +208,10 @@ fun main() {
 
 ## Examples
 
-* [Kotlin DataFrame in the IntelliJ IDEA project example](https://github.com/Kotlin/dataframe/blob/master/examples/kotlin-dataframe-plugin-example)  
-  — an IntelliJ IDEA project showcasing simple DataFrame expressions using the Compiler Plugin.
-* [](compilerPluginExamples.md) — few examples of Compiler Plugin usages.
+* [Kotlin DataFrame in the IntelliJ IDEA Gradle project example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-gradle-example)  
+  — an IntelliJ IDEA Gradle project showcasing simple DataFrame expressions using the Compiler Plugin.
+* [Kotlin DataFrame in the IntelliJ IDEA Maven project example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-maven-example)   
+  — an IntelliJ IDEA Maven project showcasing simple DataFrame expressions using the Compiler Plugin.
+* [Kotlin DataFrame in the IntelliJ IDEA Kotlin Toolchain project example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-kotlin-toolchain-example)   
+  — an IntelliJ IDEA Kotlin Toolchain project showcasing simple DataFrame expressions using the Compiler Plugin.
+* [](compilerPluginExamples.md) — a few examples of Compiler Plugin usage.

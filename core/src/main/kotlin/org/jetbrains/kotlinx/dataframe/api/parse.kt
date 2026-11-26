@@ -1,40 +1,119 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
-import org.jetbrains.kotlinx.dataframe.impl.api.StringParser
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
-import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
-import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS
-import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS_COPY
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 import kotlin.reflect.KProperty
-import kotlin.reflect.KType
+
+// region KDoc-helpers
 
 /**
- * ### Global Parser Options
+ * Returns a [DataFrame] in which `String` and `Char` columns are parsed into other types.
  *
- * These options are used to configure how [DataColumns][DataColumn] of type [String] or [String?][String]
- * should be parsed.
- * You can always pass a [ParserOptions] object to functions that perform parsing, like [tryParse], [parse],
- * or even [DataFrame.readCsv][DataFrame.Companion.readCsv] to override these options.
+ * This is a special case of the [convert] operation: instead of a target type,
+ * every selected column is tried against the supported parsers, in the parsing order
+ * documented on the website page, until one of them parses all of its values.
+ * Columns that cannot be parsed into a more specific type are left unchanged,
+ * apart from the configured [null strings][ParserOptions.nullStrings], which are converted to `null`;
+ * columns of other types are not touched.
+ *
+ * Parsing can be customized with [ParserOptions]: for every option you don't supply (or supply `null`),
+ * its value is taken from [DataFrame.parser][DataFrame.Companion.parser].
+ *
+ * See also [convert], the general operation, which requires the target types to be specified explicitly.
+ *
+ * For more information: {@include [DocumentationUrls.Parse]} {@include [DocumentationUrls.ParserOptions]} {@include [DocumentationUrls.ParsingOrder]}
  */
-public val DataFrame.Companion.parser: GlobalParserOptions
-    get() = Parsers
+@ExcludeFromSources
+internal interface ParseDocs
 
+/** {@set [SelectingColumns.OPERATION] [parse][parse]} */
+@ExcludeFromSources
+private typealias SetParseOperationArg = Nothing
+
+/**
+ * @include [ParseDocs]
+ * ### This Parse Overload
+ */
+@ExcludeFromSources
+private typealias CommonParseDocs = Nothing
+
+// endregion
+
+/**
+ * @include [CommonParseDocs]
+ *
+ * When no columns are specified, all `String` and `Char` columns are parsed,
+ * even those inside [column groups][ColumnGroup] and inside [frame columns][FrameColumn].
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.Parse.parseAll]
+ *
+ * @param [options] options for parsing, like providing a locale or a custom date-time formatter.
+ * @return a new [DataFrame] with the parsed columns.
+ */
+@Refine
+@Interpretable("ParseDefault")
+public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
+    parse(options) {
+        colsAtAnyDepth().filter { !it.isColumnGroup() }
+    }
+
+/**
+ * @include [CommonParseDocs]
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetParseOperationArg]}
+ *
+ * To parse only particular columns, use a [Columns Selector][ColumnsSelector]; the columns outside
+ * the selection are left unchanged — except that selecting a [column group][ColumnGroup] parses
+ * the columns inside it, and selecting a [frame column][FrameColumn] parses all `String` and `Char`
+ * columns inside its frames.
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.Parse.parseSome_properties]
+ *
+ * @param [options] options for parsing, like providing a locale or a custom date-time formatter.
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to parse.
+ * @return a new [DataFrame] with the parsed columns.
+ */
+@Refine
+@Interpretable("Parse")
 public fun <T> DataFrame<T>.parse(options: ParserOptions? = null, columns: ColumnsSelector<T, Any?>): DataFrame<T> =
     parseImpl(options, columns)
 
+/**
+ * @include [CommonParseDocs]
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetParseOperationArg]}
+ *
+ * To parse only particular columns, pass their names; the columns outside the selection are left
+ * unchanged — except that naming a [column group][ColumnGroup] parses the columns inside it, and naming
+ * a [frame column][FrameColumn] parses all `String` and `Char` columns inside its frames.
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.Parse.parseSome_strings]
+ *
+ * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to parse.
+ * @param [options] options for parsing, like providing a locale or a custom date-time formatter.
+ * @return a new [DataFrame] with the parsed columns.
+ */
+@Refine
+@Interpretable("ParseString")
 public fun <T> DataFrame<T>.parse(vararg columns: String, options: ParserOptions? = null): DataFrame<T> =
     parse(options) { columns.toColumnSet() }
 
@@ -48,171 +127,25 @@ public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>, options
 public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>, options: ParserOptions? = null): DataFrame<T> =
     parse(options) { columns.toColumnSet() }
 
-/**
- * Global counterpart of [ParserOptions].
- * Settings changed here will affect the defaults for all parsing operations.
- *
- * The default values are set by [Parsers.resetToDefault].
- */
-public interface GlobalParserOptions {
-
-    public fun addDateTimePattern(pattern: String)
-
-    public fun addNullString(str: String)
-
-    /** This function can be called to skip some types. Parsing will be attempted for all other types. */
-    public fun addSkipType(type: KType)
-
-    /** Whether to use [FastDoubleParser], defaults to `true`. Please report any issues you encounter. */
-    public var useFastDoubleParser: Boolean
-
-    public fun resetToDefault()
-
-    public var locale: Locale
-
-    public val nulls: Set<String>
-
-    public val skipTypes: Set<KType>
-}
-
-/**
- * ### Options for parsing [String]`?` columns
- *
- * These options are used to configure how [DataColumn]s of type [String] or [String?][String] should be parsed.
- * They can be passed to [tryParse] and [parse] functions.
- *
- * You can also use the [DataFrame.parser][DataFrame.Companion.parser] property to access and modify
- * the global parser configuration.
- *
- * If any of the arguments in [ParserOptions] are `null` (or [ParserOptions] itself is `null`),
- * the global configuration will be queried.
- *
- * @param locale locale to use for parsing dates and numbers, defaults to the System default locale.
- *   If specified instead of [dateTimeFormatter], it will be used in combination with [dateTimePattern]
- *   to create a [DateTimeFormatter]. Just providing [locale] will not allow you to parse
- *   locale-specific dates!
- * @param dateTimeFormatter a [DateTimeFormatter] to use for parsing dates, if not specified, it will be created
- *   from [dateTimePattern] and [locale]. If neither [dateTimeFormatter] nor [dateTimePattern] are specified,
- *   [DateTimeFormatter.ISO_LOCAL_DATE_TIME] will be used.
- * @param dateTimePattern a pattern to use for parsing dates. If specified instead of [dateTimeFormatter],
- *   it will be used to create a [DateTimeFormatter].
- * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
- *   `["null", "NULL", "NA", "N/A"]`.
- * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
- *   By default, it's an empty set. To skip all types except a specified one, use [convertTo] instead.
- * @param useFastDoubleParser whether to use [FastDoubleParser], defaults to `true`. Please report any issues you encounter.
- */
-public class ParserOptions(
-    public val locale: Locale? = null,
-    // TODO, migrate to kotlinx.datetime.format.DateTimeFormat? https://github.com/Kotlin/dataframe/issues/876
-    public val dateTimeFormatter: DateTimeFormatter? = null,
-    public val dateTimePattern: String? = null,
-    public val nullStrings: Set<String>? = null,
-    public val skipTypes: Set<KType>? = null,
-    public val useFastDoubleParser: Boolean? = null,
-) {
-
-    /** For binary compatibility. */
-    @Deprecated(
-        message = PARSER_OPTIONS,
-        level = DeprecationLevel.HIDDEN,
-    )
-    public constructor(
-        locale: Locale? = null,
-        dateTimeFormatter: DateTimeFormatter? = null,
-        dateTimePattern: String? = null,
-        nullStrings: Set<String>? = null,
-    ) : this(
-        locale = locale,
-        dateTimeFormatter = dateTimeFormatter,
-        dateTimePattern = dateTimePattern,
-        nullStrings = nullStrings,
-        skipTypes = null,
-        useFastDoubleParser = null,
-    )
-
-    /** For binary compatibility. */
-    @Deprecated(
-        message = PARSER_OPTIONS_COPY,
-        level = DeprecationLevel.HIDDEN,
-    )
-    public fun copy(
-        locale: Locale? = this.locale,
-        dateTimeFormatter: DateTimeFormatter? = this.dateTimeFormatter,
-        dateTimePattern: String? = this.dateTimePattern,
-        nullStrings: Set<String>? = this.nullStrings,
-    ): ParserOptions =
-        ParserOptions(
-            locale = locale,
-            dateTimeFormatter = dateTimeFormatter,
-            dateTimePattern = dateTimePattern,
-            nullStrings = nullStrings,
-            skipTypes = skipTypes,
-            useFastDoubleParser = useFastDoubleParser,
-        )
-
-    internal fun getDateTimeFormatter(): DateTimeFormatter? =
-        when {
-            dateTimeFormatter != null -> dateTimeFormatter
-            dateTimePattern != null && locale != null -> DateTimeFormatter.ofPattern(dateTimePattern, locale)
-            dateTimePattern != null -> DateTimeFormatter.ofPattern(dateTimePattern)
-            else -> null
-        }
-
-    public fun copy(
-        locale: Locale? = this.locale,
-        dateTimeFormatter: DateTimeFormatter? = this.dateTimeFormatter,
-        dateTimePattern: String? = this.dateTimePattern,
-        nullStrings: Set<String>? = this.nullStrings,
-        skipTypes: Set<KType>? = this.skipTypes,
-        useFastDoubleParser: Boolean? = this.useFastDoubleParser,
-    ): ParserOptions =
-        ParserOptions(
-            locale = locale,
-            dateTimeFormatter = dateTimeFormatter,
-            dateTimePattern = dateTimePattern,
-            nullStrings = nullStrings,
-            skipTypes = skipTypes,
-            useFastDoubleParser = useFastDoubleParser,
-        )
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as ParserOptions
-
-        if (useFastDoubleParser != other.useFastDoubleParser) return false
-        if (locale != other.locale) return false
-        if (dateTimeFormatter != other.dateTimeFormatter) return false
-        if (dateTimePattern != other.dateTimePattern) return false
-        if (nullStrings != other.nullStrings) return false
-        if (skipTypes != other.skipTypes) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = useFastDoubleParser?.hashCode() ?: 0
-        result = 31 * result + (locale?.hashCode() ?: 0)
-        result = 31 * result + (dateTimeFormatter?.hashCode() ?: 0)
-        result = 31 * result + (dateTimePattern?.hashCode() ?: 0)
-        result = 31 * result + (nullStrings?.hashCode() ?: 0)
-        result = 31 * result + (skipTypes?.hashCode() ?: 0)
-        return result
-    }
-
-    override fun toString(): String =
-        "ParserOptions(locale=$locale, dateTimeFormatter=$dateTimeFormatter, dateTimePattern=$dateTimePattern, nullStrings=$nullStrings, skipTypes=$skipTypes, useFastDoubleParser=$useFastDoubleParser)"
-}
-
 /** @include [tryParseImpl] */
 public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
 
-public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
-    parse(options) {
-        colsAtAnyDepth().filter { !it.isColumnGroup() }
-    }
+/**
+ * Tries to parse a column of chars into a column of a different type.
+ * Each parser in [Parsers] is run in order until a valid parser is found,
+ * a.k.a. that parser was able to parse all values in the column successfully. If a parser
+ * fails to parse any value, the next parser is tried. If all the others fail, the final parser
+ * returns strings.
+ *
+ * For more information: {@include [DocumentationUrls.ParseOnDataColumn]}
+ *
+ * @param [options] options for parsing, like providing a locale or a custom date-time formatter
+ * @throws IllegalStateException if no valid parser is found (unlikely, unless the `String` parser is disabled)
+ * @return a new column with parsed values
+ */
+@JvmName("tryParseChar")
+public fun DataColumn<Char?>.tryParse(options: ParserOptions? = null): DataColumn<*> =
+    map { it?.toString() }.tryParseImpl(options)
 
 /**
  * Tries to parse a column of strings into a column of a different type.
@@ -223,15 +156,53 @@ public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> 
  * If all fail [IllegalStateException] is thrown. If you don't want this exception to be thrown,
  * use [tryParse] instead.
  *
- * Parsers that are [covered by][StringParser.coveredBy] other parsers are skipped.
+ * For more information: {@include [DocumentationUrls.ParseOnDataColumn]}
  *
- * @param options options for parsing, like providing a locale or a custom date-time formatter
+ * @param [options] options for parsing, like providing a locale or a custom date-time formatter
  * @throws IllegalStateException if no valid parser is found
  * @return a new column with parsed values
  */
 public fun DataColumn<String?>.parse(options: ParserOptions? = null): DataColumn<*> =
-    tryParse(options).also { if (it.typeClass == String::class) error("Can't guess column type") }
+    tryParse(options).also { if (it.isSubtypeOf<String?>()) error("Can't guess column type") }
 
+/**
+ * Tries to parse a column of chars as strings into a column of a different type.
+ * Each parser in [Parsers] is run in order until a valid parser is found,
+ * a.k.a. that parser was able to parse all values in the column successfully. If a parser
+ * fails to parse any value, the next parser is tried.
+ *
+ * If all fail [IllegalStateException] is thrown. If you don't want this exception to be thrown,
+ * use [tryParse] instead.
+ *
+ * For more information: {@include [DocumentationUrls.ParseOnDataColumn]}
+ *
+ * @param [options] options for parsing, like providing a locale or a custom date-time formatter
+ * @return a new column with parsed values
+ */
+@JvmName("parseChar")
+public fun DataColumn<Char?>.parse(options: ParserOptions? = null): DataColumn<*> =
+    map { it?.toString() }
+        .tryParse(options)
+        .also { if (it.isSubtypeOf<Char?>() || it.isSubtypeOf<String?>()) error("Can't guess column type") }
+
+/**
+ * Returns a new column in which every [DataFrame] cell is parsed recursively:
+ * all `String` and `Char` columns inside each frame are parsed into other types,
+ * as if [parse] was called on that frame with no columns selected.
+ * `null` cells stay `null`.
+ *
+ * For more information: {@include [DocumentationUrls.Parse]} {@include [DocumentationUrls.ParseOnDataColumn]}
+ *
+ * @param [options] options for parsing, like providing a locale or a custom date-time formatter.
+ * @return a new column with the parsed frames.
+ */
 @JvmName("parseAnyFrameNullable")
-public fun DataColumn<AnyFrame?>.parse(options: ParserOptions? = null): DataColumn<AnyFrame?> =
-    map { it?.parse(options) }
+public fun DataColumn<DataFrame<*>?>.parse(options: ParserOptions? = null): DataColumn<DataFrame<*>?> =
+    when {
+        // a column without null cells (always true for a [FrameColumn]) maps with a non-null lambda,
+        // so `map` rebuilds a FrameColumn; a nullable lambda would create a ValueColumn of frames,
+        // which the column invariant forbids
+        values().none { it == null } -> map { (it as DataFrame<*>).parse(options) }
+
+        else -> map { it?.parse(options) }
+    }

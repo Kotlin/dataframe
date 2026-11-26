@@ -2,6 +2,26 @@ package org.jetbrains.kotlinx.dataframe.annotations
 
 import kotlin.reflect.KClass
 
+/**
+ * Matches the type parameter of the annotated class to DataRow/DataFrame type parameter T.
+ *
+ * Annotate public API classes that implement DataRow/DataFrame interface to enable "extract schema/create column from values" operation:
+ * ```kotlin
+ * df.add {
+ *   "col" from { it }
+ * }
+ * ```
+ * Result before:
+ * `col: DataColumn<AddDataRow<MySchema>>`
+ *
+ * Result after:
+ *
+ * ```
+ * col:
+ *   col1: Int
+ *   col2: String
+ * ```
+ */
 @Target(AnnotationTarget.CLASS)
 public annotation class HasSchema(val schemaArg: Int)
 
@@ -17,8 +37,19 @@ public annotation class Interpretable(val interpreter: String)
  */
 public annotation class Refine
 
+/**
+ * Disables plugin transformation of calls to @Refine functions, making
+ * dataframe code compile and work in context where plugin is not supported, for example inline functions or property getters,
+ * or not needed.
+ */
 @Retention(AnnotationRetention.SOURCE)
-@Target(AnnotationTarget.FILE, AnnotationTarget.EXPRESSION)
+@Target(
+    AnnotationTarget.FILE,
+    AnnotationTarget.EXPRESSION,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.CLASS,
+    AnnotationTarget.PROPERTY,
+)
 public annotation class DisableInterpretation
 
 @Target(AnnotationTarget.PROPERTY)
@@ -54,3 +85,18 @@ internal annotation class AccessApiOverload
  */
 @Target(AnnotationTarget.FUNCTION)
 public annotation class Converter(val klass: KClass<*>, val nullable: Boolean = false)
+
+/**
+ * Marks String API overloads (functions with vararg String parameters) with metadata
+ * to enable automatic delegation to their typed counterparts implementations in the compiler plugin.
+ * This annotation should not have default values for arguments (breaks plugin resolve).
+ * @param interpreter The interpreter name from the corresponding @Interpretable annotation
+ *                    on the typed API function (the one with ColumnSelectionDsl parameter)
+ * @param targetArgument The name of the ColumnSelectionDsl parameter in the typed API function
+ */
+@Target(AnnotationTarget.FUNCTION)
+public annotation class StringApiInterpretable(
+    val interpreter: String,
+    val stringArgument: String,
+    val targetArgument: String,
+)

@@ -1,0 +1,62 @@
+# single
+
+
+<web-summary>
+Discover `single` operation in Kotlin DataFrame.
+</web-summary>
+
+<card-summary>
+Discover `single` operation in Kotlin DataFrame.
+</card-summary>
+
+<link-summary>
+Discover `single` operation in Kotlin DataFrame.
+</link-summary>
+
+
+Returns the single value in this [`DataColumn`](DataColumn.md).
+Throws [`NoSuchElementException`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-no-such-element-exception/)
+if the [`DataColumn`](DataColumn.md) is empty, and
+[`IllegalArgumentException`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-illegal-argument-exception/)
+if it contains more than one value.
+
+**API reference**: [`single`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/single.html)
+
+<!---FUN singleOnColumnDf-->
+
+```kotlin
+df
+```
+
+<inline-frame src="./resources/singleOnColumnDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN singleOnColumn-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df
+    .filter { name == "Bob" } // one row is left after filtering
+    .age
+    .single() // returns 20
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df
+    .filter { "name"<String>() == "Bob" } // one row is left after filtering
+    .age
+    .single() // returns 20
+```
+
+</tab></tabs>
+<!---END-->
+
+Use [`first`](firstOnColumn.md) or [`last`](lastOnColumn.md)
+when the [`DataColumn`](DataColumn.md) may contain more than one value,
+and [`firstOrNull`](firstOnColumn.md#firstornull) when it may be empty —
+there is no `singleOrNull` for a [`DataColumn`](DataColumn.md).

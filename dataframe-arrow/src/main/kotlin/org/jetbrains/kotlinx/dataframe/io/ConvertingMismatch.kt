@@ -4,15 +4,15 @@ import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 
 /**
- * Detailed message about any mismatch when saving to Arrow format with user-defined schema that does not match with actual data.
- * Can be sent to callback, written to log or encapsulated to exception
+ * Detailed message about any mismatch when saving to Arrow format with a user-defined schema that does not match the actual data.
+ * Can be sent to a callback, written to a log, or wrapped in an exception
  */
 public sealed class ConvertingMismatch(
-    /** Name of the column with mismatch */
+    /** Name of the column with the mismatch */
     public open val column: String,
-    /** Number of first row with mismatch (0-based) if defined */
+    /** Number of the first row with a mismatch (0-based), if defined */
     public open val row: Int?,
-    /** Original exception if exist */
+    /** Original exception, if any */
     public open val cause: Exception?,
 ) {
 
@@ -29,12 +29,12 @@ public sealed class ConvertingMismatch(
     public sealed class NarrowingMismatch(column: String) : ConvertingMismatch(column, null, null) {
         public data class NotPresentedColumnIgnored(override val column: String) : NarrowingMismatch(column) {
             override fun toString(): String =
-                "Not nullable column \"$column\" is not presented in actual data, saving as is"
+                "Not nullable column \"$column\" is not present in actual data, saving as is"
         }
 
         public data class NotPresentedColumnError(override val column: String) : NarrowingMismatch(column) {
             override fun toString(): String =
-                "Not nullable column \"$column\" is not presented in actual data, can not save"
+                "Not nullable column \"$column\" is not present in actual data, can not save"
         }
     }
 
@@ -80,6 +80,45 @@ public sealed class ConvertingMismatch(
     public data class SavedAsString(override val column: String, val type: Class<*>) :
         ConvertingMismatch(column, null, null) {
         override fun toString(): String = "Column \"$column\" has type ${type.canonicalName}, will be saved as String\""
+    }
+
+    /**
+     * A date-time value did not fit the target field's precision and its trailing digits were dropped —
+     * for example a nanosecond instant saved into a `Timestamp(MICROSECOND, …)` field.
+     *
+     * Reported once per column, for the first row where it happens. Supply a target `Schema` with a finer
+     * time unit to avoid it.
+     */
+    public data class PrecisionReduced(
+        override val column: String,
+        override val row: Int?,
+        /** Arrow time unit the value was written with, e.g. `"MICROSECOND"`. */
+        public val unit: String,
+    ) : ConvertingMismatch(column, row, null) {
+        override fun toString(): String =
+            "Column \"$column\" holds a value finer than $unit in row $row, saved with the trailing digits dropped"
+    }
+
+    /**
+     * A date-time value did not fit the target field's **range** at all — for example an instant in the year 2500
+     * saved into a `Timestamp(NANOSECOND, …)` field, which is an `int64` nanosecond count and so only spans
+     * 1677–2262.
+     *
+     * Unlike [PrecisionReduced] the value cannot be stored in any form, so it is dropped: written as `null`, or
+     * refused with a [ConvertingException] when the mode has `strictType` on. Dropping it needs a nullable target
+     * field to drop it into — writing `null` into a non-nullable one would emit a file contradicting its own
+     * schema — so there it is refused whatever the mode. Reported once per column, for the first row where it
+     * happens. Supply a target `Schema` with a coarser time unit to avoid it.
+     */
+    public data class ValueOutOfRange(
+        override val column: String,
+        override val row: Int?,
+        /** Arrow time unit whose range the value exceeded, e.g. `"NANOSECOND"`. */
+        public val unit: String,
+    ) : ConvertingMismatch(column, row, null) {
+        override fun toString(): String =
+            "Column \"$column\" holds a value out of range for an Arrow $unit timestamp in row $row, " +
+                "use a coarser time unit in the target schema"
     }
 
     public sealed class NullableMismatch(column: String, row: Int?) : ConvertingMismatch(column, row, null) {

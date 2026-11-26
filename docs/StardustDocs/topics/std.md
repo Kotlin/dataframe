@@ -4,6 +4,8 @@
 
 Computes the [standard deviation (std, σ)](https://en.wikipedia.org/wiki/Standard_deviation) of values.
 
+**API reference**: [`std`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/std.html)
+
 `null` values are ignored.
 
 All primitive numeric types are supported: `Byte`, `Short`, `Int`, `Long`, `Float`, and `Double`.
@@ -59,7 +61,7 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 
 ### Type Conversion
 
-The following automatic type conversions are performed for the `mean` operation:
+The following automatic type conversions are performed for the `std` operation:
 
 | Conversion                                                                 | Result for Empty Input |
 |----------------------------------------------------------------------------|------------------------|
@@ -71,3 +73,41 @@ The following automatic type conversions are performed for the `mean` operation:
 | Float -> Double                                                            | Double.NaN             |
 | Number -> Conversion([Common number type](numberUnification.md)) -> Double | Double.NaN             |
 | Nothing -> Double                                                          | Double.NaN             |
+
+### Big numbers
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.StdSamples-->
+
+> `java.math.BigDecimal` and `java.math.BigInteger` are not supported:
+> `std` throws an exception at runtime for such columns.
+> Compute the standard deviation manually with Kotlin standard library methods and Java big number arithmetic,
+> or [`convert`](convert.md) the column to a primitive type first.
+> {style="warning"}
+
+For a `BigDecimal` column `amount`, the exact standard deviation can be computed
+with Java `BigDecimal` arithmetic:
+
+<!---FUN stdBigNumbersManually-->
+
+```kotlin
+// exact unbiased sample standard deviation (ddof = 1), computed with Java `BigDecimal` arithmetic
+val amounts = df.amount.toList()
+val mean = amounts.fold(BigDecimal.ZERO, BigDecimal::add)
+    .divide(amounts.size.toBigDecimal(), MathContext.DECIMAL128)
+amounts.fold(BigDecimal.ZERO) { acc, value -> acc + (value - mean).pow(2) }
+    .divide((amounts.size - 1).toBigDecimal(), MathContext.DECIMAL128)
+    .sqrt(MathContext.DECIMAL128)
+```
+
+<!---END-->
+
+Alternatively, [`convert`](convert.md) the column to a primitive type first — at the cost of precision:
+
+<!---FUN stdBigNumbersConverted-->
+
+```kotlin
+// approximate standard deviation, computed after converting the column to `Double`
+df.convert { amount }.toDouble().std { amount }
+```
+
+<!---END-->

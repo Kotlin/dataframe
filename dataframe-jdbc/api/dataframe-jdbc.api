@@ -1,10 +1,6 @@
 public final class org/jetbrains/kotlinx/dataframe/io/DbConnectionConfig {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun component4 ()Z
 	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;
 	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;
 	public fun equals (Ljava/lang/Object;)Z
@@ -26,6 +22,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/Jdbc : org/jetbrains/kotli
 	public fun readCodeForGeneration (Ljava/io/InputStream;Ljava/lang/String;Z)Ljava/lang/String;
 	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/JdbcSchemaKt {
@@ -33,62 +30,292 @@ public final class org/jetbrains/kotlinx/dataframe/io/JdbcSchemaKt {
 	public static final fun getDatabaseCodeGenReader (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator$Companion;)Lkotlin/jvm/functions/Function2;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/io/ReadJdbcKt {
-	public static final fun getDataFrameSchema (Ljava/sql/Connection;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static final fun getDataFrameSchema (Ljava/sql/ResultSet;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static final fun getDataFrameSchema (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static synthetic fun getDataFrameSchema$default (Ljava/sql/Connection;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static synthetic fun getDataFrameSchema$default (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static final fun getSchemaForAllSqlTables (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Ljava/util/Map;
-	public static final fun getSchemaForAllSqlTables (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Ljava/util/Map;
-	public static synthetic fun getSchemaForAllSqlTables$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Ljava/util/Map;
-	public static synthetic fun getSchemaForAllSqlTables$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Ljava/util/Map;
-	public static final fun getSchemaForResultSet (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/ResultSet;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static final fun getSchemaForSqlQuery (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static final fun getSchemaForSqlQuery (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static synthetic fun getSchemaForSqlQuery$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static synthetic fun getSchemaForSqlQuery$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static final fun getSchemaForSqlTable (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static final fun getSchemaForSqlTable (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static synthetic fun getSchemaForSqlTable$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static synthetic fun getSchemaForSqlTable$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
-	public static final fun readAllSqlTables (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Ljava/util/Map;
-	public static final fun readAllSqlTables (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Ljava/util/Map;
-	public static synthetic fun readAllSqlTables$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Ljava/util/Map;
-	public static synthetic fun readAllSqlTables$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Ljava/util/Map;
-	public static final fun readDataFrame (Ljava/sql/Connection;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readDataFrame (Ljava/sql/ResultSet;Ljava/sql/Connection;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readDataFrame (Ljava/sql/ResultSet;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;IZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readDataFrame (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun readDataFrame$default (Ljava/sql/Connection;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun readDataFrame$default (Ljava/sql/ResultSet;Ljava/sql/Connection;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun readDataFrame$default (Ljava/sql/ResultSet;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;IZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun readDataFrame$default (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readResultSet (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/ResultSet;Ljava/sql/Connection;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readResultSet (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/ResultSet;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;IZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun readResultSet$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/ResultSet;Ljava/sql/Connection;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun readResultSet$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/ResultSet;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;IZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readSqlQuery (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readSqlQuery (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun readSqlQuery$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun readSqlQuery$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readSqlTable (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readSqlTable (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun readSqlTable$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun readSqlTable$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;IZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+public final class org/jetbrains/kotlinx/dataframe/io/ReadDataFrameSchemaKt {
+	public static final fun readAllSqlTables (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljava/sql/Connection;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Ljava/util/Map;
+	public static final fun readAllSqlTables (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljavax/sql/DataSource;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Ljava/util/Map;
+	public static final fun readAllSqlTables (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Ljava/util/Map;
+	public static synthetic fun readAllSqlTables$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljava/sql/Connection;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Ljava/util/Map;
+	public static synthetic fun readAllSqlTables$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljavax/sql/DataSource;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Ljava/util/Map;
+	public static synthetic fun readAllSqlTables$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Ljava/util/Map;
+	public static final fun readDataFrameSchema (Ljava/sql/Connection;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static final fun readDataFrameSchema (Ljava/sql/ResultSet;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static final fun readDataFrameSchema (Ljavax/sql/DataSource;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static final fun readDataFrameSchema (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static synthetic fun readDataFrameSchema$default (Ljava/sql/Connection;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static synthetic fun readDataFrameSchema$default (Ljavax/sql/DataSource;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static synthetic fun readDataFrameSchema$default (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static final fun readResultSet (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljava/sql/ResultSet;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static final fun readSqlQuery (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljava/sql/Connection;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static final fun readSqlQuery (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljavax/sql/DataSource;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static final fun readSqlQuery (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static synthetic fun readSqlQuery$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljava/sql/Connection;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static synthetic fun readSqlQuery$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljavax/sql/DataSource;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static synthetic fun readSqlQuery$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static final fun readSqlTable (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljava/sql/Connection;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static final fun readSqlTable (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljavax/sql/DataSource;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static final fun readSqlTable (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static synthetic fun readSqlTable$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljava/sql/Connection;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static synthetic fun readSqlTable$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljavax/sql/DataSource;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public static synthetic fun readSqlTable$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/io/TableColumnMetadata {
+public final class org/jetbrains/kotlinx/dataframe/io/ReadJdbcKt {
+	public static final fun readAllSqlTables (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lkotlin/jvm/functions/Function1;)Ljava/util/Map;
+	public static final fun readAllSqlTables (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljavax/sql/DataSource;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lkotlin/jvm/functions/Function1;)Ljava/util/Map;
+	public static final fun readAllSqlTables (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lkotlin/jvm/functions/Function1;)Ljava/util/Map;
+	public static synthetic fun readAllSqlTables$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/util/Map;
+	public static synthetic fun readAllSqlTables$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljavax/sql/DataSource;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/util/Map;
+	public static synthetic fun readAllSqlTables$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/util/Map;
+	public static final fun readDataFrame (Ljava/sql/Connection;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readDataFrame (Ljava/sql/ResultSet;Ljava/sql/Connection;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readDataFrame (Ljava/sql/ResultSet;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;Ljava/lang/Integer;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readDataFrame (Ljavax/sql/DataSource;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readDataFrame (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDataFrame$default (Ljava/sql/Connection;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDataFrame$default (Ljava/sql/ResultSet;Ljava/sql/Connection;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDataFrame$default (Ljava/sql/ResultSet;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;Ljava/lang/Integer;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDataFrame$default (Ljavax/sql/DataSource;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDataFrame$default (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readResultSet (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/ResultSet;Ljava/sql/Connection;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readResultSet (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/ResultSet;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;Ljava/lang/Integer;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readResultSet$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/ResultSet;Ljava/sql/Connection;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readResultSet$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/ResultSet;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;Ljava/lang/Integer;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readSqlQuery (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readSqlQuery (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljavax/sql/DataSource;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readSqlQuery (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readSqlQuery$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readSqlQuery$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljavax/sql/DataSource;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readSqlQuery$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readSqlTable (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readSqlTable (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljavax/sql/DataSource;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readSqlTable (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readSqlTable$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/sql/Connection;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readSqlTable$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljavax/sql/DataSource;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readSqlTable$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Ljava/lang/Integer;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbType;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/SqlValidation : java/lang/Enum {
+	public static final field None Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;
+	public static final field ReadOnly Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;
+	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/io/SqlValidation;
+}
+
+public abstract class org/jetbrains/kotlinx/dataframe/io/db/AdvancedDbType : org/jetbrains/kotlinx/dataframe/io/db/DbType {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun buildDataColumn (Ljava/lang/String;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	protected abstract fun generateConverter (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	protected fun getConverter (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public final fun getExpectedJdbcType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lkotlin/reflect/KType;
+	public final fun getPreprocessedValueType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;)Lkotlin/reflect/KType;
+	public final fun getTargetColumnSchema (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
+	public final fun getValueFromResultSet (Ljava/sql/ResultSet;ILorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;)Ljava/lang/Object;
+	public final fun preprocessValue (Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;Lkotlin/reflect/KType;)Ljava/lang/Object;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder {
+	public abstract fun buildDataColumn (Ljava/lang/String;Ljava/util/List;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader {
+	public abstract fun getValue (Ljava/sql/ResultSet;I)Ljava/lang/Object;
+}
+
+public abstract class org/jetbrains/kotlinx/dataframe/io/db/DbType {
+	public fun <init> (Ljava/lang/String;)V
+	public fun buildDataColumn (Ljava/lang/String;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public fun buildSelectTableQueryWithLimit (Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/String;
+	public fun buildSqlQueryWithLimit (Ljava/lang/String;I)Ljava/lang/String;
+	public static synthetic fun buildSqlQueryWithLimit$default (Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;Ljava/lang/String;IILjava/lang/Object;)Ljava/lang/String;
+	public abstract fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;
+	public fun configureReadStatement (Ljava/sql/PreparedStatement;)V
+	public fun createConnection (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;)Ljava/sql/Connection;
+	public final fun getDbTypeInJdbcUrl ()Ljava/lang/String;
+	public fun getDefaultFetchSize ()I
+	protected final fun getDefaultJdbcTypeToKTypeMapping ()Ljava/util/Map;
+	public fun getDefaultQueryTimeout ()Ljava/lang/Integer;
+	public abstract fun getDriverClassName ()Ljava/lang/String;
+	public fun getExpectedJdbcType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lkotlin/reflect/KType;
+	public fun getPreprocessedValueType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;)Lkotlin/reflect/KType;
+	public fun getTableColumnsMetadata (Ljava/sql/ResultSet;)Ljava/util/List;
+	public fun getTableTypes ()Ljava/util/List;
+	public fun getTargetColumnSchema (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
+	public fun getValueFromResultSet (Ljava/sql/ResultSet;ILorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;)Ljava/lang/Object;
+	public abstract fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;)Z
+	public fun preprocessValue (Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;Lkotlin/reflect/KType;)Ljava/lang/Object;
+	public fun quoteIdentifier (Ljava/lang/String;)Ljava/lang/String;
+	protected final fun toDataColumn (Ljava/util/List;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor {
+	public abstract fun preprocess (Ljava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/DuckDb : org/jetbrains/kotlinx/dataframe/io/db/AdvancedDbType {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/db/DuckDb;
+	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;
+	public fun createConnection (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;)Ljava/sql/Connection;
+	public fun getDriverClassName ()Ljava/lang/String;
+	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;)Z
+}
+
+public class org/jetbrains/kotlinx/dataframe/io/db/H2 : org/jetbrains/kotlinx/dataframe/io/db/DbType {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Companion;
+	public static final field MODE_MARIADB Ljava/lang/String;
+	public static final field MODE_MSSQLSERVER Ljava/lang/String;
+	public static final field MODE_MYSQL Ljava/lang/String;
+	public static final field MODE_POSTGRESQL Ljava/lang/String;
+	public fun <init> ()V
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)V
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;)V
+	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun buildSqlQueryWithLimit (Ljava/lang/String;I)Ljava/lang/String;
+	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;
+	public fun getDriverClassName ()Ljava/lang/String;
+	public fun getExpectedJdbcType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lkotlin/reflect/KType;
+	public final fun getMode ()Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;)Z
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/H2$Companion {
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/H2$Mode : java/lang/Enum {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode$Companion;
+	public static final field MariaDb Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public static final field MsSqlServer Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public static final field MySql Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public static final field PostgreSql Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public static final field Regular Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getValue ()Ljava/lang/String;
+	public final fun toDbType ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/H2$Mode$Companion {
+	public final fun fromDbType (Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public final fun fromValue (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter {
+	public fun <init> (Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)V
+	public final fun buildDataColumnOrNull (Ljava/lang/String;Ljava/util/List;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public final fun copy (Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public final fun getColumnBuilder ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;
+	public final fun getExpectedJdbcType ()Lkotlin/reflect/KType;
+	public final fun getPreprocessedValueType ()Lkotlin/reflect/KType;
+	public final fun getResultSetReader ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;
+	public final fun getTargetSchema ()Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
+	public final fun getValueFromResultSetOrElse (Ljava/sql/ResultSet;ILkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+	public final fun getValuePreprocessor ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;
+	public final fun preprocessOrCast (Ljava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverterKt {
+	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;
+	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;)Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;
+	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static final fun castToAny (Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;
+	public static final fun castToAny (Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;)Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;
+	public static final fun castToAny (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static final fun jdbcToDfConverterFor (Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static final fun withColumnBuilder (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static synthetic fun withColumnBuilder$default (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static final fun withPreprocessor (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lkotlin/reflect/KType;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static synthetic fun withPreprocessor$default (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lkotlin/reflect/KType;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static final fun withResultReader (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static final fun withTargetSchema (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/MariaDb : org/jetbrains/kotlinx/dataframe/io/db/DbType {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/db/MariaDb;
+	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;
+	public fun getDriverClassName ()Ljava/lang/String;
+	public fun getExpectedJdbcType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lkotlin/reflect/KType;
+	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;)Z
+	public fun quoteIdentifier (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/MsSql : org/jetbrains/kotlinx/dataframe/io/db/DbType {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/db/MsSql;
+	public fun buildSqlQueryWithLimit (Ljava/lang/String;I)Ljava/lang/String;
+	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;
+	public fun getDriverClassName ()Ljava/lang/String;
+	public fun getExpectedJdbcType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lkotlin/reflect/KType;
+	public fun getValueFromResultSet (Ljava/sql/ResultSet;ILorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;)Ljava/lang/Object;
+	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;)Z
+	public fun quoteIdentifier (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/MySql : org/jetbrains/kotlinx/dataframe/io/db/DbType {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/db/MySql;
+	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;
+	public fun getDriverClassName ()Ljava/lang/String;
+	public fun getExpectedJdbcType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lkotlin/reflect/KType;
+	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;)Z
+	public fun quoteIdentifier (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/PostgreSql : org/jetbrains/kotlinx/dataframe/io/db/DbType {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/db/PostgreSql;
+	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;
+	public fun getDriverClassName ()Ljava/lang/String;
+	public fun getExpectedJdbcType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lkotlin/reflect/KType;
+	public fun getPreprocessedValueType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;)Lkotlin/reflect/KType;
+	public fun getValueFromResultSet (Ljava/sql/ResultSet;ILorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;)Ljava/lang/Object;
+	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;)Z
+	public fun preprocessValue (Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;Lkotlin/reflect/KType;)Ljava/lang/Object;
+	public fun quoteIdentifier (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/Sqlite : org/jetbrains/kotlinx/dataframe/io/db/AdvancedDbType {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/db/Sqlite$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Map;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/util/Map;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;
+	public fun createConnection (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;)Ljava/sql/Connection;
+	public final fun getCustomColumnsMap ()Ljava/util/Map;
+	public final fun getCustomTypesMap ()Ljava/util/Map;
+	public fun getDriverClassName ()Ljava/lang/String;
+	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;)Z
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/Sqlite$Companion {
+	public final fun getDefault ()Lorg/jetbrains/kotlinx/dataframe/io/db/Sqlite;
+	public final fun withCustomConverters (Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/io/db/Sqlite;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/SqliteCustomConvertersBuilder {
+	public fun <init> ()V
+	public final fun getColumnMappings ()Ljava/util/Map;
+	public final fun getTypeMappings ()Ljava/util/Map;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/SqliteCustomTypeConverter {
+	public fun <init> (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lkotlin/jvm/functions/Function1;)V
+	public final fun component1 ()Lkotlin/reflect/KType;
+	public final fun component2 ()Lkotlin/reflect/KType;
+	public final fun component3 ()Lkotlin/jvm/functions/Function1;
+	public final fun copy (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/io/db/SqliteCustomTypeConverter;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/db/SqliteCustomTypeConverter;Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/SqliteCustomTypeConverter;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getConvert ()Lkotlin/jvm/functions/Function1;
+	public final fun getExpectedType ()Lkotlin/reflect/KType;
+	public final fun getResultingType ()Lkotlin/reflect/KType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;Z)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()I
-	public final fun component4 ()I
-	public final fun component5 ()Ljava/lang/String;
-	public final fun component6 ()Z
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getJavaClassName ()Ljava/lang/String;
 	public final fun getJdbcType ()I
@@ -100,98 +327,16 @@ public final class org/jetbrains/kotlinx/dataframe/io/TableColumnMetadata {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/io/TableMetadata {
+public final class org/jetbrains/kotlinx/dataframe/io/db/TableMetadata {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCatalogue ()Ljava/lang/String;
 	public final fun getName ()Ljava/lang/String;
 	public final fun getSchemaName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-}
-
-public abstract class org/jetbrains/kotlinx/dataframe/io/db/DbType {
-	public fun <init> (Ljava/lang/String;)V
-	public abstract fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
-	public abstract fun convertSqlTypeToColumnSchemaValue (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
-	public abstract fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lkotlin/reflect/KType;
-	public final fun getDbTypeInJdbcUrl ()Ljava/lang/String;
-	public abstract fun getDriverClassName ()Ljava/lang/String;
-	public abstract fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;)Z
-	public fun sqlQueryLimit (Ljava/lang/String;I)Ljava/lang/String;
-	public static synthetic fun sqlQueryLimit$default (Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;Ljava/lang/String;IILjava/lang/Object;)Ljava/lang/String;
-}
-
-public class org/jetbrains/kotlinx/dataframe/io/db/H2 : org/jetbrains/kotlinx/dataframe/io/db/DbType {
-	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Companion;
-	public static final field MODE_MARIADB Ljava/lang/String;
-	public static final field MODE_MSSQLSERVER Ljava/lang/String;
-	public static final field MODE_MYSQL Ljava/lang/String;
-	public static final field MODE_POSTGRESQL Ljava/lang/String;
-	public fun <init> ()V
-	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)V
-	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
-	public fun convertSqlTypeToColumnSchemaValue (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
-	public fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lkotlin/reflect/KType;
-	public final fun getDialect ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;
-	public fun getDriverClassName ()Ljava/lang/String;
-	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;)Z
-	public fun sqlQueryLimit (Ljava/lang/String;I)Ljava/lang/String;
-}
-
-public final class org/jetbrains/kotlinx/dataframe/io/db/H2$Companion {
-}
-
-public final class org/jetbrains/kotlinx/dataframe/io/db/MariaDb : org/jetbrains/kotlinx/dataframe/io/db/DbType {
-	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/db/MariaDb;
-	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
-	public fun convertSqlTypeToColumnSchemaValue (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
-	public fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lkotlin/reflect/KType;
-	public fun getDriverClassName ()Ljava/lang/String;
-	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;)Z
-}
-
-public final class org/jetbrains/kotlinx/dataframe/io/db/MsSql : org/jetbrains/kotlinx/dataframe/io/db/DbType {
-	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/db/MsSql;
-	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
-	public fun convertSqlTypeToColumnSchemaValue (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
-	public fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lkotlin/reflect/KType;
-	public fun getDriverClassName ()Ljava/lang/String;
-	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;)Z
-	public fun sqlQueryLimit (Ljava/lang/String;I)Ljava/lang/String;
-}
-
-public final class org/jetbrains/kotlinx/dataframe/io/db/MySql : org/jetbrains/kotlinx/dataframe/io/db/DbType {
-	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/db/MySql;
-	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
-	public fun convertSqlTypeToColumnSchemaValue (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
-	public fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lkotlin/reflect/KType;
-	public fun getDriverClassName ()Ljava/lang/String;
-	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;)Z
-}
-
-public final class org/jetbrains/kotlinx/dataframe/io/db/PostgreSql : org/jetbrains/kotlinx/dataframe/io/db/DbType {
-	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/db/PostgreSql;
-	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
-	public fun convertSqlTypeToColumnSchemaValue (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
-	public fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lkotlin/reflect/KType;
-	public fun getDriverClassName ()Ljava/lang/String;
-	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;)Z
-}
-
-public final class org/jetbrains/kotlinx/dataframe/io/db/Sqlite : org/jetbrains/kotlinx/dataframe/io/db/DbType {
-	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/db/Sqlite;
-	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
-	public fun convertSqlTypeToColumnSchemaValue (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
-	public fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lkotlin/reflect/KType;
-	public fun getDriverClassName ()Ljava/lang/String;
-	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;)Z
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/db/UtilKt {

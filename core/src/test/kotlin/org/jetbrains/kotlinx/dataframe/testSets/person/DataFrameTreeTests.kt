@@ -25,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.asFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.at
+import org.jetbrains.kotlinx.dataframe.api.before
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.colsOf
@@ -43,6 +44,7 @@ import org.jetbrains.kotlinx.dataframe.api.duplicateRows
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.expr
+import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
@@ -106,7 +108,6 @@ import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.junit.Test
 import java.util.stream.Collectors
 import kotlin.reflect.typeOf
-import kotlin.streams.toList
 
 class DataFrameTreeTests : BaseTest() {
 
@@ -186,8 +187,8 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
-    fun `selects`() {
-        df2.select { nameAndCity.cols() } shouldBe typed2.nameAndCity.select { all() }
+    fun selects() {
+        df2.select { nameAndCity.allCols() } shouldBe typed2.nameAndCity.select { all() }
         df2.select { nameAndCity.cols { !it.hasNulls() } } shouldBe typed2.select { nameAndCity.name }
         df2.select { nameAndCity.cols(0..1) } shouldBe typed2.nameAndCity.select { all() }
         df2.select { nameAndCity.col(1) } shouldBe typed2.select { nameAndCity.city }
@@ -195,9 +196,9 @@ class DataFrameTreeTests : BaseTest() {
         df2.select { nameAndCity.cols("city", "name") } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
         df2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.allCols() }
         df2.select { nameAndCity[name] } shouldBe typed2.nameAndCity.select { name }
-        df2.select { nameAndCity.cols().drop(1) } shouldBe typed2.nameAndCity.select { city }
+        df2.select { nameAndCity.allCols().drop(1) } shouldBe typed2.nameAndCity.select { city }
 
-        typed2.select { nameAndCity.cols() } shouldBe typed2.nameAndCity.select { all() }
+        typed2.select { nameAndCity.allCols() } shouldBe typed2.nameAndCity.select { all() }
         typed2.select { nameAndCity.cols { !it.hasNulls() } } shouldBe typed2.select { nameAndCity.name }
         typed2.select { nameAndCity.cols(0..1) } shouldBe typed2.nameAndCity.select { all() }
         typed2.select { nameAndCity.col(1) } shouldBe typed2.select { nameAndCity.city }
@@ -206,7 +207,7 @@ class DataFrameTreeTests : BaseTest() {
             typed2.select { nameAndCity.city and nameAndCity.name }
         typed2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.allCols() }
         typed2.select { nameAndCity[name] } shouldBe typed2.nameAndCity.select { name }
-        typed2.select { nameAndCity.cols().drop(1) } shouldBe typed2.nameAndCity.select { city }
+        typed2.select { nameAndCity.allCols().drop(1) } shouldBe typed2.nameAndCity.select { city }
 
         df2.select { col(1) } shouldBe typed2.select { age }
         df2.select { nameInGroup } shouldBe typed2.nameAndCity.select { name }
@@ -238,48 +239,48 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
-    fun `slice`() {
+    fun slice() {
         val expected = typed[0..2].name
         val actual = typed2[0..2].nameAndCity.name
         actual shouldBe expected
     }
 
     @Test
-    fun `filter`() {
+    fun filter() {
         val expected = typed.filter { city == null }.select { weight }
         typed2.filter { nameAndCity.city == null }.select { weight } shouldBe expected
         df2.filter { it[nameAndCity][city] == null }.select { weight } shouldBe expected
     }
 
     @Test
-    fun `select`() {
+    fun select() {
         val expected = typed.select { name and age }
         typed2.select { nameAndCity.name and age } shouldBe expected
         df2.select { it[nameAndCity][name] and age } shouldBe expected
     }
 
     @Test
-    fun `sort`() {
+    fun sort() {
         val expected = typed.sortBy { name and age }.moveTo(1) { city }
         typed2.sortBy { nameAndCity.name and age }.ungroup { nameAndCity } shouldBe expected
     }
 
     @Test
-    fun `move`() {
-        val actual = typed2.move { nameAndCity.name }.into("name")
+    fun move() {
+        val actual = typed2.move { nameAndCity.name }.into { pathOf("name") }
         actual.columnNames() shouldBe listOf("nameAndCity", "name", "age", "weight")
         actual.getColumnGroup("nameAndCity").columnNames() shouldBe listOf("city")
     }
 
     @Test
-    fun `groupBy`() {
+    fun groupBy() {
         val expected = typed.groupBy { name }.max { age }
         typed2.groupBy { nameAndCity.name }.max { age } shouldBe expected
     }
 
     @Test
-    fun `distinct`() {
-        val duplicated = typed2.concat(typed2)
+    fun distinct() {
+        val duplicated = listOf(typed2, typed2).concat()
         duplicated.rowsCount() shouldBe typed2.rowsCount() * 2
         val dist = duplicated.nameAndCity.distinct()
         dist shouldBe typed2.nameAndCity.distinct()
@@ -368,6 +369,7 @@ class DataFrameTreeTests : BaseTest() {
         df2.pivot { it["nameAndCity"]["city"] }.groupBy { it["nameAndCity"]["name"] }.values("age").check()
     }
 
+    @Suppress("DEPRECATION_ERROR")
     @Test
     fun `pivot grouped column`() {
         val grouped = typed.group { age and weight }.into("info")
@@ -382,7 +384,7 @@ class DataFrameTreeTests : BaseTest() {
 
         dataCols.forEach { (it.isColumnGroup() || it.isFrameColumn()) shouldBe true }
 
-        val names = pivoted.name
+        val names = pivoted[name]
         dataCols.forEach { col ->
             val city = col.name()
             pivoted.indices().forEach { row ->
@@ -546,7 +548,7 @@ class DataFrameTreeTests : BaseTest() {
             colsAtAnyDepth().filter { !it.isColumnGroup() }
         }.into { pathOf(it.path.joinToString(".")) }
         val grouped = joined.group { nameContains(".") }.into { it.name().substringBefore(".") }
-        val expected = typed2.rename { nameAndCity.allCols() }.into { it.path.joinToString(".") }
+        val expected = typed2.rename { nameAndCity.allCols() }.to({ it.path.joinToString(".") })
         grouped shouldBe expected
     }
 
@@ -559,7 +561,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun rename() {
-        val res = typed2.rename { nameAndCity.allCols() }.into { it.name().capitalize() }
+        val res = typed2.rename { nameAndCity.allCols() }.to { it.name().capitalize() }
         res.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames().map { it.capitalize() }
     }
 
@@ -628,7 +630,13 @@ class DataFrameTreeTests : BaseTest() {
             .update { groupCol }.at(1).withNull()
             .update { groupCol }.at(2).with { emptyDataFrame() }
             .update { groupCol }.at(3).with { it.filter { false } }
-        val res = plain.explode(dropEmpty = false) { groupCol }
+
+        // Should cast DataColumn<AnyFrame?> to FrameColumn first
+        shouldThrow<IllegalArgumentException> { plain.explode(dropEmpty = false) { groupCol } }
+
+        val res = plain
+            .fillNulls { groupCol }.with { emptyDataFrame() }
+            .explode(dropEmpty = false) { groupCol }
         val expected = plain[groupCol.name()].sumOf { Math.max((it as AnyFrame?)?.rowsCount() ?: 0, 1) }
         res.rowsCount() shouldBe expected
     }
@@ -702,6 +710,22 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
+    fun `insert column before`() {
+        val colName = "reversed"
+
+        fun DataFrame<GroupedPerson>.check() {
+            nameAndCity.columnsCount() shouldBe 3
+            nameAndCity.columnNames() shouldBe listOf(
+                typed2.nameAndCity.name.name(),
+                colName,
+                typed2.nameAndCity.city.name(),
+            )
+        }
+
+        typed2.insert(colName) { nameAndCity.name.reversed() }.before { nameAndCity.city }.check()
+    }
+
+    @Test
     fun append() {
         val res = typed2.append(listOf("Bill", "San Francisco"), null, 66)
         res.rowsCount() shouldBe typed2.rowsCount() + 1
@@ -719,7 +743,7 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
-    fun `create data frame from map column`() {
+    fun `create dataframe from map column`() {
         val df = dataFrameOf(typed.name, typed2.nameAndCity)
         df.rowsCount() shouldBe typed.rowsCount()
     }
@@ -850,5 +874,41 @@ class DataFrameTreeTests : BaseTest() {
     fun `move under existing group`() {
         val df = typed2.move { age }.under { nameAndCity }
         df.nameAndCity.columnNames() shouldBe listOf("name", "city", "age")
+    }
+
+    @Test
+    fun `move under new group`() {
+        val df0 = typed2.move { age and weight }.under { col("newGroup") }
+        df0.getColumnGroup("newGroup").columnNames() shouldBe listOf("age", "weight")
+
+        val df1 = typed2.move { age and weight }.under { pathOf("newGroup") }
+        df1.getColumnGroup("newGroup").columnNames() shouldBe listOf("age", "weight")
+
+        val df2 = typed2.move { age and weight }.under { pathOf("newGroup", "newGroup2") }
+        df2.getColumnGroup("newGroup").getColumnGroup("newGroup2").columnNames() shouldBe listOf("age", "weight")
+
+        val df3 = typed2.move { age and weight }.under { colGroup("newGroup").colGroup("newGroup2") }
+        df3.getColumnGroup("newGroup").getColumnGroup("newGroup2").columnNames() shouldBe listOf("age", "weight")
+
+        val df4 = typed2.move { age and weight }.under("newGroup")
+        df4.getColumnGroup("newGroup").columnNames() shouldBe listOf("age", "weight")
+    }
+
+    @Test
+    fun `insert under new group`() {
+        val df0 = typed2.insert("newColumn") { 123 }.under { col("newGroup") }
+        df0.getColumnGroup("newGroup").columnNames() shouldBe listOf("newColumn")
+
+        val df1 = typed2.insert("newColumn") { 123 }.under { pathOf("newGroup") }
+        df1.getColumnGroup("newGroup").columnNames() shouldBe listOf("newColumn")
+
+        val df2 = typed2.insert("newColumn") { 123 }.under { pathOf("newGroup", "newGroup2") }
+        df2.getColumnGroup("newGroup").getColumnGroup("newGroup2").columnNames() shouldBe listOf("newColumn")
+
+        val df3 = typed2.insert("newColumn") { 123 }.under { colGroup("newGroup").colGroup("newGroup2") }
+        df3.getColumnGroup("newGroup").getColumnGroup("newGroup2").columnNames() shouldBe listOf("newColumn")
+
+        val df4 = typed2.insert("newColumn") { 123 }.under("newGroup")
+        df4.getColumnGroup("newGroup").columnNames() shouldBe listOf("newColumn")
     }
 }

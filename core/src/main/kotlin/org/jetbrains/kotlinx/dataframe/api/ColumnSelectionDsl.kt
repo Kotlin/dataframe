@@ -5,17 +5,19 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.columns.getColumn
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /** [Column Selection DSL][ColumnSelectionDsl] */
-internal interface ColumnSelectionDslLink
+internal typealias ColumnSelectionDslLink = Nothing
 
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
@@ -26,7 +28,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * This is a shorthand for [get][ColumnsContainer.get]`(myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      */
-    private interface CommonColumnReferenceInvokeDocs
+    private typealias CommonColumnReferenceInvokeDocs = Nothing
 
     /**
      * @include [CommonColumnReferenceInvokeDocs]
@@ -38,6 +40,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @include [CommonColumnReferenceInvokeDocs]
      * @return The [ColumnGroup] this [Column Reference][ColumnReference] or [-Accessor][ColumnAccessor] points to.
      */
+    @Interpretable("ColumnReferenceInvokeGroup")
     public operator fun <T> ColumnReference<DataRow<T>>.invoke(): ColumnGroup<T> = get(this)
 
     /**
@@ -55,9 +58,12 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * "myColumn"["myNestedColumn"]<NestedColumnType>()
      * ```
      *
+     * For more information: {@include [DocumentationUrls.AccessApis.InvokedStringApi]}
+     *
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [DataColumn] this [ColumnPath] points to.
      */
+    @Interpretable("ColumnPathInvokeTyped")
     public operator fun <C> ColumnPath.invoke(): DataColumn<C> = getColumn(this).cast()
 
     /**
@@ -66,7 +72,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * This is a shorthand for [get][ColumnsContainer.get]`(MyType::myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      */
-    private interface CommonKPropertyInvokeDocs
+    private typealias CommonKPropertyInvokeDocs = Nothing
 
     /**
      * @include [CommonKPropertyInvokeDocs]
@@ -105,7 +111,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * @throws [IllegalArgumentException] if the column is not found.
      */
-    private interface CommonKPropertyGetDocs
+    private typealias CommonKPropertyGetDocs = Nothing
 
     /**
      * @include [CommonKPropertyGetDocs]
@@ -171,11 +177,14 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * This is a shorthand for [get][ColumnsContainer.get]`("myColumnName")` and can be
      * written as `"myColumnName"<MyColumnType>()` instead.
      *
+     * For more information: {@include [DocumentationUrls.AccessApis.InvokedStringApi]}
+     *
      * @throws [IllegalArgumentException] if there is no column with this name.
      * @return The [DataColumn] with this name.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("stringInvokeTyped")
+    @Interpretable("StringInvokeTyped")
     public operator fun <C> String.invoke(): DataColumn<C> = getColumn(this).cast()
 
     /**
@@ -184,11 +193,14 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * This is a shorthand for [get][ColumnsContainer.get]`("myColumnName")` and can be
      * written as `"myColumnName"()` instead.
      *
+     * For more information: {@include [DocumentationUrls.AccessApis.InvokedStringApi]}
+     *
      * @throws [IllegalArgumentException] if there is no column with this name.
      * @return The [DataColumn] with this name.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("stringInvokeUntyped")
+    @Interpretable("StringInvokeUntyped")
     public operator fun String.invoke(): DataColumn<*> = getColumn(this)
 
     /**
@@ -201,13 +213,19 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * "myColumn"["myNestedColumn"]["myDoublyNestedColumn"]<NestedColumnType>()
      * ```
+     *
+     * For more information: {@include [DocumentationUrls.AccessApis.InvokedStringApi]}
      */
+    @Interpretable("StringGetColumn")
     public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
 
     /**
      * As extension to `"myColumn"["myNestedColumn"]`, this function enables
      * `"myColumn"["myNestedColumn"]["myDoublyNestedColumn"]` as alternative to
      * [pathOf]`("myColumn", "myNestedColumn", "myDoublyNestedColumn")`
+     *
+     * For more information: {@include [DocumentationUrls.AccessApis.InvokedStringApi]}
      */
+    @Interpretable("ColumnPathGetColumn")
     public operator fun ColumnPath.get(column: String): ColumnPath = this + column
 }

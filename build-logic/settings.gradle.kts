@@ -1,0 +1,11 @@
+pluginManagement {
+    includeBuild("../build-settings-logic")
+}
+
+plugins {
+    id("dfsettings.base")
+    // version should be kept in sync with `gradle/libs.versions.toml`
+    id("dev.panuszewski.typesafe-conventions") version "0.12.2"
+}
+
+rootProject.name = "build-logic"

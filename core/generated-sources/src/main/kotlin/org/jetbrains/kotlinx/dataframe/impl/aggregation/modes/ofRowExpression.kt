@@ -18,8 +18,8 @@ import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import kotlin.reflect.typeOf
 
 /**
- * Aggregates [values] by first applying [transform] to each element of the sequence and then
- * applying the [Aggregator] ([this]) to the resulting sequence.
+ * Aggregates [<code>values</code>][values] by first applying [<code>transform</code>][transform] to each element of the sequence and then
+ * applying the [<code>Aggregator</code>][Aggregator] ([<code>this</code>][this]) to the resulting sequence.
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
@@ -30,8 +30,8 @@ internal inline fun <C, reified V : Any?, R : Any?> Aggregator<V & Any, R>.aggre
 ): R = aggregate(values = values.map { transform(it) }, valueType = typeOf<V>())
 
 /**
- * Aggregates [column] by first applying [transform] to each element of the column and then
- * applying the [Aggregator] ([this]) to the resulting sequence.
+ * Aggregates [<code>column</code>][column] by first applying [<code>transform</code>][transform] to each element of the column and then
+ * applying the [<code>Aggregator</code>][Aggregator] ([<code>this</code>][this]) to the resulting sequence.
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
@@ -42,8 +42,8 @@ internal inline fun <C, reified V : Any?, R : Any?> Aggregator<V & Any, R>.aggre
 ): R = aggregateOf(column.asSequence(), transform)
 
 /**
- * Aggregates [frame] by first applying [expression] to each row of the frame and then
- * applying the [Aggregator] ([this]) to the resulting sequence.
+ * Aggregates [<code>frame</code>][frame] by first applying [<code>expression</code>][expression] to each row of the frame and then
+ * applying the [<code>Aggregator</code>][Aggregator] ([<code>this</code>][this]) to the resulting sequence.
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
@@ -65,7 +65,7 @@ internal fun <T, C, R : Any?> Aggregator<*, R>.aggregateOfDelegated(
     }
 
 /**
- * Aggregates [data] by first applying [expression] to each row of the frame and then
+ * Aggregates [<code>data</code>][data] by first applying [<code>expression</code>][expression] to each row of the frame and then
  *
  * @param C is used to infer whether there are nulls in the values fed to the aggregator!
  */
@@ -85,7 +85,7 @@ internal inline fun <T, reified C : Any?, reified R : Any?> Aggregator<*, R>.agg
 internal inline fun <T, reified C : Any?, reified R : Any?> Aggregator<*, R>.aggregateOf(
     data: PivotGroupBy<T>,
     crossinline expression: RowExpression<T, C>,
-): DataFrame<T> = data.aggregateOf(expression, this as Aggregator<C, R>)
+): DataFrame<*> = data.aggregateOf(expression, this as Aggregator<C, R>)
 
 /**
  * @param C is used to infer whether there are nulls in the values fed to the aggregator!
@@ -121,7 +121,7 @@ internal inline fun <T, reified C : Any?, reified R : Any?> Grouped<T>.aggregate
 internal inline fun <T, reified C : Any?, R : Any?> PivotGroupBy<T>.aggregateOf(
     crossinline expression: RowExpression<T, C>,
     aggregator: Aggregator<C & Any, R>,
-): DataFrame<T> =
+): DataFrame<*> =
     aggregate {
         internal().yield(emptyPath(), aggregator.aggregateOf(this, expression))
     }
