@@ -391,11 +391,7 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  *
  * For more information: {@include [DocumentationUrls.Last]}
  *
- * @include [DocumentationUrls.PivotGroupBy]
- *
- * @include [DocumentationUrls.Pivot]
- *
- * @include [DocumentationUrls.GroupBy]
+ * For more information about [PivotGroupBy] with examples: {@include [DocumentationUrls.PivotGroupBy]}
  *
  * @include [SelectingRows.RowFilterSnippet]
  *
