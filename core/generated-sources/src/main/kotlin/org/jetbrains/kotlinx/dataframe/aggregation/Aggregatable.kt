@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.GroupByDocs
 import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotDocs
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs
 
 /**
  * A common supertype for the dataframe-like structures that support aggregation:
@@ -18,7 +19,8 @@ import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
  * and a [<code>Pivot</code>][Pivot] is aggregated into a single [<code>DataRow</code>][DataRow]
  * with the pivot keys as top-level columns.
  *
- * See [<code>GroupBy aggregation</code>][GroupByDocs.Aggregation] and [<code>Pivot aggregation</code>][PivotDocs.Aggregation]
+ * See [<code>GroupBy aggregation</code>][GroupByDocs.Aggregation], [<code>Pivot aggregation</code>][PivotDocs.Aggregation],
+ * and [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation]
  * for the available aggregation operations.
  *
  * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html) [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
