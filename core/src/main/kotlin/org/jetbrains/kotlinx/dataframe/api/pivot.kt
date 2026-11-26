@@ -504,7 +504,7 @@ internal typealias PivotMatchesResultCellDescription = Nothing
 
 /**
  * {@include [PivotMatchesCommonDescription]}
- * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription] {@set [PivotGroupByDocs.GroupingColumns] remaining}
+ * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription] {@set [PivotGroupByDocs.GROUPING_COLUMNS] remaining}
  * @include [PivotMatchesResultCellDescription]
  *
  * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
@@ -602,7 +602,7 @@ internal typealias PivotCountsResultCellDescription = Nothing
 
 /**
  * {@include [PivotCountsCommonDescription]}
- * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription] {@set [PivotGroupByDocs.GroupingColumns] remaining}
+ * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription] {@set [PivotGroupByDocs.GROUPING_COLUMNS] remaining}
  * @include [PivotCountsResultCellDescription]
  *
  * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
@@ -1272,14 +1272,14 @@ internal interface PivotGroupByDocs {
 
     // The key for a `@set`/`@get` that defines which kind of columns the rows of the resulting matrix
     // correspond to: "grouping" by default, "remaining" when the rows are grouped by all other columns.
-    typealias GroupingColumns = Nothing
+    typealias GROUPING_COLUMNS = Nothing
 
     /**
      * * **Columns** represent all unique values from the selected [\columns]
      *   (they become [column groups][ColumnGroup]
      *   corresponding to value combinations when using [then][PivotDsl.then],
      *   similar to [pivot]);
-     * * **Rows** correspond to all unique combinations of values from the {@get [GroupingColumns] grouping} columns;
+     * * **Rows** correspond to all unique combinations of values from the {@get [GROUPING_COLUMNS] grouping} columns;
      *   each combination is represented in dedicated key columns that store
      *   a distinct set of values for each row
      *   (similar to [keys][GroupBy.keys] in [GroupBy]).
@@ -1366,7 +1366,7 @@ internal interface PivotGroupByDocs {
      * [PivotGroupBy][PivotGroupBy]`.`[**`frames`**][PivotGroupBy.frames]**`()`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`matches`**][PivotGroupBy.matches]`  \[ `**`(`**`yes`**`, `**`no`**`) `**`]`
+     * `| `__`.`__[**`matches`**][PivotGroupBy.matches]`  \[ `**`(`**`yes: `[`Any`][Any]**`, `**`no: `[`Any`][Any]**`) `**`]`
      *
      * {@include [Indent]}
      * `| `__`.`__[**`count`**][PivotGroupBy.count]`  \[ `**` { `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
@@ -1423,6 +1423,7 @@ internal interface PivotGroupByDocs {
      *   for each of the selected columns within each group.
      *
      * @include [CommonStatisticsDocs.EmptyPivotIntersectionSnippet]
+     * The exception is [count][PivotGroupBy.count]: it always produces `0` for the empty pivot intersections.
      *
      * For more information: {@include [DocumentationUrls.PivotAggregationStatistics]} {@include [DocumentationUrls.PivotStatistics]}
      */
@@ -1509,9 +1510,7 @@ internal interface PivotGroupByDocs {
     typealias Aggregation = Nothing
 }
 
-/**
- * {@include [PivotGroupByDocs.CommonDescription]}
- */
+/** @include [PivotGroupByDocs.CommonDescription] */
 public interface PivotGroupBy<out T> : Aggregatable<T> {
 
     /**
@@ -1523,11 +1522,11 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      * and the corresponding aggregated values in new nested columns.
      *
      * @include [AggregateDslDocs]
-     * {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]}
-     * {@set [AggregateDslDocs.RECEIVER] [PivotGroupBy]}
-     * {@set [AggregateDslDocs.APPLY_NOTE] The given [expression][body] is applied to each group independently.}
-     * {@set [AggregateDslDocs.RESULT_TYPE] [DataFrame]}
-     * {@set [AggregateDslDocs.OPERATING_COLUMNS] columns within groups in [PivotGroupBy]}
+     * @set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]
+     * @set [AggregateDslDocs.RECEIVER] [PivotGroupBy]
+     * @set [AggregateDslDocs.APPLY_NOTE] The given [expression][body] is applied to each group independently.
+     * @set [AggregateDslDocs.RESULT_TYPE] [DataFrame]
+     * @set [AggregateDslDocs.OPERATING_COLUMNS] columns within groups in [PivotGroupBy]
      *
      * @include [CommonStatisticsDocs.EmptyPivotIntersectionSnippet]
      *

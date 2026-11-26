@@ -356,7 +356,9 @@ public fun <T> Pivot<T>.last(predicate: RowFilter<T>): ReducedPivot<T> = reduce 
  * If any combined [pivot] + [groupBy] group in [PivotGroupBy] is empty, in the resulting [ReducedPivotGroupBy]
  * it will be represented by a [row][DataRow] with `null` values (except the grouping key).
  *
- * For more information: {@include [DocumentationUrls.Last]} {@include [DocumentationUrls.PivotGroupBy]}
+ * For more information: {@include [DocumentationUrls.Last]}
+ *
+ * For more information about [PivotGroupBy] with examples: {@include [DocumentationUrls.PivotGroupBy]}
  *
  * ### Example
  * ```kotlin
@@ -387,7 +389,9 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  * in the resulting [ReducedPivotGroupBy] it will be represented by a [row][DataRow] with `null` values
  * (except the grouping key).
  *
- * For more information: {@include [DocumentationUrls.Last]} {@include [DocumentationUrls.PivotGroupBy]}
+ * For more information: {@include [DocumentationUrls.Last]}
+ *
+ * For more information about [PivotGroupBy] with examples: {@include [DocumentationUrls.PivotGroupBy]}
  *
  * @include [SelectingRows.RowFilterSnippet]
  *
