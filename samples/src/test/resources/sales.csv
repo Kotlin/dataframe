@@ -1,0 +1,7 @@
+region,product,year,revenue,cost,discount
+North,Pen,2023,100,60,0.1
+North,Ink,2023,150,90,
+South,Pen,2023,80,70,0.05
+South,Ink,2024,200,120,
+North,Pen,2024,120,70,0.2
+South,Pen,2024,90,50,0.0

@@ -94,6 +94,16 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   on disk and `updateShadowResources` registers it again.
 - The test task already sets `--add-opens java.base/java.nio=ALL-UNNAMED` (for Arrow).
 - After editing a sample file, run `./gradlew :samples:ktlintFormat :samples:ktlintCheck`.
+- **`./gradlew :samples:runPandasValidation`** runs the Python half of the guide for Pandas users
+  (`pandas-validation/validate_pandas.py`; its Kotlin half is ordinary tests in this module). It is deliberately not
+  part of `test`/`check`/`build`: a Kotlin CI agent may have no Python. It fails when the interpreter, pandas, openpyxl
+  or pyarrow is missing — "not run" is never "passed", so report it as not run. Run it after changing that guide's
+  pages or its shared data (`sales.csv`, `sales-pandas.parquet`, `pandas-reference-cases.json`). Pick the interpreter
+  with `-PpandasPython=<path>` or `PANDAS_PYTHON`; how it works and how to add a row is in
+  [`pandas-validation/README.md`](pandas-validation/README.md). Its PostgreSQL cases also need a database: the Kotlin
+  half is `./gradlew :samples:pandasPostgresTest` (excluded from `test`, fails without `PANDAS_POSTGRES_URL`) and the
+  Python half runs when the same variable is set. Point them only at a throwaway local PostgreSQL you started yourself
+  and remove it afterwards; both halves refuse a non-local address.
 
 ## Writing a sample
 

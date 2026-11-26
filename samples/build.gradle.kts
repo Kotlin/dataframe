@@ -79,6 +79,7 @@ dependencies {
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
     testImplementation(libs.hikaricp)
+    testImplementation(libs.postgresql) // PandasPostgresCasesTest, see `pandasPostgresTest`
 }
 
 // Running tests creates korro output lines!
@@ -218,9 +219,47 @@ korro {
     }
 }
 
+// Tests that need a running PostgreSQL: they have their own task, `pandasPostgresTest`, so that `test` needs no database.
+val postgresTests = "*PandasPostgresCasesTest*"
+
 tasks.test {
     maxHeapSize = "4g"
     jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
+    filter {
+        excludeTestsMatching(postgresTests)
+    }
+
+    // PandasReferenceGuardTest reads this page. Without declaring it, an edit of the page alone leaves `test`
+    // UP-TO-DATE and the guard does not run.
+    inputs.file(rootProject.file("docs/StardustDocs/topics/guides/pandasToKotlinDataFrameReference.md"))
+}
+
+// The PostgreSQL cases of the guide for Pandas users (`pandas-validation/README.md`). Needs a throwaway PostgreSQL on
+// this machine and its address in PANDAS_POSTGRES_URL, for example postgresql://user:password@127.0.0.1:5432/postgres.
+// Not part of `test`/`check`/`build`. The task FAILS without the variable: a database test that did not run is not green.
+tasks.register<Test>("pandasPostgresTest") {
+    group = "verification"
+    description = "Runs the PostgreSQL cases of the guide for Pandas users. " +
+        "Needs PANDAS_POSTGRES_URL; not part of test/check/build."
+
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    maxHeapSize = "4g"
+    jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
+    filter {
+        includeTestsMatching(postgresTests)
+    }
+    // A cached result of an earlier run must not stand for a run against today's database.
+    outputs.upToDateWhen { false }
+
+    doFirst {
+        if (System.getenv("PANDAS_POSTGRES_URL").isNullOrBlank()) {
+            throw GradleException(
+                "PANDAS_POSTGRES_URL is not set. Point it at a throwaway local PostgreSQL, for example " +
+                    "postgresql://user:password@127.0.0.1:5432/postgres. See samples/pandas-validation/README.md.",
+            )
+        }
+    }
 }
 
 val resourcesDir = rootProject.file("docs/StardustDocs/resources")
@@ -242,6 +281,44 @@ tasks.register("updateShadowResources") {
         }
 
         mdFile.writeText(content)
+    }
+}
+
+// The Pandas half of the "Coming from Pandas" guide: see `pandas-validation/README.md`.
+//
+// Deliberately NOT a dependency of `test`, `check` or `build`: it needs Python with pandas, openpyxl and pyarrow,
+// which a Kotlin CI agent usually does not have. Run it by hand, or in a CI job that has Python:
+//     ./gradlew :samples:runPandasValidation [-PpandasPython=/path/to/python]
+// The interpreter is `-PpandasPython`, else the PANDAS_PYTHON environment variable, else `python3` (`python` on Windows).
+// A missing interpreter or module FAILS the task: a validation that silently did not run must not look green.
+tasks.register<Exec>("runPandasValidation") {
+    group = "documentation"
+    description = "Runs pandas-validation/validate_pandas.py, the Pandas half of the 'Coming from Pandas' guide. " +
+        "Needs Python with pandas, openpyxl and pyarrow; not part of test/check/build."
+
+    val python = providers.gradleProperty("pandasPython")
+        .orElse(providers.environmentVariable("PANDAS_PYTHON"))
+        .orElse(if (System.getProperty("os.name").startsWith("Windows")) "python" else "python3")
+    val script = layout.projectDirectory.file("pandas-validation/validate_pandas.py").asFile
+
+    commandLine(python.get(), script.path)
+
+    doFirst {
+        val ready = runCatching {
+            val probe = ProcessBuilder(python.get(), "-c", "import pandas, openpyxl, pyarrow")
+                .redirectErrorStream(true)
+                .start()
+            probe.inputStream.readBytes()
+            probe.waitFor() == 0
+        }.getOrDefault(false)
+        if (!ready) {
+            throw GradleException(
+                "`${python.get()}` is not available or lacks pandas, openpyxl or pyarrow. " +
+                    "Install them (pip install -r samples/pandas-validation/requirements.txt) or point " +
+                    "-PpandasPython / PANDAS_PYTHON at an interpreter that has them. " +
+                    "See samples/pandas-validation/README.md.",
+            )
+        }
     }
 }
 

@@ -481,6 +481,15 @@
 <resource src="jetbrains_repositories.csv"></resource>
 <resource src="movies.csv"></resource>
 <resource src="titanic.csv"></resource>
+<resource src="pandasAddColumn.html"></resource>
+<resource src="pandasCreateDataFrame.html"></resource>
+<resource src="pandasDropMissingDiscount.html"></resource>
+<resource src="pandasFillMissingDiscount.html"></resource>
+<resource src="pandasFilterRows.html"></resource>
+<resource src="pandasGroupByAggregate.html"></resource>
+<resource src="pandasLeftJoin.html"></resource>
+<resource src="pandasNullableArithmetic.html"></resource>
+<resource src="pandasPivotRevenueByYear.html"></resource>
 <resource src="quickstart.ipynb"></resource>
 <resource src="dfDescribe.html"></resource>
 <resource src="dfRepositoryGetFullName.html"></resource>

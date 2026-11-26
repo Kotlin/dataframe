@@ -1,238 +1,404 @@
-# Migration Guide: Pandas to Kotlin DataFrame
+# Coming from Pandas
 
 <web-summary>
-Quickly transition from Pandas to Kotlin DataFrame: load your datasets, perform essential transformations, and visualize your results — directly within a Kotlin Notebook.
+Moving from Pandas to Kotlin DataFrame: the same workflows side by side, and the few places
+where the mental model is different on purpose.
 </web-summary>
 
 <card-summary>
-Switching from Pandas? Kotlin DataFrame makes it easy to load, process, analyze, and visualize your data — fully interactive and type-safe!
+Know Pandas? Learn Kotlin DataFrame in ten minutes: familiar tasks side by side, and what works differently and why.
 </card-summary>
 
 <link-summary>
-Explore Kotlin DataFrame as a Pandas user: read your data, transform columns, group or join tables, and build insightful visualizations with Kotlin Notebook.
+A guide for Pandas users: common tasks side by side, and the key differences — types, immutability, nulls, grouping.
 </link-summary>
 
-This guide helps Pandas users easily transition to **Kotlin DataFrame**, translating common tasks from Python/Pandas into Kotlin DataFrame operations.
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.guides.MigratingFromPandas-->
 
-We recommend [starting with **Kotlin Notebook**](gettingStartedKotlinNotebook.md) for the best beginner experience.
-It's similar to Jupyter Notebook, but built directly into your IDE. 
-You can use IDE features, include it in your Gradle or Maven project, and work comfortably within the JVM ecosystem. 
-It also provides interactive data exploration, DataFrame rendering, and plotting out of the box.  
+You already know how to load, clean, group and join tables. This page shows the same tasks in
+Kotlin DataFrame, and explains the few places where it works differently on purpose.
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.guides.QuickStartGuide-->
+It has two parts:
 
-## Quick Setup
+- **This page** is a short tour: the ideas first, then the everyday tasks side by side.
+- **[The Pandas to Kotlin DataFrame reference](pandasToKotlinDataFrameReference.md)** is a long, exact lookup table.
+  It is written so that a coding agent can use it — see [Using an AI coding agent](#using-an-ai-coding-agent).
 
-To start working with Kotlin DataFrame in a Kotlin Notebook, run the cell with the next code:
+## Set up in one minute
 
-```kotlin
-%useLatestDescriptors
+The quickest start is a [Kotlin Notebook](SetupKotlinNotebook.md#integrate-kotlin-dataframe).
+It is like Jupyter, but inside IntelliJ IDEA. Run this in a cell:
+
+```text
 %use dataframe
 ```
 
-This will load all necessary DataFrame dependencies (of the latest stable version) and all imports, as well as DataFrame
-rendering. Learn more [here](gettingStartedKotlinNotebook.md#integrate-kotlin-dataframe).
+In a Gradle or Maven project, add the library and, for type-safe columns, the compiler plugin.
+See [Setup](Setup.md) and [Compiler plugin](Compiler-Plugin.md).
 
----
+## Five ideas to take with you
 
-## Essential Kotlin Basics
+| In Pandas                                              | In Kotlin DataFrame                                                                                        |
+|--------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| A column is a string key, checked when the code runs.  | A column is a typed property, checked when the code compiles: `df.revenue`. See [schemas](schema.md).     |
+| Many operations can change the frame in place.         | Nothing changes in place. Every operation returns a new `DataFrame`; the old one stays as it was.          |
+| A mask picks rows: `df[df.revenue > 100]`.             | A lambda picks rows: `df.filter { revenue > 100 }`. Inside it, the columns of the current row are properties. |
+| `NaN` stands for missing, and it spreads quietly.      | A missing value is `null`, and the column type says so (`Double?`). The compiler makes you handle it.      |
+| `groupby` gives you an object you can call methods on. | `groupBy` gives you a group you must finish with an aggregation (`sum`, `aggregate`, ...).                 |
 
-### Variables
-- Use `val` to define variables that cannot change after initialization.
-- Use `var` for variables that can be reassigned.
+Two more differences you will meet on day one. There is no index, so rows are numbered by position and there is
+no `loc`, `iloc` or `reset_index`. And a column can be read in two ways: as a property (`revenue`) or by name and
+type (`"revenue"<Int>()`) — see [Access APIs](apiLevels.md) and [String API](StringApi.md).
 
-### Lambdas
-- Lambdas (`{ it.column > 0 }`) are compact functions used extensively for filtering and transformations.
-- `it` refers to the current row or element in a DataFrame context.
+## The same tasks side by side
 
-### Nullability
-- Kotlin uses explicit nullability (`String?` means the value can be null).
-- Kotlin DataFrame safely handles missing data by clearly marking nullable types.
+All examples use one small table of sales: six rows, with a `discount` that is missing in two of them.
+The first example creates it; `df` in every later example is that table.
 
-### Method Chaining
-- Kotlin DataFrame methods return new dataframes, not modifying the original.
-- This functional approach encourages cleaner, safer pipelines.
+### Create a DataFrame
 
----
-
-## Loading Data
-
-| Task             | Pandas                                      | Kotlin DataFrame                               |
-|------------------|---------------------------------------------|------------------------------------------------|
-| Load CSV         | `pd.read_csv("data.csv")`                   | `DataFrame.readCSV("data.csv")`                |
-| Load JSON        | `pd.read_json("data.json")`                 | `DataFrame.readJSON("data.json")`              |
-| Load from SQL    | `pd.read_sql("SELECT * FROM table", conn)`  | `DataFrame.readSqlTable("table", jdbcUrl)`     |
-| Load from Arrow  | `pd.read_feather("data.arrow")`             | `DataFrame.readArrow("data.arrow")`            |
-
----
-
-## Inspecting Data
-
-| Task              | Pandas                 | Kotlin DataFrame    |
-|-------------------|------------------------|---------------------|
-| Preview rows      | `df.head()`            | `df.head()`         |
-| Get shape         | `df.shape`             | `df.nrow`, `df.ncol`|
-| Column types      | `df.dtypes`            | `df.schema()`       |
-| Count missing     | `df.isnull().sum()`    | `df.na.count()`     |
-
----
-
-## Selecting Data
-
-| Task                | Pandas                | Kotlin DataFrame                |
-|---------------------|-----------------------|---------------------------------|
-| Select single col   | `df["col"]`           | `df["col"]` or `df.col`         |
-| Multiple columns    | `df[["a", "b"]]`      | `df.select { a and b }`         |
-| Filter rows         | `df[df.a > 10]`       | `df.filter { a > 10 }`          |
-
----
-
-## Transforming Data
-
-| Task               | Pandas                              | Kotlin DataFrame                     |
-|--------------------|-------------------------------------|--------------------------------------|
-| Add column         | `df["c"] = df.a + df.b`             | `df.add("c") { a + b }`              |
-| Modify column      | `df["a"] = df["a"] * 100`           | `df.update { a from { it * 100 } }`  |
-| Rename column      | `df.rename(columns={"old":"new"})`  | `df.rename { "old" to "new" }`       |
-| Drop column        | `df.drop("col", axis=1)`            | `df.remove("col")`                   |
-
----
-
-## Grouping and Aggregation
-
-| Task                     | Pandas                                | Kotlin DataFrame                         |
-|--------------------------|---------------------------------------|------------------------------------------|
-| Group & sum              | `df.groupby("col").sum()`             | `df.groupBy { col }.aggregate { sum() }` |
-| Multiple aggregations    | `agg({"a":"mean","b":"sum"})`         | `aggregate { mean(a) and sum(b) }`       |
-
----
-
-## Joining DataFrames
-
-| Task              | Pandas                            | Kotlin DataFrame                    |
-|-------------------|-----------------------------------|-------------------------------------|
-| Inner join        | `df1.merge(df2, on="id")`         | `df1.join(df2, by = "id")`          |
-| Left join         | `df1.merge(df2, how="left")`      | `df1.join(df2, type = JoinType.Left)`|
-
----
-
-## Exporting/Saving Data
-
-| Task           | Pandas                                 | Kotlin DataFrame                             |
-|----------------|----------------------------------------|----------------------------------------------|
-| Save to CSV    | `df.to_csv("file.csv", index=False)`   | `df.writeCSV("file.csv")`                    |
-| Save to JSON   | `df.to_json("file.json")`              | `df.writeJSON("file.json")`                  |
-| Save to Arrow  | `df.to_feather("file.arrow")`          | `df.writeArrow("file.arrow")`                |
-
----
-
-## Example Data Pipeline A: Filtering & Aggregation
-
-### Pandas (Matplotlib)
-
-```python
-
-df = pd.read_csv("sales.csv")
-df = df[df.amount > 0]
-summary = df.groupby("region").amount.sum().reset_index()
-
-
-```
-
-### Kotlin DataFrame (Kandy)
-
-```kotlin
-val df = DataFrame.readCSV("sales.csv")
-val summary = df
-    .filter { amount > 0 }
-    .groupBy { region }
-    .aggregate { sum(amount).into("total") }
-```
-
----
-
-## Example Data Pipeline B: Add Column & Pivoting
-
-### Pandas (Matplotlib)
-
-```python
-df["profit"] = df.revenue - df.cost
-pivot = df.pivot_table(values="profit", index="product", columns="year")
-```
-
-### Kotlin DataFrame (Kandy)
-
-```kotlin
-val pivot = df
-    .add("profit") { revenue - cost }
-    .pivot(product, year) { mean(profit) }
-```
-
----
-
-## Visualization Example
-
-### Pandas (Matplotlib)
+<tabs>
+<tab title="Pandas">
 
 ```python
 import pandas as pd
-import matplotlib.pyplot as plt
 
-df = pd.read_csv("sales.csv")
-df.groupby('region')['amount'].sum().plot(kind='bar')
-plt.title("Sales by Region")
-plt.xlabel("Region")
-plt.ylabel("Amount")
-plt.show()
+df = pd.DataFrame({
+    "region": ["North", "North", "South", "South", "North", "South"],
+    "product": ["Pen", "Ink", "Pen", "Ink", "Pen", "Pen"],
+    "year": [2023, 2023, 2023, 2024, 2024, 2024],
+    "revenue": [100, 150, 80, 200, 120, 90],
+    "cost": [60, 90, 70, 120, 70, 50],
+    "discount": [0.1, None, 0.05, None, 0.2, 0.0],
+})
 ```
 
-### Kotlin DataFrame (Kandy)
+</tab>
+<tab title="Kotlin DataFrame">
+
+<!---FUN pandasCreateDataFrame-->
 
 ```kotlin
-import org.jetbrains.kotlinx.kandy.dsl.plot
-import org.jetbrains.kotlinx.kandy.letsplot.export.save
-
-val df = DataFrame.readCSV("sales.csv")
-val summary = df.groupBy { region }.aggregate { sum(amount).into("total") }
-
-summary.plot {
-    bar {
-        x(region)
-        y("total")
-    }
-    layout.title = "Sales by Region"
-    xAxisLabel = "Region"
-    yAxisLabel = "Amount"
-}.save("sales_by_region.png")
+val df = dataFrameOf(
+    "region" to listOf("North", "North", "South", "South", "North", "South"),
+    "product" to listOf("Pen", "Ink", "Pen", "Ink", "Pen", "Pen"),
+    "year" to listOf(2023, 2023, 2023, 2024, 2024, 2024),
+    "revenue" to listOf(100, 150, 80, 200, 120, 90),
+    "cost" to listOf(60, 90, 70, 120, 70, 50),
+    "discount" to listOf(0.1, null, 0.05, null, 0.2, 0.0),
+)
 ```
 
----
+<inline-frame src="./resources/pandasCreateDataFrame.html" width="100%" height="500px"></inline-frame>
 
-## In conclusion
+<!---END-->
 
-- Kotlin DataFrame prioritizes type safety and readability.
-- Some Pandas features (like advanced time indexing, resample()) aren’t available yet.
-- Use Kotlin’s typed DSL for error-free refactoring and improved IDE support.
+</tab>
+</tabs>
 
+### Read a file
 
-## What's Next?
-If you're ready to go through a complete example, we recommend our [Quickstart Guide](quickstart.md) 
-— you'll learn the basics of reading data, transforming it, and creating visualization step-by-step.  
+<tabs>
+<tab title="Pandas">
 
-Ready to go deeper? Check out what’s next:
+```python
+df = pd.read_csv("sales.csv")
+```
 
-- 📘 **[Explore in-depth guides and various examples](Guides-And-Examples.md)** with different datasets,
-  API usage examples, and practical scenarios that help you understand the main features of Kotlin DataFrame.
+</tab>
+<tab title="Kotlin DataFrame">
 
-- 🛠️ **[Browse the operations overview](operations.md)** to learn what Kotlin DataFrame can do.
+<!---FUN pandasReadCsv-->
 
-- 🧠 **Understand the design** and core concepts in the [library overview](concepts.md).
+```kotlin
+val df = DataFrame.readCsv("sales.csv")
+```
 
-- 🔤 **[Learn more about Extension Properties](extensionPropertiesApi.md)**  
-  and make working with your data both convenient and type-safe.
+<!---END-->
 
-- 💡 **[Use Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md)**  
-  for auto-generated column access in your IntelliJ IDEA projects.
+</tab>
+</tabs>
 
-- 📊 **Master Kandy** for stunning and expressive DataFrame visualizations learning
-  [Kandy Documentation](https://kotlin.github.io/kandy).
+An empty cell becomes `null`, and the column type becomes nullable (`discount: Double?`).
+JSON, Excel, Arrow, Parquet and SQL work the same way — see [Read](read.md).
+
+### Filter rows
+
+<tabs>
+<tab title="Pandas">
+
+```python
+big_north = df[(df.revenue > 100) & (df.region == "North")]
+```
+
+</tab>
+<tab title="Kotlin DataFrame">
+
+<!---FUN pandasFilterRows-->
+
+```kotlin
+df.filter { revenue > 100 && region == "North" }
+```
+
+<inline-frame src="./resources/pandasFilterRows.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+</tab>
+</tabs>
+
+### Add a column
+
+<tabs>
+<tab title="Pandas">
+
+```python
+with_profit = df.assign(profit=df.revenue - df.cost)
+```
+
+</tab>
+<tab title="Kotlin DataFrame">
+
+<!---FUN pandasAddColumn-->
+
+```kotlin
+df.add("profit") { revenue - cost }
+```
+
+<inline-frame src="./resources/pandasAddColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+</tab>
+</tabs>
+
+### Missing values
+
+<tabs>
+<tab title="Pandas">
+
+```python
+n_missing = df.discount.isna().sum()
+filled = df.fillna({"discount": 0.0})
+dropped = df.dropna(subset=["discount"])
+```
+
+</tab>
+<tab title="Kotlin DataFrame">
+
+<!---FUN pandasCountNulls-->
+
+```kotlin
+df.count { discount == null }
+```
+
+<!---END-->
+
+<!---FUN pandasFillMissingDiscount-->
+
+```kotlin
+df.fillNulls { discount }.with { 0.0 }
+```
+
+<inline-frame src="./resources/pandasFillMissingDiscount.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN pandasDropMissingDiscount-->
+
+```kotlin
+df.dropNulls { discount }
+```
+
+<inline-frame src="./resources/pandasDropMissingDiscount.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+</tab>
+</tabs>
+
+Here the two models really differ. In Pandas, arithmetic on a column with gaps gives `NaN` for those rows and
+carries on. In Kotlin DataFrame, `discount` is `Double?`, so you have to say what `null` means before the code
+compiles:
+
+<tabs>
+<tab title="Pandas">
+
+```python
+# NaN for the two rows with no discount
+net = df.revenue * (1 - df.discount)
+```
+
+</tab>
+<tab title="Kotlin DataFrame">
+
+<!---FUN pandasNullableArithmetic-->
+
+```kotlin
+// `discount` is `Double?`: the compiler makes you decide what null means.
+df.add("net") { revenue * (1 - (discount ?: 0.0)) }
+```
+
+<inline-frame src="./resources/pandasNullableArithmetic.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+</tab>
+</tabs>
+
+### Group and aggregate
+
+<tabs>
+<tab title="Pandas">
+
+```python
+summary = df.groupby("region").agg(total=("revenue", "sum"), avgCost=("cost", "mean")).reset_index()
+```
+
+</tab>
+<tab title="Kotlin DataFrame">
+
+<!---FUN pandasGroupByAggregate-->
+
+```kotlin
+df.groupBy { region }.aggregate {
+    sum(revenue) into "total"
+    mean(cost) into "avgCost"
+}
+```
+
+<inline-frame src="./resources/pandasGroupByAggregate.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+</tab>
+</tabs>
+
+Both libraries give the same numbers: `North` and `South` each total 370.
+
+### Pivot
+
+<tabs>
+<tab title="Pandas">
+
+```python
+pivoted = df.pivot_table(values="revenue", index="region", columns="year", aggfunc="sum")
+```
+
+</tab>
+<tab title="Kotlin DataFrame">
+
+<!---FUN pandasPivotRevenueByYear-->
+
+```kotlin
+df.pivot { year }.groupBy { region }.sum { revenue }.ungroup("year")
+```
+
+<inline-frame src="./resources/pandasPivotRevenueByYear.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+</tab>
+</tabs>
+
+`pivot` puts the new columns into one column *group* called `year`. `ungroup("year")` moves them
+to the top level, which is what `pivot_table` gives you directly.
+
+### Join
+
+<tabs>
+<tab title="Pandas">
+
+```python
+managers = pd.DataFrame({"region": ["North", "South", "East"], "manager": ["Ann", "Bob", "Eve"]})
+joined = managers.merge(df, on="region", how="left")
+```
+
+</tab>
+<tab title="Kotlin DataFrame">
+
+<!---FUN pandasLeftJoin-->
+
+```kotlin
+val managers = dataFrameOf(
+    "region" to listOf("North", "South", "East"),
+    "manager" to listOf("Ann", "Bob", "Eve"),
+)
+managers.leftJoin(df, "region")
+```
+
+<inline-frame src="./resources/pandasLeftJoin.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+</tab>
+</tabs>
+
+The key columns are plain arguments: `join(other, "region")` is an inner join, and `leftJoin`, `rightJoin` and
+`fullJoin` are the others. There is no `on =` and no `by =`.
+
+### Write a file
+
+<tabs>
+<tab title="Pandas">
+
+```python
+df.to_csv("out.csv", index=False)
+df.to_json("out.json")
+```
+
+</tab>
+<tab title="Kotlin DataFrame">
+
+<!---FUN pandasWriteCsv-->
+
+```kotlin
+df.writeCsv(csv)
+```
+
+<!---END-->
+
+<!---FUN pandasWriteJson-->
+
+```kotlin
+df.writeJson(json)
+```
+
+<!---END-->
+
+</tab>
+</tabs>
+
+## Things that will surprise you
+
+These are real differences, not missing features. Each one was checked on the same table in both libraries.
+
+- **Nothing changes in place.** `df.filter { revenue > 100 }` returns a new frame with 3 rows; `df` still has 6.
+  There is no `df["profit"] = ...` — use `add`.
+- **`describe()` is wider.** It describes every column, not only the numeric ones, and it has a `nulls` column
+  (Pandas needs `isnull().sum()` for that).
+- **Percentiles can differ.** The 25th percentile of `revenue` is `89.17` here and `92.5` in Pandas
+  (the same number in Pandas 1.3.5, 2.3.3 and 3.1.1).
+  Do not compare quantiles between the two libraries number by number.
+- **`drop(n)` drops rows, not columns.** It removes the first `n` rows. To remove a column, use `remove`.
+- **A single letter in a CSV is read as a `Char`**, not as a string: a column of `A`, `B` has type `Char`.
+  Pandas keeps such a column as text (`object`, or `str` since Pandas 3.0).
+- **Groups keep the order of first appearance.** `groupBy { region and product }` lists the groups as they first
+  show up in the data and gives `220, 150, 170, 200`. Pandas sorts the groups by key and gives `150, 220, 200, 170`;
+  `groupby(..., sort=False)` gives the same order as Kotlin DataFrame.
+- **`pivot` gives a column group**, as shown above.
+
+## Using an AI coding agent
+
+Coding agents often write Pandas-style calls that do not exist here, such as `df.groupby`, `df.shape`,
+`df.na.count()` or `join(..., by = "id")`. Give your agent the
+[Pandas to Kotlin DataFrame reference](pandasToKotlinDataFrameReference.md): it lists the real name for each Pandas
+call, the Pandas names that do not exist, and the rules for writing code that compiles.
+
+## What's next
+
+- [Quickstart](quickstart.md) — a complete example, from reading data to plotting it.
+- [Access APIs](apiLevels.md) — properties, strings, and when each one is available.
+- [Column selectors](ColumnSelectors.md) — the `select { a and b }` language.
+- [Group by](groupBy.md), [pivot](pivot.md), [join](join.md), [read](read.md), [write](write.md).
+- [Migration to 1.0](MigrationTo_1_0.md) — if you used an older version of Kotlin DataFrame.
