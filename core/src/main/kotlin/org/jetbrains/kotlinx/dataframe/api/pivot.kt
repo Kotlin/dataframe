@@ -1395,8 +1395,9 @@ internal interface PivotGroupByDocs {
      * Provides predefined shortcuts for the most common statistical aggregation operations
      * that can be applied to each group within a [PivotGroupBy].
      *
-     * Each function computes a statistic across the rows of a group and returns the result as
-     * a new row of computed values in the resulting [DataFrame].
+     * Each function computes a statistic across the rows of each group — the rows that share
+     * both a [pivot] key and a [groupBy] key — and stores the result in the corresponding cell
+     * of the resulting [DataFrame], which has one row per [groupBy] key combination.
      *
      * * [count][PivotGroupBy.count] — calculate the number of rows in each group
      *   (optionally counting only rows that satisfy the given predicate);
@@ -1476,9 +1477,9 @@ internal interface PivotGroupByDocs {
      * * [frames][PivotGroupBy.frames] — returns this [PivotGroupBy] as a [DataFrame] with one row
      *   per [groupBy] key combination and the corresponding groups stored as [FrameColumn]s
      *   under their [pivot] keys;
-     * * [values][PivotGroupBy.values] — creates a [DataFrame] containing values collected into a single [List]
-     *   from all rows of each group for the selected columns
-     *   (values from [column groups][ColumnGroup] are collected into a [DataFrame]);
+     * * [values][PivotGroupBy.values] — creates a [DataFrame] in which every cell holds
+     *   the values collected from all rows of the corresponding group for the selected columns:
+     *   {@include [ValuesInAggregationDocs.OneOrManyCellSnippet]}
      * * [count][PivotGroupBy.count] — creates a [DataFrame] containing the [groupBy] key columns and, under each
      *   [pivot] key, a column with the number of rows in the corresponding group;
      * * [matches][PivotGroupBy.matches] — creates a presence matrix containing, under each [pivot] key,
@@ -1522,11 +1523,11 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      * and the corresponding aggregated values in new nested columns.
      *
      * @include [AggregateDslDocs]
-     * @set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]
-     * @set [AggregateDslDocs.RECEIVER] [PivotGroupBy]
-     * @set [AggregateDslDocs.APPLY_NOTE] The given [expression][body] is applied to each group independently.
-     * @set [AggregateDslDocs.RESULT_TYPE] [DataFrame]
-     * @set [AggregateDslDocs.OPERATING_COLUMNS] columns within groups in [PivotGroupBy]
+     * {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]}
+     * {@set [AggregateDslDocs.RECEIVER] [PivotGroupBy]}
+     * {@set [AggregateDslDocs.APPLY_NOTE] The given [expression][body] is applied to each group independently.}
+     * {@set [AggregateDslDocs.RESULT_TYPE] [DataFrame]}
+     * {@set [AggregateDslDocs.OPERATING_COLUMNS] columns within groups in [PivotGroupBy]}
      *
      * @include [CommonStatisticsDocs.EmptyPivotIntersectionSnippet]
      *
