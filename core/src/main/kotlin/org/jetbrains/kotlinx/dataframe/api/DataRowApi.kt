@@ -581,8 +581,7 @@ public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> =
  * by the actual number of rows: for the first row, the result is the value of [expression] for that row.
  * If [k] is `0`, no rows are taken and the result is [Double.NaN].
  *
- * The [expression] is called for each averaged row with that row as `it`, while `this` stays
- * the current row, so access the averaged values through `it`, like `movingAverage(3) { it.age }`.
+ * The [expression] is evaluated for each of the averaged rows.
  *
  * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
  *
@@ -603,6 +602,6 @@ public inline fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression
     var count = 0
     return backwardIterable().take(k).sumOf {
         count++
-        expression(it).toDouble()
+        expression(it, it).toDouble()
     } / count
 }

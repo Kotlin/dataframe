@@ -450,8 +450,7 @@ class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
         // SampleStart
         // The average age of the current and the two previous rows.
         // The first two rows have fewer rows to average over: 15.0, 30.0, 26.67, ...
-        // `it` is the row being averaged; `this` stays the current row
-        df.add("ageMovingAverage") { movingAverage(3) { it.age } }
+        df.add("ageMovingAverage") { movingAverage(3) { age } }
             // SampleEnd
             .let { it["ageMovingAverage"].toList().take(3) }
             .shouldBe(listOf(15.0, 30.0, (15 + 45 + 20) / 3.0))
