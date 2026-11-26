@@ -97,8 +97,8 @@ internal typealias DataFrameAggregationStatistics = Nothing
 internal interface AggregateDslDocs {
 
     /**
-     * Aggregated values can be either simple values, [data rows][DataRow] or even
-     * [data frames][DataFrame]. Including them in the result using [into][AggregateDsl.into] will lead
+     * Aggregated values can be either simple values, [DataRow]s or even
+     * [DataFrame]s. Including them in the result using [into][AggregateDsl.into] will lead
      * to creating a [value column][ValueColumn],
      * a [column group][ColumnGroup], or a [frame column][FrameColumn] respectively
      * in the resulting {@get [RESULT_TYPE]} while preserving the original structure at higher levels.
