@@ -27,14 +27,19 @@ and `value` is a cell value;
 and `value: Any?` for cell values;
 * `transposeTo<T>(): DataFrame<NameValuePair<T>>` — [`DataFrame`](DataFrame.md) with two columns: `name: String` for column names 
 and `value: T` for cell values;
-* `getRow(Int): DataRow` — row from the [`DataFrame`](DataFrame.md) by a row index;
-* `getRows(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with a subset of rows selected by absolute row indices;
-* `relative(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with a subset of rows selected by relative row indices:
-`relative(-1..1)` will return the previous, current, and next row. Requested indices will be coerced to the valid range
-and invalid indices will be skipped;
+* `getRow(Int): DataRow` — deprecated; use this row's [`DataFrame`](DataFrame.md) directly: `row.df()[index]`;
+* `getRows(Iterable<Int>): DataFrame` — deprecated; use this row's [`DataFrame`](DataFrame.md) directly: `row.df().getRows(indices)`;
+* `relative(IntRange): DataFrame` / `relative(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with a subset of rows selected by relative row indices:
+`relative(-1..1)` will return the previous, current, and next row. The bounds of the range are coerced into the valid range;
+offsets of the `Iterable` overload that point outside the [`DataFrame`](DataFrame.md) are skipped;
+* `movingAverage(k) { rowExpression }: Double` — average of the [row expression](DataRow.md#row-expressions) over this row and up to `k - 1` rows before it;
 * `getValue<T>(columnName)` — cell value of type `T` by this row and the given `columnName`;
 * `getValueOrNull<T>(columnName)` — cell value of type `T?` by this row 
 and the given `columnName` or `null` if there's no such column;
+* `containsKey(columnName): Boolean` — `true` if there is a top-level column with the given `columnName` in this row's [`DataFrame`](DataFrame.md);
+* `columnName in row` — the same check as `containsKey(columnName)`, in the `in` operator form;
+* `path in row` — `true` if there is a column at the given `ColumnPath` (like `pathOf("name", "firstName") in row`),
+which can point to a nested column of a column group;
 * `get(column): T` — cell value by this row and the given `column`;
 * `get(columnIndex): Any?` — cell value by this row and the given zero-based column index;
 * `get(columnName): Any?` — cell value by this row and the given column name;

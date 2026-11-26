@@ -1933,7 +1933,9 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataRowApiKt {
 	public static final fun columnNames (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/util/List;
 	public static final fun columnTypes (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/util/List;
 	public static final fun columnsCount (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
+	public static final fun contains (Lorg/jetbrains/kotlinx/dataframe/DataRow;Ljava/lang/String;)Z
 	public static final fun contains (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lkotlin/reflect/KProperty;)Z
+	public static final fun contains (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Z
 	public static final fun contains (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Z
 	public static final fun containsKey (Lorg/jetbrains/kotlinx/dataframe/DataRow;Ljava/lang/String;)Z
 	public static final fun containsKey (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lkotlin/reflect/KProperty;)Z
