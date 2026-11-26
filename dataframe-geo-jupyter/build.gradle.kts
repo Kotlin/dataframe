@@ -14,6 +14,10 @@ plugins {
 group = "org.jetbrains.kotlinx"
 
 repositories {
+    // The Kotlin Jupyter API Gradle plugin was built against a Kotlin dev version, so it adds the
+    // JetBrains Space "Kotlin Dev repo", which no longer exists. Remove it to avoid resolution failures.
+    removeIf { it.name == "Kotlin Dev repo" }
+
     // geo repository should come before Maven Central
     maven(url = "https://repo.osgeo.org/repository/release")
     mavenCentral()
