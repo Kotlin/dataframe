@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
@@ -503,7 +504,7 @@ internal typealias PivotMatchesResultCellDescription = Nothing
 
 /**
  * {@include [PivotMatchesCommonDescription]}
- * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription] {@set [PivotGroupByDocs.GroupingColumns] remaining}
+ * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription] {@set [PivotGroupByDocs.GROUPING_COLUMNS] remaining}
  * @include [PivotMatchesResultCellDescription]
  *
  * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
@@ -601,7 +602,7 @@ internal typealias PivotCountsResultCellDescription = Nothing
 
 /**
  * {@include [PivotCountsCommonDescription]}
- * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription] {@set [PivotGroupByDocs.GroupingColumns] remaining}
+ * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription] {@set [PivotGroupByDocs.GROUPING_COLUMNS] remaining}
  * @include [PivotCountsResultCellDescription]
  *
  * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
@@ -1265,18 +1266,20 @@ internal inline fun <T> Pivot<T>.delegate(crossinline body: PivotGroupBy<T>.() -
     body(groupBy { none() })[0]
 
 /**
- * TODO (#1536)
+ * KDoc-helpers for the [PivotGroupBy] structure, its [reducers][Reducing] and [aggregations][Aggregation].
  */
 internal interface PivotGroupByDocs {
 
-    typealias GroupingColumns = Nothing
+    // The key for a `@set`/`@get` that defines which kind of columns the rows of the resulting matrix
+    // correspond to: "grouping" by default, "remaining" when the rows are grouped by all other columns.
+    typealias GROUPING_COLUMNS = Nothing
 
     /**
      * * **Columns** represent all unique values from the selected [\columns]
      *   (they become [column groups][ColumnGroup]
      *   corresponding to value combinations when using [then][PivotDsl.then],
      *   similar to [pivot]);
-     * * **Rows** correspond to all unique combinations of values from the {@get [GroupingColumns] grouping} columns;
+     * * **Rows** correspond to all unique combinations of values from the {@get [GROUPING_COLUMNS] grouping} columns;
      *   each combination is represented in dedicated key columns that store
      *   a distinct set of values for each row
      *   (similar to [keys][GroupBy.keys] in [GroupBy]).
@@ -1303,14 +1306,212 @@ internal interface PivotGroupByDocs {
      */
     @ExcludeFromSources
     typealias CommonDescription = Nothing
+
+    /**
+     * ## [PivotGroupBy] Operation Grammar
+     * {@include [LineBreak]}
+     * {@include [DslGrammarLink]}
+     * {@include [LineBreak]}
+     *
+     * ### Create [PivotGroupBy]
+     *
+     * [**`Pivot.groupBy`**][Pivot.groupBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`groupByOther`**][Pivot.groupByOther]**`()`**
+     *
+     * on a [Pivot] created by [pivot], or
+     *
+     * [**`GroupBy.pivot`**][GroupBy.pivot]**`  {  `**`pivotColumns: `[`PivotColumnsSelector`][PivotColumnsSelector]**` }`**
+     *
+     * on a [GroupBy] created by [groupBy].
+     * Both orders produce the same result.
+     *
+     * A [PivotGroupBy] can also be created inside [aggregate][Grouped.aggregate]
+     * with [pivot][AggregateGroupedDsl.pivot];
+     * its aggregated columns are then inserted into the outer [aggregate][Grouped.aggregate] result.
+     *
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
+     *
+     * ### Reduce [PivotGroupBy] into [DataFrame]
+     *
+     * [PivotGroupBy][PivotGroupBy]`.`[**`first`**][PivotGroupBy.first]`  \[ `**` { `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`last`**][PivotGroupBy.last]`  \[ `**` { `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`minBy`**][PivotGroupBy.minBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`maxBy`**][PivotGroupBy.maxBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`medianBy`**][PivotGroupBy.medianBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`percentileBy`**][PivotGroupBy.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     *
+     * {@include [Indent]}
+     * __`.`__[**`with`**][ReducedPivotGroupBy.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`values`**][ReducedPivotGroupBy.values]`  \[ `**` { `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
+     *
+     * See [PivotGroupBy Reducing][Reducing].
+     *
+     * ### Aggregate [PivotGroupBy] into [DataFrame]
+     *
+     * [PivotGroupBy][PivotGroupBy]`.`[**`frames`**][PivotGroupBy.frames]**`()`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`matches`**][PivotGroupBy.matches]`  \[ `**`(`**`yes: `[`Any`][Any]**`, `**`no: `[`Any`][Any]**`) `**`]`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`count`**][PivotGroupBy.count]`  \[ `**` { `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`values`**][PivotGroupBy.values]`  \[ `**` { `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`with`**][PivotGroupBy.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`aggregate`**][PivotGroupBy.aggregate]**`  {  `**`aggregations: `[`AggregateDsl`][AggregateDsl]**` }`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[<aggregation_statistic>][AggregationStatistics]
+     *
+     * See [PivotGroupBy Aggregations][Aggregation].
+     *
+     * Check out [`Pivot` Grammar][PivotDocs.Grammar] for more information.
+     */
     typealias Grammar = Nothing
+
+    /**
+     * ### [PivotGroupBy] aggregation statistics
+     *
+     * Provides predefined shortcuts for the most common statistical aggregation operations
+     * that can be applied to each group within a [PivotGroupBy].
+     *
+     * Each function computes a statistic across the rows of each group — the rows that share
+     * both a [pivot] key and a [groupBy] key — and stores the result in the corresponding cell
+     * of the resulting [DataFrame], which has one row per [groupBy] key combination.
+     *
+     * * [count][PivotGroupBy.count] — calculate the number of rows in each group
+     *   (optionally counting only rows that satisfy the given predicate);
+     * * [max][PivotGroupBy.max] / [maxOf][PivotGroupBy.maxOf] / [maxFor][PivotGroupBy.maxFor] —
+     *   calculate the maximum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [min][PivotGroupBy.min] / [minOf][PivotGroupBy.minOf] / [minFor][PivotGroupBy.minFor] —
+     *   calculate the minimum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [sum][PivotGroupBy.sum] / [sumOf][PivotGroupBy.sumOf] / [sumFor][PivotGroupBy.sumFor] —
+     *   calculate the sum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [mean][PivotGroupBy.mean] / [meanOf][PivotGroupBy.meanOf] / [meanFor][PivotGroupBy.meanFor] —
+     *   calculate the mean (average) of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [std][PivotGroupBy.std] / [stdOf][PivotGroupBy.stdOf] / [stdFor][PivotGroupBy.stdFor] —
+     *   calculate the standard deviation of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [median][PivotGroupBy.median] / [medianOf][PivotGroupBy.medianOf] / [medianFor][PivotGroupBy.medianFor] —
+     *   calculate the median of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [percentile][PivotGroupBy.percentile] / [percentileOf][PivotGroupBy.percentileOf] / [percentileFor][PivotGroupBy.percentileFor] —
+     *   calculate a specified percentile of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group.
+     *
+     * @include [CommonStatisticsDocs.EmptyPivotIntersectionSnippet]
+     * The exception is [count][PivotGroupBy.count]: it always produces `0` for the empty pivot intersections.
+     *
+     * For more information: {@include [DocumentationUrls.PivotAggregationStatistics]} {@include [DocumentationUrls.PivotStatistics]}
+     */
+    typealias AggregationStatistics = Nothing
+
+    /**
+     * ### [PivotGroupBy] reducing
+     *
+     * Each group of a [PivotGroupBy] — the rows that share both a [groupBy] key
+     * and a [pivot] key — can be collapsed into a single row,
+     * and then these rows are combined into a new [DataFrame] with one row per [groupBy] key combination.
+     *
+     * Reducing is a specific case of [aggregation][Aggregation].
+     *
+     * First, choose a [PivotGroupBy] reducing method:
+     * * [first][PivotGroupBy.first], [last][PivotGroupBy.last] — take the first or last row
+     *   (optionally, the first or last one that satisfies a predicate) of each group;
+     * * [minBy][PivotGroupBy.minBy] / [maxBy][PivotGroupBy.maxBy] — take the row with the minimum or maximum value
+     *   of the given [RowExpression] evaluated on rows within each group;
+     * * [medianBy][PivotGroupBy.medianBy] / [percentileBy][PivotGroupBy.percentileBy] — take the row at the position closest
+     *   to the estimated median/percentile index of the [RowExpression]'s results calculated on rows within each group.
+     *
+     * These functions return a [ReducedPivotGroupBy], which can then be transformed into a new [DataFrame]
+     * containing the reduced rows (either original or transformed) using one of the following methods:
+     * * [values][ReducedPivotGroupBy.values] — creates a [DataFrame] containing the values
+     *   from the reduced rows in the selected columns;
+     * * [with][ReducedPivotGroupBy.with] — computes a new value for each reduced row using a [RowExpression],
+     *   and produces a [DataFrame] containing these computed values.
+     *
+     * Each method returns a new [DataFrame] that includes the [groupBy] key columns,
+     * one row per [groupBy] key combination, and the [pivot] keys as top-level columns
+     * (or as [column groups][ColumnGroup]) containing the reduced results from each group.
+     *
+     * Check out [`PivotGroupBy` Grammar][Grammar].
+     *
+     * For more information: {@include [DocumentationUrls.PivotReducing]} {@include [DocumentationUrls.PivotGroupBy]}
+     */
     typealias Reducing = Nothing
+
+    /**
+     * ### [PivotGroupBy] aggregation
+     *
+     * Each group of a [PivotGroupBy] — the rows that share both a [groupBy] key
+     * and a [pivot] key — can be aggregated — that is, transformed into a new value, [DataRow],
+     * or [DataFrame] — and then combined into a new [DataFrame] with one row per [groupBy] key combination.
+     *
+     * Aggregation is a generalization of [reducing][Reducing].
+     *
+     * The following aggregation methods are available:
+     * * [frames][PivotGroupBy.frames] — returns this [PivotGroupBy] as a [DataFrame] with one row
+     *   per [groupBy] key combination and the corresponding groups stored as [FrameColumn]s
+     *   under their [pivot] keys;
+     * * [values][PivotGroupBy.values] — creates a [DataFrame] in which every cell holds
+     *   the values collected from all rows of the corresponding group for the selected columns:
+     *   {@include [ValuesInAggregationDocs.OneOrManyCellSnippet]}
+     * * [count][PivotGroupBy.count] — creates a [DataFrame] containing the [groupBy] key columns and, under each
+     *   [pivot] key, a column with the number of rows in the corresponding group;
+     * * [matches][PivotGroupBy.matches] — creates a presence matrix containing, under each [pivot] key,
+     *   a column indicating whether the corresponding group contains any rows;
+     * * [with][PivotGroupBy.with] — creates a [DataFrame] containing values computed using a [RowExpression]
+     *   across all rows of each group;
+     * * [aggregate][PivotGroupBy.aggregate] — performs a set of custom aggregations using [AggregateDsl],
+     *   allowing computation of one or more derived values per group;
+     * * [Various aggregation statistics][AggregationStatistics] — predefined shortcuts
+     *   for common statistical aggregations such as [sum][PivotGroupBy.sum], [mean][PivotGroupBy.mean],
+     *   [median][PivotGroupBy.median], and others.
+     *
+     * Each of these methods returns a new [DataFrame] that includes the [groupBy] key columns
+     * and the aggregated results of each group under the [pivot] keys
+     * (as top-level columns or as [column groups][ColumnGroup]).
+     *
+     * For the empty pivot intersections — the matrix cells for which the [pivot] and [groupBy] key
+     * combination has no rows — [frames][PivotGroupBy.frames], [count][PivotGroupBy.count] and
+     * [matches][PivotGroupBy.matches] produce their own fallbacks
+     * (an empty [DataFrame], `0`, and the [no][PivotGroupBy.matches] marker respectively).
+     * The other aggregations produce `null` there, or the value set with
+     * [default][PivotGroupBy.default]; a [default][AggregateDsl.default] applied to a single
+     * aggregation inside [aggregate][PivotGroupBy.aggregate] takes priority over it.
+     *
+     * Check out [`PivotGroupBy` Grammar][Grammar].
+     *
+     * For more information: {@include [DocumentationUrls.PivotAggregation]} {@include [DocumentationUrls.PivotGroupBy]}
+     */
     typealias Aggregation = Nothing
 }
 
-/**
- * {@include [PivotGroupByDocs.CommonDescription]}
- */
+/** @include [PivotGroupByDocs.CommonDescription] */
 public interface PivotGroupBy<out T> : Aggregatable<T> {
 
     /**
@@ -1318,7 +1519,7 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      * inside the [AggregateDsl].
      *
      * Returns a new [DataFrame] with the [groupBy] key columns
-     * and the [pivot] keys as top-level columns on top level,
+     * and the [pivot] keys as top-level columns,
      * and the corresponding aggregated values in new nested columns.
      *
      * @include [AggregateDslDocs]
@@ -1328,35 +1529,76 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      * {@set [AggregateDslDocs.RESULT_TYPE] [DataFrame]}
      * {@set [AggregateDslDocs.OPERATING_COLUMNS] columns within groups in [PivotGroupBy]}
      *
+     * @include [CommonStatisticsDocs.EmptyPivotIntersectionSnippet]
+     *
      * Check out [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar] for more information.
      *
-     * For more information: {@include [DocumentationUrls.Pivot]}
+     * For more information: {@include [DocumentationUrls.Pivot]} {@include [DocumentationUrls.PivotGroupBy]}
      *
-     * #### Example
-     * ```kotlin
-     * df.pivot { city }.groupBy { name.firstName }.aggregate {
-     *   // Count rows within each "firstName" × "city" combination group and store the result
-     *   // into a new "total" column (a new sub-column under each pivot key column)
-     *   count() into "total"
+     * ### Examples
      *
-     *   // Compute the maximum in "age" column within each group
-     *   // and store it into a new "maxAge" column
-     *   // Defaults to -1 for empty groups.
-     *   max { age } default -1 into "maxAge"
-     * }
-     * ```
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.aggregateOnPivotGroupBy]
      *
-     * @param body The aggregation logic defined using [AggregateDsl].
+     * @include [CommonStatisticsDocs.SeparateParam]
+     * @param [body] The aggregation logic defined using [AggregateDsl].
      * @return A new [DataFrame] with the results of the aggregation applied to each group.
      */
     @Refine
     @Interpretable("PivotGroupByAggregate")
     public fun <R> aggregate(separate: Boolean = false, body: AggregateBody<T, R>): DataFrame<*>
 
+    /**
+     * Sets the default [value] for the empty groups in the results of subsequent
+     * [reducing][PivotGroupByDocs.Reducing] and [aggregation][PivotGroupByDocs.Aggregation]
+     * operations on this [PivotGroupBy].
+     *
+     * By default, a cell of the resulting matrix for which the [pivot] and [groupBy] key combination
+     * has no rows contains `null`. After [default] is called, such cells contain [value] instead.
+     * The [value] also replaces the `null` results of the aggregations over non-empty groups.
+     *
+     * [value] only applies to the aggregations that set no default of their own:
+     * [count][PivotGroupBy.count] always produces `0` for the empty groups,
+     * [matches][PivotGroupBy.matches] produces its [no][PivotGroupBy.matches] marker,
+     * and [frames][PivotGroupBy.frames] produces an empty [DataFrame].
+     * A [default][AggregateDsl.default] applied to a single aggregation inside
+     * [aggregate][PivotGroupBy.aggregate] takes priority over [value] as well.
+     *
+     * Check out [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+     *
+     * For more information: {@include [DocumentationUrls.PivotGroupBy]}
+     *
+     * ### Examples
+     *
+     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotDefaultDirect_properties]
+     *
+     * @param [value] The value to use for the empty groups instead of `null`.
+     * @return A new [PivotGroupBy] with [value] as the default for the empty groups.
+     */
     @Interpretable("PivotGroupByDefault")
     public fun default(value: Any?): PivotGroupBy<T>
 }
 
+/**
+ * An intermediate class used in [`PivotGroupBy` reducing][PivotGroupByDocs.Reducing] operations.
+ *
+ * Serves as a transitional step between performing a reduction on pivot groups
+ * and specifying how the resulting reduced rows should be represented
+ * in a resulting [DataFrame].
+ *
+ * Available transformation methods:
+ * * [values][ReducedPivotGroupBy.values] — creates a new [DataFrame] containing the values
+ *   from the reduced rows in the selected columns;
+ * * [with][ReducedPivotGroupBy.with] — computes a new value for each reduced row using a [RowExpression],
+ *   and produces a [DataFrame] containing these computed values.
+ *
+ * Each method returns a new [DataFrame] with the [groupBy] key columns, one row per [groupBy] key combination,
+ * and the [pivot] keys as top-level columns (or as [column groups][ColumnGroup])
+ * containing the reduced results from each group.
+ *
+ * Check out [`PivotGroupBy` grammar][PivotGroupByDocs.Grammar].
+ *
+ * For more information: {@include [DocumentationUrls.PivotReducing]} {@include [DocumentationUrls.PivotGroupBy]}
+ */
 public class ReducedPivotGroupBy<T>(
     @PublishedApi internal val pivot: PivotGroupBy<T>,
     @PublishedApi internal val reducer: Selector<DataFrame<T>, DataRow<T>?>,
@@ -1364,6 +1606,7 @@ public class ReducedPivotGroupBy<T>(
     override fun toString(): String = "ReducedPivotGroupBy(pivot=$pivot, reducer=$reducer)"
 }
 
+/** Reduces each group of this [PivotGroupBy] to at most one row with the given [reducer]. */
 @PublishedApi
 internal fun <T> PivotGroupBy<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>): ReducedPivotGroupBy<T> =
     ReducedPivotGroupBy(this, reducer)
