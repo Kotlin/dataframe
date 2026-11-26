@@ -432,11 +432,7 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
  *
- * [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
- *
- * [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
- *
- * [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
+ * For more information about [<code>PivotGroupBy</code>][PivotGroupBy] with examples: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  *
  *
