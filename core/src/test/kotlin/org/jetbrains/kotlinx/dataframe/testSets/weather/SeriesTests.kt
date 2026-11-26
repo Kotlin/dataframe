@@ -81,5 +81,14 @@ class SeriesTests {
             }
 
         withMa["ma_temp"].toList() shouldBe expected
+
+        // `this` inside the expression also refers to the averaged row, not the current one
+        val withMaByThis = typed
+            .groupBy { city }
+            .sortByKey()
+            .sortBy { day }
+            .add("ma_temp") { it.movingAverage(k) { temp } }
+            .concat()
+        withMaByThis["ma_temp"].toList() shouldBe expected
     }
 }
