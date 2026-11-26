@@ -394,6 +394,7 @@ class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
         // SampleStart
         val row = df[0]
         row.containsKey("age") // true
+        "age" in row // the same check in the `in` operator form
         row.containsKey("height") // false
 
         // `containsKey` only checks top-level columns, a column path can point to a nested one
@@ -401,7 +402,9 @@ class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
         pathOf("name", "firstName") in row // true
         // SampleEnd
         row.containsKey("age") shouldBe true
+        ("age" in row) shouldBe true
         row.containsKey("height") shouldBe false
+        ("height" in row) shouldBe false
         row.containsKey("firstName") shouldBe false
         (pathOf("name", "firstName") in row) shouldBe true
         (pathOf("name", "middleName") in row) shouldBe false

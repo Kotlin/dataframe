@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
@@ -313,12 +314,13 @@ public fun <T> DataRow<*>.getValueOrNull(column: KProperty<T>): T? = getValueOrN
  * Returns `true` if the [DataFrame] this row belongs to has a top-level column with the given [columnName].
  *
  * Nested columns of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are not checked;
- * use [contains][DataRow.contains] with a [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
- * (like `pathOf("name", "firstName") in row`) for them.
+ * for them, use [contains][DataRow.contains] with a
+ * [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] (like `pathOf("name", "firstName") in row`).
  *
  * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
  *
- * See also [getValue][DataRow.getValue], which throws if there is no such column,
+ * See also [contains][DataRow.contains], the `in` operator form of this check,
+ * [getValue][DataRow.getValue], which throws if there is no such column,
  * and [getValueOrNull][DataRow.getValueOrNull], which returns `null` instead.
  *
  * ### Example
@@ -339,22 +341,49 @@ public fun DataRow<*>.containsKey(column: ColumnReference<*>): Boolean = owner.c
 public fun DataRow<*>.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
 
 /**
- * Returns `true` if the [DataFrame] this row belongs to has the given [column].
- * Allows writing `column in row`.
+ * Returns `true` if the [DataFrame] this row belongs to has a top-level column with the given [columnName].
+ * Allows writing `columnName in row`.
  *
- * Unlike [containsKey][DataRow.containsKey] with a column name, the [column] is resolved by its path,
- * so a [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
- * (like `pathOf("name", "firstName")`) can point to a nested column of a column group.
+ * Nested columns of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are not checked;
+ * for them, use [contains][DataRow.contains] with a
+ * [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] (like `pathOf("name", "firstName") in row`).
  *
  * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
+ *
+ * See also [containsKey][DataRow.containsKey], which is the same check in the function form.
  *
  * ### Example
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.DataRowApiSamples.containsKeyAndContains]
  *
- * @param [column] the reference to the column to look for.
- * @return `true` if the [column] is found, `false` otherwise.
+ * @param [columnName] the name of the column to look for.
+ * @return `true` if there is a top-level column with the given [columnName], `false` otherwise.
  */
+public operator fun DataRow<*>.contains(columnName: String): Boolean = containsKey(columnName)
+
+/**
+ * Returns `true` if the [DataFrame] this row belongs to has the column at the given [path].
+ * Allows writing `path in row`.
+ *
+ * Unlike [contains][DataRow.contains] with a column name, the [path] can point to a nested column
+ * of a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+ * like `pathOf("name", "firstName")`.
+ *
+ * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
+ *
+ * See also [containsKey][DataRow.containsKey], which checks a top-level column by name.
+ *
+ * ### Example
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.DataRowApiSamples.containsKeyAndContains]
+ *
+ * @param [path] the path of the column to look for.
+ * @return `true` if there is a column at the given [path], `false` otherwise.
+ */
+public operator fun DataRow<*>.contains(path: ColumnPath): Boolean = owner.containsColumn(path)
+
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public operator fun DataRow<*>.contains(column: ColumnReference<*>): Boolean = containsKey(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -366,8 +395,16 @@ public operator fun DataRow<*>.contains(column: KProperty<*>): Boolean = contain
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous [DataRow].
  *
+ * The [expression\] is evaluated for the current row and then for the previous row;
+ * in each call, that row is available as both `this` and `it`.
+ *
  * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
  *
+ * See also [diffOrNull][DataRow.diffOrNull], which returns `null` for the first row
+ * instead of taking the result for it explicitly.
+ *
+ * @param [firstRowResult\] the result returned for the first row, which has no previous row.
+ * @param [expression\] the [row expression][RowExpression] computing a numeric value for each row.
  * @return [firstRowResult\] for the first row; difference between expression computed for current and previous row for the following rows
  */
 @ExcludeFromSources
@@ -376,25 +413,28 @@ internal typealias DiffDocs = Nothing
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous [DataRow].
  *
+ * The [expression\] is evaluated for the current row and then for the previous row;
+ * in each call, that row is available as both `this` and `it`.
+ *
  * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
  *
+ * See also [diff][DataRow.diff], which takes the result for the first row explicitly
+ * instead of returning `null` for it.
+ *
+ * @param [expression\] the [row expression][RowExpression] computing a numeric value for each row.
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
 @ExcludeFromSources
 internal typealias DiffOrNullDocs = Nothing
 
-/**
- * @include [DiffDocs]
- */
+/** @include [DiffDocs] */
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
 public inline fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression<T, Double>): Double =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
-/**
- * @include [DiffDocs]
- */
+/** @include [DiffDocs] */
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
 // required to resolve `diff(0) { intValue }`
@@ -402,43 +442,31 @@ public inline fun <T> DataRow<T>.diff(firstRowResult: Int, expression: RowExpres
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
-/**
- * @include [DiffDocs]
- */
+/** @include [DiffDocs] */
 public inline fun <T> DataRow<T>.diff(firstRowResult: Long, expression: RowExpression<T, Long>): Long =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
-/**
- * @include [DiffDocs]
- */
+/** @include [DiffDocs] */
 public inline fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpression<T, Float>): Float =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
-/**
- * @include [DiffOrNullDocs]
- */
+/** @include [DiffOrNullDocs] */
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
 public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Double>): Double? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
-/**
- * @include [DiffOrNullDocs]
- */
+/** @include [DiffOrNullDocs] */
 public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Int>): Int? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
-/**
- * @include [DiffOrNullDocs]
- */
+/** @include [DiffOrNullDocs] */
 public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Long>): Long? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
-/**
- * @include [DiffOrNullDocs]
- */
+/** @include [DiffOrNullDocs] */
 public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Float>): Float? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
@@ -522,9 +550,8 @@ public fun <T> DataRow<T>.next(): DataRow<T>? {
 
 /**
  * @include [RelativeDocs]
- * {@set [RelativeDocs.BOUNDS] The rows are returned in the order of [relativeIndices\]. Offsets that point outside
- * the [DataFrame] are dropped, so the result can have fewer rows than [relativeIndices\] or no rows at all.}
- *
+ * @set [RelativeDocs.BOUNDS] The rows are returned in the order of [relativeIndices\]. Offsets that point outside
+ * the [DataFrame] are dropped, so the result can have fewer rows than [relativeIndices\] or no rows at all.
  * @param [relativeIndices] the offsets of the rows to return, relative to the index of this row.
  * @return A [DataFrame] with the rows at the given offsets that exist.
  */
@@ -534,11 +561,10 @@ public fun <T> DataRow<T>.relative(relativeIndices: Iterable<Int>): DataFrame<T>
 
 /**
  * @include [RelativeDocs]
- * {@set [RelativeDocs.BOUNDS] Unlike the overload with an [Iterable] of offsets, the range is not filtered
+ * @set [RelativeDocs.BOUNDS] Unlike the overload with an [Iterable] of offsets, the range is not filtered
  * offset by offset: both of its bounds, shifted by the index of this row, are coerced into the valid row indices
  * of the [DataFrame]. So a range that partly sticks out of the [DataFrame], like `-5..0` for the third row,
- * is cut to the rows that exist.}
- *
+ * is cut to the rows that exist.
  * @param [relativeIndices] the range of offsets of the rows to return, relative to the index of this row.
  * @return A [DataFrame] with the rows in the given range of offsets, cut to the bounds of the [DataFrame].
  */
@@ -568,8 +594,8 @@ public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> =
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.DataRowApiSamples.movingAverageOfAge]
  *
  * @param [k] the size of the window: the number of rows to average over, including this row.
- * @throws [IllegalArgumentException] if [k] is negative.
  * @param [expression] the [row expression][RowExpression] computing the [Number] to average for each row.
+ * @throws [IllegalArgumentException] if [k] is negative.
  * @return The average of [expression] over the current row and up to `k - 1` previous rows,
  * as a [Double].
  */
