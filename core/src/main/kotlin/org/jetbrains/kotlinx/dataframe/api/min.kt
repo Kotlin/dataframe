@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateBy
@@ -253,11 +254,11 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
  * @return The first element for which [selector] returns the minimum value.
  * @throws NoSuchElementException if there are no values to compare.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
 ): T =
-    Aggregators.min<R>(skipNaN)
+    Aggregators.min.invoke(skipNaN).cast<R>()
         .aggregateBy(this, selector)
         .getOrElse { throwAndSuggestWhenNoElements("minBy") }
 
@@ -293,11 +294,11 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
  * @return The first element for which [selector] returns the minimum value,
  *   or `null` if there are no values to compare.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNull(
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.minByOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
 ): T? =
-    Aggregators.min<R>(skipNaN)
+    Aggregators.min.invoke(skipNaN).cast<R>()
         .aggregateBy(this, selector)
         .getOrNull()
 
@@ -334,10 +335,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  * @return The minimum of the values [selector] returns.
  * @throws NoSuchElementException if there are no values to compare.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.minOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): R & Any = minOfOrNull(skipNaN, selector).throwAndSuggestIfNull("minOf")
+): R = minOfOrNull(skipNaN, selector).throwAndSuggestIfNull("minOf")
 
 /**
  * Returns the minimum of the values that the given [selector] returns
@@ -373,10 +374,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  * @return The minimum of the values [selector] returns,
  *   or `null` if there are no values to compare.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOfOrNull(
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.minOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): R? = Aggregators.min<R>(skipNaN).aggregateOf(this, selector)
+): R? = Aggregators.min.invoke(skipNaN).cast<R>().aggregateOf(this, selector)
 
 // endregion
 
@@ -619,10 +620,10 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  * @return The smallest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
  */
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
+public fun <T, C : Comparable<*>?> DataFrame<T>.min(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): C & Any = minOrNull(skipNaN, columns).throwAndSuggestIfNull("min")
+): C = minOrNull(skipNaN, columns).throwAndSuggestIfNull("min")
 
 /**
  * Returns a single minimum of all the values in the selected columns of this [DataFrame].
@@ -663,17 +664,17 @@ public fun <T> DataFrame<T>.min(vararg columns: String, skipNaN: Boolean = skipN
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
+public fun <T, C : Comparable<*>?> DataFrame<T>.min(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): C & Any = minOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("min")
+): C = minOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("min")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
+public fun <T, C : Comparable<*>?> DataFrame<T>.min(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): C & Any = minOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("min")
+): C = minOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("min")
 
 /**
  * Returns a single minimum of all the values in the selected columns of this [DataFrame],
@@ -711,10 +712,10 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * @return The smallest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
  */
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
+public fun <T, C : Comparable<*>?> DataFrame<T>.minOrNull(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): C? = Aggregators.min<C>(skipNaN).aggregateAll(this, columns)
+): C? = Aggregators.min.invoke(skipNaN).cast<C>().aggregateAll(this, columns)
 
 /**
  * Returns a single minimum of all the values in the selected columns of this [DataFrame],
@@ -757,14 +758,14 @@ public fun <T> DataFrame<T>.minOrNull(vararg columns: String, skipNaN: Boolean =
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
+public fun <T, C : Comparable<*>?> DataFrame<T>.minOrNull(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): C? = minOrNull(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
+public fun <T, C : Comparable<*>?> DataFrame<T>.minOrNull(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): C? = minOrNull(skipNaN) { columns.toColumnSet() }
@@ -806,10 +807,10 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * @return The minimum of the values [expression] returns.
  * @throws NoSuchElementException if there are no values to compare.
  */
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): C & Any = minOfOrNull(skipNaN, expression).throwAndSuggestIfNull("minOf")
+): C = minOfOrNull(skipNaN, expression).throwAndSuggestIfNull("minOf")
 
 /**
  * Returns the minimum of the values that the given [expression] returns
@@ -848,10 +849,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  * @return The minimum of the values [expression] returns,
  *   or `null` if there are no values to compare.
  */
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): C? = Aggregators.min<C>(skipNaN).aggregateOf(this, expression)
+): C? = Aggregators.min.invoke(skipNaN).cast<C>().aggregateOf(this, expression)
 
 /**
  * Returns the first row of this [DataFrame] for which the given [expression]
@@ -890,7 +891,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  * @return The first [DataRow] for which [expression] returns the minimum value.
  * @throws NoSuchElementException if there are no values to compare.
  */
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
 ): DataRow<T> = minByOrNull(skipNaN, expression).throwAndSuggestIfNull("minBy")
@@ -932,14 +933,14 @@ public fun <T> DataFrame<T>.minBy(column: String, skipNaN: Boolean = skipNaNDefa
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = minByOrNull(column, skipNaN).throwAndSuggestIfNull("minBy")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = minByOrNull(column, skipNaN).throwAndSuggestIfNull("minBy")
@@ -977,10 +978,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  * @return The first [DataRow] for which [expression] returns the minimum value,
  *   or `null` if there are no values to compare.
  */
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minByOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): DataRow<T>? = Aggregators.min<C>(skipNaN).aggregateByOrNull(this, expression)
+): DataRow<T>? = Aggregators.min.invoke(skipNaN).cast<C>().aggregateByOrNull(this, expression)
 
 /**
  * Returns the first row of this [DataFrame] that has the smallest value in the column with
@@ -1018,14 +1019,14 @@ public fun <T> DataFrame<T>.minByOrNull(column: String, skipNaN: Boolean = skipN
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minByOrNull(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T>? = Aggregators.min<C>(skipNaN).aggregateByOrNull(this, column)
+): DataRow<T>? = Aggregators.min.invoke(skipNaN).cast<C>().aggregateByOrNull(this, column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minByOrNull(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T>? = minByOrNull(column.toColumnAccessor(), skipNaN)
@@ -1211,11 +1212,11 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  */
 @Refine
 @Interpretable("GroupByMin2")
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
+public fun <T, C : Comparable<*>?> Grouped<T>.min(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C?>,
-): DataFrame<T> = Aggregators.min<C>(skipNaN).aggregateAll(this, name, columns)
+): DataFrame<T> = Aggregators.min.invoke(skipNaN).cast<C>().aggregateAll(this, name, columns)
 
 /**
  * Aggregates this [GroupBy] by computing a single minimum of all the values
@@ -1266,7 +1267,7 @@ public fun <T> Grouped<T>.min(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
+public fun <T, C : Comparable<*>?> Grouped<T>.min(
     vararg columns: ColumnReference<C>,
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -1274,7 +1275,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
+public fun <T, C : Comparable<*>?> Grouped<T>.min(
     vararg columns: KProperty<C>,
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -1319,11 +1320,11 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  */
 @Refine
 @Interpretable("GroupByMinOf")
-public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
+public inline fun <T, reified C : Comparable<*>?> Grouped<T>.minOf(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): DataFrame<T> = Aggregators.min<C>(skipNaN).aggregateOf(this, name, expression)
+): DataFrame<T> = Aggregators.min.invoke(skipNaN).cast<C>().aggregateOf(this, name, expression)
 
 /**
  * Reduces each group of this [GroupBy] to the first row for which the given [rowExpression]
@@ -1360,14 +1361,14 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
  *   for which [rowExpression] returns the minimum value.
  */
 @Interpretable("GroupByReduceExpression")
-public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.minBy(
+public inline fun <T, G, reified R : Comparable<*>?> GroupBy<T, G>.minBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<G, R>,
 ): ReducedGroupBy<T, G> = reduce { minByOrNull(skipNaN, rowExpression) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
+public inline fun <T, G, reified C : Comparable<*>?> GroupBy<T, G>.minBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedGroupBy<T, G> = reduce { minByOrNull(column, skipNaN) }
@@ -1408,7 +1409,7 @@ public fun <T, G> GroupBy<T, G>.minBy(column: String, skipNaN: Boolean = skipNaN
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
+public inline fun <T, G, reified C : Comparable<*>?> GroupBy<T, G>.minBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedGroupBy<T, G> = minBy(column.toColumnAccessor(), skipNaN)
@@ -1595,7 +1596,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * @return A single [DataRow] with, per [pivot] group, the smallest value among all the values
  *   in the selected columns.
  */
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
+public fun <T, R : Comparable<*>?> Pivot<T>.min(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, R>,
 ): DataRow<*> = delegate { min(skipNaN, columns) }
@@ -1640,14 +1641,14 @@ public fun <T> Pivot<T>.min(vararg columns: String, skipNaN: Boolean = skipNaNDe
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
+public fun <T, R : Comparable<*>?> Pivot<T>.min(
     vararg columns: ColumnReference<R>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<*> = min(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
+public fun <T, R : Comparable<*>?> Pivot<T>.min(
     vararg columns: KProperty<R>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<*> = min(skipNaN) { columns.toColumnSet() }
@@ -1691,7 +1692,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A single [DataRow] with, per [pivot] group, the minimum of the expression's results.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
+public inline fun <T, reified R : Comparable<*>?> Pivot<T>.minOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
 ): DataRow<*> = delegate { minOf(skipNaN, rowExpression) }
@@ -1733,14 +1734,14 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  * @return A [ReducedPivot] holding, per group,
  *   the first row where the [rowExpression] produced the minimum result.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minBy(
+public inline fun <T, reified R : Comparable<*>?> Pivot<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivot<T> = reduce { minByOrNull(skipNaN, rowExpression) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
+public inline fun <T, reified C : Comparable<*>?> Pivot<T>.minBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivot<T> = reduce { minByOrNull(column, skipNaN) }
@@ -1784,7 +1785,7 @@ public fun <T> Pivot<T>.minBy(column: String, skipNaN: Boolean = skipNaNDefault)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
+public inline fun <T, reified C : Comparable<*>?> Pivot<T>.minBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivot<T> = minBy(column.toColumnAccessor(), skipNaN)
@@ -1985,10 +1986,10 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  */
 @Refine
 @Interpretable("PivotGroupByMin2")
-public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
+public fun <T, R : Comparable<*>?> PivotGroupBy<T>.min(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, R>,
-): DataFrame<*> = Aggregators.min<R>(skipNaN).aggregateAll(this, columns)
+): DataFrame<*> = Aggregators.min.invoke(skipNaN).cast<R>().aggregateAll(this, columns)
 
 /**
  * Aggregates this [PivotGroupBy] by computing a single minimum of all the values
@@ -2035,14 +2036,14 @@ public fun <T> PivotGroupBy<T>.min(vararg columns: String, skipNaN: Boolean = sk
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
+public fun <T, R : Comparable<*>?> PivotGroupBy<T>.min(
     vararg columns: ColumnReference<R>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<*> = min(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
+public fun <T, R : Comparable<*>?> PivotGroupBy<T>.min(
     vararg columns: KProperty<R>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<*> = min(skipNaN) { columns.toColumnSet() }
@@ -2089,7 +2090,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  */
 @Refine
 @Interpretable("PivotGroupByMinOf")
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
+public inline fun <T, reified R : Comparable<*>?> PivotGroupBy<T>.minOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
 ): DataFrame<*> = aggregate { minOfOrNull(skipNaN, rowExpression) }
@@ -2133,14 +2134,14 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *   the first row where the [rowExpression] produced the minimum result.
  */
 @Interpretable("PivotGroupByMinBy")
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minBy(
+public inline fun <T, reified R : Comparable<*>?> PivotGroupBy<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivotGroupBy<T> = reduce { minByOrNull(skipNaN, rowExpression) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
+public inline fun <T, reified C : Comparable<*>?> PivotGroupBy<T>.minBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivotGroupBy<T> = reduce { minByOrNull(column, skipNaN) }
@@ -2185,7 +2186,7 @@ public fun <T> PivotGroupBy<T>.minBy(column: String, skipNaN: Boolean = skipNaND
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
+public inline fun <T, reified C : Comparable<*>?> PivotGroupBy<T>.minBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivotGroupBy<T> = minBy(column.toColumnAccessor(), skipNaN)
@@ -2202,19 +2203,19 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(): T = min(skipNaN = skipNaNDe
 public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(): T? = minOrNull(skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(noinline selector: (T) -> R): T =
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.minBy(noinline selector: (T) -> R): T =
     minBy(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNull(noinline selector: (T) -> R): T? =
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.minByOrNull(noinline selector: (T) -> R): T? =
     minByOrNull(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(crossinline selector: (T) -> R): R & Any =
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.minOf(crossinline selector: (T) -> R): R =
     minOf(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOfOrNull(crossinline selector: (T) -> R): R? =
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.minOfOrNull(crossinline selector: (T) -> R): R? =
     minOfOrNull(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2222,7 +2223,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(): T? =
     rowMinOfOrNull<T>(skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T : Comparable<T & Any>?> DataRow<*>.rowMinOf(): T & Any = rowMinOf(skipNaN = skipNaNDefault)
+public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(): T = rowMinOf(skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<T>.min(): DataRow<T> = min(skipNaN = skipNaNDefault)
@@ -2246,7 +2247,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(vararg columns: KProperty
     minFor(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(columns: ColumnsSelector<T, C>): C & Any =
+public fun <T, C : Comparable<*>?> DataFrame<T>.min(columns: ColumnsSelector<T, C>): C =
     min(skipNaN = skipNaNDefault, columns = columns)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2255,16 +2256,16 @@ public fun <T> DataFrame<T>.min(vararg columns: String): Comparable<Any> =
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(vararg columns: ColumnReference<C>): C & Any =
+public fun <T, C : Comparable<*>?> DataFrame<T>.min(vararg columns: ColumnReference<C>): C =
     min(columns = columns, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(vararg columns: KProperty<C>): C & Any =
+public fun <T, C : Comparable<*>?> DataFrame<T>.min(vararg columns: KProperty<C>): C =
     min(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(columns: ColumnsSelector<T, C>): C? =
+public fun <T, C : Comparable<*>?> DataFrame<T>.minOrNull(columns: ColumnsSelector<T, C>): C? =
     minOrNull(skipNaN = skipNaNDefault, columns = columns)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2273,26 +2274,25 @@ public fun <T> DataFrame<T>.minOrNull(vararg columns: String): Comparable<Any>? 
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(vararg columns: ColumnReference<C>): C? =
+public fun <T, C : Comparable<*>?> DataFrame<T>.minOrNull(vararg columns: ColumnReference<C>): C? =
     minOrNull(columns = columns, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(vararg columns: KProperty<C>): C? =
+public fun <T, C : Comparable<*>?> DataFrame<T>.minOrNull(vararg columns: KProperty<C>): C? =
     minOrNull(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
-    crossinline expression: RowExpression<T, C>,
-): C & Any = minOf(skipNaN = skipNaNDefault, expression = expression)
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minOf(crossinline expression: RowExpression<T, C>): C =
+    minOf(skipNaN = skipNaNDefault, expression = expression)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minOfOrNull(
     crossinline expression: RowExpression<T, C>,
 ): C? = minOfOrNull(skipNaN = skipNaNDefault, expression = expression)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minBy(
     crossinline expression: RowExpression<T, C>,
 ): DataRow<T> = minBy(skipNaN = skipNaNDefault, expression = expression)
 
@@ -2301,16 +2301,16 @@ public fun <T> DataFrame<T>.minBy(column: String): DataRow<T> = minBy(column, sk
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(column: ColumnReference<C>): DataRow<T> =
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minBy(column: ColumnReference<C>): DataRow<T> =
     minBy(column, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(column: KProperty<C>): DataRow<T> =
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minBy(column: KProperty<C>): DataRow<T> =
     minBy(column, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minByOrNull(
     crossinline expression: RowExpression<T, C>,
 ): DataRow<T>? = minByOrNull(skipNaN = skipNaNDefault, expression = expression)
 
@@ -2319,13 +2319,12 @@ public fun <T> DataFrame<T>.minByOrNull(column: String): DataRow<T>? = minByOrNu
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull(
-    column: ColumnReference<C>,
-): DataRow<T>? = minByOrNull(column, skipNaN = skipNaNDefault)
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minByOrNull(column: ColumnReference<C>): DataRow<T>? =
+    minByOrNull(column, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull(column: KProperty<C>): DataRow<T>? =
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.minByOrNull(column: KProperty<C>): DataRow<T>? =
     minByOrNull(column, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2350,7 +2349,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(vararg columns: KProperty<C
     minFor(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
+public fun <T, C : Comparable<*>?> Grouped<T>.min(
     name: String? = null,
     columns: ColumnsSelector<T, C?>,
 ): DataFrame<T> = min(name, skipNaN = skipNaNDefault, columns = columns)
@@ -2361,32 +2360,30 @@ public fun <T> Grouped<T>.min(vararg columns: String, name: String? = null): Dat
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
+public fun <T, C : Comparable<*>?> Grouped<T>.min(
     vararg columns: ColumnReference<C>,
     name: String? = null,
 ): DataFrame<T> = min(columns = columns, name = name, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
-    vararg columns: KProperty<C>,
-    name: String? = null,
-): DataFrame<T> = min(columns = columns, name = name, skipNaN = skipNaNDefault)
+public fun <T, C : Comparable<*>?> Grouped<T>.min(vararg columns: KProperty<C>, name: String? = null): DataFrame<T> =
+    min(columns = columns, name = name, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
+public inline fun <T, reified C : Comparable<*>?> Grouped<T>.minOf(
     name: String? = null,
     crossinline expression: RowExpression<T, C>,
 ): DataFrame<T> = minOf(name, skipNaN = skipNaNDefault, expression = expression)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.minBy(
+public inline fun <T, G, reified R : Comparable<*>?> GroupBy<T, G>.minBy(
     crossinline rowExpression: RowExpression<G, R>,
 ): ReducedGroupBy<T, G> = minBy(skipNaN = skipNaNDefault, rowExpression = rowExpression)
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
+public inline fun <T, G, reified C : Comparable<*>?> GroupBy<T, G>.minBy(
     column: ColumnReference<C>,
 ): ReducedGroupBy<T, G> = minBy(column, skipNaN = skipNaNDefault)
 
@@ -2395,9 +2392,8 @@ public fun <T, G> GroupBy<T, G>.minBy(column: String): ReducedGroupBy<T, G> = mi
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
-    column: KProperty<C>,
-): ReducedGroupBy<T, G> = minBy(column, skipNaN = skipNaNDefault)
+public inline fun <T, G, reified C : Comparable<*>?> GroupBy<T, G>.minBy(column: KProperty<C>): ReducedGroupBy<T, G> =
+    minBy(column, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> Pivot<T>.min(separate: Boolean = false): DataRow<*> = min(separate, skipNaN = skipNaNDefault)
@@ -2427,32 +2423,32 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
 ): DataRow<*> = minFor(columns = columns, separate = separate, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(columns: ColumnsSelector<T, R>): DataRow<*> =
+public fun <T, R : Comparable<*>?> Pivot<T>.min(columns: ColumnsSelector<T, R>): DataRow<*> =
     min(skipNaN = skipNaNDefault, columns = columns)
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(vararg columns: ColumnReference<R>): DataRow<*> =
+public fun <T, R : Comparable<*>?> Pivot<T>.min(vararg columns: ColumnReference<R>): DataRow<*> =
     min(columns = columns, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(vararg columns: KProperty<R>): DataRow<*> =
+public fun <T, R : Comparable<*>?> Pivot<T>.min(vararg columns: KProperty<R>): DataRow<*> =
     min(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
+public inline fun <T, reified R : Comparable<*>?> Pivot<T>.minOf(
     crossinline rowExpression: RowExpression<T, R>,
 ): DataRow<*> = minOf(skipNaN = skipNaNDefault, rowExpression = rowExpression)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minBy(
+public inline fun <T, reified R : Comparable<*>?> Pivot<T>.minBy(
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivot<T> = minBy(skipNaN = skipNaNDefault, rowExpression = rowExpression)
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(column: ColumnReference<C>): ReducedPivot<T> =
+public inline fun <T, reified C : Comparable<*>?> Pivot<T>.minBy(column: ColumnReference<C>): ReducedPivot<T> =
     minBy(column, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2460,7 +2456,7 @@ public fun <T> Pivot<T>.minBy(column: String): ReducedPivot<T> = minBy(column, s
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(column: KProperty<C>): ReducedPivot<T> =
+public inline fun <T, reified C : Comparable<*>?> Pivot<T>.minBy(column: KProperty<C>): ReducedPivot<T> =
     minBy(column, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2491,7 +2487,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
 ): DataFrame<*> = maxFor(columns = columns, separate = separate, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(columns: ColumnsSelector<T, R>): DataFrame<*> =
+public fun <T, R : Comparable<*>?> PivotGroupBy<T>.min(columns: ColumnsSelector<T, R>): DataFrame<*> =
     min(skipNaN = skipNaNDefault, columns = columns)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2499,27 +2495,27 @@ public fun <T> PivotGroupBy<T>.min(vararg columns: String): DataFrame<*> =
     min(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(vararg columns: ColumnReference<R>): DataFrame<*> =
+public fun <T, R : Comparable<*>?> PivotGroupBy<T>.min(vararg columns: ColumnReference<R>): DataFrame<*> =
     min(columns = columns, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(vararg columns: KProperty<R>): DataFrame<*> =
+public fun <T, R : Comparable<*>?> PivotGroupBy<T>.min(vararg columns: KProperty<R>): DataFrame<*> =
     min(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
+public inline fun <T, reified R : Comparable<*>?> PivotGroupBy<T>.minOf(
     crossinline rowExpression: RowExpression<T, R>,
 ): DataFrame<*> = minOf(skipNaN = skipNaNDefault, rowExpression = rowExpression)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minBy(
+public inline fun <T, reified R : Comparable<*>?> PivotGroupBy<T>.minBy(
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivotGroupBy<T> = minBy(skipNaN = skipNaNDefault, rowExpression = rowExpression)
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
+public inline fun <T, reified C : Comparable<*>?> PivotGroupBy<T>.minBy(
     column: ColumnReference<C>,
 ): ReducedPivotGroupBy<T> = minBy(column, skipNaN = skipNaNDefault)
 
@@ -2528,8 +2524,7 @@ public fun <T> PivotGroupBy<T>.minBy(column: String): ReducedPivotGroupBy<T> = m
 
 @AccessApiOverload
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
-    column: KProperty<C>,
-): ReducedPivotGroupBy<T> = minBy(column, skipNaN = skipNaNDefault)
+public inline fun <T, reified C : Comparable<*>?> PivotGroupBy<T>.minBy(column: KProperty<C>): ReducedPivotGroupBy<T> =
+    minBy(column, skipNaN = skipNaNDefault)
 
 // endregion

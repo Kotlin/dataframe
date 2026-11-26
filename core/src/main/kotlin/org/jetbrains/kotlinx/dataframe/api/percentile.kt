@@ -24,6 +24,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast2
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateBy
@@ -549,7 +551,7 @@ private typealias SetPercentileForOperationArg = Nothing
  * @return The given percentile of the values in this column.
  * @throws NoSuchElementException if there are no values to compute the percentile of.
  */
-public fun <T : Comparable<T & Any>?> DataColumn<T>.percentile(percentile: Double): T & Any =
+public fun <T : Comparable<*>?> DataColumn<T>.percentile(percentile: Double): T =
     percentileOrNull(percentile).throwAndSuggestIfNull("percentile")
 
 /**
@@ -589,8 +591,8 @@ public fun <T : Comparable<T & Any>?> DataColumn<T>.percentile(percentile: Doubl
  * @return The given percentile of the values in this column,
  *   or `null` if there are no values to compute the percentile of.
  */
-public fun <T : Comparable<T & Any>?> DataColumn<T>.percentileOrNull(percentile: Double): T? =
-    Aggregators.percentileComparables<T>(percentile).aggregateSingleColumn(this)
+public fun <T : Comparable<*>?> DataColumn<T>.percentileOrNull(percentile: Double): T? =
+    Aggregators.percentile(percentile, skipNaNDefault).cast<T>().aggregateSingleColumn(this)
 
 /**
  * Returns the given [percentile] of the numbers in this [DataColumn], as a [Double].
@@ -628,7 +630,7 @@ public fun <T> DataColumn<T>.percentile(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
 ): Double
-    where T : Comparable<T & Any>?, T : Number? =
+    where T : Comparable<*>?, T : Number? =
     percentileOrNull(percentile = percentile, skipNaN = skipNaN).throwAndSuggestIfNull("percentile")
 
 /**
@@ -669,8 +671,8 @@ public fun <T> DataColumn<T>.percentileOrNull(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
 ): Double?
-    where T : Comparable<T & Any>?, T : Number? =
-    Aggregators.percentileNumbers<T>(percentile, skipNaN).aggregateSingleColumn(this)
+    where T : Comparable<*>?, T : Number? =
+    Aggregators.percentile(percentile, skipNaN).cast2<T & Any, Double?>().aggregateSingleColumn(this)
 
 /**
  * Returns the element of this [DataColumn] at the given [percentile] of the values that the given [selector]
@@ -709,12 +711,12 @@ public fun <T> DataColumn<T>.percentileOrNull(
  * @throws NoSuchElementException if there are no values to compute the percentile of.
  */
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.percentileBy(
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.percentileBy(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
 ): T =
-    Aggregators.percentileCommon<R>(percentile, skipNaN)
+    Aggregators.percentile(percentile, skipNaN).cast<R>()
         .aggregateBy(this, selector)
         .getOrElse { throwAndSuggestWhenNoElements("percentileBy") }
 
@@ -756,12 +758,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.percentile
  *   or `null` if there are no values to compute the percentile of.
  */
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.percentileByOrNull(
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.percentileByOrNull(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
 ): T? =
-    Aggregators.percentileCommon<R>(percentile, skipNaN)
+    Aggregators.percentile(percentile, skipNaN).cast<R>()
         .aggregateBy(this, selector)
         .getOrNull()
 
@@ -808,10 +810,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.percentile
  * @throws NoSuchElementException if there are no values to compute the percentile of.
  */
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.percentileOf(
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.percentileOf(
     percentile: Double,
     crossinline expression: (T) -> R,
-): R & Any = percentileOfOrNull(percentile, expression).throwAndSuggestIfNull("percentileOf")
+): R = percentileOfOrNull(percentile, expression).throwAndSuggestIfNull("percentileOf")
 
 /**
  * Returns the given [percentile] of the comparable values that the given [expression] returns
@@ -858,10 +860,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.percentile
  *   or `null` if there are no values to compute the percentile of.
  */
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.percentileOfOrNull(
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.percentileOfOrNull(
     percentile: Double,
     crossinline expression: (T) -> R,
-): R? = Aggregators.percentileComparables<R>(percentile).aggregateOf(this, expression)
+): R? = Aggregators.percentile(percentile, skipNaNDefault).cast<R>().aggregateOf(this, expression)
 
 /**
  * Returns the given [percentile] of the numbers that the given [expression] returns
@@ -904,7 +906,7 @@ public inline fun <T, reified R> DataColumn<T>.percentileOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: (T) -> R,
 ): Double
-    where R : Comparable<R & Any>?, R : Number? =
+    where R : Comparable<*>?, R : Number? =
     percentileOfOrNull(percentile, skipNaN, expression).throwAndSuggestIfNull("percentileOf")
 
 /**
@@ -951,8 +953,8 @@ public inline fun <T, reified R> DataColumn<T>.percentileOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: (T) -> R,
 ): Double?
-    where R : Comparable<R & Any>?, R : Number? =
-    Aggregators.percentileNumbers<R>(percentile, skipNaN).aggregateOf(this, expression)
+    where R : Comparable<*>?, R : Number? =
+    Aggregators.percentile(percentile, skipNaN).cast2<R & Any, Double?>().aggregateOf(this, expression)
 
 // endregion
 
@@ -1275,10 +1277,8 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.percentileFor(
  * @throws NoSuchElementException if there are no values to compute the percentile of.
  */
 @OverloadResolutionByLambdaReturnType
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentile(
-    percentile: Double,
-    columns: ColumnsSelector<T, C>,
-): C & Any = percentileOrNull(percentile, columns).throwAndSuggestIfNull("percentile")
+public fun <T, C : Comparable<*>?> DataFrame<T>.percentile(percentile: Double, columns: ColumnsSelector<T, C>): C =
+    percentileOrNull(percentile, columns).throwAndSuggestIfNull("percentile")
 
 /**
  * Returns a single [percentile] of all the comparable values in the selected columns of this [DataFrame],
@@ -1325,10 +1325,10 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentile(
  */
 @OverloadResolutionByLambdaReturnType
 @Suppress("UNCHECKED_CAST")
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileOrNull(
+public fun <T, C : Comparable<*>?> DataFrame<T>.percentileOrNull(
     percentile: Double,
     columns: ColumnsSelector<T, C>,
-): C? = Aggregators.percentileComparables<C>(percentile).aggregateAll(this, columns)
+): C? = Aggregators.percentile(percentile, skipNaNDefault).cast<C>().aggregateAll(this, columns)
 
 /**
  * Returns a single [percentile] of all the numbers in the selected columns of this [DataFrame], as a [Double].
@@ -1369,7 +1369,7 @@ public fun <T, C> DataFrame<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
 ): Double
-    where C : Number?, C : Comparable<C & Any>? =
+    where C : Number?, C : Comparable<*>? =
     percentileOrNull(percentile, skipNaN, columns).throwAndSuggestIfNull("percentile")
 
 /**
@@ -1415,8 +1415,8 @@ public fun <T, C> DataFrame<T>.percentileOrNull(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
 ): Double?
-    where C : Comparable<C & Any>?, C : Number? =
-    Aggregators.percentileNumbers<C>(percentile, skipNaN).aggregateAll(this, columns)
+    where C : Comparable<*>?, C : Number? =
+    Aggregators.percentile(percentile, skipNaN).cast2<C & Any, Double?>().aggregateAll(this, columns)
 
 /**
  * Returns a single [percentile] of all the values in the columns of this [DataFrame] with the given names.
@@ -1499,14 +1499,12 @@ public fun <T> DataFrame<T>.percentileOrNull(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentile(
-    percentile: Double,
-    vararg columns: ColumnReference<C>,
-): C & Any = percentileOrNull(percentile, *columns).throwAndSuggestIfNull("percentile")
+public fun <T, C : Comparable<*>?> DataFrame<T>.percentile(percentile: Double, vararg columns: ColumnReference<C>): C =
+    percentileOrNull(percentile, *columns).throwAndSuggestIfNull("percentile")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileOrNull(
+public fun <T, C : Comparable<*>?> DataFrame<T>.percentileOrNull(
     percentile: Double,
     vararg columns: ColumnReference<C>,
 ): C? = percentileOrNull<T, C>(percentile) { columns.toColumnSet() }
@@ -1518,7 +1516,7 @@ public fun <T, C> DataFrame<T>.percentile(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double
-    where C : Comparable<C & Any>?, C : Number? =
+    where C : Comparable<*>?, C : Number? =
     percentileOrNull(percentile, *columns, skipNaN = skipNaN).throwAndSuggestIfNull("percentile")
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -1528,19 +1526,16 @@ public fun <T, C> DataFrame<T>.percentileOrNull(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double?
-    where C : Comparable<C & Any>?, C : Number? =
-    percentileOrNull(percentile, skipNaN) { columns.toColumnSet() }
+    where C : Comparable<*>?, C : Number? = percentileOrNull(percentile, skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentile(
-    percentile: Double,
-    vararg columns: KProperty<C>,
-): C & Any = percentileOrNull(percentile, *columns).throwAndSuggestIfNull("percentile")
+public fun <T, C : Comparable<*>?> DataFrame<T>.percentile(percentile: Double, vararg columns: KProperty<C>): C =
+    percentileOrNull(percentile, *columns).throwAndSuggestIfNull("percentile")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileOrNull(
+public fun <T, C : Comparable<*>?> DataFrame<T>.percentileOrNull(
     percentile: Double,
     vararg columns: KProperty<C>,
 ): C? = percentileOrNull<T, C>(percentile) { columns.toColumnSet() }
@@ -1552,7 +1547,7 @@ public fun <T, C> DataFrame<T>.percentile(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double
-    where C : Comparable<C & Any>?, C : Number? =
+    where C : Comparable<*>?, C : Number? =
     percentileOrNull(percentile, *columns, skipNaN = skipNaN).throwAndSuggestIfNull("percentile")
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -1562,8 +1557,7 @@ public fun <T, C> DataFrame<T>.percentileOrNull(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double?
-    where C : Comparable<C & Any>?, C : Number? =
-    percentileOrNull(percentile, skipNaN) { columns.toColumnSet() }
+    where C : Comparable<*>?, C : Number? = percentileOrNull(percentile, skipNaN) { columns.toColumnSet() }
 
 /**
  * Returns the given [percentile] of the comparable values that the given [expression] returns
@@ -1611,10 +1605,10 @@ public fun <T, C> DataFrame<T>.percentileOrNull(
  * @throws NoSuchElementException if there are no values to compute the percentile of.
  */
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataFrame<T>.percentileOf(
+public inline fun <T, reified R : Comparable<*>?> DataFrame<T>.percentileOf(
     percentile: Double,
     crossinline expression: RowExpression<T, R>,
-): R & Any = percentileOfOrNull(percentile, expression).throwAndSuggestIfNull("percentileOf")
+): R = percentileOfOrNull(percentile, expression).throwAndSuggestIfNull("percentileOf")
 
 /**
  * Returns the given [percentile] of the comparable values that the given [expression] returns
@@ -1663,10 +1657,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataFrame<T>.percentileO
  *   or `null` if there are no values to compute the percentile of.
  */
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataFrame<T>.percentileOfOrNull(
+public inline fun <T, reified R : Comparable<*>?> DataFrame<T>.percentileOfOrNull(
     percentile: Double,
     crossinline expression: RowExpression<T, R>,
-): R? = Aggregators.percentileComparables<R>(percentile).aggregateOf(this, expression)
+): R? = Aggregators.percentile(percentile, skipNaNDefault).cast<R>().aggregateOf(this, expression)
 
 /**
  * Returns the given [percentile] of the numbers that the given [expression] returns
@@ -1712,7 +1706,7 @@ public inline fun <T, reified R> DataFrame<T>.percentileOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
 ): Double
-    where R : Comparable<R & Any>?, R : Number? =
+    where R : Comparable<*>?, R : Number? =
     percentileOfOrNull(percentile, skipNaN, expression).throwAndSuggestIfNull("percentileOf")
 
 /**
@@ -1761,8 +1755,8 @@ public inline fun <T, reified R> DataFrame<T>.percentileOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
 ): Double?
-    where R : Comparable<R & Any>?, R : Number? =
-    Aggregators.percentileNumbers<R>(percentile, skipNaN).aggregateOf(this, expression)
+    where R : Comparable<*>?, R : Number? =
+    Aggregators.percentile(percentile, skipNaN).cast2<R & Any, Double?>().aggregateOf(this, expression)
 
 /**
  * Returns the row of this [DataFrame] at the given [percentile] of the values that the given [expression]
@@ -1805,7 +1799,7 @@ public inline fun <T, reified R> DataFrame<T>.percentileOfOrNull(
  * @return The [DataRow] at the given percentile of the values [expression] returns.
  * @throws NoSuchElementException if there are no values to compute the percentile of.
  */
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileBy(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.percentileBy(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
@@ -1852,7 +1846,7 @@ public fun <T> DataFrame<T>.percentileBy(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileBy(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.percentileBy(
     percentile: Double,
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -1860,7 +1854,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileB
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileBy(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.percentileBy(
     percentile: Double,
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -1904,11 +1898,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileB
  * @return The [DataRow] at the given percentile of the values [expression] returns,
  *   or `null` if there are no values to compute the percentile of.
  */
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileByOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.percentileByOrNull(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): DataRow<T>? = Aggregators.percentileCommon<C>(percentile, skipNaN).aggregateByOrNull(this, expression)
+): DataRow<T>? = Aggregators.percentile(percentile, skipNaN).cast<C>().aggregateByOrNull(this, expression)
 
 /**
  * Returns the row of this [DataFrame] at the given [percentile] of the values in the column with the given name,
@@ -1952,15 +1946,15 @@ public fun <T> DataFrame<T>.percentileByOrNull(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileByOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.percentileByOrNull(
     percentile: Double,
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T>? = Aggregators.percentileCommon<C>(percentile, skipNaN).aggregateByOrNull(this, column)
+): DataRow<T>? = Aggregators.percentile(percentile, skipNaN).cast<C>().aggregateByOrNull(this, column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileByOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.percentileByOrNull(
     percentile: Double,
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -2087,12 +2081,12 @@ public fun <T, C : Comparable<*>?> Grouped<T>.percentileFor(
  */
 @Refine
 @Interpretable("GroupByPercentile2")
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
+public fun <T, C : Comparable<*>?> Grouped<T>.percentile(
     percentile: Double,
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): DataFrame<T> = Aggregators.percentileCommon<C>(percentile, skipNaN).aggregateAll(this, name, columns)
+): DataFrame<T> = Aggregators.percentile(percentile, skipNaN).cast<C>().aggregateAll(this, name, columns)
 
 /**
  * @include [PercentileDocs.GroupedPercentileSnippet]
@@ -2119,7 +2113,7 @@ public fun <T> Grouped<T>.percentile(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
+public fun <T, C : Comparable<*>?> Grouped<T>.percentile(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     name: String? = null,
@@ -2128,7 +2122,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
+public fun <T, C : Comparable<*>?> Grouped<T>.percentile(
     percentile: Double,
     vararg columns: KProperty<C>,
     name: String? = null,
@@ -2178,12 +2172,12 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
  */
 @Refine
 @Interpretable("GroupByPercentileOf")
-public inline fun <T, reified R : Comparable<R & Any>?> Grouped<T>.percentileOf(
+public inline fun <T, reified R : Comparable<*>?> Grouped<T>.percentileOf(
     percentile: Double,
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
-): DataFrame<T> = Aggregators.percentileCommon<R>(percentile, skipNaN).aggregateOf(this, name, expression)
+): DataFrame<T> = Aggregators.percentile(percentile, skipNaN).cast<R>().aggregateOf(this, name, expression)
 
 /**
  * Reduces each group of this [GroupBy] to the row at the given [percentile] of the values that the given
@@ -2223,7 +2217,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Grouped<T>.percentileOf(
  *   of the values [rowExpression] returns.
  */
 @Interpretable("GroupByReduceExpression") // TODO?
-public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.percentileBy(
+public inline fun <T, G, reified R : Comparable<*>?> GroupBy<T, G>.percentileBy(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<G, R>,
@@ -2231,7 +2225,7 @@ public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.percent
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.percentileBy(
+public inline fun <T, G, reified C : Comparable<*>?> GroupBy<T, G>.percentileBy(
     percentile: Double,
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -2278,7 +2272,7 @@ public fun <T, G> GroupBy<T, G>.percentileBy(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.percentileBy(
+public inline fun <T, G, reified C : Comparable<*>?> GroupBy<T, G>.percentileBy(
     percentile: Double,
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -2405,7 +2399,7 @@ public fun <T, C : Comparable<*>?> Pivot<T>.percentileFor(
  * @return A [DataRow] with, per [pivot] group, a single given percentile of all the values
  *   in the selected columns.
  */
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
+public fun <T, C : Comparable<*>?> Pivot<T>.percentile(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
@@ -2432,7 +2426,7 @@ public fun <T> Pivot<T>.percentile(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
+public fun <T, C : Comparable<*>?> Pivot<T>.percentile(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -2440,7 +2434,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
+public fun <T, C : Comparable<*>?> Pivot<T>.percentile(
     percentile: Double,
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -2487,7 +2481,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
  * @include [PercentileDocs.ExpressionParam]
  * @return A single [DataRow] with, per [pivot] group, the given percentile of the expression's results.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.percentileOf(
+public inline fun <T, reified R : Comparable<*>?> Pivot<T>.percentileOf(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
@@ -2533,7 +2527,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.percentileOf(
  * @return A [ReducedPivot] holding, per group,
  *   the row at the given percentile of the values [rowExpression] returns.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.percentileBy(
+public inline fun <T, reified R : Comparable<*>?> Pivot<T>.percentileBy(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
@@ -2541,7 +2535,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.percentileBy(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.percentileBy(
+public inline fun <T, reified C : Comparable<*>?> Pivot<T>.percentileBy(
     percentile: Double,
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -2590,7 +2584,7 @@ public fun <T> Pivot<T>.percentileBy(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.percentileBy(
+public inline fun <T, reified C : Comparable<*>?> Pivot<T>.percentileBy(
     percentile: Double,
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -2723,11 +2717,11 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentileFor(
  */
 @Refine
 @Interpretable("PivotGroupByPercentile2")
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
+public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentile(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): DataFrame<*> = Aggregators.percentileCommon<C>(percentile, skipNaN).aggregateAll(this, columns)
+): DataFrame<*> = Aggregators.percentile(percentile, skipNaN).cast<C>().aggregateAll(this, columns)
 
 /**
  * @include [PercentileDocs.PivotGroupByPercentileSnippet]
@@ -2752,7 +2746,7 @@ public fun <T> PivotGroupBy<T>.percentile(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
+public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentile(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -2760,7 +2754,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
+public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentile(
     percentile: Double,
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -2809,11 +2803,11 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
  */
 @Refine
 @Interpretable("PivotGroupByPercentileOf")
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.percentileOf(
+public inline fun <T, reified R : Comparable<*>?> PivotGroupBy<T>.percentileOf(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
-): DataFrame<*> = Aggregators.percentileCommon<R>(percentile, skipNaN).aggregateOf(this, expression)
+): DataFrame<*> = Aggregators.percentile(percentile, skipNaN).cast<R>().aggregateOf(this, expression)
 
 /**
  * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking from each group
@@ -2858,7 +2852,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.percenti
  *   the row at the given percentile of the values [rowExpression] returns.
  */
 @Interpretable("PivotGroupByPercentileBy")
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.percentileBy(
+public inline fun <T, reified R : Comparable<*>?> PivotGroupBy<T>.percentileBy(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
@@ -2866,7 +2860,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.percenti
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.percentileBy(
+public inline fun <T, reified C : Comparable<*>?> PivotGroupBy<T>.percentileBy(
     percentile: Double,
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -2917,7 +2911,7 @@ public fun <T> PivotGroupBy<T>.percentileBy(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.percentileBy(
+public inline fun <T, reified C : Comparable<*>?> PivotGroupBy<T>.percentileBy(
     percentile: Double,
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
