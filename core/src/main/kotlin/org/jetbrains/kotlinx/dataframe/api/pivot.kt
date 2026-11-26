@@ -1357,7 +1357,7 @@ internal interface PivotGroupByDocs {
      * __`.`__[**`with`**][ReducedPivotGroupBy.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`values`**][ReducedPivotGroupBy.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * `| `__`.`__[**`values`**][ReducedPivotGroupBy.values]`  \[ `**` { `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
      *
      * See [PivotGroupBy Reducing][Reducing].
      *
@@ -1369,10 +1369,10 @@ internal interface PivotGroupByDocs {
      * `| `__`.`__[**`matches`**][PivotGroupBy.matches]`  \[ `**`(`**`yes`**`, `**`no`**`) `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`count`**][PivotGroupBy.count]**`()`**
+     * `| `__`.`__[**`count`**][PivotGroupBy.count]`  \[ `**` { `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`values`**][PivotGroupBy.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * `| `__`.`__[**`values`**][PivotGroupBy.values]`  \[ `**` { `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
      *
      * {@include [Indent]}
      * `| `__`.`__[**`with`**][PivotGroupBy.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
@@ -1494,7 +1494,13 @@ internal interface PivotGroupByDocs {
      * and the aggregated results of each group under the [pivot] keys
      * (as top-level columns or as [column groups][ColumnGroup]).
      *
-     * @include [CommonStatisticsDocs.EmptyPivotIntersectionSnippet]
+     * For the empty pivot intersections — the matrix cells for which the [pivot] and [groupBy] key
+     * combination has no rows — [frames][PivotGroupBy.frames], [count][PivotGroupBy.count] and
+     * [matches][PivotGroupBy.matches] produce their own fallbacks
+     * (an empty [DataFrame], `0`, and the [no][PivotGroupBy.matches] marker respectively).
+     * The other aggregations produce `null` there, or the value set with
+     * [default][PivotGroupBy.default]; a [default][AggregateDsl.default] applied to a single
+     * aggregation inside [aggregate][PivotGroupBy.aggregate] takes priority over it.
      *
      * Check out [`PivotGroupBy` Grammar][Grammar].
      *
@@ -1542,7 +1548,7 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
     public fun <R> aggregate(separate: Boolean = false, body: AggregateBody<T, R>): DataFrame<*>
 
     /**
-     * Sets the default [value] for the empty groups in the results of all subsequent
+     * Sets the default [value] for the empty groups in the results of subsequent
      * [reducing][PivotGroupByDocs.Reducing] and [aggregation][PivotGroupByDocs.Aggregation]
      * operations on this [PivotGroupBy].
      *
@@ -1550,8 +1556,12 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      * has no rows contains `null`. After [default] is called, such cells contain [value] instead.
      * The [value] also replaces the `null` results of the aggregations over non-empty groups.
      *
-     * This is the same as applying the [default][AggregateDsl.default] infix to every aggregation result
-     * inside [aggregate][PivotGroupBy.aggregate], but it applies to all of them at once.
+     * [value] only applies to the aggregations that set no default of their own:
+     * [count][PivotGroupBy.count] always produces `0` for the empty groups,
+     * [matches][PivotGroupBy.matches] produces its [no][PivotGroupBy.matches] marker,
+     * and [frames][PivotGroupBy.frames] produces an empty [DataFrame].
+     * A [default][AggregateDsl.default] applied to a single aggregation inside
+     * [aggregate][PivotGroupBy.aggregate] takes priority over [value] as well.
      *
      * Check out [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
      *
