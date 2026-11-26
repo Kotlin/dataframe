@@ -394,11 +394,7 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  *
  * For more information: {@include [DocumentationUrls.First]}
  *
- * @include [DocumentationUrls.PivotGroupBy]
- *
- * @include [DocumentationUrls.Pivot]
- *
- * @include [DocumentationUrls.GroupBy]
+ * For more information about [PivotGroupBy] with examples: {@include [DocumentationUrls.PivotGroupBy]}
  *
  * @include [SelectingRows.RowFilterSnippet]
  *
