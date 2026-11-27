@@ -34,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.io.renderToStringTable
 import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
 import org.jetbrains.kotlinx.dataframe.io.toHtml
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
+import org.jetbrains.kotlinx.dataframe.io.toStaticHtml
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
@@ -90,6 +91,88 @@ class RenderingTests : TestBase() {
         val html = df.toHtml().toString()
         html shouldNotContain "\\\\"
         html shouldNotContain "&#34;"
+    }
+
+    @Test
+    fun columnNamesAreHtmlEscapedInToHtml() {
+        val name = "<script>alert('you have been hacked!')</script>"
+        val df = dataFrameOf(name)(1)
+        val html = df.toHtml()
+
+        // header in the inline script: the name is escaped in both the tooltip and the span content
+        html.script shouldContain "&#60;script&#62;alert(1)&#60;/script&#62;"
+        html.script shouldNotContain "<script>alert(1)"
+
+        // fallback static table in the body
+        html.body shouldNotContain "<script>alert(1)"
+        Jsoup.parse(html.body).select("th").eachText() shouldBe listOf(name)
+    }
+
+    @Test
+    fun columnNamesAreHtmlEscapedInToStaticHtml() {
+        val name = "<script>alert(1)</script>"
+        val df = dataFrameOf(name)(1, 2, 3)
+        val html = df.toStaticHtml()
+
+        html.body shouldContain
+            """<th class="bottomBorder" style="text-align:left">&#60;script&#62;alert(1)&#60;/script&#62;</th>"""
+        html.body shouldNotContain "<script>alert(1)"
+        Jsoup.parse(html.body).select("th").eachText() shouldBe listOf(name)
+    }
+
+    @Test
+    fun columnNamesAreHtmlEscapedInToStandaloneHtml() {
+        val df = dataFrameOf("<script>alert(1)</script>")(1)
+        val html = df.toStandaloneHtml().toString()
+
+        html shouldContain "&#60;script&#62;alert(1)&#60;/script&#62;"
+        html shouldNotContain "<script>alert(1)"
+    }
+
+    @Test
+    fun columnGroupNamesAreHtmlEscaped() {
+        val name = "<script>alert(1)</script>"
+        val df = dataFrameOf("a")(1).group("a").into(name)
+        val html = df.toHtml()
+
+        html.script shouldContain "&#60;script&#62;alert(1)&#60;/script&#62;"
+        html.script shouldNotContain "<script>alert(1)"
+        html.body shouldNotContain "<script>alert(1)"
+        Jsoup.parse(html.body).select("th").eachText() shouldBe listOf(name, "a")
+    }
+
+    @Test
+    fun quotesInColumnNamesAreHtmlEscapedInHeaderTooltip() {
+        val name = "\" onmouseover=\"alert(1)"
+        val df = dataFrameOf(name)(1)
+        val html = df.toHtml()
+
+        html.script shouldContain "&#34; onmouseover=&#34;alert(1)"
+        html.script shouldNotContain name
+        html.body shouldNotContain name
+        Jsoup.parse(html.body).select("th").eachText() shouldBe listOf(name)
+    }
+
+    @Test
+    fun columnTypesAreHtmlEscapedInHeaderTooltip() {
+        val col = DataColumn.createValueColumn("col", listOf(listOf(1, 2)), typeOf<List<Int>>())
+        val df = col.toDataFrame()
+
+        df.toHtml().script shouldContain "col: List&#60;Int&#62;"
+    }
+
+    @Test
+    fun truncatedColumnNamesAreHtmlEscaped() {
+        val name = "<script>alert(1)</script>" + "a".repeat(60)
+        val df = dataFrameOf(name)(1)
+        val html = df.toStaticHtml()
+
+        // cellContentLimit defaults to 40, so the name is truncated before it is escaped
+        html.body shouldContain "&#60;script&#62;alert(1)&#60;/script&#62;aaaaaaaaaaaa"
+        html.body shouldNotContain "<script>alert(1)"
+        Jsoup.parse(html.body).select("th").eachText() shouldBe listOf(
+            "<script>alert(1)</script>aaaaaaaaaaaa...",
+        )
     }
 
     @Test
