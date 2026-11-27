@@ -1,4 +1,3 @@
-
 # Pandas to Kotlin DataFrame reference
 
 <web-summary>
@@ -26,18 +25,19 @@ If a Pandas call is not in the tables below, do not invent a name — look it up
 
 1. **Never mutate.** No `df["x"] = ...`, no `inplace`. Every operation returns a new `DataFrame`; assign the
    result to a new `val`.
-2. **Row lambdas read columns as properties** — `df.filter { revenue > 100 }`. Properties exist only when the
-   frame has a known schema: a notebook (`%use dataframe`), the compiler plugin, or `cast<Schema>()` with a
-   `@DataSchema` interface. Without a schema, read a column by name and type: `"revenue"<Int>()`.
+2. **Row lambdas read columns as properties** — `df.filter { revenue > 100 }`. Properties come from the compiler
+   plugin or a Kotlin Notebook (`%use dataframe`): they know the schema of a frame built or read in the same code.
+   Without them, read a column by name and type inside the row lambda: `"revenue"<Int>()`. A frame of unknown
+   schema, for example one read from a file, gets one with `cast<Schema>()` to a `@DataSchema` interface.
 3. **Key columns are positional arguments, not named ones.** `df.join(other, "id")`, not `join(other, by = "id")`
    and not `merge(on = ...)`.
 4. **Column selectors use `and`**: `select { region and revenue }`. Not a list, not `[["a", "b"]]`.
-5. **Name a result column with `into`**: `sum(revenue) into "total"`. Inside `aggregate { }` write one
-   aggregation per line.
+5. **Name a result column with `into`**: `sum { revenue } into "total"`. Inside `aggregate { }` write one
+   aggregation per line; the tables below put them on one line, separated by `;`, only to fit a cell.
 6. **Handle `null` explicitly.** A missing value is `null`; the column type is nullable (`Double?`).
    In a row lambda use `?:`, `?.` or `!!`; at frame level use `fillNulls` / `dropNulls`.
 7. **A group is not a result.** `groupBy { }` must be finished with `aggregate { }`, `sum { }`, `count()` or
-   another aggregation.
+   another aggregation, or its groups taken back with `concat()` or `into(...)`.
 8. **Prefer the current names.** `readCsv` / `writeCsv` / `readJson` / `writeJson` (CamelCase). The old
    `readCSV` / `writeCSV` still compile with a deprecation warning; `readJSON` / `writeJSON` do not exist.
 9. **Imports.** In a notebook `%use dataframe` imports everything. In a project import the functions you use,
@@ -47,13 +47,13 @@ If a Pandas call is not in the tables below, do not invent a name — look it up
 
 | Pandas                                  | Kotlin DataFrame                                                    | Notes                                              |
 |-----------------------------------------|---------------------------------------------------------------------|----------------------------------------------------|
-| `pd.DataFrame({"a": [1, 2]})`           | `dataFrameOf("a" to listOf(1, 2))`                                  | Add `.cast<Schema>()` to get properties.           |
+| `pd.DataFrame({"a": [1, 2]})`           | `dataFrameOf("a" to listOf(1, 2))`                                  | With the plugin or a notebook the schema is inferred; `cast<Schema>()` is for frames of unknown schema. |
 | `pd.read_csv(path)`                     | `DataFrame.readCsv(path)`                                           | Empty cell → `null`. Single letters → `Char`.      |
 | `pd.read_json(path)`                    | `DataFrame.readJson(path)`                                          |                                                    |
 | `pd.read_feather(path)`                 | `DataFrame.readArrowFeather(path)`                                  | `readArrow` takes an `ArrowReader`, not a path.    |
 | `pd.read_parquet(path)`                 | `DataFrame.readParquet(path)`                                       |                                                    |
-| `pd.read_sql_table("name", engine)`     | `DataFrame.readSqlTable(connection, "name")`                        | First argument: `DbConnectionConfig`, `DataSource` or `Connection` — never a URL string. Types: see below. |
-| `pd.read_sql_query("SELECT ...", engine)` | `DataFrame.readSqlQuery(connection, "SELECT * FROM sales")`       | Same first argument. Checked on PostgreSQL. |
+| `pd.read_sql_table("name", engine)`     | `DataFrame.readSqlTable(connection, "name")`                        | First argument: `DbConnectionConfig`, `DataSource` or `Connection` — never a URL string. Column types: [PostgreSQL type mapping](readSqlTypeMapping_PostgreSQL.md) and [where the results differ](#where-the-results-differ). |
+| `pd.read_sql_query("SELECT ...", engine)` | `DataFrame.readSqlQuery(connection, "SELECT * FROM sales")`       | Same first argument. Covered for PostgreSQL only. |
 | `df.to_csv(path, index=False)`          | `df.writeCsv(file)`                                                 | There is no index, so nothing to turn off.         |
 | `df.to_json(path)`                      | `df.writeJson(file)`                                                |                                                    |
 | `df.to_feather(path)`                   | `df.writeArrowFeather(file)`                                        | `writeArrow` does not exist.                       |
@@ -67,12 +67,12 @@ If a Pandas call is not in the tables below, do not invent a name — look it up
 |---------------------|-------------------------------------------|--------------------------------------------------------------------|
 | `df.head(n)`        | `df.head(n)` or `df.take(n)`              |                                                                    |
 | `df.tail(n)`        | `df.tail(n)`                              |                                                                    |
-| `df.shape`          | `df.rowsCount()`, `df.columnsCount()`, `df.size()` | `size()` prints `6 x 6`. `nrow` / `ncol` are not public.   |
+| `df.shape`          | `df.rowsCount()`, `df.columnsCount()`, `df.size()` | `size()` prints rows, then columns: `6 x 2` for 6 rows and 2 columns. `nrow` / `ncol` are not public; `size().nrow` is. |
 | `len(df)`           | `df.rowsCount()`                          |                                                                    |
 | `df.columns`        | `df.columnNames()`                        | `columns()` returns `DataColumn`s, not names.                      |
 | `df.dtypes`         | `df.schema()`                             | Prints `name: Type`; a trailing `?` means nullable.                |
 | `df.describe()`     | `df.describe()`                           | Describes *all* columns; has `nulls`, `top`, `freq`.               |
-| `df.isnull().sum()` | `df.describe().select { name and nulls }` | One column: `df.count { discount == null }`.                       |
+| `df.isnull().sum()` | `df.describe().select { name and nulls }` | One column: `df.count { d == null }`.                              |
 | `df["a"].nunique()` | `df.countDistinct { a }`                  |                                                                    |
 | `df["a"].value_counts()` | `df.valueCounts { a }`               | Result has a `count` column.                                       |
 | `df["a"].unique()`  | `df.select { a }.distinct()`              | Returns a `DataFrame`, not a list.                                 |
@@ -84,10 +84,10 @@ If a Pandas call is not in the tables below, do not invent a name — look it up
 | `df["a"]`                            | `df.a` or `df["a"]`                          | `df["a"]`                                    |
 | `df[["a", "b"]]`                     | `df.select { a and b }`                      | `df.select("a", "b")`                        |
 | `df[df.a > 10]`                      | `df.filter { a > 10 }`                       | `df.filter { "a"<Int>() > 10 }`              |
-| `df[(df.a > 1) & (df.s == "x")]`     | `df.filter { a > 1 && s == "x" }`            |                                              |
-| `df.sort_values(["a", "b"])`         | `df.sortBy { a and b }`                      |                                              |
-| `df.sort_values("a", ascending=False)` | `df.sortByDesc { a }`                      |                                              |
-| `df.iloc[:n]` / `df.iloc[n:]`        | `df.take(n)` / `df.drop(n)`                  | `drop(n)` removes the first `n` **rows**.    |
+| `df[(df.a > 1) & (df.s == "x")]`     | `df.filter { a > 1 && s == "x" }`            | `df.filter { "a"<Int>() > 1 && "s"<String>() == "x" }` |
+| `df.sort_values(["a", "b"])`         | `df.sortBy { a and b }`                      | `df.sortBy("a", "b")`                        |
+| `df.sort_values("a", ascending=False)` | `df.sortByDesc { a }`                      | `df.sortByDesc("a")`                         |
+| `df.iloc[:n]` / `df.iloc[n:]`        | `df.take(n)` / `df.drop(n)`                  | `drop(n)` removes the first `n` **rows**; Pandas `drop(4)` removes the row *labelled* 4. |
 
 ## Add, change, rename, remove
 
@@ -95,10 +95,10 @@ If a Pandas call is not in the tables below, do not invent a name — look it up
 |-----------------------------------------------|--------------------------------------------------------|------------------------------------------------|
 | `df["c"] = df.a + df.b` / `df.assign(c=...)`  | `df.add("c") { a + b }`                                | Returns a new frame.                           |
 | `np.where(df.a > 1, "hi", "lo")`              | `df.add("c") { if (a > 1) "hi" else "lo" }`            |                                                |
-| `df["a"] = df["a"] * 2`                       | `df.update { a }.with { it * 2 }`                      | Type may not change — use `convert` for that.  |
+| `df["a"] = df["a"] * 2`                       | `df.update { a }.with { it * 2 }`                      | To change the type, use `convert`.             |
 | `df.loc[df.y == 2024, "a"] *= 2`              | `df.update { a }.where { y == 2024 }.with { it * 2 }`  |                                                |
 | `df.astype({"y": str})`                       | `df.convert { y }.to<String>()`                        |                                                |
-| `df.rename(columns={"a": "b"})`               | `df.rename("a" to "b")` or `df.rename { a }.into("b")` | Not `rename { "a" to "b" }`.                   |
+| `df.rename(columns={"a": "b"})`               | `df.rename("a" to "b")` or `df.rename { a }.to("b")`   | `rename("a" to "b")` takes the pairs directly. |
 | `df.drop(columns=["a"])`                      | `df.remove { a }` or `df.remove("a")`                  | `drop` is for rows.                            |
 | `df.a.map(lambda x: x * 2)`                   | `df.a.map { it * 2 }`                                  | Returns a `DataColumn`.                        |
 | `df.copy()`                                   | *not needed* — frames are immutable                    |                                                |
@@ -119,8 +119,8 @@ If a Pandas call is not in the tables below, do not invent a name — look it up
 |----------------------------------------------------------|----------------------------------------------------------------------------------------|
 | `df.groupby("r").revenue.sum()`                          | `df.groupBy { r }.sum { revenue }`                                                     |
 | `df.groupby("r").size()`                                 | `df.groupBy { r }.count()`                                                             |
-| `df.groupby("r").agg(t=("rev", "sum"), m=("cost", "mean"))` | `df.groupBy { r }.aggregate { sum(rev) into "t"; mean(cost) into "m" }`             |
-| `df.groupby(["r", "p"]).rev.sum()`                       | `df.groupBy { r and p }.aggregate { sum(rev) into "t" }`                               |
+| `df.groupby("r").agg(t=("rev", "sum"), m=("cost", "mean"))` | `df.groupBy { r }.aggregate { sum { rev } into "t"; mean { cost } into "m" }`       |
+| `df.groupby(["r", "p"]).rev.sum()`                       | `df.groupBy { r and p }.aggregate { sum { rev } into "t" }`                            |
 | `df.pivot_table(values="v", index="r", columns="y", aggfunc="sum")` | `df.pivot { y }.groupBy { r }.sum { v }.ungroup("y")`                        |
 
 Notes:
@@ -137,9 +137,11 @@ Notes:
 | Pandas                               | Kotlin DataFrame                       | Notes                                                       |
 |--------------------------------------|----------------------------------------|-------------------------------------------------------------|
 | `df1.merge(df2, on="id")`            | `df1.join(df2, "id")`                  | Also `innerJoin`. Result columns come from `df1`, then new ones from `df2`. |
-| `df1.merge(df2, on="id", how="left")` | `df1.leftJoin(df2, "id")`             | Also `rightJoin`, `fullJoin`. Unmatched rows hold `null`.   |
+| `df1.merge(df2, on="id", how="left")` | `df1.leftJoin(df2, "id")`             | Unmatched rows hold `null`.                                 |
+| `df1.merge(df2, on="id", how="right")` | `df1.rightJoin(df2, "id")`           |                                                             |
+| `df1.merge(df2, on="id", how="outer")` | `df1.fullJoin(df2, "id")`            |                                                             |
 | `pd.concat([df1, df2])`              | `df1.concat(df2)`                      | Rows are appended; there is no index to reset.              |
-| `pd.concat([df1, df2], axis=1)`      | `df1.add(df2)`                         | Columns are appended.                                       |
+| `pd.concat([df1, df2], axis=1)`      | `df1.addAll(df2)`                      | Columns are appended.                                       |
 | `df1.merge(df2, left_on="a", right_on="b")` | `df1.join(df2) { "a" match right["b"] }` | Keeps only the left key column; `merge` keeps both.   |
 
 ## Reshape and sequences
@@ -152,11 +154,12 @@ Notes:
 | `df.a.cumsum()`                               | `df.a.cumSum()`                                      | Capital `S`.                                                 |
 | `df.a.shift(1)`                               | `df.add("prev") { prev()?.a }`                       | The first row is `null` (`NaN` in Pandas).                   |
 | `df.a.diff()`                                 | `df.add("d") { diff(0) { a } }`                      | `diff` needs a value for the first row; here `0`. Compare with `df.a.diff().fillna(0)`. |
+| `df.a.rolling(3, min_periods=1).mean()`       | `df.add("ma") { movingAverage(3) { it.a } }`         | Inside the lambda `it` is a row of the window: a bare `a` reads the current row. `rolling(3)` without `min_periods=1` gives `NaN` in the first two rows. |
 | `df.a.value_counts(normalize=True)`           | `df.valueCounts { a }`                               | No `normalize`: divide the `count` column by `df.rowsCount()`. |
 | `df.nlargest(n, "a")`                         | `df.sortByDesc { a }.take(n)`                        |                                                              |
 | `df.nsmallest(n, "a")`                        | `df.sortBy { a }.take(n)`                            |                                                              |
 | `df.sample(n)`                                | `df.shuffle().take(n)`                               | Random in both. Only the number of rows is checked: with a seed the two libraries pick different rows. |
-| `df.groupby("r").cost.transform("sum")`       | `df.join(df.groupBy { r }.aggregate { sum(cost) into "total" }, "r")` | Keeps the row order of `df` and adds a column. |
+| `df.groupby("r").cost.transform("sum")`       | `df.join(df.groupBy { r }.aggregate { sum { cost } into "total" }, "r")` | Keeps the row order of `df` and adds a column. |
 
 ## Strings, dates, row by row
 
@@ -166,7 +169,7 @@ Notes:
 | `df[df.s.str.contains("or")]`                 | `df.filter { s.contains("or") }`                     |                                                              |
 | `df.s.str.len()`                              | `df.s.map { it.length }`                             |                                                              |
 | `df.apply(lambda r: r.a - r.b, axis=1)`       | `df.map { a - b }`                                   | One value per row.                                           |
-| `pd.to_datetime(df.s)`                        | `df.convert { s }.toLocalDate()`                     | Values become `kotlinx.datetime.LocalDate`; use `.year`, `.month`. |
+| `pd.to_datetime(df.s)`                        | `df.convert { s }.toLocalDate()`                     | Values become `kotlinx.datetime.LocalDate`, for example `.year`. |
 
 ## Iterate and compute
 
@@ -180,7 +183,8 @@ Notes:
 
 ## Pandas names that do not exist
 
-Each name below was tried on a `DataFrame` and does not compile. Use the replacement.
+The calls on the left do not compile on a `DataFrame` in this version of Kotlin DataFrame. Use the replacement.
+Some of these names exist for another operation (`merge`, `readArrow`): only the call shown fails.
 
 | Do not write                            | Write instead                                         |
 |-----------------------------------------|-------------------------------------------------------|
@@ -190,9 +194,9 @@ Each name below was tried on a `DataFrame` and does not compile. Use the replace
 | `df.dtypes`, `df.info()`                | `df.schema()`                                         |
 | `df.isnull()`, `df.isna()`, `df.na.count()` | `df.describe().select { name and nulls }`         |
 | `df.columns` (property)                 | `df.columnNames()`                                    |
-| `df.loc[...]`, `df.iloc[...]`, `df.index`, `df.reset_index()` | there is no index — see *Select, filter, sort* |
+| `df.loc[...]`, `df.iloc[...]`, `df.index`, `df.reset_index()` | there is no index — see [Select, filter, sort](#select-filter-sort) |
 | `df.assign(...)`                        | `df.add("c") { ... }`                                 |
-| `df.merge(other, on="id")`              | `df.join(other, "id")`                                |
+| `df.merge(other, on="id")`              | `df.join(other, "id")` (`merge` here merges columns)  |
 | `df.sort_values(...)`                   | `df.sortBy { ... }`                                   |
 | `df.fillna(...)`, `df.dropna()`         | `df.fillNulls { ... }.with { ... }`, `df.dropNulls()` |
 | `df.to_csv(...)`                        | `df.writeCsv(file)`                                   |
@@ -211,22 +215,22 @@ Each name below was tried on a `DataFrame` and does not compile. Use the replace
 | `df["c"] = ...` (assignment)            | `df.add("c") { ... }`                                 |
 | `df.join(other, by = "id")`             | `df.join(other, "id")` — there is no `by` parameter   |
 | `DataFrame.readJSON(...)`, `writeJSON(...)` | `readJson`, `writeJson`                           |
-| `DataFrame.readArrow(path)`, `writeArrow(...)` | `readArrowFeather` / `readArrowIPC`, `writeArrowFeather` / `writeArrowIPC` |
+| `DataFrame.readArrow(path)`, `writeArrow(...)` | `readArrowFeather` / `readArrowIPC`, `writeArrowFeather` / `writeArrowIPC` (`readArrow` exists but takes an `ArrowReader`) |
 
 ## Where the results differ
 
-These were measured on the same six-row table in Kotlin DataFrame and in Pandas 1.3.5, 2.3.3 and 3.1.1.
-The three Pandas versions agree on every row below except the text type of a column.
+Both libraries were run on the same six-row table. Pandas 1.x, 2.x and 3.x agree on every row below,
+except the text type of a column.
 
 | What                            | Pandas                    | Kotlin DataFrame                                 |
 |---------------------------------|---------------------------|--------------------------------------------------|
-| 25th percentile of `revenue`    | `92.5`                    | `89.17` (`89.16666666666666`)                    |
+| 25th percentile of `revenue`    | `92.5` (method R7)        | `89.17` (`89.16666666666666`, method [R8](percentile.md#quantile-estimation-methods)) |
 | `describe()` columns            | numeric only              | every column, plus `nulls`                       |
 | Missing value                   | `NaN`, silently spreads   | `null`; column type is `T?`                      |
 | Order of groups                 | sorted by key (`sort=False` keeps first appearance) | first appearance       |
 | Single-letter CSV values        | text: `object`, `str` since Pandas 3.0 | `Char`                              |
 | `pivot` result                  | flat columns              | one column group, needs `ungroup`                |
-| `drop(n)`                       | drops labels / columns    | drops the first `n` rows                         |
+| `drop(4)`                       | removes the row labelled 4 (`drop(columns=[...])` removes columns) | removes the first 4 rows |
 | Numbers after an Excel round trip | whole numbers stay `int64` | every number is `Double`                       |
 | `melt` and `gather`             | all values of the first column, then of the second | row by row                       |
 | Key columns of `merge(left_on, right_on)` and `join { a match right.b }` | both are kept | only the left one |
@@ -235,13 +239,13 @@ The three Pandas versions agree on every row below except the text type of a col
 
 ## Not covered yet
 
-Do not guess a name for these. Each was searched for by name in the main sources of every module and was not found:
+Do not guess a name for these: no function with such a name exists in Kotlin DataFrame.
 
-- `rolling`, `resample`, `ewm`, `expanding` (windowed and time-series functions);
+- `resample`, `ewm` and `expanding` (time-series functions); for `rolling(...).mean()` see `movingAverage` above;
 - `to_parquet` (there is no `writeParquet`);
 - `normalize=` in `value_counts` (divide by the number of rows, see above).
 
-Reading from a database was run on **PostgreSQL** only, on a table with text, integer and floating-point columns.
-Other databases, other column types (dates, arrays, JSON) and writing to a database were not run here.
+Reading from a database is covered for **PostgreSQL** only, with text, integer and floating-point columns.
+Other databases, other column types (dates, arrays, JSON) and writing to a database are not covered.
 
 If the task needs something that is not on this page, say so instead of guessing a name.

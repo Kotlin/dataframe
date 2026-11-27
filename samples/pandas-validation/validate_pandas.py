@@ -14,22 +14,25 @@ What it does:
      (pandasToKotlinDataFrameReference.md) whose result is easy to get wrong, in particular the rows where
      the two libraries give different results.
 
-  4. If PANDAS_POSTGRES_URL is set (for example postgresql://user:password@127.0.0.1:5432/postgres), runs the cases
-     of samples/src/test/resources/pandas-postgres-cases.json against that PostgreSQL: it creates a schema of its
-     own with a random name, loads sales-postgres.sql into it, evaluates the Pandas expressions through SQLAlchemy
-     and drops the schema. The Kotlin half is samples/.../guides/PandasPostgresCasesTest.kt. It refuses an address
-     that is not local unless PANDAS_POSTGRES_ALLOW_REMOTE=1. Without the variable these cases are reported as
-     NOT RUN, loudly, in the last line too.
+  4. If PANDAS_POSTGRES_URL is set (for example postgresql://user:password@127.0.0.1:5432/postgres), or
+     PANDAS_POSTGRES_DOCKER=1 (a container started with Testcontainers for Python, image PANDAS_POSTGRES_IMAGE),
+     runs the cases of samples/src/test/resources/pandas-postgres-cases.json against that PostgreSQL: it creates
+     a schema of its own with a random name, loads sales-postgres.sql into it, evaluates the Pandas expressions
+     through SQLAlchemy and drops the schema. The Kotlin half is samples/.../guides/PandasPostgresCasesTest.kt.
+     It refuses an address that is not local, or has parameters, unless PANDAS_POSTGRES_ALLOW_REMOTE=1. With
+     neither variable these cases are reported as NOT RUN, loudly, in the last line too.
 
 What it does NOT do: it does not run every Pandas cell of the reference page - those are inline code cells,
 not runnable blocks. Only the cases of the JSON files are executed.
 
 Usage:  python validate_pandas.py [--page PATH] [--csv PATH] [--cases PATH] [--postgres-cases PATH]
 Exit code: 0 - everything that ran holds, 1 - a block failed to run or a check failed.
-Needs:  Python 3.7+ and the packages of requirements.txt. Checked on pandas 1.3.5, 2.3.3 and 3.1.1
-        (SQLAlchemy 1.4 with pandas 1.3.5, 2.x with the others).
+Needs:  the packages of requirements.txt, and a Python that the Pandas you test supports: 3.7+ for pandas 1.x,
+        3.9+ for 2.2 and later 2.x, 3.11+ for 3.x (the `requires_python` of pandas itself). Checked on pandas
+        1.3.5, 2.3.3 and 3.1.1 (SQLAlchemy 1.4 with pandas 1.3.5, 2.x with the others).
 """
 import argparse
+import atexit
 import io
 import json
 import os
@@ -121,6 +124,7 @@ def run_cases(cases_path: Path, csv: Path):
     """Evaluate the `pandas` expression of every case on sales.csv and compare it with `expect`."""
     cases = json.loads(cases_path.read_text(encoding="utf-8"))
     tmp = tempfile.mkdtemp(prefix="pandas-cases-")
+    atexit.register(shutil.rmtree, tmp, True)
 
     def excel_roundtrip(frame):
         """Write `frame` to an .xlsx file and read it back: what `writeExcel` + `readExcel` do on the Kotlin side."""
@@ -153,18 +157,53 @@ def run_cases(cases_path: Path, csv: Path):
 
 
 def run_postgres_cases(cases_path: Path):
-    """Run pandas-postgres-cases.json against the PostgreSQL named by PANDAS_POSTGRES_URL, or report NOT RUN."""
+    """Run pandas-postgres-cases.json against a PostgreSQL, or report NOT RUN.
+
+    The database comes from PANDAS_POSTGRES_URL (a throwaway local PostgreSQL) or, with PANDAS_POSTGRES_DOCKER=1,
+    from a container started with Testcontainers for Python; its image is PANDAS_POSTGRES_IMAGE.
+    """
     address = os.environ.get("PANDAS_POSTGRES_URL", "").strip()
-    if not address:
-        not_run.append("PostgreSQL cases (PANDAS_POSTGRES_URL is not set)")
-        print("NOT RUN  PostgreSQL cases: PANDAS_POSTGRES_URL is not set")
-        return
+    if address:
+        _run_postgres_cases_at(address, cases_path)
+    elif os.environ.get("PANDAS_POSTGRES_DOCKER") == "1":
+        image = os.environ.get("PANDAS_POSTGRES_IMAGE", "").strip()
+        if not image:
+            check("PostgreSQL cases: PANDAS_POSTGRES_IMAGE is set", False,
+                  "set it, for example postgres:18-alpine, or run through :samples:runPandasValidation")
+            return
+        try:
+            try:
+                from testcontainers.community.postgres import PostgresContainer
+            except ImportError:  # older Testcontainers for Python keep it one level up
+                from testcontainers.postgres import PostgresContainer
+        except ImportError as e:
+            check("PostgreSQL cases: testcontainers is installed", False,
+                  '%s (pip install "testcontainers[postgres]")' % e)
+            return
+        try:
+            container = PostgresContainer(image)  # the constructor already connects to the Docker engine
+            container.start()
+        except Exception as e:  # no Docker engine, no image, no permission: say so, do not dump a traceback
+            check("PostgreSQL cases: the container started", False, "%s: %s" % (type(e).__name__, str(e)[:160]))
+            return
+        try:
+            _run_postgres_cases_at(container.get_connection_url(), cases_path)
+        finally:
+            container.stop()
+    else:
+        not_run.append("PostgreSQL cases (neither PANDAS_POSTGRES_URL nor PANDAS_POSTGRES_DOCKER=1 is set)")
+        print("NOT RUN  PostgreSQL cases: neither PANDAS_POSTGRES_URL nor PANDAS_POSTGRES_DOCKER=1 is set")
+
+
+def _run_postgres_cases_at(address: str, cases_path: Path):
     from urllib.parse import urlparse
-    host = urlparse(address).hostname or ""
-    if host not in LOCAL_HOSTS and os.environ.get("PANDAS_POSTGRES_ALLOW_REMOTE") != "1":
-        check("PostgreSQL cases: the address is local", False,
-              "%s is not local; these cases create and drop a schema. Use a throwaway local database, "
-              "or set PANDAS_POSTGRES_ALLOW_REMOTE=1 if you mean it" % host)
+    parsed = urlparse(address)
+    host = parsed.hostname or ""
+    # Local only, and no parameters: `?host=other` could send the driver somewhere else than the host shows.
+    if os.environ.get("PANDAS_POSTGRES_ALLOW_REMOTE") != "1" and (host not in LOCAL_HOSTS or parsed.query):
+        check("PostgreSQL cases: the address is local and has no parameters", False,
+              "%r is not local or has parameters; these cases create and drop a schema. Use a throwaway local "
+              "database, or set PANDAS_POSTGRES_ALLOW_REMOTE=1 if you mean it" % address.split("@")[-1])
         return
     try:
         import uuid
@@ -220,11 +259,11 @@ def main():
     # createDataFrame / readCsvResource: the frame built in code and the CSV hold the same data
     try:
         pd.testing.assert_frame_equal(created, df)
-        same = True
+        frames_equal = True
     except AssertionError as e:
-        same = False
+        frames_equal = False
         print(e)
-    check("createDataFrame == sales.csv (same rows, same dtypes)", same)
+    check("createDataFrame == sales.csv (same rows, same dtypes)", frames_equal)
     check("createDataFrame: 6 rows x 6 columns", df.shape == (6, 6), df.shape)
 
     # filterRows
@@ -261,7 +300,16 @@ def main():
     # The text dtype is version dependent: `object` up to pandas 2.x, `str` since pandas 3.0. Never a char type.
     check("one-letter CSV values: a string dtype (object, or str in pandas 3), not a char type",
           str(one_letter["product"].dtype) in ("object", "str"), one_letter["product"].dtype)
-    check("in place: df keeps 6 rows after filtering", len(df) == 6)
+    # "Many operations can change the frame in place": a real inplace=True on a copy, the original is untouched.
+    scratch = df.copy()
+    returned = scratch.drop(columns=["cost"], inplace=True)
+    check("in place: drop(inplace=True) changes the frame itself and returns None",
+          returned is None and "cost" not in scratch.columns and "cost" in df.columns)
+    # drop(n): Pandas removes by LABEL, Kotlin DataFrame's drop(n) removes the first n rows
+    dropped = df.drop(4)
+    check("drop(4): the row labelled 4 is gone, 5 rows remain", len(dropped) == 5 and 4 not in dropped.index,
+          list(dropped.index))
+    check("drop(columns=[...]) removes columns", "cost" not in df.drop(columns=["cost"]).columns)
 
     # the reference page: the cases shared with PandasReferenceCasesTest
     run_cases(args.cases, args.csv)

@@ -79,7 +79,10 @@ dependencies {
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
     testImplementation(libs.hikaricp)
-    testImplementation(libs.postgresql) // PandasPostgresCasesTest, see `pandasPostgresTest`
+    // PandasPostgresCasesTest, see `pandasPostgresTest`
+    testImplementation(libs.postgresql)
+    testImplementation(libs.testcontainers)
+    testImplementation(libs.testcontainers.postgresql)
 }
 
 // Running tests creates korro output lines!
@@ -234,18 +237,21 @@ tasks.test {
     inputs.file(rootProject.file("docs/StardustDocs/topics/guides/pandasToKotlinDataFrameReference.md"))
 }
 
-// The PostgreSQL cases of the guide for Pandas users (`pandas-validation/README.md`). Needs a throwaway PostgreSQL on
-// this machine and its address in PANDAS_POSTGRES_URL, for example postgresql://user:password@127.0.0.1:5432/postgres.
-// Not part of `test`/`check`/`build`. The task FAILS without the variable: a database test that did not run is not green.
+// The PostgreSQL cases of the guide for Pandas users (`pandas-validation/README.md`). They need a database from one of
+// two sources: PANDAS_POSTGRES_URL, the address of a throwaway PostgreSQL on this machine (for example
+// postgresql://user:password@127.0.0.1:5432/postgres), or PANDAS_POSTGRES_DOCKER=1, a container started with
+// Testcontainers. Not part of `test`/`check`/`build`. The task FAILS without either: a database test that did not run
+// is not green.
 tasks.register<Test>("pandasPostgresTest") {
     group = "verification"
     description = "Runs the PostgreSQL cases of the guide for Pandas users. " +
-        "Needs PANDAS_POSTGRES_URL; not part of test/check/build."
+        "Needs PANDAS_POSTGRES_URL or PANDAS_POSTGRES_DOCKER=1; not part of test/check/build."
 
     testClassesDirs = sourceSets.test.get().output.classesDirs
     classpath = sourceSets.test.get().runtimeClasspath
     maxHeapSize = "4g"
     jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
+    systemProperty("pandas.postgres.image", "postgres:${libs.versions.dockerImage.postgres.get()}")
     filter {
         includeTestsMatching(postgresTests)
     }
@@ -253,10 +259,11 @@ tasks.register<Test>("pandasPostgresTest") {
     outputs.upToDateWhen { false }
 
     doFirst {
-        if (System.getenv("PANDAS_POSTGRES_URL").isNullOrBlank()) {
+        if (System.getenv("PANDAS_POSTGRES_URL").isNullOrBlank() && System.getenv("PANDAS_POSTGRES_DOCKER") != "1") {
             throw GradleException(
-                "PANDAS_POSTGRES_URL is not set. Point it at a throwaway local PostgreSQL, for example " +
-                    "postgresql://user:password@127.0.0.1:5432/postgres. See samples/pandas-validation/README.md.",
+                "Neither PANDAS_POSTGRES_URL nor PANDAS_POSTGRES_DOCKER=1 is set. Point the first at a throwaway " +
+                    "local PostgreSQL, for example postgresql://user:password@127.0.0.1:5432/postgres, or use " +
+                    "Docker. See samples/pandas-validation/README.md.",
             )
         }
     }
@@ -301,9 +308,13 @@ tasks.register<Exec>("runPandasValidation") {
         .orElse(if (System.getProperty("os.name").startsWith("Windows")) "python" else "python3")
     val script = layout.projectDirectory.file("pandas-validation/validate_pandas.py").asFile
 
-    commandLine(python.get(), script.path)
+    // The image of the optional PostgreSQL cases, PANDAS_POSTGRES_DOCKER=1: the same tag the Kotlin side uses.
+    environment("PANDAS_POSTGRES_IMAGE", "postgres:${libs.versions.dockerImage.postgres.get()}")
 
     doFirst {
+        // Resolved here, not at configuration time, so that configuring the build never looks for Python.
+        commandLine(python.get(), script.path)
+
         val ready = runCatching {
             val probe = ProcessBuilder(python.get(), "-c", "import pandas, openpyxl, pyarrow")
                 .redirectErrorStream(true)

@@ -2,6 +2,7 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.guides
 
+import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -80,12 +81,13 @@ class MigratingFromPandas : DataFrameSampleHelper("migratingFromPandas", "guides
         )
         // SampleEnd
         df.rowsCount() shouldBe 6
+        // the schema that the page's later examples rely on (they use the hand-written `Sales` of this class)
+        df.schema().toString() shouldBe
+            "region: String\nproduct: String\nyear: Int\nrevenue: Int\ncost: Int\ndiscount: Double?"
         df.saveDfHtmlSample()
     }
 
-    // Shown on the page; ignored because the path is relative to the reader's own project.
-    // The real read of the same file is `readCsvResource` below.
-    @Ignore
+    @Ignore("The shown path is relative to the reader's own project; pandasReadCsvResource reads the same file")
     @Test
     fun pandasReadCsv() {
         // SampleStart
@@ -134,7 +136,7 @@ class MigratingFromPandas : DataFrameSampleHelper("migratingFromPandas", "guides
         // SampleStart
         df.fillNulls { discount }.with { 0.0 }
             // SampleEnd
-            .also { it.rowsCount() shouldBe 6 }
+            .also { it["discount"].toList() shouldBe listOf(0.1, 0.0, 0.05, 0.0, 0.2, 0.0) }
             .saveDfHtmlSample()
     }
 
@@ -143,7 +145,7 @@ class MigratingFromPandas : DataFrameSampleHelper("migratingFromPandas", "guides
         // SampleStart
         df.dropNulls { discount }
             // SampleEnd
-            .also { it.rowsCount() shouldBe 4 }
+            .also { it["revenue"].toList() shouldBe listOf(100, 80, 120, 90) } // the rows without a discount are gone
             .saveDfHtmlSample()
     }
 
@@ -161,11 +163,16 @@ class MigratingFromPandas : DataFrameSampleHelper("migratingFromPandas", "guides
     fun pandasGroupByAggregate() {
         // SampleStart
         df.groupBy { region }.aggregate {
-            sum(revenue) into "total"
-            mean(cost) into "avgCost"
+            sum { revenue } into "total"
+            mean { cost } into "avgCost"
         }
             // SampleEnd
-            .also { it["total"].toList() shouldBe listOf(370, 370) } // pandas: the same totals
+            .also {
+                // pandas: the same numbers
+                it["region"].toList() shouldBe listOf("North", "South")
+                it["total"].toList() shouldBe listOf(370, 370)
+                it["avgCost"].toList() shouldBe listOf(73.33333333333333, 80.0)
+            }
             .saveDfHtmlSample()
     }
 
@@ -174,7 +181,11 @@ class MigratingFromPandas : DataFrameSampleHelper("migratingFromPandas", "guides
         // SampleStart
         df.pivot { year }.groupBy { region }.sum { revenue }.ungroup("year")
             // SampleEnd
-            .also { it.columnNames() shouldBe listOf("region", "2023", "2024") }
+            .also {
+                it.columnNames() shouldBe listOf("region", "2023", "2024")
+                it["2023"].toList() shouldBe listOf(250, 80)
+                it["2024"].toList() shouldBe listOf(120, 290)
+            }
             .saveDfHtmlSample()
     }
 
@@ -187,7 +198,10 @@ class MigratingFromPandas : DataFrameSampleHelper("migratingFromPandas", "guides
         )
         managers.leftJoin(df, "region")
             // SampleEnd
-            .also { it.rowsCount() shouldBe 7 } // East has no sales: one row of nulls
+            .also {
+                it.rowsCount() shouldBe 7
+                it["revenue"].toList().last() shouldBe null // East has no sales: its row holds nulls
+            }
             .saveDfHtmlSample()
     }
 
@@ -221,19 +235,19 @@ class MigratingFromPandas : DataFrameSampleHelper("migratingFromPandas", "guides
     fun describeCoversAllColumnsAndHasNulls() {
         val described = df.describe()
         described.rowsCount() shouldBe 6 // all six columns, pandas: only the 4 numeric ones
-        described.columnNames().contains("nulls") shouldBe true
+        described.columnNames() shouldContainAll listOf("nulls", "top", "freq")
     }
 
     @Test
     fun percentilesDifferFromPandas() {
-        // pandas 1.3.5: df.revenue.quantile(0.25) == 92.5
+        // The 25th percentile of the six revenues: R8 (used here) 89.17, R7 (the Pandas default) 92.5.
         df.revenue.percentile(25.0) shouldBe 89.16666666666666
     }
 
     @Test
     fun dropRemovesFirstRowsNotColumns() {
         val dropped = df.drop(4)
-        dropped.rowsCount() shouldBe 2
+        dropped.revenue.toList() shouldBe listOf(120, 90) // the first four rows are gone, not the last ones
         dropped.columnNames() shouldBe df.columnNames()
     }
 

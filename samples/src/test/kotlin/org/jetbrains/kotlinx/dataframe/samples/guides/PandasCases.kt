@@ -19,28 +19,28 @@ import kotlin.math.abs
  */
 internal object PandasCases {
 
-    /**
-     * Runs [kotlinSide] (one lambda per case id) against the cases in [resource] and returns what went wrong:
-     * an empty list means every case holds.
-     */
-    fun check(resource: String, kotlinSide: Map<String, () -> Any?>): List<String> {
+    /** One case as the Kotlin side sees it: its [id] and the value Kotlin DataFrame must give. */
+    class Case(val id: String, val expected: Any?)
+
+    fun load(resource: String): List<Case> {
         val text = PandasCases::class.java.getResource(resource)!!.readText()
-        val cases = Json.parseToJsonElement(text).jsonArray.map { it.jsonObject }
-        val ids = cases.map { it.getValue("id").jsonPrimitive.content }
-
-        // No case without a Kotlin counterpart, and no counterpart without a case.
-        val onlyInFile = ids - kotlinSide.keys
-        val onlyInCode = kotlinSide.keys - ids.toSet()
-        if (onlyInFile.isNotEmpty() || onlyInCode.isNotEmpty()) {
-            return listOf("case ids differ: only in $resource: $onlyInFile, only in the Kotlin code: $onlyInCode")
+        return Json.parseToJsonElement(text).jsonArray.map { it.jsonObject }.map { case ->
+            Case(
+                id = case.getValue("id").jsonPrimitive.content,
+                expected = (case["expectKotlin"] ?: case.getValue("expect")).plain(),
+            )
         }
+    }
 
-        return cases.mapNotNull { case ->
-            val id = case.getValue("id").jsonPrimitive.content
-            val expected = (case["expectKotlin"] ?: case.getValue("expect")).plain()
-            val actual = kotlinSide.getValue(id)()
-            if (same(expected, actual)) null else "$id: expected $expected but was $actual"
+    /** Runs [kotlinSide] and returns `null` when [case] holds, otherwise a sentence that says what went wrong. */
+    fun failure(case: Case, kotlinSide: (() -> Any?)?): String? {
+        if (kotlinSide == null) return "${case.id}: there is no Kotlin counterpart for this case"
+        val actual = try {
+            kotlinSide()
+        } catch (e: Exception) {
+            return "${case.id}: the Kotlin side threw $e"
         }
+        return if (same(case.expected, actual)) null else "${case.id}: expected ${case.expected} but was $actual"
     }
 
     private fun JsonElement.plain(): Any? =

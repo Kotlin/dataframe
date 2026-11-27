@@ -5,6 +5,7 @@ package org.jetbrains.kotlinx.dataframe.samples.guides
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.addAll
 import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.columnNames
@@ -24,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
+import org.jetbrains.kotlinx.dataframe.api.fullJoin
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.head
@@ -33,6 +35,7 @@ import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.median
+import org.jetbrains.kotlinx.dataframe.api.movingAverage
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.nulls
 import org.jetbrains.kotlinx.dataframe.api.percentile
@@ -40,6 +43,7 @@ import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.shuffle
@@ -146,8 +150,11 @@ class PandasReferenceCells {
         df.filter { a > 10 }
         df.filter { "a"<Int>() > 10 }
         df.filter { a > 1 && s == "x" }
+        df.filter { "a"<Int>() > 1 && "s"<String>() == "x" }
         df.sortBy { a and b }
+        df.sortBy("a", "b")
         df.sortByDesc { a }
+        df.sortByDesc("a")
         df.take(n)
         df.drop(n)
     }
@@ -159,7 +166,7 @@ class PandasReferenceCells {
         df.update { a }.where { y == 2024 }.with { it * 2 }
         df.convert { y }.to<String>()
         df.rename("a" to "b")
-        df.rename { a }.into("b")
+        df.rename { a }.to("b")
         df.remove { a }
         df.remove("a")
         df.a.map { it * 2 }
@@ -178,8 +185,8 @@ class PandasReferenceCells {
     fun groupAggregatePivot(df: DataFrame<RefRow>) {
         df.groupBy { r }.sum { revenue }
         df.groupBy { r }.count()
-        df.groupBy { r }.aggregate { sum(rev) into "t"; mean(cost) into "m" }
-        df.groupBy { r and p }.aggregate { sum(rev) into "t" }
+        df.groupBy { r }.aggregate { sum { rev } into "t"; mean { cost } into "m" }
+        df.groupBy { r and p }.aggregate { sum { rev } into "t" }
         df.pivot { y }.groupBy { r }.sum { v }.ungroup("y")
     }
 
@@ -187,7 +194,9 @@ class PandasReferenceCells {
         df1.join(df2, "id")
         df1.leftJoin(df2, "id")
         df1.concat(df2)
-        df1.add(df2)
+        df1.rightJoin(df2, "id")
+        df1.fullJoin(df2, "id")
+        df1.addAll(df2)
         df1.join(df2) { "a" match right["b"] }
     }
 
@@ -198,11 +207,12 @@ class PandasReferenceCells {
         df.a.cumSum()
         df.add("prev") { prev()?.a }
         df.add("d") { diff(0) { a } }
+        df.add("ma") { movingAverage(3) { it.a } }
         df.valueCounts { a }
         df.sortByDesc { a }.take(n)
         df.sortBy { a }.take(n)
         df.shuffle().take(n)
-        df.join(df.groupBy { r }.aggregate { sum(cost) into "total" }, "r")
+        df.join(df.groupBy { r }.aggregate { sum { cost } into "total" }, "r")
     }
 
     fun stringsDatesRowByRow(df: DataFrame<RefRow>) {
