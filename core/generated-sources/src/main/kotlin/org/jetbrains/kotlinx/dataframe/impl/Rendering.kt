@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
-import org.jetbrains.kotlinx.dataframe.io.escapeHTML
+import org.jetbrains.kotlinx.dataframe.io.escapeHtml
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
@@ -127,7 +127,7 @@ internal fun renderType(column: AnyCol) =
 
 internal fun AnyCol.renderShort() =
     when (kind()) {
-        ColumnKind.Value -> "ValueColumn<${renderType(type)}>: $size entries".escapeHTML()
+        ColumnKind.Value -> "ValueColumn<${renderType(type)}>: $size entries".escapeHtml()
         ColumnKind.Frame -> "FrameColumn: $size entries"
         ColumnKind.Group -> "ColumnGroup ${asColumnGroup().asDataFrame().size}}"
     }
