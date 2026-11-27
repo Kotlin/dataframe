@@ -198,7 +198,7 @@ df.filter { "info"["age"]<Int>() >= 18 }
 
 ### Invoked String API
 
-> This API is outdated and may be changed in the future.
+> This API may be changed in the future.
 > 
 > Please don't mix it with the `col`/`colGroup` methods.
 > 
@@ -210,6 +210,8 @@ It will create the same column accessors as in the Columns Selection DSL.
 You can access nested columns using the 
 `String.get` or `String.invoke` operators or using the ` String.select {} ` function, 
 where the receiver is the column group name.
+
+For example:
 
 <!---FUN invocatedStringsApi-->
 
@@ -246,6 +248,21 @@ df.filter { "info"["age"]<Int>() >= 18 }
 ```
 
 <!---END-->
+
+Correspondence between String Column Accessors and the Invoked String API:
+
+| String Column Accessors                                                                 | Invoked String API                  |
+|-----------------------------------------------------------------------------------------|-------------------------------------|
+| `col("name")`                                                                           | `"name"()`                          |
+| `col<String>("name")` / `getValue<String>("name")`                                      | `"name"<String>()`                  |
+| `colGroup("info").col("age")`                                                           | `"info"["age"]`                     |
+| `colGroup("info").col<Int>("age")` / `getColumnGroup("info").getValue<Int>("age")`      | `"info"["age"]<Int>()`              |
+| `colGroup("info").cols("age", "height")`                                                | `"info"["age", "height"]`           |
+| `colGroup("info").select { col("age") and col("height") }`                              | `"info" { "age"() and "height"() }` |
+
+This is a DSL-like shortcut for String Column Accessors.
+It can be good for presentations or demos for simple column selection / row expression cases,
+but we don't recommend using it in production code.
 
 ## When should I use the String API?
 
