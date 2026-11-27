@@ -16,8 +16,11 @@ on:
 jobs:
   build_preview_generated_code:
     name: Build Preview of Generated Code
+    # `edited` also fires for closed PRs; don't push preview branches that cleanup has already run for
+    if: github.event.pull_request.state == 'open'
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      # Shared with cleanup-generated-sources-preview.yml, so closing the PR cancels and waits for this run
+      group: generated-sources-preview-pr-${{ github.event.pull_request.number }}
       cancel-in-progress: true
     runs-on: ubuntu-latest
     env:
@@ -50,10 +53,13 @@ jobs:
       - name: Commit and push if changes
         id: git-commit
         if: steps.git-diff.outputs.changed == 'true'
+        env:
+          # The `pr-<number>/` segment lets cleanup-generated-sources-preview.yml delete this PR's branches once it's closed
+          BRANCH: generated-sources/pr-${{ github.event.number }}/docs-update-${{ github.run_number }}
         run: |
-          git checkout -b generated-sources/docs-update-${{ github.run_number }}
+          git checkout -b "$BRANCH"
           git commit -m "Update generated sources with recent changes"
-          git push origin generated-sources/docs-update-${{ github.run_number }}
+          git push origin "$BRANCH"
           echo "commit=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
       - name: Update status to PR
