@@ -42,7 +42,7 @@ import kotlin.io.path.writer
  *
  * Converting to a [<code>String</code>][String] can be done like this:
  *
- * [DataFrame.toCsvStr][toCsvStr]`(delimiter = ",")`
+ * [DataFrame.toCsvStr][toCsvStr]`(delimiter = ',')`
  *
  * @param path The path pointing to a file to write to.
  * @param delimiter The field delimiter character. Default: ','.
@@ -111,7 +111,7 @@ public fun AnyFrame.writeCsv(
  *
  * Converting to a [<code>String</code>][String] can be done like this:
  *
- * [DataFrame.toCsvStr][toCsvStr]`(delimiter = ",")`
+ * [DataFrame.toCsvStr][toCsvStr]`(delimiter = ',')`
  *
  * @param file The file to write to.
  * @param delimiter The field delimiter character. Default: ','.
@@ -180,7 +180,7 @@ public fun AnyFrame.writeCsv(
  *
  * Converting to a [<code>String</code>][String] can be done like this:
  *
- * [DataFrame.toCsvStr][toCsvStr]`(delimiter = ",")`
+ * [DataFrame.toCsvStr][toCsvStr]`(delimiter = ',')`
  *
  * @param path The path pointing to a file to write to.
  * @param delimiter The field delimiter character. Default: ','.
@@ -250,7 +250,7 @@ public fun AnyFrame.writeCsv(
  *
  * Converting to a [<code>String</code>][String] can be done like this:
  *
- * [DataFrame.toCsvStr][toCsvStr]`(delimiter = ",")`
+ * [DataFrame.toCsvStr][toCsvStr]`(delimiter = ',')`
  *
  * @param writer The [<code>Appendable</code>][Appendable] to write to.
  * @param delimiter The field delimiter character. Default: ','.

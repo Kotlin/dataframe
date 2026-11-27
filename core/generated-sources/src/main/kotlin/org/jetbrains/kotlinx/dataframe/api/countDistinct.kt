@@ -72,7 +72,7 @@ public fun DataFrame<*>.countDistinct(): Int = countDistinct { all() }
  * df.countDistinct { year and title }
  * ```
  *
- * @return The number of distinct rows in this [<code>DataFrame</code>][DataFrame].
+ * @return The number of distinct combinations of values in the selected columns.
  */
 public fun <T, C> DataFrame<T>.countDistinct(columns: ColumnsSelector<T, C>): Int {
     val cols = get(columns)
@@ -105,7 +105,7 @@ public fun <T, C> DataFrame<T>.countDistinct(columns: ColumnsSelector<T, C>): In
  * df.countDistinct("year", "title")
  * ```
  *
- * @return The number of distinct rows in this [<code>DataFrame</code>][DataFrame].
+ * @return The number of distinct combinations of values in the selected columns.
  */
 public fun <T> DataFrame<T>.countDistinct(vararg columns: String): Int = countDistinct { columns.toColumnSet() }
 

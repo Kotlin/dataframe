@@ -69,7 +69,7 @@ public data class ColumnPath(val path: List<String>) :
     /**
      * Returns a shortened [<code>ColumnPath</code>][ColumnPath] containing just the last [<code>last</code>][last] elements.
      *
-     * NOTE: If called from the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], you might be looking for [<code>ColumnsSelectionDsl.takeLast</code>][ColumnsSelectionDsl.takeLast]
+     * NOTE: If called from the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], you might be looking for [<code>ColumnsSelectionDsl.takeLastCols</code>][ColumnsSelectionDsl.takeLastCols]
      * instead.
      */
     public fun takeLast(last: Int): ColumnPath = ColumnPath(path.takeLast(last))

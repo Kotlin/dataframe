@@ -166,7 +166,7 @@ public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
  *
  * ### Example
  * ```kotlin
- * // Count rows for each city where the "income" value is greater than 30.0.
+ * // Count rows for each city where the "income" value is greater than or equal to 30.0.
  * // Returns a new DataFrame with columns "city" and "pointsCount".
  * df.groupBy { city }.count("pointsCount") { income >= 30.0 }
  * ```
@@ -275,7 +275,7 @@ public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataR
  * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by counting the number of rows in each
  * combined [<code>pivot</code>][pivot] + [<code>groupBy</code>][groupBy] group.
  *
- * Returns a new [<code>DataFrame</code>][DataFrame] containing a following matrix:
+ * Returns a new [<code>DataFrame</code>][DataFrame] containing the following matrix:
  * - one row per [<code>groupBy</code>][groupBy] key (or keys set);
  * - one column group per [<code>pivot</code>][pivot] key, where each inner column corresponds to a value of that key;
  * - each cell contains the number of rows in the corresponding pivot–group pair.

@@ -33,7 +33,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
  *
  * Converting to a [<code>String</code>][String] can be done like this:
  *
- * [DataFrame.toCsvStr][toCsvStr]`(delimiter = ",")`
+ * [DataFrame.toCsvStr][toCsvStr]`(delimiter = ',')`
  *
  * @param delimiter The field delimiter character. Default: ','.
  *

@@ -75,7 +75,7 @@ import kotlin.io.path.inputStream
  *
  * You can also read "raw" CSV data from a [<code>String</code>][String] like this:
  *
- * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
+ * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ',')`
  *
  * @param path The file path to read.
  *   Use [charset] to specify the encoding.
@@ -239,7 +239,7 @@ public fun DataFrame.Companion.readCsv(
  *
  * You can also read "raw" CSV data from a [<code>String</code>][String] like this:
  *
- * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
+ * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ',')`
  *
  * @param file The file to read.
  *   Use [charset] to specify the encoding.
@@ -403,7 +403,7 @@ public fun DataFrame.Companion.readCsv(
  *
  * You can also read "raw" CSV data from a [<code>String</code>][String] like this:
  *
- * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
+ * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ',')`
  *
  * @param url The URL from which to fetch the data.
  *   Use [charset] to specify the encoding.
@@ -567,7 +567,7 @@ public fun DataFrame.Companion.readCsv(
  *
  * You can also read "raw" CSV data from a [<code>String</code>][String] like this:
  *
- * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
+ * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ',')`
  *
  * @param fileOrUrl The file path or URL to read the data from.
  *   Use [charset] to specify the encoding.
@@ -732,7 +732,7 @@ public fun DataFrame.Companion.readCsv(
  *
  * You can also read "raw" CSV data from a [<code>String</code>][String] like this:
  *
- * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
+ * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ',')`
  *
  * @param inputStream Represents the file to read.
  *   Use [charset] to specify the encoding.
