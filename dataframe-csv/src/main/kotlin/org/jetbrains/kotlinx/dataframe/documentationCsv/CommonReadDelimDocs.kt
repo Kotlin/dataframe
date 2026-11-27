@@ -48,7 +48,7 @@ import java.net.URL
  *
  * You can also read "raw" $[FILE_TYPE] data from a [String] like this:
  *
- * $[STR_FUNCTION_LINK]`("a,b,c", delimiter = ",")`
+ * $[STR_FUNCTION_LINK]`("a,b,c", delimiter = ',')`
  *
  * @comment Some helper arguments for the function links
  * @set [FUNCTION_LINK] \[DataFrame.${[FUNCTION_NAME]}\]\[${[FUNCTION_NAME]}\]

@@ -306,7 +306,7 @@ internal fun <T> TransformableColumnSet<T>.singleWithTransformerImpl(): Transfor
 /**
  * Converts [this] [ColumnsResolver] to a [SingleColumn].
  * [resolveSingle] will return the single column of [this] if there is only one, else it will return `null`.
- * If the result used as a [ColumnSet], `null` will be converted to an empty list.
+ * If the result is used as a [ColumnSet], `null` will be converted to an empty list.
  */
 internal fun <T> ColumnsResolver<T>.singleOrNullImpl(): SingleColumn<T> =
     object : SingleColumn<T> {
@@ -486,7 +486,7 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(
 /**
  * Retrieves the correct [ColumnKind] based on the [type][KType] of the values in the column.
  *
- * NOTE: nullable DataFrames cannot become a [FrameColumns][FrameColumn],
+ * NOTE: nullable DataFrames cannot become a [FrameColumn],
  * so they become [ValueColumns][ValueColumn] instead.
  */
 internal fun KType.toColumnKind(): ColumnKind =

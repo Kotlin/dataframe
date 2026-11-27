@@ -38,7 +38,7 @@ internal class TwoStepMultipleColumnsHandler<in Value : Any, Return : Any?>(
 
     /**
      * The second step [Aggregator] which can take multiple outputs of
-     * this [aggregator] and aggregate it to a single value.
+     * this [aggregator] and aggregate them to a single value.
      */
     @Suppress("UNCHECKED_CAST")
     val stepTwo by lazy {

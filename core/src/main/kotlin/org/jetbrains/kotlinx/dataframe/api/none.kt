@@ -40,7 +40,7 @@ public fun <T> DataColumn<T>.none(predicate: Predicate<T>): Boolean = values.non
  * ```
  *
  * @param predicate A [RowFilter] lambda that takes a [DataRow] (as both `this` and `it`)
- * and returns `true` if none of the rows should be considered a match.
+ * and returns `true` if the row should be considered a match.
  * @return `true` if none of the rows satisfies the [predicate], `false` otherwise.
  * @see [DataFrame.any]
  */

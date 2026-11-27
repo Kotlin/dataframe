@@ -604,7 +604,7 @@ public fun <T, C> MoveClause<T, C>.under(
  * ```
  *
  * @param [columnIndex] The index specifying the position in the [DataFrame] columns
- *  * where the selected columns will be moved.
+ * where the selected columns will be moved.
  */
 @Refine
 @Interpretable("MoveTo")
