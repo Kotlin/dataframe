@@ -101,9 +101,10 @@ internal fun getResourceText(resource: String, vararg replacement: Pair<String, 
 }
 
 internal fun ColumnDataForJs.renderHeader(): String {
-    val tooltip = "${column.name}: ${renderType(column.type())}"
+    val escapedName = column.name().escapeHTML()
+    val tooltip = "$escapedName: ${renderType(column.type()).escapeHTML()}"
     val styleAttr = if (headerStyle != null) " style=\"$headerStyle\"" else ""
-    return "<span title=\"$tooltip\"$styleAttr>${column.name()}</span>"
+    return "<span title=\"$tooltip\"$styleAttr>$escapedName</span>"
 }
 
 internal fun tableJs(
@@ -405,7 +406,9 @@ public fun AnyFrame.toStaticHtml(
                             colBorders += Border.RIGHT
                         }
                         emitTag("th", "${colBorders.toClass()} style=\"text-align:left\"") {
-                            append(col.columnWithPath?.name ?: "")
+                            append(
+                                cellRenderer.content(col.columnWithPath?.name ?: "", configuration).truncatedContent,
+                            )
                         }
                     }
                 }
@@ -447,7 +450,7 @@ public fun AnyFrame.toStaticHtml(
                         ).let { append(it.body) }
 
                         val size = cellValue.rowsCount()
-                        if (size > newRowsLimit ?: Int.MAX_VALUE) {
+                        if (size > (newRowsLimit ?: Int.MAX_VALUE)) {
                             emitTag("p") {
                                 append("... showing only top $newRowsLimit of $size rows")
                             }
