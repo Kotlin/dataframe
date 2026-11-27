@@ -334,7 +334,7 @@ public fun <T> DataFrame<T>.sortBy(vararg cols: ColumnReference<*>): DataFrame<T
  * df.sortBy("age", "name")
  * ```
  *
- * @param cols The [<code>Column Names</code>][String] that defines which columns are used for sorting.
+ * @param cols The [<code>Column Names</code>][String] that define which columns are used for sorting.
  * @return A new [<code>DataFrame</code>][DataFrame] with the original rows sorted based on the specified columns.
  */
 public fun <T> DataFrame<T>.sortBy(vararg cols: String): DataFrame<T> = sortBy { cols.toColumnSet() }

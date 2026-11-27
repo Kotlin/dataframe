@@ -286,7 +286,7 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
  *
  * ### Example:
  * ```kotlin
- * // For each selected column, place it under its under a group with its type as name (individual for each column):
+ * // For each selected column, place it under a group with its type as name (individual for each column):
  * df.group { all() }.into { it.type().toString() }
  * ```
  *

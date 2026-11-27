@@ -183,7 +183,7 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
  * [<code>takeLast</code>][DataFrame.takeLast],
  * [<code>single</code>][DataFrame.single], that fails unless there is exactly one row to return.
  *
- * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the first value
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the first row
  * that satisfies a condition specified in this filter.
  *
  * @return A [<code>DataRow</code>][DataRow] containing the first row that matches the given [<code>predicate</code>][predicate].

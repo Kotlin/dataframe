@@ -357,7 +357,7 @@ private fun downsizeBufferedImageIfNeeded(value: Any?, renderConfig: DisplayConf
  * @param cellRenderer optional cell renderer for rendering
  * @param includeCss whether to include CSS in the output. This is `true` by default but it can be set
  *  to `false` to emulate what happens in environments where custom CSS is not allowed.
- * @param openNestedDfs whether to open nested dataframes. This is `false` by default byt ut can be set
+ * @param openNestedDfs whether to open nested dataframes. This is `false` by default but it can be set
  *  to `true` to emulate what happens in environments where `<details>` tags are not supported.
  */
 public fun AnyFrame.toStaticHtml(

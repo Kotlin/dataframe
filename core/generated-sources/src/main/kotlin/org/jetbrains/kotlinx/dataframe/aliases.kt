@@ -156,8 +156,7 @@ public typealias RowFilter<T> = RowExpression<T, Boolean>
 /**
  * ## Column Filter
  *
- * [<code>ColumnFilter</code>][ColumnFilter] is a lambda function expecting a [<code>Boolean</code>][Boolean] result given an instance of [<code>DataColumn</code>][DataColumn]`<C>` as context
- * (`this` and `it`).
+ * [<code>ColumnFilter</code>][ColumnFilter] is a lambda function expecting a [<code>Boolean</code>][Boolean] result given an instance of [<code>ColumnWithPath</code>][ColumnWithPath]`<T>` as `it`.
  *
  * Return `true` if the column should be included in the result.
  *

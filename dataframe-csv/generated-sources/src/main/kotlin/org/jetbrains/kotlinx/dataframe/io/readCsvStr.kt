@@ -59,7 +59,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  *
  * You can also read "raw" CSV data from a [<code>String</code>][String] like this:
  *
- * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
+ * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ',')`
  *
  * @param text The raw data to read in the form of a [<code>String</code>][String].
  * @param delimiter The field delimiter character. Default: ','.

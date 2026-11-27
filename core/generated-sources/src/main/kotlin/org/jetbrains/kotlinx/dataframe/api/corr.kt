@@ -122,7 +122,7 @@ internal interface CorrDocs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * **[<code>`corr`</code>][convert]**`  { columnsSelector: `[<code>`ColumnsSelector`</code>][ColumnsSelector]`  }`
+     * **[<code>`corr`</code>][corr]**`  { columnsSelector: `[<code>`ColumnsSelector`</code>][ColumnsSelector]`  }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * __`.`__[<code>**`with`**</code>][Corr.with]` { columnsSelector: `[<code>`ColumnsSelector`</code>][ColumnsSelector]`  }`
