@@ -78,7 +78,7 @@ public interface DataRow<out T> {
     /**
      * Returns the result of the [row expression][expression] computed for this row.
      *
-     * [Row expressions][ExpressionsGivenRow] is a
+     * A [row expression][ExpressionsGivenRow] is a
      * lambda that receives each [DataRow] as both `this` and `it`
      * and is expected to return a computed value.
      *

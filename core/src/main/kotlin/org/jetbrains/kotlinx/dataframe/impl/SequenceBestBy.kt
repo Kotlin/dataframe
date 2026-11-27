@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.NA
  *
  * This means that if `this` and `other` are considered equally "good", `false` should be returned.
  *
- * You add additional constraints to an [IsBetterThan] function in the following fashion:
+ * You can add additional constraints to an [IsBetterThan] function in the following fashion:
  *
  * Let's say you want a value to always be returned when it satisfies the condition `isPreferred(it)`,
  * but in all other cases, you just want the best.

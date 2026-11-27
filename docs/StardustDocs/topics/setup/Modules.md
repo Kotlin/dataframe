@@ -37,7 +37,7 @@ that significantly enhance the development experience
     </tr>
     <tr>
       <td><code><a href="#dataframe-excel">dataframe-excel</a></code></td>
-      <td>Provides support for XSL/XLSX format writing and reading.</td>
+      <td>Provides support for XLS/XLSX format writing and reading.</td>
     </tr>
     <tr>
       <td><code><a href="#dataframe-jdbc">dataframe-jdbc</a></code></td>
