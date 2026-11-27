@@ -32,11 +32,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.scale
-import org.jetbrains.kotlinx.dataframe.impl.truncate
 import org.jetbrains.kotlinx.dataframe.jupyter.CellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
-import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.util.DISPLAY_CONFIGURATION
@@ -101,9 +99,10 @@ internal fun getResourceText(resource: String, vararg replacement: Pair<String, 
 }
 
 internal fun ColumnDataForJs.renderHeader(): String {
-    val tooltip = "${column.name}: ${renderType(column.type())}"
+    val escapedName = column.name().escapeHtml()
+    val tooltip = "$escapedName: ${renderType(column.type()).escapeHtml()}"
     val styleAttr = if (headerStyle != null) " style=\"$headerStyle\"" else ""
-    return "<span title=\"$tooltip\"$styleAttr>${column.name()}</span>"
+    return "<span title=\"$tooltip\"$styleAttr>$escapedName</span>"
 }
 
 internal fun tableJs(
@@ -405,7 +404,9 @@ public fun AnyFrame.toStaticHtml(
                             colBorders += Border.RIGHT
                         }
                         emitTag("th", "${colBorders.toClass()} style=\"text-align:left\"") {
-                            append(col.columnWithPath?.name ?: "")
+                            append(
+                                (col.columnWithPath?.name ?: "").escapeHtml(),
+                            )
                         }
                     }
                 }
@@ -447,7 +448,7 @@ public fun AnyFrame.toStaticHtml(
                         ).let { append(it.body) }
 
                         val size = cellValue.rowsCount()
-                        if (size > newRowsLimit ?: Int.MAX_VALUE) {
+                        if (size > (newRowsLimit ?: Int.MAX_VALUE)) {
                             emitTag("p") {
                                 append("... showing only top $newRowsLimit of $size rows")
                             }
@@ -996,17 +997,23 @@ internal fun String.escapeForHtmlInJs() = replace("\"", "\\\"").escapeNewLines()
 internal fun renderValueForHtml(value: Any?, truncate: Int, format: RendererDecimalFormat): RenderedContent =
     formatter.truncate(renderValueToString(value, format), truncate)
 
-internal fun String.escapeHTML(): String {
+internal fun String.escapeHtml(): String {
     val str = this
+    val illegalCodePoints = setOf('"', '\'', '<', '>', '&', '\\').map { it.code }
     return buildString {
-        for (c in str) {
-            if (c.code > 127 || c == '"' || c == '\'' || c == '<' || c == '>' || c == '&' || c == '\\') {
+        var index = 0
+        while (index < str.length) {
+            // iterate by code point so that a non-BMP character (e.g. an emoji) is escaped as a single
+            // character reference instead of two surrogate references, which browsers decode to U+FFFD
+            val codePoint = str.codePointAt(index)
+            if (codePoint > 127 || codePoint in illegalCodePoints) {
                 append("&#")
-                append(c.code)
+                append(codePoint)
                 append(';')
             } else {
-                append(c)
+                appendCodePoint(codePoint)
             }
+            index += Character.charCount(codePoint)
         }
     }
 }
@@ -1042,10 +1049,10 @@ internal class DataFrameFormatter(
                 ellipsis
             } else {
                 val len = (limit - 3).coerceAtLeast(1)
-                RenderedContent.textWithLength(str.substring(0, len).escapeHTML(), len) + ellipsis
+                RenderedContent.textWithLength(str.substring(0, len).escapeHtml(), len) + ellipsis
             }
         } else {
-            RenderedContent.textWithLength(str.escapeHTML(), str.length)
+            RenderedContent.textWithLength(str.escapeHtml(), str.length)
         }
 
     fun format(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): String {
@@ -1054,7 +1061,7 @@ internal class DataFrameFormatter(
             result == null -> ""
 
             result.isFormatted || result.isTruncated -> {
-                val tooltip = result.fullContent?.escapeHTML() ?: ""
+                val tooltip = result.fullContent?.escapeHtml() ?: ""
                 "<span class=\"$formattedClass\" title=\"$tooltip\">${result.truncatedContent}</span>"
             }
 
@@ -1189,7 +1196,7 @@ internal class DataFrameFormatter(
                 val keyLimit = limit - sizeOfValue
                 if (key.length > keyLimit) {
                     if (limit > 3) {
-                        ("$key...").truncate(limit).addCss(structuralClass)
+                        truncate("$key...", limit).addCss(structuralClass)
                     } else {
                         null
                     }
@@ -1198,9 +1205,8 @@ internal class DataFrameFormatter(
                         value = value.second,
                         renderer = renderer,
                         configuration = configuration.copy(cellContentLimit = limit - key.length),
-                    )
-                        ?: "...".addCss(structuralClass)
-                    key.addCss(structuralClass) + renderedValue
+                    ) ?: "...".addCss(structuralClass)
+                    truncate(key, limit = -1).addCss(structuralClass) + renderedValue
                 }
             }
 
