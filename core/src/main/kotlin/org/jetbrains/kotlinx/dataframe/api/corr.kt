@@ -68,7 +68,7 @@ internal interface CorrDocs {
      * {@include [DslGrammarLink]}
      * {@include [LineBreak]}
      *
-     * **[`corr`][convert]**`  { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  }`
+     * **[`corr`][corr]**`  { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  }`
      *
      * {@include [Indent]}
      * __`.`__[**`with`**][Corr.with]` { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  }`

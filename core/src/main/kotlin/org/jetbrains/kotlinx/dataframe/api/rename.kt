@@ -229,7 +229,7 @@ public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> =
  * The resulting columns will keep their original values and positions
  * in the [DataFrame], but their names will be changed.
  *
- * Use the following methods to perform the conversion:
+ * Use the following methods to perform the renaming:
  * - [to(name)][RenameClause.to] — renames selected columns to the specified names.
  * - [to { nameExpression }][RenameClause.to] — renames selected columns using a custom expression,
  *   which takes the column and its path and returns a new name.

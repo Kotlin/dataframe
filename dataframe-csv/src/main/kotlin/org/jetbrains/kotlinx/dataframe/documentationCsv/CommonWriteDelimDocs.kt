@@ -29,7 +29,7 @@ import java.io.File
  *
  * Converting to a [String] can be done like this:
  *
- * $[TO_STR_FUNCTION_LINK]`(delimiter = ",")`
+ * $[TO_STR_FUNCTION_LINK]`(delimiter = ',')`
  *
  * @comment Some helper arguments for the function links
  * @set [FUNCTION_LINK] \[DataFrame.${[FUNCTION_NAME]}\]\[${[FUNCTION_NAME]}\]

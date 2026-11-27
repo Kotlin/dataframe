@@ -24,7 +24,7 @@ private val logger = KotlinLogging.logger {}
  *
  * The [locale][locale] used by the double parser is defined like:
  *
- *   [parserOptions][parserOptions]`?.`[locale][ParserOptions.locale]`  ?:  `[Parsers.locale][Parsers.locale]`  :?  `[Locale.getDefault()][Locale.getDefault]
+ *   [parserOptions][parserOptions]`?.`[locale][ParserOptions.locale]`  ?:  `[Parsers.locale][Parsers.locale]`  ?:  `[Locale.getDefault()][Locale.getDefault]
  *
  * [FastDoubleParser] has a fallback mechanism; In practice, this means it can recognize symbols and notations
  * of any locale recognized by Java as long as that symbol does not conflict with the given locale.

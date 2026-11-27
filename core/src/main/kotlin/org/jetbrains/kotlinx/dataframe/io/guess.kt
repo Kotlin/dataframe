@@ -30,7 +30,7 @@ public sealed interface SupportedFormat {
 
     public fun acceptsSample(sample: SupportedFormatSample): Boolean
 
-    // `DataFrame.Companion.read` methods uses this to sort list of all supported formats in ascending order (-1, 2, 10)
+    // `DataFrame.Companion.read` methods use this to sort list of all supported formats in ascending order (-1, 2, 10)
     // sorted list is used to test if any format can read given input
     public val testOrder: Int
 

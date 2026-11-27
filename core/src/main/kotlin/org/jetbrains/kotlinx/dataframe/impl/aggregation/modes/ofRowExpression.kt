@@ -66,6 +66,7 @@ internal fun <T, C, R : Any?> Aggregator<*, R>.aggregateOfDelegated(
 
 /**
  * Aggregates [data] by first applying [expression] to each row of the frame and then
+ * applying the [Aggregator] ([this]) to the resulting sequence.
  *
  * @param C is used to infer whether there are nulls in the values fed to the aggregator!
  */
