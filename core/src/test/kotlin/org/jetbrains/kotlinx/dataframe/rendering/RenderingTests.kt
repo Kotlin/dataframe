@@ -162,6 +162,38 @@ class RenderingTests : TestBase() {
     }
 
     @Test
+    fun pairKeysAreHtmlEscaped() {
+        val key = "<script>alert(1)</script>"
+        val df = dataFrameOf("pair")(key to 1)
+
+        // the key fits the cell limit and is rendered whole
+        val html = df.toHtml()
+        html.script shouldContain "&#60;script&#62;alert(1)&#60;/script&#62;: "
+        html.script shouldNotContain "<script>alert(1)"
+        html.body shouldNotContain "<script>alert(1)"
+
+        // the key doesn't fit the cell limit and is truncated
+        val truncated = df.toHtml(DisplayConfiguration(cellContentLimit = 10)).script
+        truncated shouldContain "&#60;script"
+        truncated shouldNotContain "<script>alert(1)"
+
+        // the truncated key and its tooltip must be escaped exactly once
+        truncated shouldNotContain "&#38;#60;"
+    }
+
+    @Test
+    fun rowColumnNamesAreHtmlEscapedInCells() {
+        // a row cell renders its column name/value pairs through the same pair-rendering path
+        val name = "<script>alert(1)</script>"
+        val df = dataFrameOf("row")(dataFrameOf(name)(1)[0])
+        val html = df.toHtml()
+
+        html.script shouldContain "&#60;script&#62;alert(1)&#60;/script&#62;: "
+        html.script shouldNotContain "<script>alert(1)"
+        html.body shouldNotContain "<script>alert(1)"
+    }
+
+    @Test
     fun nonBmpCharactersAreEscapedByCodePoint() {
         // BMP characters are escaped exactly as before
         "Ш".escapeHtml() shouldBe "&#1064;"

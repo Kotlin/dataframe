@@ -32,7 +32,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.scale
-import org.jetbrains.kotlinx.dataframe.impl.truncate
 import org.jetbrains.kotlinx.dataframe.jupyter.CellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
@@ -1197,7 +1196,7 @@ internal class DataFrameFormatter(
                 val keyLimit = limit - sizeOfValue
                 if (key.length > keyLimit) {
                     if (limit > 3) {
-                        ("$key...").truncate(limit).addCss(structuralClass)
+                        truncate("$key...", limit).addCss(structuralClass)
                     } else {
                         null
                     }
@@ -1206,9 +1205,8 @@ internal class DataFrameFormatter(
                         value = value.second,
                         renderer = renderer,
                         configuration = configuration.copy(cellContentLimit = limit - key.length),
-                    )
-                        ?: "...".addCss(structuralClass)
-                    key.addCss(structuralClass) + renderedValue
+                    ) ?: "...".addCss(structuralClass)
+                    truncate(key, limit = -1).addCss(structuralClass) + renderedValue
                 }
             }
 
