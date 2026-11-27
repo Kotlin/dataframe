@@ -133,7 +133,7 @@ class JsonTests {
         df.rowsCount() shouldBe 2
         df["a"].type() shouldBe typeOf<Int>()
         df["b"].type() shouldBe typeOf<Comparable<*>>()
-        df["c"].type() shouldBe typeOf<Float?>()
+        df["c"].type() shouldBe typeOf<Double?>()
     }
 
     @Test
@@ -151,7 +151,7 @@ class JsonTests {
         df.rowsCount() shouldBe 2
         df["a"].type() shouldBe typeOf<Int>()
         df["b"].type() shouldBe typeOf<Comparable<*>>()
-        df["c"].type() shouldBe typeOf<Float?>()
+        df["c"].type() shouldBe typeOf<Double?>()
     }
 
     @Test
@@ -420,7 +420,7 @@ class JsonTests {
         ).alsoDebug("df:")
 
         val res = DataFrame.readJsonStr(df.toJson()).alsoDebug("res:")
-        res shouldBe df.convert { colsOf<Double?>() }.toFloat()
+        res shouldBe df
     }
 
     @Test
@@ -433,7 +433,7 @@ class JsonTests {
 
         val res =
             DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS).alsoDebug("res:")
-        res shouldBe df.convert { colsOf<Double?>() }.toFloat()
+        res shouldBe df
     }
 
     @Test
@@ -442,8 +442,8 @@ class JsonTests {
         df["v"].type() shouldBe typeOf<Double>()
 
         val df2 = DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS)
-        df2["v"].type() shouldBe typeOf<Float>()
-        df2 shouldBe df.convert("v").toFloat()
+        df2["v"].type() shouldBe typeOf<Double>()
+        df2 shouldBe df
     }
 
     @Test
@@ -778,7 +778,7 @@ class JsonTests {
         val group = df["a"] as ColumnGroup<*>
         group.columnsCount() shouldBe 6
         group["b"].type() shouldBe typeOf<Int?>()
-        group["value"].type() shouldBe typeOf<Float?>()
+        group["value"].type() shouldBe typeOf<Double?>()
         group["value1"].type() shouldBe typeOf<String?>()
         group["array"].type() shouldBe nothingType(nullable = true)
 
