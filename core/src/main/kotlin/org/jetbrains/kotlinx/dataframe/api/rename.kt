@@ -81,6 +81,12 @@ internal interface RenameDocs {
      *
      * {@include [Indent]}
      * `| `__`.`__[**`toCamelCase`**][RenameClause.toCamelCase]**`()`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`addPrefix`**][RenameClause.addPrefix]**`(`**`prefix: `[`String`][String]**`)`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`addSuffix`**][RenameClause.addSuffix]**`(`**`suffix: `[`String`][String]**`)`**
      */
     typealias Grammar = Nothing
 
@@ -234,6 +240,8 @@ public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> =
  * - [to { nameExpression }][RenameClause.to] — renames selected columns using a custom expression,
  *   which takes the column and its path and returns a new name.
  * - [toCamelCase()][RenameClause.toCamelCase] — renames all selected columns to `camelCase`.
+ * - [addPrefix][RenameClause.addPrefix] — prepends a prefix to the selected column names.
+ * - [addSuffix][RenameClause.addSuffix] — appends a suffix to the selected column names.
  *
  * For more information: {@include [DocumentationUrls.Rename]}
  *
@@ -384,6 +392,42 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
 @Refine
 @Interpretable("RenameIntoLambda")
 public fun <T, C> RenameClause<T, C>.to(transform: (ColumnWithPath<C>) -> String): DataFrame<T> = renameImpl(transform)
+
+/**
+ * @include [RenameDocs]
+ *
+ * Prepends [prefix] to each selected column's name, preserving its values, type, and position.
+ * Only selected columns are renamed, including nested columns explicitly selected with [rename].
+ * An empty prefix leaves names unchanged. Duplicate names are handled as in [to][RenameClause.to].
+ *
+ * ### Example
+ * ```kotlin
+ * df.rename("name", "age").addPrefix("person_")
+ * ```
+ *
+ * @param prefix The text to prepend to each selected column name.
+ * @return A new [DataFrame] with the selected columns renamed.
+ */
+@Refine
+public fun <T, C> RenameClause<T, C>.addPrefix(prefix: String): DataFrame<T> = renameImpl { prefix + it.name }
+
+/**
+ * @include [RenameDocs]
+ *
+ * Appends [suffix] to each selected column's name, preserving its values, type, and position.
+ * Only selected columns are renamed, including nested columns explicitly selected with [rename].
+ * An empty suffix leaves names unchanged. Duplicate names are handled as in [to][RenameClause.to].
+ *
+ * ### Example
+ * ```kotlin
+ * df.rename("name", "age").addSuffix("_original")
+ * ```
+ *
+ * @param suffix The text to append to each selected column name.
+ * @return A new [DataFrame] with the selected columns renamed.
+ */
+@Refine
+public fun <T, C> RenameClause<T, C>.addSuffix(suffix: String): DataFrame<T> = renameImpl { it.name + suffix }
 
 /**
  * Renames the columns, previously selected with [rename] to "camelCase" format.
