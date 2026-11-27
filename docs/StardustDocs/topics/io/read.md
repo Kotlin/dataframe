@@ -447,7 +447,7 @@ D: Boolean?
 ```
 
 Column A has `String` type because all values are string literals, no implicit conversion is performed. Column C
-has the `Double` type because it's the smallest unified number type for `Int` and `Float`.
+has the `Double` type because it's the smallest unified number type for `Int` and `Double`.
 
 ### JSON parsing options
 
