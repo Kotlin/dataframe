@@ -4,16 +4,10 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.double
 import kotlinx.serialization.json.doubleOrNull
-import kotlinx.serialization.json.float
-import kotlinx.serialization.json.floatOrNull
-import kotlinx.serialization.json.int
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.long
 import kotlinx.serialization.json.longOrNull
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -225,30 +219,11 @@ internal fun fromJsonListAnyColumns(
 
                     is JsonNull -> collector.add(null)
 
-                    is JsonPrimitive -> {
-                        when {
-                            v.content == "NaN" -> {
-                                nanIndices.add(i)
-                                collector.add(null)
-                            }
-
-                            v.isString -> collector.add(v.content)
-
-                            v.booleanOrNull != null -> collector.add(v.boolean)
-
-                            v.intOrNull != null -> collector.add(v.int)
-
-                            v.longOrNull != null -> collector.add(v.long)
-
-                            v.floatOrNull != null -> collector.add(v.float)
-
-                            v.doubleOrNull != null -> collector.add(v.double)
-
-                            isLenient -> collector.add(v.content)
-
-                            else -> error("Malformed JSON element ${v::class}: $v")
-                        }
-                    }
+                    is JsonPrimitive -> collector.add(
+                        parseJsonPrimitive(v, isLenient).also {
+                            if (it == null) nanIndices.add(i)
+                        },
+                    )
 
                     else -> collector.add(v)
                 }
@@ -606,30 +581,11 @@ internal fun fromJsonListArrayAndValueColumns(
 
                                 is JsonNull -> collector.add(null)
 
-                                is JsonPrimitive -> {
-                                    when {
-                                        v.content == "NaN" -> {
-                                            nanIndices.add(i)
-                                            collector.add(null)
-                                        }
-
-                                        v.isString -> collector.add(v.content)
-
-                                        v.booleanOrNull != null -> collector.add(v.boolean)
-
-                                        v.intOrNull != null -> collector.add(v.int)
-
-                                        v.longOrNull != null -> collector.add(v.long)
-
-                                        v.floatOrNull != null -> collector.add(v.float)
-
-                                        v.doubleOrNull != null -> collector.add(v.double)
-
-                                        isLenient -> collector.add(v.content)
-
-                                        else -> error("Malformed JSON element ${v::class}: $v")
-                                    }
-                                }
+                                is JsonPrimitive -> collector.add(
+                                    parseJsonPrimitive(v, isLenient).also {
+                                        if (it == null) nanIndices.add(i)
+                                    },
+                                )
 
                                 else -> collector.add(v)
                             }
@@ -734,6 +690,23 @@ internal fun fromJsonListArrayAndValueColumns(
         else ->
             columns.toDataFrame()
     }
+}
+
+/**
+ * Returns a value from a JSON primitive. `null` if the value is "NaN".
+ * If [<code>isLenient</code>][isLenient], the String value is returned instead of throwing an exception if the value cannot be parsed.
+ */
+private fun parseJsonPrimitive(primitive: JsonPrimitive, isLenient: Boolean): Any? {
+    if (primitive.content == "NaN") return null
+
+    if (primitive.isString) return primitive.content
+    primitive.booleanOrNull?.let { return it }
+    primitive.intOrNull?.let { return it }
+    primitive.longOrNull?.let { return it }
+    // not checking for Floats, because doubleOrNull would be unreachable
+    primitive.doubleOrNull?.let { return it }
+    if (isLenient) return primitive.content
+    error("Malformed JSON element ${primitive::class}: $primitive")
 }
 
 // we need it to check if AnyFrame created by recursive call has single unnamed column,
