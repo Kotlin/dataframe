@@ -24,7 +24,7 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
-import org.jetbrains.kotlinx.dataframe.io.escapeHTML
+import org.jetbrains.kotlinx.dataframe.io.escapeHtml
 import org.jetbrains.kotlinx.dataframe.io.formatter
 import org.jetbrains.kotlinx.dataframe.io.maxDepth
 import org.jetbrains.kotlinx.dataframe.io.maxWidth
@@ -162,6 +162,39 @@ class RenderingTests : TestBase() {
     }
 
     @Test
+    fun nonBmpCharactersAreEscapedByCodePoint() {
+        // BMP characters are escaped exactly as before
+        "Ш".escapeHtml() shouldBe "&#1064;"
+
+        // a non-BMP character must become a single code-point reference, not two surrogate references,
+        // as browsers decode each surrogate reference to U+FFFD
+        "📈".escapeHtml() shouldBe "&#128200;"
+    }
+
+    @Test
+    fun nonBmpColumnNamesAreEscapedByCodePoint() {
+        val name = "📈 growth"
+        val df = dataFrameOf(name)(1)
+        val html = df.toHtml()
+
+        html.script shouldContain "&#128200; growth"
+        html.script shouldNotContain Regex("&#5[0-9]{4};")
+        html.body shouldContain "&#128200; growth"
+        html.body shouldNotContain Regex("&#5[0-9]{4};")
+        Jsoup.parse(html.body).select("th").eachText() shouldBe listOf(name)
+    }
+
+    @Test
+    fun nonBmpCellValuesAreEscapedByCodePoint() {
+        val df = dataFrameOf("text")("📈")
+        val html = df.toHtml()
+
+        html.script shouldContain "&#128200;"
+        html.script shouldNotContain Regex("&#5[0-9]{4};")
+        html.body shouldContain "&#128200;"
+    }
+
+    @Test
     fun `cellContentLimit null disables cell content truncation`() {
         val longValue = "abcdefghij".repeat(10)
         val df = dataFrameOf("text")(longValue)
@@ -188,7 +221,7 @@ class RenderingTests : TestBase() {
         val value = "Шёл Шива по шоссе, сокрушая сущее"
         val df = dataFrameOf("text")(value)
         val script = df.toHtml().script
-        script shouldContain value.escapeHTML()
+        script shouldContain value.escapeHtml()
     }
 
     @Test
