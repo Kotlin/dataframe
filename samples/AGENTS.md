@@ -94,6 +94,10 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   on disk and `updateShadowResources` registers it again.
 - The test task already sets `--add-opens java.base/java.nio=ALL-UNNAMED` (for Arrow).
 - After editing a sample file, run `./gradlew :samples:ktlintFormat :samples:ktlintCheck`.
+- `:samples:runPandasValidation` (Python) and `:samples:pandasPostgresTest` (a database) check the guide for Pandas
+  users. They need tools a Kotlin CI agent may lack, so they are outside `test`/`check`/`build` and fail when their
+  environment is missing: "not run" is never "passed", report it as not run. Never point them at a database that
+  matters. Details are in [`pandas-validation/README.md`](pandas-validation/README.md).
 
 ## Writing a sample
 

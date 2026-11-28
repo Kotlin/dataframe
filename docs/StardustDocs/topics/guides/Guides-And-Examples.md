@@ -26,6 +26,9 @@ Explore our structured, in-depth guides to steadily improve your Kotlin DataFram
 
 * [](Guide-for-backend-SQL-developers.md) — migration guide for backend developers with SQL/ORM experience moving to Kotlin DataFrame
 
+* [](migratingFromPandas.md) — a guide for Pandas users: the same everyday tasks side by side, and what works differently.
+  A detailed [](pandasToKotlinDataFrameReference.md) is there for coding agents and careful readers.
+
 * [](extensionPropertiesApi.md) — learn about extension properties for [`DataFrame`](DataFrame.md) 
 and make working with your data both convenient and type-safe.
 

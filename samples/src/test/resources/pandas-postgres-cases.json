@@ -1,0 +1,16 @@
+[
+  {"id": "readTableRows", "pandas": "len(pd.read_sql_table('sales', engine))", "expect": 6},
+  {"id": "readTableColumns", "pandas": "list(pd.read_sql_table('sales', engine).columns)", "expect": ["region", "product", "year", "revenue", "cost", "discount"]},
+  {"id": "readTableMissing", "pandas": "list(pd.read_sql_table('sales', engine).discount)", "expect": [0.1, null, 0.05, null, 0.2, 0.0]},
+  {"id": "readTableNumberTypes", "pandas": "[str(t) for t in pd.read_sql_table('sales', engine).dtypes[2:]]", "expect": ["int64", "int64", "int64", "float64"],
+   "expectKotlin": ["kotlin.Int", "kotlin.Int", "kotlin.Int", "kotlin.Double?"],
+   "note": "PostgreSQL integer is int64 in Pandas and Int in Kotlin DataFrame; a nullable column is Double? here and float64 with NaN there"},
+
+  {"id": "queryFilter", "pandas": "list(pd.read_sql_query(\"SELECT revenue FROM sales WHERE region = 'North' ORDER BY revenue\", engine).revenue)", "expect": [100, 120, 150]},
+  {"id": "queryGroupTotals", "pandas": "list(pd.read_sql_query('SELECT region, SUM(revenue) AS total FROM sales GROUP BY region ORDER BY region', engine).total)", "expect": [370, 370]},
+  {"id": "queryAverageCost", "pandas": "list(pd.read_sql_query('SELECT AVG(cost) AS average FROM sales GROUP BY region ORDER BY region', engine).average)", "expect": [73.33333333333333, 80.0]},
+  {"id": "queryAverageType", "pandas": "str(pd.read_sql_query('SELECT AVG(cost) AS average FROM sales', engine).average.dtype)", "expect": "float64",
+   "expectKotlin": "java.math.BigDecimal",
+   "note": "PostgreSQL numeric (the type of AVG) is float64 in Pandas and BigDecimal in Kotlin DataFrame"},
+  {"id": "queryCountMissing", "pandas": "int(pd.read_sql_query('SELECT COUNT(*) AS n FROM sales WHERE discount IS NULL', engine).n[0])", "expect": 2}
+]
